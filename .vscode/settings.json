@@ -1,0 +1,9 @@
+{
+  "files.encoding": "utf8",
+  "python.defaultInterpreterPath": "${workspaceFolder}/code/rede-neural-do-zero/.venv/Scripts/python.exe",
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.venv": true
+  }
+}
+
