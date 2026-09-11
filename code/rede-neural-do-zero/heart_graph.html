@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box}body{margin:0;font:14px system-ui,sans-serif;color:#203047;background:#f8fafc}
+.panel{border:1px solid #dbe4ef;border-radius:14px;overflow:hidden;background:white}
+.toolbar{padding:12px 16px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;border-bottom:1px solid #e8eef5}
+button{border:1px solid #cbd5e1;background:#fff;border-radius:7px;padding:6px 12px;color:#203047;cursor:pointer}
+button:hover{background:#eff6ff}#phase{font-weight:650;color:#155e75}#epoch{margin-left:auto;font-variant-numeric:tabular-nums}
+canvas{display:block;width:100%;height:530px}.legend{padding:10px 16px;border-top:1px solid #e8eef5;font-size:12px;color:#52647a}
+.blue{color:#2483ed}.red{color:#e25466}.amber{color:#ad7100}
+</style>
+<div class="panel">
+  <div class="toolbar"><button id="play">Pausar</button><button id="restart">Reiniciar</button>
+    <span id="phase" role="status"></span><span id="epoch"></span></div>
+  <canvas id="graph" role="img" aria-label="Grafo neural: pulsos de ativacao e retorno dos gradientes"></canvas>
+  <div class="legend"><span class="blue">● Peso positivo</span> · <span class="red">● Peso negativo</span> ·
+    <span class="amber">● Gradiente voltando</span> · Espessura = |peso| · Passe o mouse numa ligação para ver peso e alteração.</div>
+</div>
+<script>
+const data = __GRAPH_DATA__;
+const canvas = document.getElementById('graph'), ctx = canvas.getContext('2d');
+const play = document.getElementById('play'), phaseLabel = document.getElementById('phase');
+const transitions = data.layers.length - 1;
+const stages = transitions * (data.training ? 2 : 1) + 1;
+let width = 1000, height = 530, positions = [], elapsed = 0, previous = null;
+// Mantem a fase visual entre snapshots substituidos pelo Streamlit ao vivo.
+if(data.training && data.frames.length===1 && data.animate)
+  elapsed=Date.now()%(stages*data.seconds*1000);
+let paused = !data.animate, pointer = null;
+function resize(){
+  width = canvas.clientWidth; const ratio = window.devicePixelRatio || 1;
+  canvas.width = width * ratio; canvas.height = height * ratio;
+  ctx.setTransform(ratio,0,0,ratio,0,0);
+  data.layers.forEach((ids, layer) => ids.forEach((id, j) => {
+    positions[id] = {x:90 + layer*(width-135)/transitions,
+                     y:45+(ids.length === 1 ? .5 : j/(ids.length-1))*(height-80), layer};
+  }));
+}
+new ResizeObserver(resize).observe(canvas);
+function line(a,b,color,thickness,alpha=1){
+  ctx.globalAlpha=alpha; ctx.strokeStyle=color; ctx.lineWidth=thickness;
+  ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); ctx.globalAlpha=1;
+}
+function dot(point,radius,color){ctx.beginPath();ctx.arc(point.x,point.y,radius,0,Math.PI*2);ctx.fillStyle=color;ctx.fill();}
+function distance(p,a,b){
+  const dx=b.x-a.x,dy=b.y-a.y;
+  const t=Math.max(0,Math.min(1,((p.x-a.x)*dx+(p.y-a.y)*dy)/(dx*dx+dy*dy)));
+  return Math.hypot(p.x-a.x-t*dx,p.y-a.y-t*dy);
+}
+function render(now){
+  if(!canvas.isConnected) return;
+  if(previous !== null && !paused) elapsed += Math.min(now-previous,100);
+  previous=now;
+  const tick=elapsed/(Math.max(.1,data.seconds)*1000), cycle=Math.floor(tick/stages);
+  const frameIndex=Math.min(cycle,data.frames.length-1), frame=data.frames[frameIndex];
+  const stage=Math.floor(tick%stages), progress=tick%1;
+  const backward=data.training && stage>=transitions && stage<2*transitions;
+  const resting=stage===stages-1;
+  const activeLayer=backward ? 2*transitions-1-stage : stage;
+  const label=!data.animate ? 'Visualização estática' : resting ? (data.training?'Pesos atualizados':'Inferência concluída') :
+              backward?'← Backpropagation':'Feed forward →';
+  phaseLabel.textContent=label;
+  document.getElementById('epoch').textContent=data.training ?
+    `${data.frames.length>1?'Replay · ':''}Época ${frame.epoch}` : 'Inferência · pesos fixos';
+  ctx.clearRect(0,0,width,height);
+  let hover=null, nearest=6;
+  data.edges.forEach(([s,t],i)=>{
+    const a=positions[s],b=positions[t],weight=frame.weights[i];
+    const active=!resting && a.layer===activeLayer;
+    const color=weight>=0?'#2483ed':'#e25466', thickness=.6+Math.min(Math.abs(weight),2)*1.8;
+    if(!data.hideInactive || !data.animate) line(a,b,color,thickness,.16);
+    if(active && data.animate){
+      const stagger=(i%7)*.025;
+      const p=Math.max(0,Math.min(1,(progress-stagger)/.8));
+      const from=backward?b:a,to=backward?a:b;
+      const tip={x:from.x+(to.x-from.x)*p,y:from.y+(to.y-from.y)*p};
+      // A ligacao nasce, acende e se apaga ao fim desta etapa.
+      const intensity=p<.8?1:Math.max(0,(1-p)/.2);
+      line(from,tip,backward?'#e5a321':color,thickness+.8,intensity*.85);
+      ctx.globalAlpha=intensity; dot(tip,2.8,backward?'#fbbf24':color);ctx.globalAlpha=1;
+    }
+    if(pointer){const d=distance(pointer,a,b);if(d<nearest){nearest=d;hover=i;}}
+  });
+  data.layers.forEach((ids,layer)=>{
+    ctx.font='12px system-ui';ctx.fillStyle='#64748b';ctx.textAlign='center';
+    ctx.fillText(layer===0?'Entrada':layer===transitions?'Saída':`Oculta ${layer}`,positions[ids[0]].x,18);
+    ids.forEach(id=>{
+      const pos=positions[id],value=frame.values[id];
+      const reached=!data.animate || backward || resting || layer<=stage;
+      const pulse=!resting && layer===(backward?activeLayer:activeLayer+1);
+      const v=Math.max(-1,Math.min(1,value));
+      dot(pos,17,reached?`hsl(${v>=0?8:225},72%,${91-Math.abs(v)*30}%)`:'#f1f5f9');
+      ctx.strokeStyle=pulse?'#0ea5e9':'#53647b';ctx.lineWidth=pulse?2.5:1.3;ctx.stroke();
+      ctx.fillStyle='#172b46';ctx.textAlign='center';ctx.font='11px system-ui';
+      ctx.fillText(reached?value.toFixed(2):'…',pos.x,pos.y+4);
+      if(layer===0){ctx.textAlign='right';ctx.fillText(data.features[ids.indexOf(id)],pos.x-24,pos.y+4);}
+    });
+  });
+  if(hover!==null){
+    const [s,t]=data.edges[hover]; line(positions[s],positions[t],'#0f172a',2);
+    const text=`${s} → ${t}  peso ${frame.weights[hover].toFixed(5)}  Δ ${frame.changes[hover].toFixed(5)}`;
+    ctx.font='12px system-ui';const box=Math.min(width-10,ctx.measureText(text).width+20);
+    const x=Math.max(5,Math.min(pointer.x+10,width-box-5)),y=Math.min(pointer.y+15,height-32);
+    ctx.fillStyle='#0f172a';ctx.fillRect(x,y,box,28);ctx.fillStyle='white';ctx.textAlign='left';ctx.fillText(text,x+8,y+18);
+  }
+  requestAnimationFrame(render);
+}
+play.textContent=paused?'Continuar':'Pausar';
+play.onclick=()=>{data.animate=true;paused=!paused;play.textContent=paused?'Continuar':'Pausar';};
+document.getElementById('restart').onclick=()=>{data.animate=true;elapsed=0;paused=false;play.textContent='Pausar';};
+canvas.onmousemove=e=>{const r=canvas.getBoundingClientRect();pointer={x:e.clientX-r.left,y:e.clientY-r.top};};
+canvas.onmouseleave=()=>{pointer=null;};
+resize();requestAnimationFrame(render);
+</script>
+</html>
