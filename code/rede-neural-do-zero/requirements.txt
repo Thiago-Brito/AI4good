@@ -1,4 +1,4 @@
-streamlit>=1.36,<2
+streamlit>=1.62,<2
 numpy>=1.26,<3
 matplotlib>=3.8,<4
-
+kagglehub>=1,<2
