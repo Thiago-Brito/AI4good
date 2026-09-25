@@ -1,0 +1,331 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Qual é o assunto deste documento? · Cora</title>
+  <style>
+    :root { font-family: Segoe UI, Arial, sans-serif; color: #19304b; background: #f1f5fa; }
+    body { max-width: 1150px; margin: 32px auto; padding: 0 20px; }
+    h1 { font-size: clamp(28px,4vw,40px); margin: 8px 0; }
+    h2 { font-size: 22px; margin-top: 0; }
+    h3 { font-size: 17px; }
+    p, li { line-height: 1.65; }
+    a { color: #125b9a; }
+    .eyebrow { color: #087b78; font-weight: 700; letter-spacing: 1px; font-size: 12px; }
+    header { margin-bottom: 24px; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .card { background: white; border: 1px solid #d8e1ea; border-radius: 14px; padding: 24px; margin-bottom: 20px; min-width: 0; }
+    .steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 18px; }
+    .steps p { margin: 6px 0; }
+    .muted { color: #53657b; font-size: 13px; }
+    .callout { background: #edf4fb; border-left: 4px solid #1764ab; border-radius: 5px; padding: 14px 18px; line-height: 1.6; }
+    .expected { font-size: 22px; margin: 16px 0 8px; }
+    .answer { font-size: 28px; font-weight: 700; margin: 5px 0 12px; }
+    .badge { display: inline-block; border-radius: 6px; padding: 7px 11px; font-weight: 600; }
+    .correct { color: #086248; background: #e4f5ec; }
+    .incorrect { color: #973819; background: #fff0e7; }
+    .row { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; }
+    .probability { padding: 8px 10px; margin-top: 3px; border: 1px solid transparent; border-radius: 7px; }
+    .expected-row { border-color: #087b78; background: #f1faf7; }
+    .bar { height: 9px; background: #e5ecf3; border-radius: 6px; overflow: hidden; margin-top: 7px; }
+    .fill { height: 100%; background: #1764ab; }
+    .expected-row .fill { background: #087b78; }
+    button { background: #1565ad; color: white; border: 0; border-radius: 7px; padding: 12px 16px; cursor: pointer; font: inherit; }
+    button:disabled { opacity: .6; cursor: wait; }
+    button:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px solid #d3830b; outline-offset: 3px; }
+    .examples { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+    .examples button { background: #edf4fb; color: #16446b; border: 1px solid #b7cce0; font-size: 14px; }
+    form { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+    input { font: inherit; padding: 10px; border: 1px solid #abbcd0; border-radius: 7px; width: 90px; }
+    #status { margin-top: 14px; color: #087b78; }
+    pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: 12px; max-height: 350px; overflow: auto; }
+    code { overflow-wrap: anywhere; }
+    summary { cursor: pointer; font-weight: 600; line-height: 1.5; }
+    svg { width: 100%; height: 240px; }
+    .glossary dt { font-weight: 700; margin-top: 12px; }
+    .glossary dd { margin: 4px 0; line-height: 1.6; }
+    @media(max-width:700px) { .grid,.steps { grid-template-columns: 1fr; } .card { padding: 18px; } body { padding: 0 12px; } }
+  </style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">EXPERIMENTO COM DOCUMENTOS CIENTÍFICOS · ORDERED GNN · ICLR 2023</div>
+  <h1>Qual é o assunto deste documento?</h1>
+  <p>Vamos comparar duas redes que tentam colocar um documento na categoria certa.
+    Pense em organizar livros por assunto: aqui as “prateleiras” são sete assuntos de aprendizado de máquina.</p>
+  <a href="/paper.pdf" target="_blank" rel="noopener">Artigo que apresenta o método (2023)</a> ·
+  <a href="/report.pdf" target="_blank" rel="noopener">Relatório dos nossos experimentos</a> ·
+  <a href="https://github.com/LUMIA-Group/OrderedGNN" target="_blank" rel="noopener">Código dos pesquisadores</a>
+</header>
+
+<section class="card" aria-labelledby="task-title">
+  <h2 id="task-title">1. Entenda a tarefa antes de olhar os números</h2>
+  <div class="steps">
+    <div><h3>O que entra?</h3><p>Indicações de palavras presentes no documento e suas ligações com outros documentos.</p></div>
+    <div><h3>O que a rede faz?</h3><p>Combina características do próprio documento com informações dos documentos ligados a ele.</p></div>
+    <div><h3>O que sai?</h3><p>Uma previsão de assunto, como <strong>Redes neurais</strong> ou <strong>Teoria</strong>.</p></div>
+  </div>
+  <p class="callout"><strong>O que é uma citação?</strong> Quando o documento B usa o documento A como referência, há uma ligação entre eles.
+    Nesta rede, a ligação permite trocar informações nos dois sentidos. Isso não garante que os dois tratem do mesmo assunto.</p>
+  <p>O <strong>Cora</strong> é a base de dados: 2.708 documentos, cada um representado por 1.433 indicadores de palavras.
+    Não estamos abrindo nem lendo os PDFs completos desses documentos.</p>
+  <details><summary>Quais são as sete categorias? Por que antes aparecia “Classe 0”?</summary>
+    <p>“Classe” significa <strong>categoria</strong>. O número é só um código interno, não uma nota nem uma posição em um ranking.</p>
+    <dl id="categories" class="glossary"></dl>
+    <p class="muted">Os nomes foram conferidos por correspondência dos 1.433 atributos com o arquivo original cora.content, nos 2.708 documentos.
+      As traduções e explicações são didáticas. O vocabulário das palavras e os títulos dos documentos não foram reconstruídos.</p>
+  </details>
+</section>
+
+<section class="card" aria-labelledby="choose-title">
+  <h2 id="choose-title">2. Escolha um exemplo e veja as redes responderem</h2>
+  <p>Os quatro exemplos abaixo são documentos reais do conjunto de teste. Mostramos tanto acertos quanto erros.</p>
+  <div class="examples" aria-label="Exemplos prontos">
+    <button type="button" data-node="1709">1709 · As duas acertam</button>
+    <button type="button" data-node="1713">1713 · Só a modificada acerta</button>
+    <button type="button" data-node="1797">1797 · Só a base acerta</button>
+    <button type="button" data-node="1708">1708 · As duas erram</button>
+  </div>
+  <form id="form">
+    <label for="node">Ou escolha o número do documento (0–2707):</label>
+    <input id="node" type="number" min="0" max="2707" value="1708" required>
+    <button id="run">Pedir uma previsão às duas redes</button>
+  </form>
+  <p class="muted">O clique usa pesos já treinados. Isso é <strong>inferência</strong>: pedir uma resposta sem ensinar novamente a rede.</p>
+  <div id="status" role="status" aria-live="polite"></div>
+  <div id="expected" class="callout" aria-live="polite"></div>
+</section>
+
+<div class="grid" aria-label="Respostas dos dois modelos">
+  <section class="card" id="original"></section>
+  <section class="card" id="modified"></section>
+</div>
+<section class="card">
+  <h2>Como ler as barras?</h2>
+  <p>Cada barra é a probabilidade que a rede atribuiu a um assunto <strong>para este documento</strong>.
+    A maior barra determina a resposta escolhida. As sete probabilidades somam aproximadamente 100%, considerando o arredondamento.</p>
+  <p><strong>Uma barra de 93% não significa 93% de acertos no teste.</strong>
+    A rede pode atribuir uma probabilidade alta à resposta errada. Para saber se acertou, compare sua resposta com o assunto registrado no dataset.</p>
+  <p>A categoria esperada aparece com contorno verde e a indicação “resposta esperada”. Acerto ou erro também aparece por escrito.</p>
+</section>
+
+<div class="grid">
+  <section class="card">
+    <h2>3. Veja de onde vêm as informações</h2>
+    <div id="sample"></div>
+    <svg id="graph" viewBox="0 0 450 240" role="img" aria-label="Documento selecionado e documentos ligados a ele"></svg>
+    <p id="graph-note" class="muted"></p>
+    <details><summary>Mostrar os indicadores de palavras deste documento</summary>
+      <p>Estes números identificam posições do vetor de entrada. Não são as palavras escritas nem os números de outros documentos.</p>
+      <p id="features"></p>
+    </details>
+  </section>
+  <section class="card">
+    <h2>4. Um exemplo é diferente do resultado geral</h2>
+    <p>Avaliamos <strong>1.000 documentos de teste</strong> e repetimos o treinamento três vezes para cada rede.</p>
+    <div id="summary">Carregando os resultados reais…</div>
+    <p><strong>A modificação não melhorou a média de acertos neste experimento.</strong></p>
+    <details><summary>Como separamos treino, validação e teste?</summary>
+      <ul><li><strong>1.208 para treino:</strong> suas categorias ensinam a rede e ajustam os pesos.</li>
+      <li><strong>500 para validação:</strong> ajudam a escolher quais pesos guardar.</li>
+      <li><strong>1.000 para teste:</strong> suas categorias avaliam a rede depois dessa escolha.</li></ul>
+      <p>As características e ligações de todos os documentos são conhecidas durante o treinamento.
+        Apenas as categorias dos documentos de treino entram no erro usado para atualizar os pesos.</p>
+    </details>
+  </section>
+</div>
+
+<section class="card">
+  <h2>5. Comparamos duas maneiras de analisar os mesmos documentos</h2>
+  <p><strong>O Cora fornece os exemplos. As redes tentam descobrir o assunto de cada exemplo.</strong>
+    Chamamos a primeira rede de <strong>“base”</strong> porque ela é a referência da comparação.
+    A segunda é a versão que modificamos. Ambas usam os mesmos documentos e a mesma divisão de treino, validação e teste.</p>
+  <h3>O que acontece em uma “rodada”?</h3>
+  <p>Cada documento tem um resumo numérico de suas características. Em uma rodada, a rede recebe os resumos
+    dos documentos ligados a ele e combina essas informações com seu próprio resumo.
+    Esse resumo é um vetor de números, não um texto escrito.</p>
+  <p class="callout"><strong>Exemplo fictício:</strong> A está ligado a B, e B está ligado a C.
+    Na primeira rodada, A recebe informações de B. Na segunda, B já pode trazer informações que recebeu de C.
+    Assim, repetir as rodadas permite incorporar informações de documentos mais distantes nas ligações.
+    Uma rodada dessas não é uma época de treinamento.</p>
+  <div class="grid">
+    <div><h3>Rede de referência: decide pelo resumo final</h3>
+      <ol><li>Prepara o resumo numérico de cada documento.</li>
+      <li>Atualiza esse resumo em quatro rodadas de troca de informações.</li>
+      <li>Entrega o resumo da quarta rodada ao classificador, que escolhe um dos sete assuntos.</li></ol>
+      <p><strong>Caminho da decisão:</strong><br>Entrada → rodada 1 → 2 → 3 → 4 → previsão.</p>
+      <p>As rodadas anteriores influenciam a última; porém, seus resumos não são entregues separadamente ao classificador.</p>
+    </div>
+    <div><h3>Rede modificada: combina resumos de várias etapas</h3>
+      <ol><li>Prepara o resumo inicial e também faz quatro rodadas.</li>
+      <li>Acrescenta uma transformação com soma residual depois de cada rodada.</li>
+      <li>Guarda cinco resumos: o inicial e os de cada rodada. Aprende a dar um peso a cada um, combina-os e faz a previsão.</li></ol>
+      <p><strong>Caminho da decisão:</strong><br>Resumo inicial + resumo 1 + 2 + 3 + 4 → combinação aprendida → previsão.</p>
+      <p>Os pesos dessa combinação podem ser diferentes para cada documento.</p>
+    </div>
+  </div>
+  <h3>Quais foram as três mudanças no código?</h3>
+  <ol>
+    <li><strong>Um controle próprio por rodada:</strong> a base compartilha os parâmetros do controle que combina
+      informação própria e dos vizinhos. Na modificada, cada rodada aprende seus próprios parâmetros de controle (gates).</li>
+    <li><strong>Mais processamento depois da troca:</strong> adicionamos quatro blocos que transformam o resumo e somam
+      o resultado ao resumo recebido. São os blocos residuais.</li>
+    <li><strong>Uma nova forma de decidir:</strong> o classificador recebe uma combinação aprendida das cinco etapas,
+      em vez de receber apenas a última. Essa combinação usa atenção.</li>
+  </ol>
+  <details><summary>Onde encontro essas alterações em models.py?</summary>
+    <ul><li><code>global_gating=False</code>: deixa os controles independentes.</li>
+    <li><code>self.feedforward</code> e <code>self.residual_norm</code>: criam os novos blocos de processamento.</li>
+    <li><code>states.append(x)</code>: guarda o resumo de cada rodada.</li>
+    <li><code>self.depth_score</code> e <code>(stack * attention).sum(dim=1)</code>: aprendem os pesos e combinam as etapas.</li></ul>
+  </details>
+  <h3>E os 99.223 e 174.344 parâmetros?</h3>
+  <p><strong>Parâmetros são números ajustáveis dentro da rede.</strong> Durante o treinamento, o programa muda esses números
+    para reduzir os erros. Não são documentos nem quantidade de acertos.</p>
+  <p>A referência tem <strong>99.223</strong> parâmetros. Os novos controles e blocos elevaram a modificada a
+    <strong>174.344</strong>: 75.121 números ajustáveis a mais. Cada rede começou com pesos aleatórios e foi treinada separadamente.</p>
+  <p class="callout"><strong>A mudança ajudou?</strong> Queríamos testar se combinar diferentes etapas melhoraria as previsões.
+    A base acertou, em média, <strong>87,23%</strong> dos documentos de teste; a modificada, <strong>87,10%</strong>.
+    Portanto, a rede ficou maior, mas não houve melhora média neste experimento.</p>
+  <details><summary>Tradução dos termos do código</summary>
+    <dl class="glossary">
+      <dt>Nó / vizinho / grafo</dt><dd>Documento / documento ligado a ele / conjunto de documentos e ligações.</dd>
+      <dt>Rótulo real / classe prevista</dt><dd>Categoria registrada no dataset / categoria escolhida pela rede.</dd>
+      <dt>Gate</dt><dd>Controle aprendido que combina a informação do próprio documento com a recebida dos vizinhos. Na variante, cada camada tem seu próprio controle.</dd>
+      <dt>Bloco residual</dt><dd>Um bloco transforma a informação e soma o resultado à informação de entrada.</dd>
+      <dt>Atenção entre profundidades</dt><dd>A rede aprende a dar pesos às representações de diferentes rodadas antes de combiná-las.</dd>
+      <dt>Época</dt><dd>Uma rodada de treinamento. Nesta implementação, ela faz uma atualização dos pesos usando os documentos de treino.</dd>
+      <dt>Semente</dt><dd>Número que controla o sorteio inicial. Usamos 42, 43 e 44 para comparar três execuções.</dd>
+      <dt>Checkpoint / inferência</dt><dd>Arquivo de pesos guardados / usar esses pesos para calcular uma resposta.</dd>
+      <dt>Acurácia</dt><dd>Porcentagem de respostas corretas em um conjunto de documentos. É diferente da probabilidade de uma resposta individual.</dd>
+    </dl>
+  </details>
+  <p class="muted">Executamos uma configuração compacta da arquitetura do artigo, com adaptações descritas no relatório.
+    Não é reprodução integral dos números publicados. As categorias esperadas não são entradas do modelo na inferência.</p>
+</section>
+<details class="card"><summary>Para conferir a execução: dados numéricos, probabilidades e identificação dos pesos</summary>
+  <p>O hash identifica o arquivo de pesos. A época informa quando os pesos foram selecionados pela validação.
+    O tempo mede o cálculo no grafo completo, não a leitura de um PDF.</p>
+  <pre id="raw"></pre>
+</details>
+
+<script>
+// O servidor retorna os códigos 0–6. Esta tabela apenas traduz os resultados:
+// ela não altera pesos, probabilidades, dados de treino ou previsões.
+// Correspondência conferida em outputs/dataset/class-label-verification.json.
+const CATEGORIES = [
+  {name: 'Teoria', original: 'Theory', explanation: 'Fundamentos matemáticos do aprendizado de máquina.'},
+  {name: 'Aprendizado por reforço', original: 'Reinforcement_Learning', explanation: 'Aprender a escolher ações a partir de recompensas.'},
+  {name: 'Algoritmos genéticos', original: 'Genetic_Algorithms', explanation: 'Buscar soluções com seleção e variação inspiradas na evolução.'},
+  {name: 'Redes neurais', original: 'Neural_Networks', explanation: 'Modelos compostos por unidades conectadas que aprendem com exemplos.'},
+  {name: 'Métodos probabilísticos', original: 'Probabilistic_Methods', explanation: 'Usar modelos de probabilidade para representar dados e incerteza.'},
+  {name: 'Aprendizado baseado em casos', original: 'Case_Based', explanation: 'Usar exemplos ou casos anteriores para resolver novas situações.'},
+  {name: 'Aprendizado de regras', original: 'Rule_Learning', explanation: 'Aprender regras de decisão, como “se acontecer X, então Y”.'}
+];
+const MODEL_NAMES = {original: 'Rede de referência (base)', modified: 'Nossa rede modificada'};
+const SPLIT_NAMES = {train: 'treino — sua categoria foi usada para ensinar a rede', val: 'validação — ajudou a escolher o checkpoint', test: 'teste — sua categoria não foi usada para ajustar os pesos'};
+const percent = value => (100 * value).toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '%';
+const categoryName = id => CATEGORIES[id].name;
+
+// Uma explicação concreta acompanha cada resultado, inclusive quando ambas erram.
+function renderModel(kind, data) {
+  const model = data.models[kind];
+  const correct = model.predicted_class === data.target;
+  const chosenName = categoryName(model.predicted_class);
+  const expectedName = categoryName(data.target);
+  const explanation = correct
+    ? `A rede respondeu “${chosenName}”, que é o assunto registrado no dataset.`
+    : `A rede respondeu “${chosenName}”, mas o dataset registra “${expectedName}”. Portanto, errou este documento.`;
+  const bars = model.probabilities.map((probability, index) => {
+    const expected = index === data.target;
+    const chosen = index === model.predicted_class;
+    const marker = expected ? ' · resposta esperada' : chosen ? ' · resposta escolhida' : '';
+    return `<div class="probability ${expected ? 'expected-row' : ''}">
+      <div class="row"><span>${categoryName(index)}${marker}</span><strong>${percent(probability)}</strong></div>
+      <div class="bar"><div class="fill" style="width:${probability * 100}%"></div></div>
+    </div>`;
+  }).join('');
+  document.getElementById(kind).innerHTML = `
+    <h2>${MODEL_NAMES[kind]}</h2><div class="muted">Resposta para o documento ${data.node_id}:</div>
+    <div class="answer">${chosenName}</div>
+    <span class="badge ${correct ? 'correct' : 'incorrect'}">${correct ? 'Acertou este documento' : 'Errou este documento'}</span>
+    <p>${explanation}</p><h3>Probabilidade atribuída a cada assunto</h3>${bars}
+    <details><summary>Detalhes técnicos desta previsão</summary>
+      <p>Categoria escolhida: código ${model.predicted_class}. Categoria esperada: código ${data.target}.
+      Pesos selecionados na época ${model.epoch}; semente ${model.seed}.
+      Cálculo do grafo: ${model.elapsed_ms.toFixed(1)} ms.</p></details>`;
+}
+
+function renderDocument(data) {
+  document.querySelector('#expected').innerHTML = `<div class="expected">Documento ${data.node_id} · assunto esperado: <strong>${categoryName(data.target)}</strong></div>
+    <div>${CATEGORIES[data.target].explanation}</div><p>Este documento pertence ao conjunto de <strong>${SPLIT_NAMES[data.split]}</strong>.
+    A resposta esperada vem do dataset e serve para conferir as previsões abaixo.</p>`;
+  document.querySelector('#sample').textContent = `O documento ${data.node_id} está ligado a ${data.neighbors.length} documentos.
+    Seu vetor tem ${data.active_feature_indices.length} indicadores de palavras presentes, entre 1.433 posições.`;
+  document.querySelector('#features').textContent = 'Posições com palavras presentes: ' + data.active_feature_indices.join(', ') + '.';
+  // Esta figura é a vizinhança real, limitada a 14 documentos para caber na tela.
+  const neighbors = data.neighbors.slice(0, 14);
+  document.querySelector('#graph-note').textContent = `O círculo central é o documento escolhido. Os demais são documentos ligados a ele.
+    Exibindo ${neighbors.length} de ${data.neighbors.length} ligações. Os números identificam documentos, não assuntos.`;
+  document.querySelector('#graph').innerHTML = neighbors.map((node, index) => {
+    const angle = 2 * Math.PI * index / neighbors.length;
+    const x = 225 + 165 * Math.cos(angle), y = 120 + 90 * Math.sin(angle);
+    return `<line x1="225" y1="120" x2="${x}" y2="${y}" stroke="#b7c8d9"/>
+      <circle cx="${x}" cy="${y}" r="20" fill="#edf4fb"/>
+      <text x="${x}" y="${y + 4}" text-anchor="middle" font-size="10">${node}</text>`;
+  }).join('') + `<circle cx="225" cy="120" r="28" fill="#1565ad"/>
+    <text x="225" y="124" text-anchor="middle" fill="white" font-size="12">${data.node_id}</text>`;
+}
+
+async function predict(event) {
+  if (event) event.preventDefault();
+  const controls = document.querySelectorAll('button, #node');
+  controls.forEach(control => control.disabled = true);
+  document.querySelector('#status').textContent = 'As duas redes estão calculando uma resposta…';
+  try {
+    const response = await fetch('/predict?node=' + encodeURIComponent(document.querySelector('#node').value));
+    if (!response.ok) throw new Error('Não foi possível consultar esse documento. Escolha um número entre 0 e 2707.');
+    const data = await response.json();
+    renderDocument(data);
+    for (const kind of ['original', 'modified']) renderModel(kind, data);
+    document.querySelector('#raw').textContent = JSON.stringify(data, null, 2);
+    document.querySelector('#status').textContent = 'Inferência concluída: novas previsões calculadas, sem modificar os pesos.';
+  } catch (error) {
+    document.querySelector('#status').textContent = error.message;
+    document.querySelector('#expected').textContent = 'A consulta falhou. Os resultados anteriores foram ocultados para evitar confusão.';
+    for (const id of ['original','modified','sample','features','graph','graph-note','raw']) document.getElementById(id).textContent = '';
+  } finally {
+    controls.forEach(control => control.disabled = false);
+  }
+}
+
+async function loadSummary() {
+  try {
+    const response = await fetch('/summary');
+    if (!response.ok) throw new Error('summary unavailable');
+    const summary = await response.json();
+    document.querySelector('#summary').innerHTML = Object.entries(summary).map(([kind, metrics]) => `
+      <h3>${MODEL_NAMES[kind]}</h3><p><strong>${percent(metrics.accuracy.mean)} de respostas corretas, em média.</strong><br>
+      Aproximadamente ${(metrics.accuracy.mean * 100).toFixed(0)} acertos a cada 100 documentos de teste.</p>
+      <details><summary>Variação entre os três treinamentos e F1</summary>
+        <p>Desvio padrão da acurácia: ${(metrics.accuracy.std_sample * 100).toFixed(2)} pontos percentuais.
+        F1 macro: ${percent(metrics.macro_f1.mean)}. Essa medida equilibra os erros de cada categoria, dando o mesmo peso às sete categorias.</p>
+      </details>`).join('');
+  } catch (_) {
+    document.querySelector('#summary').textContent = 'Não foi possível carregar o resultado geral. Atualize a página para tentar novamente.';
+  }
+}
+
+// Os exemplos mudam apenas o documento consultado; nenhum deles retreina a rede.
+document.querySelector('#form').addEventListener('submit', predict);
+for (const button of document.querySelectorAll('[data-node]')) {
+  button.addEventListener('click', () => { document.querySelector('#node').value = button.dataset.node; predict(); });
+}
+document.querySelector('#categories').innerHTML = CATEGORIES.map((category, index) =>
+  `<dt>${category.name} · código ${index}</dt><dd>${category.explanation} Nome original: ${category.original}.</dd>`).join('');
+loadSummary();
+predict();
+</script>
+</body>
+</html>
