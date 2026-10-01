@@ -36,6 +36,17 @@ Ablações, outros splits e reprodução integral das tabelas são trabalhos fut
 
 ## Versionamento no GitHub
 
+## Slides para apresentação
+
+- [x] Gerar PowerPoint editável e PDF compacto de cinco páginas, com roteiro de fala.
+- [x] Incluir artigo de 2023, Cora, código, modificações e resultados reais.
+- [x] Capturar a aplicação em execução e incluir o exemplo 1713 nos slides.
+- [x] Verificar cinco páginas no PDF e ausência de transbordamento no HTML.
+- Arquivos: `outputs/apresentacao-ordered-gnn/` na raiz do workspace.
+- Importação no Canva pendente: integração ainda não conectada.
+
+## Registro do Git flow
+
 - Feature: `feature/ordered-gnn-cora`, criada a partir de `develop`.
 - Base sincronizada com o trabalho anterior já integrado em `origin/main`.
 - Validação anterior ao commit: quatro testes passaram e seis checkpoints auditados.
