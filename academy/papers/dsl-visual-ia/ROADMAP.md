@@ -1,5 +1,25 @@
 # Roadmap — DSL visual para orquestração de IA
 
+## Imagens dos guias no GitHub — 01/10/2026
+
+- [x] Identificar que a regra global de `outputs/` excluía as imagens incorporadas aos Markdown.
+- [x] Criar exceções restritas para o mapa da área e os PNGs de figuras e tabelas dos três estudos detalhados.
+- [x] Atualizar a documentação sobre quais artefatos acompanham os guias no Git.
+- [x] Incluir as imagens junto aos guias para versionamento; conferir a existência e a inclusão permitida das 51 imagens referenciadas.
+- [ ] Estudante conferir a renderização no GitHub após o envio da branch `dsl-visual`.
+
+## Adaptação do guia ao domínio de slides — 01/10/2026
+
+- [x] Registrar e preservar em `estudos/01-fundamentos/refs/` o texto e a imagem fornecidos pelo estudante antes da adaptação.
+- [x] Adaptar `GUIA-INICIAL.md` para análise e melhoria de slides, com conceitos, metamodelo, tipos e contratos dos blocos.
+- [x] Incorporar a imagem do fluxo e explicar decisão, estado, correção, revalidação e saída com pendências ao atingir o limite.
+- [x] Detalhar desenvolvimento incremental e preservar vídeos, trilha de estudo e navegação para os artigos.
+- [ ] Validar com o orientador o recorte proposto e o público da linguagem.
+- [ ] Definir formato de entrada, critérios de análise com referências, gravidade dos problemas e alterações suportadas.
+- [ ] Especificar portas, estado e regras de execução; implementar e avaliar as etapas incrementalmente.
+
+O guia descreve uma proposta, não funcionalidades implementadas nem qualidade de correção já demonstrada. O domínio proposto passa a ser slides; as pendências históricas sobre delimitação devem ser lidas à luz desse recorte.
+
 ## Apresentação das palavras-chave — 30/09/2026
 
 - [x] Confirmar o foco com o estudante: descrever palavras-chave do tema, incluindo a organização dos blocos na tela.

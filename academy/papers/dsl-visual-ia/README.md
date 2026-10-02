@@ -44,4 +44,4 @@ dsl-visual-ia/
         └── outputs/              # Texto extraído, páginas e recortes
 ```
 
-Os links relativos entre os materiais foram ajustados para esta organização. Os arquivos em `outputs/` são artefatos locais; acompanham a leitura no workspace, embora estejam ignorados pelo Git conforme a convenção existente.
+Os links relativos entre os materiais foram ajustados para esta organização. As imagens incorporadas aos guias (o mapa da área e os recortes de figuras e tabelas) têm exceções no `.gitignore` para acompanhar os Markdown no GitHub. Os demais arquivos em `outputs/`, incluindo as apresentações, permanecem artefatos locais.

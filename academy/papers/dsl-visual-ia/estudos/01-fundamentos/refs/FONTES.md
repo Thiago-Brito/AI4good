@@ -19,7 +19,16 @@ Consulta: 27/09/2026. Registro criado antes da redação do guia. Fontes conceit
 | V5 | Langflow. [Canal de vídeos](https://www.youtube.com/@Langflow). | Canal indicado pelo site oficial, para observar exemplos de fluxos. |
 | F9 | Rodrigo Nader/Langflow. [Langflow Micro Tutorials — Multiple Sources](https://www.langflow.org/blog/langflow-micro-tutorials-multiple-sources/), 2023. | Exemplo histórico de composição de fontes; página também aponta para o canal oficial. |
 
-## Limites da verificação
+## Adaptação ao domínio de slides — 01/10/2026
+
+Registro anterior à adaptação do guia. Materiais fornecidos pelo estudante como referência de conteúdo e organização:
+
+- [Texto original da proposta](PROPOSTA-SLIDES-ORIGINAL.txt): DSL visual aplicada à análise e melhoria de slides, vocabulário, metamodelo, decisões e ciclo controlado. Autoria externa não informada.
+- [Fluxo principal da DSL](fluxo-principal-slides.png): imagem recebida, preservada sem alterações. Mostra extração, três análises, consolidação, decisão, correção e revalidação.
+
+Esses materiais orientam o recorte proposto; não são fontes de evidência experimental. O guia mantém as referências conceituais já registradas e trata blocos, tipos, critérios e limite de três correções como propostas a validar. A imagem simplifica as conexões de dados e não explicita a saída ao esgotar tentativas; o texto adaptado esclarece essas duas situações. Não houve nova busca bibliográfica nesta adaptação.
+
+## Limites da consulta original
 
 - As páginas, metadados e descrições disponíveis foram consultados; os vídeos não foram assistidos integralmente. Não foram verificados duração, legendas ou timestamps.
 - Links de vídeo direto e links de canal estão diferenciados no guia. Materiais antigos ajudam com conceitos, mas suas interfaces podem divergir das atuais.

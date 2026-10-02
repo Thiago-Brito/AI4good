@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="540" viewBox="0 0 1080 540" role="img" aria-labelledby="title desc">
+  <title id="title">Mapa da área: DSL visual para orquestração de IA</title>
+  <desc id="desc">Três áreas convergem para o tema: linguagens e modelagem, orquestração de IA e interação visual. O centro representa a interseção conceitual.</desc>
+  <rect width="1080" height="540" fill="#f8fafc"/>
+  <g font-family="Segoe UI, Arial, sans-serif" text-anchor="middle">
+    <text x="540" y="48" font-size="27" fill="#0f172a" font-weight="700">Onde fica a sua pesquisa?</text>
+    <g stroke="#64748b" stroke-width="3"><path d="M215 235 L440 340"/><path d="M540 235 L540 320"/><path d="M865 235 L640 340"/></g>
+    <rect x="45" y="95" width="300" height="140" rx="18" fill="#dbeafe" stroke="#2563eb"/>
+    <rect x="390" y="95" width="300" height="140" rx="18" fill="#dcfce7" stroke="#16a34a"/>
+    <rect x="735" y="95" width="300" height="140" rx="18" fill="#fef3c7" stroke="#d97706"/>
+    <g fill="#0f172a" font-size="22" font-weight="600"><text x="195" y="136">Linguagens e modelagem</text><text x="540" y="136">Orquestração de IA</text><text x="885" y="136">Interação visual</text></g>
+    <g fill="#334155" font-size="18"><text x="195" y="176">Conceitos, tipos e regras</text><text x="195" y="205">O que pode ser expresso?</text><text x="540" y="176">Modelos, dados e execução</text><text x="540" y="205">Como o fluxo funciona?</text><text x="885" y="176">Blocos, conexões e feedback</text><text x="885" y="205">Como a pessoa entende?</text></g>
+    <rect x="290" y="320" width="500" height="125" rx="22" fill="#0f172a"/>
+    <text x="540" y="353" font-size="15" fill="#cbd5e1">INTERSEÇÃO DAS TRÊS ÁREAS</text>
+    <text x="540" y="386" font-size="25" font-weight="700" fill="white">DSL visual para orquestração de IA</text>
+    <text x="540" y="417" font-size="18" fill="#e2e8f0">Especificar • validar • executar • compreender</text>
+    <text x="540" y="500" font-size="16" fill="#475569">Mapa didático próprio — recorte inicial, não uma taxonomia exaustiva.</text>
+  </g>
+</svg>

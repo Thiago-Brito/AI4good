@@ -10,6 +10,25 @@
 # Generated outputs
 outputs/
 **/outputs/
+# Images embedded in the DSL study guides accompany the Markdown files.
+!/academy/papers/dsl-visual-ia/estudos/01-fundamentos/outputs/
+/academy/papers/dsl-visual-ia/estudos/01-fundamentos/outputs/*
+!/academy/papers/dsl-visual-ia/estudos/01-fundamentos/outputs/diagrama-area.svg
+!/academy/papers/dsl-visual-ia/estudos/02-workflows-ml/outputs/
+/academy/papers/dsl-visual-ia/estudos/02-workflows-ml/outputs/*
+!/academy/papers/dsl-visual-ia/estudos/02-workflows-ml/outputs/figuras-tabelas/
+/academy/papers/dsl-visual-ia/estudos/02-workflows-ml/outputs/figuras-tabelas/*
+!/academy/papers/dsl-visual-ia/estudos/02-workflows-ml/outputs/figuras-tabelas/*.png
+!/academy/papers/dsl-visual-ia/estudos/03-chainforge/outputs/
+/academy/papers/dsl-visual-ia/estudos/03-chainforge/outputs/*
+!/academy/papers/dsl-visual-ia/estudos/03-chainforge/outputs/figuras-tabelas/
+/academy/papers/dsl-visual-ia/estudos/03-chainforge/outputs/figuras-tabelas/*
+!/academy/papers/dsl-visual-ia/estudos/03-chainforge/outputs/figuras-tabelas/*.png
+!/academy/papers/dsl-visual-ia/estudos/04-instructpipe/outputs/
+/academy/papers/dsl-visual-ia/estudos/04-instructpipe/outputs/*
+!/academy/papers/dsl-visual-ia/estudos/04-instructpipe/outputs/figuras-tabelas/
+/academy/papers/dsl-visual-ia/estudos/04-instructpipe/outputs/figuras-tabelas/*
+!/academy/papers/dsl-visual-ia/estudos/04-instructpipe/outputs/figuras-tabelas/*.png
 **/*.aux
 **/*.bbl
 **/*.blg

@@ -1,0 +1,424 @@
+# DSL visual para orquestração de IA aplicada à análise e melhoria de slides
+
+## 1. Ideia geral do projeto
+
+O trabalho pretende investigar uma DSL visual voltada à construção e execução de fluxos de análise e melhoria de slides utilizando inteligência artificial.
+
+A ideia não é desenvolver apenas uma ferramenta que analisa apresentações, mas estudar como esse processo pode ser representado por uma linguagem visual própria, composta por blocos, conexões, entradas, saídas, tipos de dados e regras de execução.
+
+O domínio escolhido para demonstrar essa linguagem será a análise de slides. Assim, o usuário poderá montar visualmente um fluxo que recebe um slide, executa diferentes análises, toma decisões com base nos resultados e, em determinadas situações, realiza uma correção e executa novamente a análise.
+
+O foco principal do trabalho está, portanto, na linguagem e na forma como ela representa a orquestração das etapas.
+
+## 2. O que é uma DSL
+
+DSL significa Domain-Specific Language, ou linguagem específica de domínio.
+
+Diferentemente de linguagens de propósito geral, como Java ou Python, uma DSL é criada para resolver um conjunto mais específico de problemas.
+
+SQL, por exemplo, é uma linguagem especializada na consulta e manipulação de dados.
+
+No contexto deste trabalho, o domínio será a análise e melhoria de slides com apoio de IA.
+
+A linguagem poderá possuir conceitos próprios desse domínio, como:
+
+- Entrada de Slide;
+- Analisar Hierarquia Visual;
+- Analisar Layout;
+- Analisar Texto;
+- Consolidar Problemas;
+- Decisão;
+- Gerar Correção;
+- Aplicar Correção;
+- Entregar Resultado.
+
+Esses elementos fazem parte do vocabulário da linguagem.
+
+## 3. O que torna a DSL visual
+
+A DSL será visual porque os programas ou fluxos serão construídos por meio de elementos gráficos, principalmente blocos e conexões.
+
+Entretanto, a existência de caixas e setas não é suficiente para caracterizar uma linguagem.
+
+Cada elemento precisa possuir um significado definido.
+
+Por exemplo, um bloco chamado `Analisar Layout` pode receber um dado do tipo `Slide` e produzir uma `Lista de Problemas Visuais`.
+
+Uma conexão entre dois blocos também deve seguir regras. Se um bloco produz `Texto` e o próximo espera receber um `Slide`, a ligação deve ser considerada inválida.
+
+Isso diferencia a DSL de um simples editor de fluxogramas.
+
+## 4. Linguagem, editor e motor de execução
+
+O projeto pode ser entendido em três partes principais.
+
+A linguagem define as regras. Ela estabelece quais blocos existem, quais entradas e saídas possuem, quais tipos de dados são utilizados e quais conexões são permitidas.
+
+O editor visual é a interface utilizada para construir os fluxos. Nele, o usuário poderá posicionar blocos, realizar conexões e configurar parâmetros.
+
+O motor de execução é responsável por executar o fluxo construído. Ele determina quais blocos devem ser executados, transporta os dados entre eles e controla decisões e repetições.
+
+De forma resumida:
+
+**a linguagem define, o editor permite montar e o motor executa.**
+
+## 5. Orquestração de IA
+
+Neste trabalho, orquestração significa coordenar diferentes operações para que uma tarefa seja realizada do início ao fim.
+
+A orquestração determina:
+
+- qual etapa executa primeiro;
+- quais etapas dependem de outras;
+- quais dados passam entre os blocos;
+- quais operações podem executar em paralelo;
+- qual caminho deve ser seguido após uma decisão;
+- o que acontece quando uma análise encontra um problema;
+- quando uma etapa deve ser executada novamente;
+- quando o fluxo deve terminar.
+
+Por exemplo:
+
+`Slide → Analisar → Verificar Resultado → Corrigir → Analisar novamente`
+
+Nesse caso, a IA é utilizada dentro de determinadas operações, mas a DSL é responsável por representar como essas operações se relacionam.
+
+## 6. Elementos básicos da linguagem
+
+### Nó
+
+Um nó representa um bloco do fluxo.
+
+Exemplos:
+
+- Analisar Layout;
+- Analisar Hierarquia;
+- Gerar Correção.
+
+### Porta
+
+A porta é o ponto de entrada ou saída de um bloco.
+
+Um bloco `Analisar Layout`, por exemplo, pode possuir:
+
+Entrada:
+
+`slide: Slide`
+
+Saída:
+
+`problemas: Lista<ProblemaVisual>`
+
+### Aresta ou conexão
+
+A conexão liga uma porta de saída de um bloco a uma porta de entrada de outro.
+
+Ela pode representar a passagem de dados e também influenciar a ordem de execução.
+
+### Tipo
+
+O tipo define que espécie de informação pode passar por uma conexão.
+
+Alguns tipos possíveis no projeto são:
+
+- Slide;
+- DadosDoSlide;
+- ListaDeProblemas;
+- SugestaoDeCorrecao;
+- Relatorio.
+
+Os tipos permitem detectar conexões inválidas ainda durante a construção do fluxo.
+
+## 7. Fluxo de dados e fluxo de controle
+
+O fluxo de dados representa o caminho percorrido pelas informações.
+
+Por exemplo:
+
+`Slide → Dados extraídos → Problemas encontrados → Sugestões`
+
+Já o fluxo de controle representa a ordem e as condições de execução.
+
+Por exemplo:
+
+`Analisar → verificar condição → corrigir ou finalizar`
+
+Esses dois conceitos podem coexistir dentro da DSL.
+
+## 8. Estado
+
+Estado é o conjunto de informações mantidas durante a execução de um fluxo.
+
+No projeto, o estado poderia guardar:
+
+- o slide original;
+- a versão atual do slide;
+- os problemas encontrados;
+- sugestões geradas;
+- número de tentativas de correção;
+- resultados das análises anteriores.
+
+Isso é especialmente importante quando existe um ciclo de correção e revalidação.
+
+## 9. Ciclos e DAGs
+
+Um fluxo puramente sequencial pode formar um DAG, um grafo dirigido sem ciclos.
+
+Exemplo:
+
+`Entrada → Análise → Resultado`
+
+Entretanto, o projeto pretende também explorar a possibilidade de repetição.
+
+Por exemplo:
+
+`Análise → Problema encontrado → Correção → Nova análise`
+
+Nesse caso existe um ciclo.
+
+Para evitar execução infinita, é necessário definir uma condição de parada.
+
+Algumas possibilidades são:
+
+- parar quando não existirem mais problemas considerados críticos;
+- parar quando determinado critério mínimo for atingido;
+- parar após um número máximo de tentativas.
+
+No protótipo, uma solução simples seria permitir até três ciclos de correção.
+
+## 10. Metamodelo
+
+O metamodelo define a estrutura básica da própria DSL.
+
+Um metamodelo inicial poderia estabelecer que:
+
+- um Fluxo contém Nós;
+- um Nó possui Portas;
+- uma Porta possui um Tipo;
+- uma Conexão liga uma Porta de Saída a uma Porta de Entrada;
+- apenas tipos compatíveis podem ser conectados;
+- determinados Nós podem possuir mais de uma saída;
+- uma Decisão pode selecionar caminhos diferentes;
+- um fluxo pode possuir ciclos desde que exista uma condição de parada.
+
+O metamodelo não descreve apenas um fluxo específico. Ele descreve as regras utilizadas para construir qualquer fluxo válido dentro da linguagem.
+
+## 11. Fluxo principal pensado para o protótipo
+
+Uma possível execução seria:
+
+`Entrada do Slide`
+
+↓
+
+`Extrair Elementos`
+
+↓
+
+Executar análises específicas:
+
+- Hierarquia Visual;
+- Layout;
+- Texto.
+
+↓
+
+`Consolidar Análise`
+
+↓
+
+`Está adequado?`
+
+Se sim:
+
+`Entregar Resultado`
+
+Se não:
+
+`Gerar Correção`
+
+↓
+
+`Aplicar Correção`
+
+↓
+
+voltar para:
+
+`Extrair Elementos / Analisar novamente`
+
+Esse ciclo continua até o slide atender aos critérios definidos ou atingir o limite de tentativas.
+
+## 12. Blocos que podem existir na DSL
+
+Uma primeira versão da linguagem poderia conter os seguintes blocos:
+
+### Entrada do Slide
+
+Recebe o arquivo ou slide utilizado no fluxo.
+
+### Extrair Elementos
+
+Obtém informações como:
+
+- caixas de texto;
+- imagens;
+- tamanho dos objetos;
+- coordenadas;
+- estilos;
+- tamanho das fontes;
+- conteúdo textual.
+
+### Analisar Hierarquia Visual
+
+Verifica se os elementos considerados mais importantes possuem destaque visual adequado.
+
+### Analisar Layout
+
+Analisa aspectos como:
+
+- alinhamento;
+- espaçamento;
+- distribuição;
+- organização espacial.
+
+### Analisar Texto
+
+Pode verificar aspectos mais simples como:
+
+- excesso de texto;
+- quantidade de informação;
+- legibilidade;
+- concisão.
+
+### Consolidar Análise
+
+Junta os resultados produzidos pelos diferentes blocos de análise.
+
+### Decisão
+
+Avalia uma condição e seleciona o próximo caminho do fluxo.
+
+Exemplo:
+
+`existem problemas críticos?`
+
+### Gerar Correção
+
+Utiliza IA para produzir uma sugestão de alteração.
+
+### Aplicar Correção
+
+Realiza uma alteração no slide ou produz uma nova versão.
+
+### Limite de Tentativas
+
+Controla quantas vezes o fluxo pode repetir determinada etapa.
+
+### Gerar Relatório
+
+Produz um resumo dos problemas encontrados, alterações realizadas e resultado final.
+
+### Saída
+
+Entrega o slide e os resultados do fluxo ao usuário.
+
+## 13. Desenvolvimento incremental
+
+Para reduzir o risco do projeto, o protótipo pode ser desenvolvido em etapas.
+
+### Etapa 1 — fluxo linear
+
+Primeiro:
+
+`Entrada → Análise → Resultado`
+
+Essa etapa permite validar:
+
+- blocos;
+- conexões;
+- tipos;
+- execução.
+
+### Etapa 2 — decisão
+
+Depois:
+
+`Entrada → Análise → Decisão → Resultado`
+
+Aqui é possível demonstrar caminhos diferentes de execução.
+
+### Etapa 3 — correção e revalidação
+
+Por fim:
+
+`Análise → Decisão → Correção → Nova análise`
+
+Essa etapa demonstra que a DSL consegue representar ciclos.
+
+Essa abordagem permite que o TCC continue apresentando uma contribuição mesmo que a implementação do ciclo completo precise ser reduzida.
+
+## 14. Escopo do trabalho
+
+O trabalho deverá abordar:
+
+- definição de uma DSL visual;
+- metamodelo básico;
+- nós e portas;
+- sistema simples de tipos;
+- regras de conexão;
+- representação visual dos fluxos;
+- execução dos fluxos;
+- sequência de operações;
+- decisões condicionais;
+- ciclo simples de correção e revalidação;
+- editor visual básico;
+- aplicação da DSL à análise de slides;
+- conjunto delimitado de critérios visuais.
+
+Os critérios iniciais podem incluir:
+
+- hierarquia visual;
+- alinhamento;
+- organização espacial;
+- excesso de texto e legibilidade.
+
+## 15. O que fica fora do escopo
+
+Não é objetivo do trabalho:
+
+- treinar um modelo de linguagem do zero;
+- desenvolver um novo LLM;
+- criar um sistema genérico para qualquer tipo de workflow de IA;
+- criar um concorrente completo do PowerPoint;
+- cobrir todos os princípios de design gráfico;
+- garantir que qualquer slide seja automaticamente transformado em um slide perfeito;
+- corrigir todos os possíveis problemas de uma apresentação;
+- desenvolver agentes autônomos complexos;
+- realizar um estudo de usabilidade de grande escala.
+
+Esses elementos podem ser citados como possibilidades futuras, mas não são necessários para demonstrar a proposta principal.
+
+## 16. Qual é a contribuição esperada
+
+A principal contribuição não precisa ser um novo modelo de inteligência artificial.
+
+O trabalho pretende investigar como uma linguagem visual específica de domínio pode representar e executar fluxos que combinam análise, inteligência artificial, decisões e repetição.
+
+Os slides funcionam como um domínio concreto e suficientemente limitado para experimentar essas ideias.
+
+Assim, a questão central deixa de ser:
+
+“Como criar uma IA que faça slides melhores?”
+
+e passa a ser algo mais próximo de:
+
+“Como uma DSL visual pode representar e orquestrar fluxos de análise e melhoria de slides utilizando inteligência artificial?”
+
+## 17. Resumo do projeto
+
+Em uma frase, a proposta pode ser apresentada como:
+
+**Definir e prototipar uma DSL visual para representar e executar fluxos de análise e melhoria de slides com inteligência artificial, utilizando blocos tipados, regras de conexão, decisões e um ciclo controlado de correção e revalidação.**
+
+O foco não é produzir apresentações perfeitas automaticamente, mas demonstrar como esse tipo de processo pode ser modelado, validado e executado por meio de uma linguagem visual específica de domínio.
