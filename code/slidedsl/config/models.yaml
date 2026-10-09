@@ -1,0 +1,7 @@
+models:
+  qwen3:0.6b: {provider: ollama, temperature: 0, seed: 42}
+  qwen3:4b: {provider: ollama, temperature: 0, seed: 42}
+  gpt-4.1-mini: {provider: openai, temperature: 0, seed: null}
+  gpt-4.1: {provider: openai, temperature: 0, seed: null}
+timeout_seconds: 300
+repair_maximum: 2

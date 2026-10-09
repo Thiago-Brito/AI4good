@@ -1,0 +1,1021 @@
+{
+  "sha": "8c0452b32b6b8752ccd4293622557485cca4df3a",
+  "url": "https://api.github.com/repos/lsfcin/spacemantics/git/trees/8c0452b32b6b8752ccd4293622557485cca4df3a",
+  "tree": [
+    {
+      "path": ".gitignore",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5cb371caed14ca0a8c53f7992d065eb250f4d58c",
+      "size": 127,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/5cb371caed14ca0a8c53f7992d065eb250f4d58c"
+    },
+    {
+      "path": "CONTEXT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "53871e3d3f52d00c6986b5e98c7ff098ff2512fe",
+      "size": 3984,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/53871e3d3f52d00c6986b5e98c7ff098ff2512fe"
+    },
+    {
+      "path": "ISSUES.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "530747b7f8955ee31c54996085c52115fa016cdd",
+      "size": 7508,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/530747b7f8955ee31c54996085c52115fa016cdd"
+    },
+    {
+      "path": "LICENSE",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2820f39dd0b8e306e3555e3d21e9ff98dfb0d22f",
+      "size": 1073,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/2820f39dd0b8e306e3555e3d21e9ff98dfb0d22f"
+    },
+    {
+      "path": "Makefile",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0f1ea2a2d783bd6fd48360953de3fc20eaaafa47",
+      "size": 234,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/0f1ea2a2d783bd6fd48360953de3fc20eaaafa47"
+    },
+    {
+      "path": "README.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "387b211d663ffa31ed37d8b4e931029f2a7f397f",
+      "size": 2317,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/387b211d663ffa31ed37d8b4e931029f2a7f397f"
+    },
+    {
+      "path": "ROADMAP.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c140f7589cd1e5f8dddd0118043858bf511f1751",
+      "size": 11777,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/c140f7589cd1e5f8dddd0118043858bf511f1751"
+    },
+    {
+      "path": "adapters",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "462970f62c05817dbf60c770baa66e14850a89c4",
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/trees/462970f62c05817dbf60c770baa66e14850a89c4"
+    },
+    {
+      "path": "adapters/CONTEXT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5ced3f80db82d851bcdfab97dfe318f4811f8e51",
+      "size": 2849,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/5ced3f80db82d851bcdfab97dfe318f4811f8e51"
+    },
+    {
+      "path": "adapters/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "09935c5113620f41f735c429f4b86daa03cfbb5f",
+      "size": 280,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/09935c5113620f41f735c429f4b86daa03cfbb5f"
+    },
+    {
+      "path": "adapters/__main__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "aa63bdd3477fd13786823c2b19a5efe53c3f1632",
+      "size": 700,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/aa63bdd3477fd13786823c2b19a5efe53c3f1632"
+    },
+    {
+      "path": "adapters/__main__.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "40199097e57c2b479c78d55b7144afa18fbffa07",
+      "size": 105,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/40199097e57c2b479c78d55b7144afa18fbffa07"
+    },
+    {
+      "path": "adapters/adapters",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "ba725f7f64aff089d764453a38ff48ec8df372ad",
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/trees/ba725f7f64aff089d764453a38ff48ec8df372ad"
+    },
+    {
+      "path": "adapters/adapters/__init__.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6e1e71b27ef6ab143e87cd69e0d3e1df36d0f155",
+      "size": 191,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/6e1e71b27ef6ab143e87cd69e0d3e1df36d0f155"
+    },
+    {
+      "path": "adapters/adapters/__main__.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "40199097e57c2b479c78d55b7144afa18fbffa07",
+      "size": 105,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/40199097e57c2b479c78d55b7144afa18fbffa07"
+    },
+    {
+      "path": "adapters/adapters/svg.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "12e6b37ed9ae55dd4fc2736af405e66c419b2ec0",
+      "size": 406,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/12e6b37ed9ae55dd4fc2736af405e66c419b2ec0"
+    },
+    {
+      "path": "adapters/adapters/svg_parse.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "94459713ca4b61873ce29987e065aa2f95f86db1",
+      "size": 219,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/94459713ca4b61873ce29987e065aa2f95f86db1"
+    },
+    {
+      "path": "adapters/svg.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "47aab68575df5538f5b473c5c7623e564198e15c",
+      "size": 6638,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/47aab68575df5538f5b473c5c7623e564198e15c"
+    },
+    {
+      "path": "adapters/svg.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "12e6b37ed9ae55dd4fc2736af405e66c419b2ec0",
+      "size": 406,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/12e6b37ed9ae55dd4fc2736af405e66c419b2ec0"
+    },
+    {
+      "path": "adapters/svg_parse.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "017f80228c497b396e5ab76ae06f28a5a799d388",
+      "size": 3289,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/017f80228c497b396e5ab76ae06f28a5a799d388"
+    },
+    {
+      "path": "adapters/svg_parse.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "94459713ca4b61873ce29987e065aa2f95f86db1",
+      "size": 219,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/94459713ca4b61873ce29987e065aa2f95f86db1"
+    },
+    {
+      "path": "bench",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "7646430b368becb4ee1c33b0c545db1058990d66",
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/trees/7646430b368becb4ee1c33b0c545db1058990d66"
+    },
+    {
+      "path": "bench/CONTEXT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b621da8370ad29c5c5d70630ab8936f9e63e2998",
+      "size": 6404,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/b621da8370ad29c5c5d70630ab8936f9e63e2998"
+    },
+    {
+      "path": "bench/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "19886e112ca9bd9952d76ee80b7d88aa6f56ce75",
+      "size": 517,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/19886e112ca9bd9952d76ee80b7d88aa6f56ce75"
+    },
+    {
+      "path": "bench/arms.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1452f3bde9ac7ec64633068cf3074d6d0be6b4be",
+      "size": 4202,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/1452f3bde9ac7ec64633068cf3074d6d0be6b4be"
+    },
+    {
+      "path": "bench/arms.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4c1b64bb8480123d3d13aba5672786d6ad1d7c41",
+      "size": 1026,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/4c1b64bb8480123d3d13aba5672786d6ad1d7c41"
+    },
+    {
+      "path": "bench/bench",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "fa73bc28022d8b533148a89f52152dba2cb97b28",
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/trees/fa73bc28022d8b533148a89f52152dba2cb97b28"
+    },
+    {
+      "path": "bench/bench/__init__.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "5bf94db4665278b75203bfe3ddbbdba7a1114943",
+      "size": 465,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/5bf94db4665278b75203bfe3ddbbdba7a1114943"
+    },
+    {
+      "path": "bench/bench/arms.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4c1b64bb8480123d3d13aba5672786d6ad1d7c41",
+      "size": 1026,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/4c1b64bb8480123d3d13aba5672786d6ad1d7c41"
+    },
+    {
+      "path": "bench/bench/cli_transport.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c0bf0c667a7e7d4500d784953a251bd8b6946d6f",
+      "size": 264,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/c0bf0c667a7e7d4500d784953a251bd8b6946d6f"
+    },
+    {
+      "path": "bench/bench/model_client.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e781a40f90d15b4ed63d1d960ac255429b3afbc2",
+      "size": 399,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/e781a40f90d15b4ed63d1d960ac255429b3afbc2"
+    },
+    {
+      "path": "bench/bench/prompts.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c97da9bb7d480beff391a620790fef57cbf2d966",
+      "size": 305,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/c97da9bb7d480beff391a620790fef57cbf2d966"
+    },
+    {
+      "path": "bench/bench/report.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "239204cff6c18719cce5541d1851b30eedf6cbba",
+      "size": 97,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/239204cff6c18719cce5541d1851b30eedf6cbba"
+    },
+    {
+      "path": "bench/bench/run.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9f41dbe82bc8902ed2911293e360f1763616def9",
+      "size": 311,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/9f41dbe82bc8902ed2911293e360f1763616def9"
+    },
+    {
+      "path": "bench/bench/scoring.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "34c7d7ea2f06d4433a8e83a32475a5cdfc0610e2",
+      "size": 524,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/34c7d7ea2f06d4433a8e83a32475a5cdfc0610e2"
+    },
+    {
+      "path": "bench/cli_transport.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fac5415c446008c551186296044e3040ca4855ec",
+      "size": 3162,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/fac5415c446008c551186296044e3040ca4855ec"
+    },
+    {
+      "path": "bench/cli_transport.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c0bf0c667a7e7d4500d784953a251bd8b6946d6f",
+      "size": 264,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/c0bf0c667a7e7d4500d784953a251bd8b6946d6f"
+    },
+    {
+      "path": "bench/model_client.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "13bc943f5cb555e492b3604a5bc4d7ea359784a6",
+      "size": 3713,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/13bc943f5cb555e492b3604a5bc4d7ea359784a6"
+    },
+    {
+      "path": "bench/model_client.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "04a0f9606f6ae5ceee05a84eb132516603ae61b3",
+      "size": 263,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/04a0f9606f6ae5ceee05a84eb132516603ae61b3"
+    },
+    {
+      "path": "bench/prompts.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "deca29df1bcfebbecad8fbbba6ead68a7f07f63c",
+      "size": 4826,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/deca29df1bcfebbecad8fbbba6ead68a7f07f63c"
+    },
+    {
+      "path": "bench/prompts.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c97da9bb7d480beff391a620790fef57cbf2d966",
+      "size": 305,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/c97da9bb7d480beff391a620790fef57cbf2d966"
+    },
+    {
+      "path": "bench/report.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a29912d0f7890724ad69bd8bcdf8d5ec5323d789",
+      "size": 1716,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/a29912d0f7890724ad69bd8bcdf8d5ec5323d789"
+    },
+    {
+      "path": "bench/report.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "239204cff6c18719cce5541d1851b30eedf6cbba",
+      "size": 97,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/239204cff6c18719cce5541d1851b30eedf6cbba"
+    },
+    {
+      "path": "bench/results-claude-cli-haiku.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "07fec1a6748d0d5bf2b45451e5f57554d1739494",
+      "size": 5376,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/07fec1a6748d0d5bf2b45451e5f57554d1739494"
+    },
+    {
+      "path": "bench/results-claude-cli-sonnet.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2ebb91cdd55103eee04011a0490077f7512203a7",
+      "size": 5365,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/2ebb91cdd55103eee04011a0490077f7512203a7"
+    },
+    {
+      "path": "bench/results.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "398507b8a72ba8a9eefe31fb968fcdcbc2de0807",
+      "size": 3663,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/398507b8a72ba8a9eefe31fb968fcdcbc2de0807"
+    },
+    {
+      "path": "bench/run.log",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "cb67461531e89a0c08043ac469db41ef72567b87",
+      "size": 1322,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/cb67461531e89a0c08043ac469db41ef72567b87"
+    },
+    {
+      "path": "bench/run.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e2ce6fff23b5c2de1e3675fa5d2557be24c50c75",
+      "size": 5165,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/e2ce6fff23b5c2de1e3675fa5d2557be24c50c75"
+    },
+    {
+      "path": "bench/run.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9f41dbe82bc8902ed2911293e360f1763616def9",
+      "size": 311,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/9f41dbe82bc8902ed2911293e360f1763616def9"
+    },
+    {
+      "path": "bench/run_hard.log",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "df1372799dbbddd25ae2511e22b6b8abc82737aa",
+      "size": 930,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/df1372799dbbddd25ae2511e22b6b8abc82737aa"
+    },
+    {
+      "path": "bench/scoring.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c44b8008e5951337a3199f5a1fcc1c9e919d1267",
+      "size": 3435,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/c44b8008e5951337a3199f5a1fcc1c9e919d1267"
+    },
+    {
+      "path": "bench/scoring.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "34c7d7ea2f06d4433a8e83a32475a5cdfc0610e2",
+      "size": 524,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/34c7d7ea2f06d4433a8e83a32475a5cdfc0610e2"
+    },
+    {
+      "path": "bench/tasks.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1c41f62960d3ae62d42637c7f76521556a5d07ef",
+      "size": 9827,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/1c41f62960d3ae62d42637c7f76521556a5d07ef"
+    },
+    {
+      "path": "bench/tasks_2d.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ceee7fae24c41186ad7365dfb20f6cb2011b9144",
+      "size": 16945,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/ceee7fae24c41186ad7365dfb20f6cb2011b9144"
+    },
+    {
+      "path": "bench/tasks_hard.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6c41be6ec0b39b6a1f08087ef91236857de9af23",
+      "size": 9470,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/6c41be6ec0b39b6a1f08087ef91236857de9af23"
+    },
+    {
+      "path": "checker",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "ecd689ced01ef9b63144d9596a06ab3c01943494",
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/trees/ecd689ced01ef9b63144d9596a06ab3c01943494"
+    },
+    {
+      "path": "checker/CONTEXT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "775153d5f730c713fc385819139f75d234b5ee1b",
+      "size": 6506,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/775153d5f730c713fc385819139f75d234b5ee1b"
+    },
+    {
+      "path": "checker/__init__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4f79d2dc5a3f1336d272714ad74a5469f5c1eb40",
+      "size": 913,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/4f79d2dc5a3f1336d272714ad74a5469f5c1eb40"
+    },
+    {
+      "path": "checker/__main__.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "790acfd3a81d109d953ed465be5c53f35aa9792a",
+      "size": 213,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/790acfd3a81d109d953ed465be5c53f35aa9792a"
+    },
+    {
+      "path": "checker/__main__.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e87cc11fec82b425326ea1903d8aa8a5cc47d6a0",
+      "size": 30,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/e87cc11fec82b425326ea1903d8aa8a5cc47d6a0"
+    },
+    {
+      "path": "checker/allen.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "365742a153f787e86631ce0985b194109215eb31",
+      "size": 2149,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/365742a153f787e86631ce0985b194109215eb31"
+    },
+    {
+      "path": "checker/allen.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "7f4935a1cdf1f0be6a9beac9ece97d87e178c50b",
+      "size": 245,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/7f4935a1cdf1f0be6a9beac9ece97d87e178c50b"
+    },
+    {
+      "path": "checker/cli.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "36453d7d576d9a0db974ebe59f92d45ac5fabc1d",
+      "size": 1217,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/36453d7d576d9a0db974ebe59f92d45ac5fabc1d"
+    },
+    {
+      "path": "checker/cli.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b2afc106b73ea5e3e0793bb51decbcd617767ee2",
+      "size": 241,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/b2afc106b73ea5e3e0793bb51decbcd617767ee2"
+    },
+    {
+      "path": "checker/direction.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "22bd376caa00f6db0bff2ff59662261edd33a799",
+      "size": 4140,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/22bd376caa00f6db0bff2ff59662261edd33a799"
+    },
+    {
+      "path": "checker/direction.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "0dd450b137629ecaf1b0ff6107e47ed2bcdad0c2",
+      "size": 494,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/0dd450b137629ecaf1b0ff6107e47ed2bcdad0c2"
+    },
+    {
+      "path": "checker/evaluate.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f3b08deeea078e5fda6311fa7043e8d4275e3a56",
+      "size": 6823,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/f3b08deeea078e5fda6311fa7043e8d4275e3a56"
+    },
+    {
+      "path": "checker/evaluate.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b2b52a89ea8d1b57c32ad5dbd465f73671fe5637",
+      "size": 430,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/b2b52a89ea8d1b57c32ad5dbd465f73671fe5637"
+    },
+    {
+      "path": "checker/geometry.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "06d5ec22fb7749872a5bd6959f75e8c7f72f3e87",
+      "size": 2776,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/06d5ec22fb7749872a5bd6959f75e8c7f72f3e87"
+    },
+    {
+      "path": "checker/geometry.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b7f646e74d237ed2ee77713133d1cb712725a27d",
+      "size": 568,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/b7f646e74d237ed2ee77713133d1cb712725a27d"
+    },
+    {
+      "path": "checker/loader.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "576f7cad6c7a293071aeae059e8b0644f1a3c47e",
+      "size": 5017,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/576f7cad6c7a293071aeae059e8b0644f1a3c47e"
+    },
+    {
+      "path": "checker/loader.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9600a5733cf8f00546ec72abc58b7ee6923ee74c",
+      "size": 437,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/9600a5733cf8f00546ec72abc58b7ee6923ee74c"
+    },
+    {
+      "path": "checker/metrics.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "591bfb4a300ba94dc330804a10b710ca506e02a0",
+      "size": 4185,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/591bfb4a300ba94dc330804a10b710ca506e02a0"
+    },
+    {
+      "path": "checker/metrics.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "d712a7a42e4228f9d4d9fe78072a74409492dfca",
+      "size": 807,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/d712a7a42e4228f9d4d9fe78072a74409492dfca"
+    },
+    {
+      "path": "checker/rcc8.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bbec23371665789452244175e3646498e32058b2",
+      "size": 2673,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/bbec23371665789452244175e3646498e32058b2"
+    },
+    {
+      "path": "checker/rcc8.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "171789729ddb20f75ed5d3825d3af77e53653b27",
+      "size": 241,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/171789729ddb20f75ed5d3825d3af77e53653b27"
+    },
+    {
+      "path": "checker/report.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "183124f1fb946960c81257dffde04a7f2b863a5a",
+      "size": 2055,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/183124f1fb946960c81257dffde04a7f2b863a5a"
+    },
+    {
+      "path": "checker/report.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "af1fbd9ace097d4f39fa57d66c3f65526d2e4bdf",
+      "size": 573,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/af1fbd9ace097d4f39fa57d66c3f65526d2e4bdf"
+    },
+    {
+      "path": "checker/scene.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "bd72fcbbdc665e8994f13f6a8991e84c373d65a7",
+      "size": 5700,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/bd72fcbbdc665e8994f13f6a8991e84c373d65a7"
+    },
+    {
+      "path": "checker/scene.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "734d4bad3c462b89bcf071f023e7f8e4b25f0075",
+      "size": 1855,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/734d4bad3c462b89bcf071f023e7f8e4b25f0075"
+    },
+    {
+      "path": "checker/types.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8c17c546da7418a21a57ed2a7720c3977bc96924",
+      "size": 2939,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/8c17c546da7418a21a57ed2a7720c3977bc96924"
+    },
+    {
+      "path": "checker/types.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "1e9705360e78cbda9402b0b87f3dce3fd151ddb8",
+      "size": 437,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/1e9705360e78cbda9402b0b87f3dce3fd151ddb8"
+    },
+    {
+      "path": "checker/units.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a58f8edf615053bc4e22d116b2f81b36821faf56",
+      "size": 4457,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/a58f8edf615053bc4e22d116b2f81b36821faf56"
+    },
+    {
+      "path": "checker/units.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "39ac3c9129c57c6bfca2c6934e4eab6590c3905f",
+      "size": 780,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/39ac3c9129c57c6bfca2c6934e4eab6590c3905f"
+    },
+    {
+      "path": "checker/vecmath.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b8b3b60ebd899534bff8fcfc6c8705d6c9107f58",
+      "size": 2578,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/b8b3b60ebd899534bff8fcfc6c8705d6c9107f58"
+    },
+    {
+      "path": "checker/vecmath.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b4196250253ef693d7194d1f99c407637aee6611",
+      "size": 646,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/b4196250253ef693d7194d1f99c407637aee6611"
+    },
+    {
+      "path": "dsl",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "2ebb96f6f7657f68a180c3b07346c5a384bb9d2e",
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/trees/2ebb96f6f7657f68a180c3b07346c5a384bb9d2e"
+    },
+    {
+      "path": "dsl/CHECKABILITY.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2d55e9176cd000efdcb4d4523ad53712704679e3",
+      "size": 6376,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/2d55e9176cd000efdcb4d4523ad53712704679e3"
+    },
+    {
+      "path": "dsl/CONFLICTS.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "74ef53847743c8c166796945f882ed04cd415e47",
+      "size": 8112,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/74ef53847743c8c166796945f882ed04cd415e47"
+    },
+    {
+      "path": "dsl/CONFORMANCE.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "169525c04b4437b4c0411e1e8b7688af10467782",
+      "size": 9377,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/169525c04b4437b4c0411e1e8b7688af10467782"
+    },
+    {
+      "path": "dsl/CONTEXT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3f92097f15f0d5842c7e4455107dd64e8b1b45b9",
+      "size": 3228,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/3f92097f15f0d5842c7e4455107dd64e8b1b45b9"
+    },
+    {
+      "path": "dsl/EXAMPLES.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9a605a971f45b803a296b1e8becc5abfaeb5609c",
+      "size": 9549,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/9a605a971f45b803a296b1e8becc5abfaeb5609c"
+    },
+    {
+      "path": "dsl/GRAMMAR-JSON.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9db0fcc77215bbb5f70d88db6b70e04cd89310de",
+      "size": 6755,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/9db0fcc77215bbb5f70d88db6b70e04cd89310de"
+    },
+    {
+      "path": "dsl/GRAMMAR-PROSE.ebnf",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "8895a0b68d63959f6df9be5551394bb4e21427f5",
+      "size": 11029,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/8895a0b68d63959f6df9be5551394bb4e21427f5"
+    },
+    {
+      "path": "dsl/INVENTORY-ADVISORY.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a7e7bbe163a20d25d7c45c39aafdb157adfa58dd",
+      "size": 3239,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/a7e7bbe163a20d25d7c45c39aafdb157adfa58dd"
+    },
+    {
+      "path": "dsl/INVENTORY.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b16d374a447abcf554b85c36ba8295580c766d4e",
+      "size": 12743,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/b16d374a447abcf554b85c36ba8295580c766d4e"
+    },
+    {
+      "path": "dsl/LEXICON.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "44a8e3d2dc5236004912917969655a270d362164",
+      "size": 9871,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/44a8e3d2dc5236004912917969655a270d362164"
+    },
+    {
+      "path": "dsl/SPEC.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "fe6d73376c7785296f62f1ea79809c1580ca00b5",
+      "size": 14773,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/fe6d73376c7785296f62f1ea79809c1580ca00b5"
+    },
+    {
+      "path": "dsl/TYPES.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "59d4c1ebb38c157afb88eb97bd654a798ddb0e69",
+      "size": 4517,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/59d4c1ebb38c157afb88eb97bd654a798ddb0e69"
+    },
+    {
+      "path": "examples",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "1ef1111d8d4bdc98d297183d7c3a46ae27aefc4e",
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/trees/1ef1111d8d4bdc98d297183d7c3a46ae27aefc4e"
+    },
+    {
+      "path": "examples/office.json",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "9ebc507a978bceff7b6b24c5441bbdb9e840f61d",
+      "size": 2421,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/9ebc507a978bceff7b6b24c5441bbdb9e840f61d"
+    },
+    {
+      "path": "refs",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "4e6b7cb51d304a9cc0ae07ceba10be6c09903740",
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/trees/4e6b7cb51d304a9cc0ae07ceba10be6c09903740"
+    },
+    {
+      "path": "refs/CONTEXT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "829cb9631521aef7e389fe61d21de6fc9314f893",
+      "size": 421,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/829cb9631521aef7e389fe61d21de6fc9314f893"
+    },
+    {
+      "path": "refs/REFS.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "16e6735f2fbe162e2ae8ad76f9041f6b5a47b507",
+      "size": 1530,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/16e6735f2fbe162e2ae8ad76f9041f6b5a47b507"
+    },
+    {
+      "path": "tasks",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "08a9e9873616d12a75d6af9f03086f58dfdb4589",
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/trees/08a9e9873616d12a75d6af9f03086f58dfdb4589"
+    },
+    {
+      "path": "tasks/CONTEXT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ba4b23b50380d6023cfbd1c5dc0134fdb9c07a49",
+      "size": 1131,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/ba4b23b50380d6023cfbd1c5dc0134fdb9c07a49"
+    },
+    {
+      "path": "tasks/TAXONOMY-FAMILIES.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "07ccaed3481d9681845da1ce6fc5132bb395e311",
+      "size": 9601,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/07ccaed3481d9681845da1ce6fc5132bb395e311"
+    },
+    {
+      "path": "tasks/TAXONOMY.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e93d0932d824edde9b690cda104ef7baf836ee62",
+      "size": 6650,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/e93d0932d824edde9b690cda104ef7baf836ee62"
+    },
+    {
+      "path": "tests",
+      "mode": "040000",
+      "type": "tree",
+      "sha": "ad459bfbf2fea3cb550580ccf27333f7f110fa45",
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/trees/ad459bfbf2fea3cb550580ccf27333f7f110fa45"
+    },
+    {
+      "path": "tests/CONTEXT.md",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "54df8952d54c4c578ef8f4091d297fa89d087a27",
+      "size": 2087,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/54df8952d54c4c578ef8f4091d297fa89d087a27"
+    },
+    {
+      "path": "tests/conftest.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "ea35280c120598a6491b145bd13510130fdc62db",
+      "size": 1995,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/ea35280c120598a6491b145bd13510130fdc62db"
+    },
+    {
+      "path": "tests/conftest.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b64014f5d2f5d28c6427b5f67f149239b48fe89f",
+      "size": 260,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/b64014f5d2f5d28c6427b5f67f149239b48fe89f"
+    },
+    {
+      "path": "tests/test_declarations.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "6d3e8af57ac493aca4289b73e537ddc612bf5dbf",
+      "size": 2206,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/6d3e8af57ac493aca4289b73e537ddc612bf5dbf"
+    },
+    {
+      "path": "tests/test_declarations.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b6b63717efcba32c04afdb753dc1f77a4be22459",
+      "size": 367,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/b6b63717efcba32c04afdb753dc1f77a4be22459"
+    },
+    {
+      "path": "tests/test_direction.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "c0008cafd03190dcd9f5963fdcfd1d6cf7b4a376",
+      "size": 3934,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/c0008cafd03190dcd9f5963fdcfd1d6cf7b4a376"
+    },
+    {
+      "path": "tests/test_direction.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "b16c582742ff8f87e33732cb75af6a8c6ad24b13",
+      "size": 537,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/b16c582742ff8f87e33732cb75af6a8c6ad24b13"
+    },
+    {
+      "path": "tests/test_metrics.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "70be648c9932875021ca3b5d7c33c43510c52f55",
+      "size": 3025,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/70be648c9932875021ca3b5d7c33c43510c52f55"
+    },
+    {
+      "path": "tests/test_metrics.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "922f89ba985e1220372189edcf6619ba02508457",
+      "size": 553,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/922f89ba985e1220372189edcf6619ba02508457"
+    },
+    {
+      "path": "tests/test_profile_2d.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "e882a32dc7dd8e75aebb465e3607b5a7e89791d4",
+      "size": 2703,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/e882a32dc7dd8e75aebb465e3607b5a7e89791d4"
+    },
+    {
+      "path": "tests/test_profile_2d.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "3faf404e7184e552926de7dc949d7795dd5adcb2",
+      "size": 346,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/3faf404e7184e552926de7dc949d7795dd5adcb2"
+    },
+    {
+      "path": "tests/test_quantifiers.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "2b0d181eb4ff9f0b49cb374488e70a3ff92894a9",
+      "size": 2047,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/2b0d181eb4ff9f0b49cb374488e70a3ff92894a9"
+    },
+    {
+      "path": "tests/test_quantifiers.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "078bbe9aeaeb51120c9d6135ec010638d721be62",
+      "size": 358,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/078bbe9aeaeb51120c9d6135ec010638d721be62"
+    },
+    {
+      "path": "tests/test_svg_parse.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "f2d8a1a25f12ceb02325a8d37537e202f3368bfc",
+      "size": 1867,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/f2d8a1a25f12ceb02325a8d37537e202f3368bfc"
+    },
+    {
+      "path": "tests/test_svg_parse.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "591575a81bc3b7e0a786a62be2c62b44bb4de589",
+      "size": 350,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/591575a81bc3b7e0a786a62be2c62b44bb4de589"
+    },
+    {
+      "path": "tests/test_temporal.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "a1aefffea9ba99d005a4539b0eb1dc0772e700b3",
+      "size": 3365,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/a1aefffea9ba99d005a4539b0eb1dc0772e700b3"
+    },
+    {
+      "path": "tests/test_temporal.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "4617b1e7c986b050aac75107d20a746dc256a210",
+      "size": 543,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/4617b1e7c986b050aac75107d20a746dc256a210"
+    },
+    {
+      "path": "tests/test_topology.py",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "00299f025992a1c4389fee93da5050dec0e99818",
+      "size": 1687,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/00299f025992a1c4389fee93da5050dec0e99818"
+    },
+    {
+      "path": "tests/test_topology.pyi",
+      "mode": "100644",
+      "type": "blob",
+      "sha": "dd4d92c1c58672c70e5c8ae494947d005553d9de",
+      "size": 326,
+      "url": "https://api.github.com/repos/lsfcin/spacemantics/git/blobs/dd4d92c1c58672c70e5c8ae494947d005553d9de"
+    }
+  ],
+  "truncated": false
+}

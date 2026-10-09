@@ -1,0 +1,6 @@
+{
+  "name": "slidedsl-renderer", "version": "1.1.0", "private": true, "type": "module",
+  "engines": {"node": ">=24 <25"},
+  "scripts": {"test": "node --test", "lint": "node --check render.mjs"},
+  "dependencies": {"pptxgenjs": "4.0.1"}
+}

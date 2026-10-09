@@ -1,0 +1,19 @@
+description: Checklist estrutural e proxies lexicais, não avaliação estética ou factual.
+items:
+  - {id: title, requirement: 'Título exato da apresentação'}
+  - {id: theme, requirement: 'Tema claro'}
+  - {id: slides, requirement: 'Exatamente cinco slides'}
+  - {id: canvas, requirement: 'Canvas 1280 por 720'}
+  - {id: cover, requirement: 'Slide 1 com pelo menos dois textos centralizados por caixas (tolerância 32 px)'}
+  - {id: contrast_content, requirement: 'Slide 2 menciona contraste'}
+  - {id: contrast_examples, requirement: 'Slide 2 com dois textos e duas formas de cores distintas'}
+  - {id: left_alignment, requirement: 'Slide 2 tem relação de alinhamento à esquerda'}
+  - {id: proximity_groups, requirement: 'Slide 3 tem dois grupos não sobrepostos separados por ao menos 64 px'}
+  - {id: local_image, requirement: 'Slide 4 usa assets/imagem_demo.png'}
+  - {id: layer_actions, requirement: 'Slide 4 envia a imagem para trás e depois traz para frente'}
+  - {id: final_layer, requirement: 'Slide 4 tem imagem acima de retângulo e interseção parcial'}
+  - {id: comparison_columns, requirement: 'Slide 5 tem cabeçalhos lexicais de vantagens/limitações e três itens por coluna'}
+  - {id: footer, requirement: 'Slide 5 tem texto de rodapé na faixa y >= 580'}
+  - {id: margins, requirement: 'Todos os objetos não background preservam 64 px de margem'}
+  - {id: unique_ids, requirement: 'IDs únicos e referências válidas'}
+  - {id: valid_commands, requirement: 'Programa integralmente aceito pela GLC'}

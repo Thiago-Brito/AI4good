@@ -1,0 +1,36 @@
+{
+  "name": "slidedsl-editor",
+  "version": "1.1.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "test": "playwright test",
+    "lint": "eslint .",
+    "format": "prettier --write src tests *.json *.ts *.js index.html",
+    "format:check": "prettier --check src tests *.json *.ts *.js index.html"
+  },
+  "dependencies": {
+    "@xyflow/react": "12.6.4",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.29.0",
+    "@playwright/test": "1.60.0",
+    "@types/node": "22.15.29",
+    "@types/react": "19.1.6",
+    "@types/react-dom": "19.1.6",
+    "@vitejs/plugin-react": "4.5.1",
+    "eslint": "9.29.0",
+    "globals": "16.2.0",
+    "prettier": "3.5.3",
+    "typescript": "5.8.3",
+    "typescript-eslint": "8.34.1",
+    "vite": "6.3.5"
+  }
+}

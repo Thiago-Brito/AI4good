@@ -1,0 +1,21 @@
+canvas: {width: 1280, height: 720}
+contrast_minimum: 4.5
+alignment_tolerance: 2
+proximity_maximum: 120
+density_maximum: 0.8
+occlusion_maximum: 0.2
+text_padding: 8
+character_width_factor: 0.52
+line_height_factor: 1.2
+strict_codes: [D002, D008, D010]
+severities:
+  D001: ERRO
+  D002: AVISO
+  D003: AVISO
+  D004: ERRO
+  D005: AVISO
+  D006: AVISO
+  D007: AVISO
+  D008: AVISO
+  D009: ERRO
+  D010: AVISO

@@ -1,0 +1,8 @@
+claro:
+  colors: {primaria: '#2563EB', texto: '#14233D', fundo: '#F6F8FC', secundaria: '#DDE8F9', destaque: '#D97706'}
+  fonts: {titulo: 42, corpo: 24, rodape: 16}
+  font_face: Arial
+escuro:
+  colors: {primaria: '#60A5FA', texto: '#F1F5F9', fundo: '#14233D', secundaria: '#334765', destaque: '#FBBF24'}
+  fonts: {titulo: 42, corpo: 24, rodape: 16}
+  font_face: Arial

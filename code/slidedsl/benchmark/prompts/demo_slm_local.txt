@@ -1,0 +1,18 @@
+Crie uma apresentação educativa de exatamente cinco slides em português sobre
+"SlideDSL com IA local", em tema claro, para explicar o projeto a um professor.
+Slide 1: apresente a proposta de transformar linguagem natural em slides editáveis.
+Slide 2: explique o papel do SLM e a geração incremental de um slide por chamada.
+Slide 3: explique a passagem pelo parser, pela AST e pela IR.
+Slide 4: explique como diagnósticos explícitos permitem corrigir erros do modelo.
+Slide 5: explique a exportação para PowerPoint e a edição no editor visual.
+Em cada slide, crie um título curto, duas explicações curtas com informações
+concretas e uma forma colorida decorativa. Escolha seus próprios textos, IDs,
+coordenadas, dimensões e a forma (retângulo ou elipse). Use espaço livre entre
+os elementos, mantenha margens e evite textos sobre a forma. Não é necessário
+usar imagens, grupos ou operações de camada nesta apresentação introdutória.
+Use frases completas com até 40 caracteres em cada explicação, sem cortar
+palavras. Os seguintes fatos do sistema devem orientar o conteúdo: o SLM recebe
+linguagem natural e produz comandos ou JSON de elementos; o parser recebe
+SlideDSL e produz AST; a análise semântica produz IR. Os diagnósticos verificam
+sintaxe, referências e geometria; não avaliam coesão discursiva. A IR permite
+exportar objetos editáveis com PptxGenJS e editar seus valores no editor visual.
