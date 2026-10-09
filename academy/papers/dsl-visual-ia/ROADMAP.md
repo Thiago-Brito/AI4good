@@ -1,5 +1,21 @@
 # Roadmap — DSL visual para orquestração de IA
 
+## SlideDSL implementada do zero — 08/10/2026
+
+- [x] Ler instruções e SLIDEDSL_CODEX_DO_ZERO.md; criar repositório novo em `code/slidedsl`, sem reutilizar protótipos.
+- [x] Executar fases 0–4: pesquisa com fontes, parser LALR, AST/IR, semântica, geometria, D001–D010 e backend PowerPoint.
+- [x] Executar fases 5–7: adapters Ollama/OpenAI, benchmark A/B/C, FastAPI e editor React Flow com importação, edição, validação e exportação.
+- [x] Executar fase 8: scripts Windows, instalação reproduzida, lint/build e testes; 105 Python, 2 Node e 3 Playwright passaram.
+- [x] Gerar PPTX real de cinco slides, inspecionar objetos editáveis e roundtrip; documentar resultados, defesa e limites.
+- [x] Instalar Ollama 0.40.1 e os dois Qwen3; executar cinco repetições A/B/C por modelo com respostas reais preservadas. Ambos tiveram 0/5 programas aceitos inicialmente e após até dois reparos.
+- [x] Corrigir descoberta de thinking suportado e retomada sem sobrescrever respostas; regressão: 108 Python, 2 Node e 3 Playwright passaram.
+- [ ] Executar comparação com gpt-4.1-mini/gpt-4.1: OPENAI_API_KEY ausente. Regimes de thinking e orçamento de tokens limitam a comparação local; não há avaliação humana.
+- [x] Estender o projeto existente com geração incremental direta/JSON, evidências de P001 e até dois reparos explícitos.
+- [x] Executar uma demonstração SLM real de cinco slides, PPTX editável, auditoria de proveniência e edição no navegador; 123 Python, 2 Node e 4 Playwright passaram.
+- [x] Concluir avaliação incremental com três modelos locais, dois modos e cinco repetições: 317 respostas reais auditadas, quatro PPTX no modo JSON do pedido complexo; demonstrações introdutórias estritas separadas. Protocolo histórico preservado.
+
+Entrega: [README](../../../code/slidedsl/README.md), [resultados](../../../code/slidedsl/docs/RESULTADOS.md), [defesa](../../../code/slidedsl/docs/DEFESA_PROFESSOR.md) e [PPTX](../../../code/slidedsl/outputs/apresentacao.pptx). Estas evidências confirmam a implementação e testes descritos; não constituem avaliação humana nem eficácia comprovada de geração por IA.
+
 ## Imagens dos guias no GitHub — 01/10/2026
 
 - [x] Identificar que a regra global de `outputs/` excluía as imagens incorporadas aos Markdown.
