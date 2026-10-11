@@ -3,6 +3,7 @@ import { request } from "./api";
 
 export type ContextOptions = {
   visual_planning?: boolean;
+  expressive_planning?: boolean;
   theme?: string;
   audience?: string;
   objective?: string;
@@ -180,6 +181,21 @@ export function ContextPanel({
   return (
     <details className="context-panel">
       <summary>Configurações avançadas, imagens e fontes (opcional)</summary>
+      <label>
+        <input
+          type="checkbox"
+          aria-label="Planejamento expressivo"
+          checked={settings.expressive_planning ?? false}
+          disabled={disabled || working || settings.grounding === "restricted"}
+          onChange={(e) => change({ expressive_planning: e.target.checked })}
+        />
+        Planejamento expressivo · composições adaptativas e explicações
+      </label>
+      {settings.grounding === "restricted" && (
+        <p>
+          O modo restrito mantém as frases literais e as composições existentes.
+        </p>
+      )}
       <div className="generation-options">
         {(
           [

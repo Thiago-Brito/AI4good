@@ -120,7 +120,11 @@ def plan_visual(adapter, request, supplied, count, out, seed=42, event_callback=
         )
 
 
-def constrain_visual_schema(schema, outline, explicit=None, restricted=False):
+def constrain_visual_schema(schema, outline, explicit=None, restricted=False, expressive=False):
+    if expressive and not restricted:
+        from .expressive_composition import expressive_schema
+
+        return expressive_schema(schema, outline, explicit)
     schema = deepcopy(schema)
     alternatives = schema["$defs"]["SlidePlan"]["anyOf"]
     slides = []
@@ -250,6 +254,7 @@ def visual_decoder_schema(schema, restricted=False):
     decoder["required"] = [key for key in decoder["required"] if key != "slides"]
     for number, variant in enumerate(variants, 1):
         layout = variant["properties"]["layout"]["const"]
+        expressive = variant["properties"].get("expressive", {}).get("const", False)
         columns = variant["properties"]["columns"]
         if (
             layout in COMPOSED_LAYOUTS - {"takeaway"}
@@ -270,7 +275,21 @@ def visual_decoder_schema(schema, restricted=False):
             columns["items"]["properties"]["items"]["items"] = node
             for col in columns.get("prefixItems", []):
                 col["properties"]["items"]["items"] = deepcopy(node)
-        if layout == "takeaway" and not restricted:
+        if expressive:
+            from .expressive_composition import content_array
+
+            for col in [columns["items"], *columns.get("prefixItems", [])]:
+                items = col["properties"]["items"]
+                node = content_array(layout, items["minItems"], items["maxItems"])
+                # Ollama's regex grammar does not reliably intersect pattern/maxLength.
+                # Keep completion patterns in post-decoder validation, not sampling.
+                for branch in node.get("anyOf", [node]):
+                    for prop in branch["items"]["properties"].values():
+                        prop.pop("pattern", None)
+                col["properties"].pop("content", None)
+                col["required"] = [k for k in col["required"] if k != "content"]
+                col["properties"]["items"] = deepcopy(node)
+        if layout == "takeaway" and not restricted and not expressive:
             columns["items"]["properties"]["items"]["items"]["maxLength"] = 180
         if layout == "comparison_visual" and "prefixItems" in columns:
             choices = columns.pop("prefixItems")
@@ -299,6 +318,12 @@ def normalize_visual_response(data, count):
         if "column_1" in slide:
             slide["columns"] = [slide.pop("column_1"), slide.pop("column_2")]
         for col in slide["columns"]:
+            if slide.get("expressive"):
+                from .planning import ContentBlock
+
+                col["content"] = deepcopy(col["items"])
+                col["items"] = [ContentBlock.model_validate(i).full_text() for i in col["content"]]
+                continue
             col["items"] = [
                 item["label"] + ": " + item["detail"] if isinstance(item, dict) else item
                 for item in col["items"]

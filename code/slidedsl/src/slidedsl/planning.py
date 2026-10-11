@@ -2,9 +2,19 @@
 
 from typing import Literal
 
-from pydantic import Field, model_serializer
+from pydantic import Field, model_serializer, model_validator
 
 from .structured_slide import OutputModel
+
+
+class ContentBlock(OutputModel):
+    label: str = Field(min_length=1, max_length=80)
+    detail: str = Field(default="", max_length=180)
+    explanation: str = Field(default="", max_length=360)
+
+    def full_text(self):
+        body = " ".join(t for t in [self.detail, self.explanation] if t)
+        return self.label + (": " + body if body else "")
 
 
 class ColumnPlan(OutputModel):
@@ -12,12 +22,23 @@ class ColumnPlan(OutputModel):
     items: list[str] = Field(min_length=1, max_length=6)
     group: bool
     representation: Literal["list", "stack", "services", "cards"] = "list"
+    content: list[ContentBlock] = Field(default_factory=list, max_length=6)
+
+    @model_validator(mode="after")
+    def consistent_content(self):
+        if self.content and self.items != [node.full_text() for node in self.content]:
+            raise ValueError(
+                "items deve preservar integralmente label/detail/explanation de content."
+            )
+        return self
 
     @model_serializer(mode="wrap")
     def serialize_legacy_column(self, handler):
         data = handler(self)
         if self.representation == "list":
             data.pop("representation", None)
+        if not self.content:
+            data.pop("content", None)
         return data
 
 
@@ -70,6 +91,17 @@ class SlidePlan(OutputModel):
     media: list[MediaPlan] = Field(default_factory=list, max_length=4)
     sources: list[str] = Field(default_factory=list, max_length=8)
     vector_flow: bool = False
+    expressive: bool = False
+    composition: Literal["auto", "grid", "row", "vertical"] = "auto"
+
+    @model_serializer(mode="wrap")
+    def serialize_legacy_slide(self, handler):
+        data = handler(self)
+        if not self.expressive:
+            data.pop("expressive", None)
+        if self.composition == "auto":
+            data.pop("composition", None)
+        return data
 
 
 class DeckPlan(OutputModel):
@@ -91,6 +123,10 @@ def plan_schema(slide_count: int) -> dict:
         raise ValueError("Use de 1 a 12 slides.")
     schema = DeckPlan.model_json_schema()
     schema["properties"].pop("refinement")  # Compiler options, never model-owned.
+    schema["$defs"]["ColumnPlan"]["properties"].pop("content")
+    schema["$defs"].pop("ContentBlock")  # Keep historical model contracts free of new unused types.
+    for name in ("expressive", "composition"):
+        schema["$defs"]["SlidePlan"]["properties"].pop(name)
     schema["properties"]["slides"].update(minItems=slide_count, maxItems=slide_count)
     return schema
 

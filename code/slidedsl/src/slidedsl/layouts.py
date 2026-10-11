@@ -88,6 +88,22 @@ def plan_to_dsl(plan: DeckPlan) -> tuple[str, dict[str, str], list[Diagnostic]]:
             )
             return id
 
+        if slide.expressive:
+            from .expressive_composition import select_candidate
+
+            node, paths, failures, _ = select_candidate(
+                slide,
+                number,
+                plan.theme,
+                (plan.refinement or {}).get("style", ""),
+                (plan.refinement or {}).get("requirements", []),
+            )
+            mapping.update(paths)
+            for code, message, path in failures:
+                issue(code, message, path)
+            slides.append(node)
+            continue
+
         if slide.layout in COMPOSED_LAYOUTS:
             from .composition import compose_slide
 

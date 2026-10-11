@@ -213,22 +213,66 @@ def evaluate_requirements(validation, requirements, plan=None):
                 e.id for e in elements if e.text and normalized(r.value) in normalized(e.text)
             ]
             ok = bool(witnesses)
+            if not ok:
+                # Reconstruct only a single emitted rich node, never unrelated boxes.
+                nodes = {}
+                for e in elements:
+                    match = re.fullmatch(r"(s\d+_c\d+_i\d+)_(ref_label|detail|explanation)", e.id)
+                    if match and e.type == "text" and e.text:
+                        nodes.setdefault(match[1], {})[match[2]] = e
+                for fields in nodes.values():
+                    if "ref_label" not in fields:
+                        continue
+                    body = " ".join(
+                        fields[k].text for k in ["detail", "explanation"] if k in fields
+                    )
+                    text = fields["ref_label"].text + (": " + body if body else "")
+                    if normalized(r.value) in normalized(text):
+                        witnesses.extend(e.id for e in fields.values())
+                ok = bool(witnesses)
         elif r.kind == "component":
             # Component evidence is emitted geometry, never solely a plan declaration.
             panels = [
                 e for e in elements if re.search(r"_panel\d+$", e.id) and e.type == "rectangle"
             ]
             bodies = [e for e in elements if re.search(r"_c1_i\d+$", e.id) and e.type == "text"]
+            adaptive = [
+                e for e in elements if re.search(r"_c1_i\d+_panel$", e.id) and e.type == "rectangle"
+            ]
+            if adaptive:
+                panels = adaptive
+                bodies = [
+                    e
+                    for e in elements
+                    if re.search(r"_c1_i\d+_ref_label$", e.id) and e.type == "text"
+                ]
             ok = bool(panels and len(panels) == len(bodies))
             if r.value == "cards":
-                ok = ok and all(e.width == 544 for e in panels)
+                if adaptive:
+                    from itertools import combinations
+
+                    ok = ok and not any(
+                        intersection(box(a), box(b)) for a, b in combinations(panels, 2)
+                    )
+                    ok = ok and all(
+                        any(
+                            p.x <= b.x
+                            and p.y <= b.y
+                            and b.x + b.width <= p.x + p.width
+                            and b.y + b.height <= p.y + p.height
+                            for p in panels
+                        )
+                        for b in bodies
+                    )
+                else:
+                    ok = ok and all(e.width == 544 for e in panels)
             elif r.value == "sequence":
                 ok = ok and all(
                     (e.text or "").startswith(f"{i}. ") for i, e in enumerate(bodies, 1)
                 )
             if r.value == "flow":
                 arrows = [e for e in elements if e.text == "↓" or e.type == "arrow"]
-                nodes = sorted(bodies, key=lambda e: e.y)
+                nodes = sorted(panels if adaptive else bodies, key=lambda e: e.y)
                 ok = ok and {e.y for e in arrows} == {e.y + e.height for e in nodes[:-1]}
             witnesses = [e.id for e in panels + bodies]
         path = repair_path(r)

@@ -1,5 +1,27 @@
 # Progresso de implementação
 
+## Expressividade do planejamento — 11/10/2026
+Diagnóstico registrado antes de editar; percurso opcional expressive-planning-v1.
+Campos tipados, variantes reais por família, capacidade concisa/detalhada, corpo
+mínimo 22 pt, slots de mídia e medição local Arial/palavras com fallback conservador.
+Compatibilidade, fontes restritas, requisitos, reparos e compilador preservados.
+Onze respostas reais Qwen3, incluindo falhas e uma etapa parcial; before_01 e
+after_05 exportaram, recompilação atual preserva conteúdo e tem zero D/V.
+Comparações fixas/novas com cinco pares de capturas, zero corte no DOM/erro JS;
+cinco famílias com imagens offline, créditos e objetos nativos verificados.
+271 Python, dois Node e oito Playwright passaram; quatro optativos omitidos.
+ESLint/Ruff/Prettier/TypeScript/build passaram. Renderização real indisponível.
+Limitações de conteúdo e diagramas genéricos explicitadas em
+docs/EXPRESSIVIDADE_PLANEJAMENTO.md; sem inferir beleza ou verdade da exportação.
+HEAD/branch e alterações anteriores preservados, sem commit/push.
+
+## Diagnóstico das próximas melhorias — 11/10/2026
+PROXIMAS_MELHORIAS.md analisa o código em 22ebec4 e os artefatos existentes.
+Prioriza contrato editorial/profundidade, variantes de composição e imagens
+planejadas por função. Identifica evidências, módulos e sequência de implementação,
+separando validade estrutural de estética e de limitações atribuíveis ao modelo.
+Sem execuções Ollama, novas funcionalidades, commit/push ou alteração de resultados.
+
 ## Refinamento visual — 11/10/2026
 Base f05fc8a4021b5169342c8498772956f5ccbe0d34 limpa e confirmada no remoto antes
 de editar. Diagnóstico do PPTX histórico, fontes registradas e resultados preservados.

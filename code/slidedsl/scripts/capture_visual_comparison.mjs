@@ -11,6 +11,7 @@ const browser = await chromium.launch({
 });
 const page = await browser.newPage({ viewport: { width: 1600, height: 1100 } });
 const errors = [];
+const textOverflow = [];
 page.on("pageerror", (error) => errors.push(error.message));
 try {
   for (const [label, folder] of [["before", before], ["after", after]]) {
@@ -25,6 +26,10 @@ try {
     for (let n = 1; n <= 5; n++) {
       await page.locator(".slides-panel").getByRole("button").filter({ hasText: String(n).padStart(2, "0") }).first().click();
       await page.getByTestId("preview").screenshot({ path: path.join(output, `${label}_${n}.png`) });
+      const overflow = await page.locator('.preview-element').evaluateAll((nodes) => nodes
+        .filter((node) => node.textContent?.trim() && (node.scrollWidth > node.clientWidth + 2 || node.scrollHeight > node.clientHeight + 2))
+        .map((node) => ({ id: node.getAttribute('title'), scroll: [node.scrollWidth, node.scrollHeight], box: [node.clientWidth, node.clientHeight] })));
+      if (overflow.length) textOverflow.push({ label, slide: n, elements: overflow });
     }
     await page.screenshot({ path: path.join(output, `${label}_editor.png`), fullPage: true });
   }
@@ -39,5 +44,6 @@ try {
     html += "</section>";
   }
   await fs.writeFile(path.join(output, "comparison.html"), html);
-  await fs.writeFile(path.join(output, "capture.json"), JSON.stringify({ before, after, javascript_errors: errors, slides: 5, rendering: "geometric editor preview", source_equal: true, selection_outline_hidden: true }, null, 2));
+  await fs.writeFile(path.join(output, "capture.json"), JSON.stringify({ before, after, javascript_errors: errors, text_overflow: textOverflow, slides: 5, rendering: "geometric editor preview", source_equal: true, selection_outline_hidden: true }, null, 2));
+  if (textOverflow.some((row) => row.label === 'after')) throw new Error('Texto cortado no preview depois: ' + JSON.stringify(textOverflow));
 } finally { await browser.close(); }

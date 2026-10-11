@@ -91,6 +91,7 @@ def contextual_schema(count, files, chunk_ids, layouts=None, excerpts=None):
 class GenerationContext(BaseModel):
     model_config = ConfigDict(extra="forbid")
     visual_planning: bool = False
+    expressive_planning: bool = False
     theme: str = Field(default="", max_length=200)
     audience: str = Field(default="", max_length=200)
     objective: str = Field(default="", max_length=200)
@@ -246,6 +247,8 @@ def generate_contextual(
             "Contexto visual/referências exige estratégia C ou D; A/B continuam históricos."
         )
     context = GenerationContext.model_validate(context or {})
+    if context.expressive_planning:
+        context.visual_planning = True
     from .models.ollama_model import OllamaTextModel
     from urllib.parse import urlsplit
 
@@ -366,6 +369,7 @@ def generate_contextual(
                 outline,
                 named[0] if len(named) == 1 else None,
                 context.grounding == "restricted",
+                context.expressive_planning,
             )
             supplied["visual_outline"] = outline
             save_json(out / "context.json", supplied)
@@ -384,6 +388,11 @@ def generate_contextual(
             }
             save_json(out / "report.json", report)
             return report
+    content_system = CONTENT_SYSTEM if context.visual_planning else None
+    if context.expressive_planning and context.grounding != "restricted":
+        from .expressive_composition import CONTENT_SYSTEM as EXPRESSIVE_SYSTEM
+
+        content_system = EXPRESSIVE_SYSTEM
     initial = generate_strategy(
         model,
         "C",
@@ -395,7 +404,7 @@ def generate_contextual(
         adapter=adapter,
         event_callback=event_callback,
         system_context=CONTEXT_SYSTEM,
-        system_override=CONTENT_SYSTEM if context.visual_planning else None,
+        system_override=content_system,
         schema_override=schema,
         schema_in_prompt=False,
         decode_schema_override=visual_decoder_schema(schema, context.grounding == "restricted")
@@ -484,6 +493,10 @@ def generate_contextual(
                     ):
                         if m["caption"] and m["caption"] not in column["items"]:
                             column["items"].append(m["caption"])
+                            if column.get("content"):
+                                column["content"].append(
+                                    {"label": m["caption"], "detail": "", "explanation": ""}
+                                )
                 slide["media"] = []
                 fallbacks.append(
                     {
@@ -517,6 +530,12 @@ def generate_contextual(
         event_callback=event_callback,
     )
     final_plan = json.loads((out / "validated/plan.json").read_text("utf-8"))
+    if any(s.get("expressive") for s in final_plan["slides"]):
+        from .expressive_composition import composition_report
+        from .planning import DeckPlan
+
+        report["composition"] = composition_report(DeckPlan.model_validate(final_plan))
+        save_json(out / "composition.json", report["composition"])
     if final_plan.get("refinement"):
         from .refinement import refinement_report
 
@@ -592,6 +611,8 @@ def generate_contextual(
     )
     if context.visual_planning:
         report["protocol"] = "visual-planning-v1"
+    if context.expressive_planning and context.grounding != "restricted":
+        report["protocol"] = "expressive-planning-v1"
     save_json(out / "source_audit.json", audit)
     save_json(out / "report.json", report)
     return report

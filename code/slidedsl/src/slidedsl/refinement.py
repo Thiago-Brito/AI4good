@@ -371,7 +371,8 @@ def refine_slides(plan, slides, mapping):
     for index, (spec, old) in enumerate(zip(plan.slides, slides, strict=True)):
         report = {"slide": index + 1, "candidates": [], "accepted": False}
         if (
-            spec.layout not in COMPOSED_LAYOUTS
+            spec.expressive
+            or spec.layout not in COMPOSED_LAYOUTS
             or spec.relations
             or spec.decorations
             or spec.media

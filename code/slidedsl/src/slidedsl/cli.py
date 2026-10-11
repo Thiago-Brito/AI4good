@@ -125,6 +125,11 @@ def main(argv=None) -> int:
     contextual_parser.add_argument(
         "--context-file", help="JSON GenerationContext; padrão offline/livre"
     )
+    contextual_parser.add_argument(
+        "--expressive-planning",
+        action="store_true",
+        help="Conteúdo estruturado e composições medidas; implica --visual-planning",
+    )
     contextual_parser.add_argument("--out", required=True)
     contextual_parser.add_argument("--repair-max", type=int, default=2, choices=range(11))
     contextual_parser.add_argument("--seed", type=int, default=42)
@@ -175,13 +180,15 @@ def main(argv=None) -> int:
                 if args.context_file
                 else {}
             )
-            if args.visual_planning:
+            if args.visual_planning or args.expressive_planning:
                 context_data = {
                     "provider": "auto",
                     "selection": "auto",
                     **context_data,
                     "visual_planning": True,
                 }
+            if args.expressive_planning:
+                context_data["expressive_planning"] = True
             report = generate_contextual(
                 args.model,
                 args.strategy,

@@ -151,6 +151,40 @@ test("mostra indisponibilidade do Ollama e mantém importação manual acessíve
   await expect(page.getByRole("status")).toHaveText("Programa importado.");
 });
 
+test("envia planejamento expressivo opcional pela geração existente", async ({
+  page,
+}) => {
+  await page.route("**/api/models", (route) =>
+    route.fulfill({
+      json: { available: true, models: [{ name: "modelo-de-teste" }] },
+    }),
+  );
+  let payload: {
+    context?: { expressive_planning?: boolean; visual_planning?: boolean };
+  } = {};
+  await page.route("**/api/generations", async (route) => {
+    payload = route.request().postDataJSON();
+    await route.fulfill({
+      status: 503,
+      json: { detail: "Transporte simulado; nenhuma chamada ao modelo." },
+    });
+  });
+  await page.goto("/");
+  await page
+    .getByText("Configurações avançadas, imagens e fontes (opcional)", {
+      exact: true,
+    })
+    .click();
+  await expect(page.getByLabel("Planejamento expressivo")).not.toBeChecked();
+  await page.getByLabel("Planejamento expressivo").check();
+  await page
+    .getByRole("button", { name: "Gerar apresentação", exact: true })
+    .click();
+  await expect(page.getByRole("alert")).toContainText("Transporte simulado");
+  expect(payload.context?.expressive_planning).toBe(true);
+  expect(payload.context?.visual_planning).toBe(true);
+});
+
 test("exibe caminhos e diagnósticos das correções sem substituir por exemplo manual", async ({
   page,
 }) => {

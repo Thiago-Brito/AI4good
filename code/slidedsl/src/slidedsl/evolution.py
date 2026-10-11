@@ -146,6 +146,15 @@ def apply_patch_response(data: dict, raw: str, paths: list[str]) -> dict:
             obj = obj[int(token)] if isinstance(obj, list) else obj[token]
         key = int(tokens[-1]) if isinstance(obj, list) else tokens[-1]
         obj[key] = edit["value"]
+    # Only rebuild the derived text view for content paths explicitly authorized.
+    from .planning import ContentBlock
+
+    affected = {".".join(p.split(".")[:4]) for p in seen if ".content" in p}
+    for path in affected:
+        obj = result
+        for token in path.split("."):
+            obj = obj[int(token)] if isinstance(obj, list) else obj[token]
+        obj["items"] = [ContentBlock.model_validate(n).full_text() for n in obj["content"]]
     return result
 
 

@@ -1,5 +1,17 @@
 # Roadmap — SlideDSL
 
+## Expressividade do planejamento — 11/10/2026
+- [x] Diagnóstico prévio dos limites de nós, textos, estruturas, mídia e associação intenção/composição.
+- [x] Percurso opcional com rótulo/descrição/explicação, variantes medidas, quantidades concisas/detalhadas e slots de imagens, preservando DSL e validadores.
+- [x] Medição local de palavras/fontes e correção dos cortes encontrados nas capturas; corpo ≥22 pt.
+- [x] Comparação Qwen3 local, recompilação com conteúdo fixo, imagens offline e auditoria de evidências; 271 Python, dois Node e oito Playwright passaram (quatro optativos omitidos).
+- [x] Documentar resultados/falhas em [EXPRESSIVIDADE_PLANEJAMENTO.md](docs/EXPRESSIVIDADE_PLANEJAMENTO.md).
+- [ ] Papéis semânticos dos nós, sustentação editorial, revisão humana e renderização real; os proxies não comprovam qualidade factual/estética.
+
+## Diagnóstico das próximas melhorias — 11/10/2026
+- [x] [Três limitações, evidências, módulos e ordem de implementação](docs/PROXIMAS_MELHORIAS.md), usando resultados existentes, sem novas chamadas Ollama ou alterações de código.
+- [ ] Prioridades propostas: contrato editorial e profundidade; variantes por intenção; imagens integradas à mensagem. Implementação fora do escopo desta etapa.
+
 ## Refinamento visual — 11/10/2026
 - [x] Base f05fc8a4 limpa, push confirmado; documentação e PPTX recente inspecionados.
 - [x] Refinamento determinístico, hierarquia e conexões nativas, preservando relações, conteúdo e critérios já atendidos.
