@@ -198,6 +198,8 @@ export default function App() {
         <span className="badge">16:9 · 1280 × 720</span>
       </header>
       <GenerationPanel
+        currentDeck={deck}
+        currentSource={source}
         disabled={busy}
         onBusy={setBusy}
         onStatus={setStatus}

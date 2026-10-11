@@ -220,7 +220,28 @@ def generate_strategy(
     requirements=None,
     adapter=None,
     event_callback=None,
+    reliability=False,
+    repair_max=2,
 ) -> dict:
+    if reliability:
+        from .reliability import generate_reliable
+
+        return generate_reliable(
+            model,
+            strategy,
+            request,
+            out,
+            slide_count=slide_count,
+            temperature=temperature,
+            seed=seed,
+            context_length=context_length,
+            output_tokens=output_tokens,
+            strict=strict,
+            requirements=requirements,
+            adapter=adapter,
+            event_callback=event_callback,
+            repair_max=repair_max,
+        )
     if strategy not in {"A", "B", "C", "D"}:
         raise ValueError("Estratégia deve ser A, B, C ou D.")
     count = requested_count(request) if slide_count is None else slide_count

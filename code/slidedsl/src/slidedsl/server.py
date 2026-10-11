@@ -44,6 +44,10 @@ class GenerationPayload(BaseModel):
     slides: int | None = Field(default=None, ge=1, le=12)
     strict: bool = True
     seed: int = 42
+    reliability: bool = False
+    repair_max: int = Field(default=2, ge=0, le=10)
+    plan: dict | None = None
+    requirements: list[dict] | None = None
 
 
 @app.get("/api/models")
@@ -73,6 +77,17 @@ def start_generation(payload: GenerationPayload):
         if not payload.prompt.strip():
             raise ValueError("Escreva o pedido da apresentação.")
         requested_count(payload.prompt)  # Reject unsupported counts before queueing.
+        if payload.plan is not None:
+            from .planning import DeckPlan
+
+            DeckPlan.model_validate(payload.plan)
+            if payload.requirements is None:
+                raise ValueError("Correção exige os critérios congelados da geração.")
+        if payload.requirements is not None:
+            from .requirements import Requirement
+
+            for requirement in payload.requirements:
+                Requirement.model_validate(requirement)
         return submit_job(payload.model_dump())
     except ValueError as exc:
         raise HTTPException(422, detail=str(exc)) from exc
@@ -91,6 +106,27 @@ def generation_progress(id: str):
         return read_job(id)
     except KeyError as exc:
         raise HTTPException(404, detail="Geração não encontrada.") from exc
+
+
+class RequirementsPayload(IRPayload):
+    requirements: list[dict]
+    source: str | None = None
+
+
+@app.post("/api/requirements/validate")
+def validate_requirements(payload: RequirementsPayload):
+    from .pipeline import ValidationResult
+    from .requirements import evaluate_requirements
+    from .parser import parse
+
+    try:
+        result = ValidationResult(ir=payload.ir, semantic_success=not validate_ir(payload.ir))
+        if payload.source:
+            result.ast = parse(payload.source)
+            result.parse_success = True
+        return evaluate_requirements(result, payload.requirements)
+    except (ValueError, DSLException) as exc:
+        raise HTTPException(422, detail=str(exc)) from exc
 
 
 def normalize_ir(deck: Presentation):

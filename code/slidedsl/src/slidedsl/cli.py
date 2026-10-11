@@ -87,6 +87,12 @@ def main(argv=None) -> int:
             p.add_argument("--strategy", choices=["A", "B", "C", "D"], default="D")
             p.add_argument("--slides", type=int)
             p.add_argument("--seed", type=int, default=42)
+            p.add_argument(
+                "--reliability",
+                action="store_true",
+                help="Validador de requisitos e D com controle de progresso",
+            )
+            p.add_argument("--repair-max", type=int, default=2, choices=range(11))
         else:
             p.add_argument("--requests-file", default="benchmark/evolution_requests.json")
             p.add_argument("--strategies", default="A,B,C,D")
@@ -96,6 +102,14 @@ def main(argv=None) -> int:
     p.add_argument("file")
     p.add_argument("--out", required=True)
     p.add_argument("--strict", action="store_true")
+    p = sub.add_parser(
+        "evaluate-reliability", help="Ablação sobre o mesmo plano inicial e critérios congelados"
+    )
+    p.add_argument("--requests-file", default="benchmark/reliability_requests.json")
+    p.add_argument("--model", default="qwen3:4b-instruct")
+    p.add_argument("--repetitions", type=int, default=2)
+    p.add_argument("--repair-max", type=int, default=2, choices=range(11))
+    p.add_argument("--out", required=True)
     p = sub.add_parser("serve", help="Abrir API/editor local")
     p.add_argument("--host", default="127.0.0.1")
     p.add_argument("--port", type=int, default=8000)
@@ -106,6 +120,20 @@ def main(argv=None) -> int:
     p.add_argument("--out", required=True)
     args = parser.parse_args(argv)
     try:
+        if args.command == "evaluate-reliability":
+            from .reliability_experiment import evaluate_reliability
+
+            report = evaluate_reliability(
+                json.loads(Path(args.requests_file).read_text(encoding="utf-8-sig")),
+                Path(args.out),
+                model=args.model,
+                repetitions=args.repetitions,
+                repair_max=args.repair_max,
+            )
+            print(
+                f"{len(report['runs'])} avaliações; {report['actual_calls']} chamadas reais; {report['status']}"
+            )
+            return 0 if report["status"] == "EXECUTADO" else 1
         if args.command == "compile-plan":
             from .layouts import compile_plan
             from .planning import DeckPlan
@@ -134,6 +162,8 @@ def main(argv=None) -> int:
                     Path(args.out),
                     slide_count=args.slides,
                     seed=args.seed,
+                    reliability=args.reliability,
+                    repair_max=args.repair_max,
                     **options,
                 )
                 print(

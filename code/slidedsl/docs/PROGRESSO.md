@@ -198,3 +198,33 @@ ast.json, ir.json e introducao.pptx. Esclarecidos os requisitos distintos da
 demonstração manual offline e da geração por Ollama.
 Acrescentado direcionamento explícito no README para o arquivo executável da GLC,
 a função grammar_parser() e a documentação dos comandos.
+
+## Confiabilidade da geração — 11/10/2026
+Snapshot anterior à implementação: c53bb4498a6aba2812e22014bd1cf66954abfd13,
+commit e push confirmados em origin/dsl-visual. Código do projeto foi estendido.
+Requisitos tipados, interpretação conservadora por slide e verificadores AST/IR
+produzem evidências e R001. D tenta correções determinísticas autorizadas, patches
+locais, rejeita regressões e repetições, registra estados e limita tentativas a 0–10.
+Componentes cards/sequence/flow, slots compactos e cabeçalhos com altura calculada
+preservam texto completo. V001–V003 complementam as dez regras de design.
+Painel mostra requisitos e fases, permite corrigir plano e revalidar IR editada.
+PowerPoint COM indisponível; previews de navegador não são renderização de PPTX.
+
+Ablação final em outputs/reliability/experiment_20261011_final: quatro pedidos,
+duas repetições, 32 avaliações sobre oito planos iniciais compartilhados, oito
+chamadas reais qwen3:4b-instruct, 4.285 tokens de saída e 30 PPTX auditados.
+Baseline/validador: 7/8 PPTX, 4/8 estrutura+requisitos e 60/68 critérios.
+Determinístico/SLM permitido: 8/8 PPTX e 68/68 critérios; nenhuma chamada adicional
+à SLM foi necessária no protocolo final. Complexo atingiu 17/17 nas duas repetições.
+Executados dois protocolos intermediários preservados, com falhas que orientaram
+ajustes gerais de direção de fluxo, reconhecimento, altura e controle de progresso.
+Não se misturam taxas entre versões nem se afirma generalização estatística.
+Auditoria conferiu HTTP/bytes, schemas, seeds, critérios fixos, snapshots, escopo,
+rollbacks e texto nativo de todos os PPTX. Docs em EVOLUCAO_CONFIABILIDADE.md.
+Regressão final: 160 Python, dois Node e oito Playwright; lint/formatação/build.
+Falhas encontradas e corrigidas: API antiga no processo reutilizado, altura de seta,
+overflow de cabeçalho, layout incoerente e negações simples no reconhecedor.
+Evidências novas em outputs/reliability/ e outputs/tests/reliability-final.xml;
+experimentos anteriores não foram modificados. Avaliação humana e maior amostra
+continuam pendentes, assim como interpretação geral de português e reparo de plano
+após mudanças manuais da IR.

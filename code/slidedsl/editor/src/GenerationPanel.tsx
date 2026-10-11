@@ -3,6 +3,8 @@ import { request } from "./api";
 import type { Deck, Diagnostic } from "./types";
 
 type GenerationResult = {
+  request?: string;
+  plan?: Record<string, unknown> | null;
   source: string | null;
   ir: Deck | null;
   report: {
@@ -11,9 +13,30 @@ type GenerationResult = {
     diagnostics: Diagnostic[];
     corrections: number;
     availability: string;
-    requirements: { numerator: number; denominator: number; all_met: boolean };
+    requirements: RequirementReport;
+    syntax?: boolean;
+    semantics?: boolean;
+    geometry?: boolean | null;
   };
   path: string;
+};
+type RequirementItem = {
+  id: string;
+  kind: string;
+  slide: number | null;
+  minimum: number;
+  distinct_colors: boolean;
+  value: string;
+  description: string;
+  met: boolean;
+  elements: string[];
+};
+type RequirementReport = {
+  numerator: number;
+  denominator: number;
+  all_met: boolean;
+  details?: RequirementItem[];
+  diagnostics?: Diagnostic[];
 };
 type Job = {
   id: string;
@@ -34,11 +57,15 @@ export function GenerationPanel({
   onBusy,
   onResult,
   onStatus,
+  currentDeck,
+  currentSource,
 }: {
   disabled: boolean;
   onBusy: (value: boolean) => void;
   onResult: (result: GenerationResult) => void;
   onStatus: (value: string) => void;
+  currentDeck: Deck | null;
+  currentSource: string;
 }) {
   const [models, setModels] = useState<string[]>([]);
   const [model, setModel] = useState("");
@@ -49,6 +76,10 @@ export function GenerationPanel({
   const [strict, setStrict] = useState(true);
   const [job, setJob] = useState<Job | null>(null);
   const [error, setError] = useState("");
+  const [repairMax, setRepairMax] = useState(2);
+  const [requirements, setRequirements] = useState<RequirementReport | null>(
+    null,
+  );
   const active = useRef(true);
   useEffect(() => {
     active.current = true;
@@ -86,7 +117,37 @@ export function GenerationPanel({
   useEffect(() => {
     void loadModels();
   }, []);
-  const generate = async () => {
+  const criteria = () =>
+    (requirements?.details ?? []).map((r) => ({
+      id: r.id,
+      kind: r.kind,
+      slide: r.slide,
+      minimum: r.minimum,
+      distinct_colors: r.distinct_colors,
+      value: r.value,
+      description: r.description,
+    }));
+  const revalidate = async () => {
+    if (!currentDeck) return;
+    onBusy(true);
+    try {
+      const result = await request<RequirementReport>("requirements/validate", {
+        ir: currentDeck,
+        source: currentSource,
+        requirements: criteria(),
+      });
+      setRequirements(result);
+      onStatus(
+        `Requisitos verificados: ${result.numerator}/${result.denominator}.`,
+      );
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    } finally {
+      onBusy(false);
+    }
+  };
+  const generate = async (repair = false) => {
+    const previous = job;
     onBusy(true);
     setError("");
     setJob(null);
@@ -94,16 +155,24 @@ export function GenerationPanel({
     try {
       let current = await request<Job>("generations", {
         model,
-        prompt,
+        prompt: repair ? (previous?.result?.request ?? prompt) : prompt,
         strategy,
         strict,
+        reliability: true,
+        repair_max: repairMax,
+        ...(repair
+          ? { plan: previous?.result?.plan, requirements: criteria() }
+          : {}),
       });
       while (active.current) {
         setJob(current);
         if (current.state === "failed")
           throw new Error(current.error ?? "Geração interrompida.");
         if (current.state === "completed") {
-          if (current.result) onResult(current.result);
+          if (current.result) {
+            setRequirements(current.result.report.requirements);
+            onResult(current.result);
+          }
           break;
         }
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -156,7 +225,7 @@ export function GenerationPanel({
             <option value="A">A · Código direto</option>
             <option value="B">B · JSON com coordenadas</option>
             <option value="C">C · Plano e layouts automáticos</option>
-            <option value="D">D · Plano, layouts e até dois reparos</option>
+            <option value="D">D · Plano, layouts e correções</option>
           </select>
         </label>
         <label className="strict-option">
@@ -176,6 +245,20 @@ export function GenerationPanel({
           value={prompt}
           disabled={disabled}
           onChange={(e) => setPrompt(e.target.value)}
+        />
+      </label>
+      <label>
+        Limite de correções
+        <input
+          aria-label="Limite de correções"
+          type="number"
+          min={0}
+          max={10}
+          value={repairMax}
+          disabled={disabled}
+          onChange={(e) =>
+            setRepairMax(Math.max(0, Math.min(10, Number(e.target.value))))
+          }
         />
       </label>
       <button
@@ -205,7 +288,7 @@ export function GenerationPanel({
                 {event.stage === "planning"
                   ? "Planejamento do conteúdo"
                   : event.stage === "repair"
-                    ? `Correção ${event.round} de 2`
+                    ? `Correção ${event.round} de ${repairMax}`
                     : event.stage === "slide"
                       ? `Slide ${event.slide}`
                       : "Validação"}
@@ -222,11 +305,69 @@ export function GenerationPanel({
                 ? "PowerPoint gerado."
                 : "Geração terminou com pendências."}{" "}
               Correções: {job.result.report.corrections}. Critérios estruturais
-              básicos: {job.result.report.requirements.numerator}/
+              identificados: {job.result.report.requirements.numerator}/
               {job.result.report.requirements.denominator}. Revise o conteúdo e
               o atendimento ao pedido.
             </p>
           )}
+        </div>
+      )}
+      {requirements?.details && (
+        <div aria-label="Requisitos do pedido">
+          {job?.result?.report.syntax !== undefined && (
+            <p>
+              Sintaxe: {job.result.report.syntax ? "válida" : "pendente"}.
+              Semântica: {job.result.report.semantics ? "válida" : "pendente"}.
+              Geometria:{" "}
+              {job.result.report.geometry === null
+                ? "não alcançada"
+                : job.result.report.geometry
+                  ? "válida"
+                  : "pendente"}
+              . Qualidade visual: requer inspeção humana.
+            </p>
+          )}
+          <h3>
+            Requisitos identificados: {requirements.numerator}/
+            {requirements.denominator}
+          </h3>
+          <p>
+            Reconhecimento limitado a padrões em português. Revise requisitos
+            não identificados, conteúdo e aparência.
+          </p>
+          <ul>
+            {requirements.details.map((r) => (
+              <li key={r.id}>
+                {r.met ? "Atendido" : "Pendente"}: {r.description}
+                {r.slide ? ` · slide ${r.slide}` : ""}
+                {r.elements.length ? ` · ${r.elements.join(", ")}` : ""}
+              </li>
+            ))}
+          </ul>
+          <button
+            disabled={disabled || !currentDeck}
+            onClick={() => void revalidate()}
+          >
+            Revalidar requisitos
+          </button>
+          <button
+            disabled={
+              disabled ||
+              !job?.result?.plan ||
+              repairMax === 0 ||
+              JSON.stringify(currentDeck) !== JSON.stringify(job.result.ir)
+            }
+            onClick={() => void generate(true)}
+          >
+            Corrigir pendências
+          </button>
+          {job?.result?.plan &&
+            JSON.stringify(currentDeck) !== JSON.stringify(job.result.ir) && (
+              <p>
+                O plano mudou com a edição manual. Revalide os requisitos; uma
+                nova geração inicia outro plano.
+              </p>
+            )}
         </div>
       )}
     </section>

@@ -25,3 +25,14 @@
 - [x] Executar comparação A/B/C/D: 40 execuções, 122 respostas auditadas; PPTX estrito A 0/10, B 0/10, C 10/10, D 9/10. Nenhum pedido complexo atingiu 17/17.
 - [x] Verificar regressão (141 Python, 2 Node, 7 Playwright), demonstração real e editor de produção; documentar em EVOLUCAO_SLM.md.
 - [ ] Ampliar pedidos/seeds e isolar reparos a partir do mesmo plano inicial; corrigir omissões de requisitos (formas/camadas) e avaliar conteúdo com pessoas.
+
+## Confiabilidade — 11/10/2026
+- [x] Commit e push prévios: c53bb4498a6aba2812e22014bd1cf66954abfd13, origin/dsl-visual.
+- [x] Requisitos tipados por slide, verificação AST/IR independente e diagnósticos R001.
+- [x] D com adições determinísticas autorizadas, patches locais, limite configurável, progresso, rejeição de regressões e estados antes/depois.
+- [x] Cards, sequência e fluxo; layouts anteriores preservados, geometria compacta sem cortar textos.
+- [x] V001–V003 e fases separadas; investigar renderização real (PowerPoint COM indisponível).
+- [x] Ablação com oito planos compartilhados, quatro pedidos e 32 avaliações: 8 respostas reais, 30 PPTX auditados; complexo 17/17 nas duas repetições após reparo.
+- [x] Interface de requisitos/correções/revalidação; fluxo real com Ollama e exportação.
+- [x] Documentar arquitetura, evidências e limites em docs/EVOLUCAO_CONFIABILIDADE.md.
+- [ ] Ampliar amostra e avaliação humana; resolver overflow persistente, interpretação de pedidos e reparo depois de edição manual.

@@ -1,0 +1,275 @@
+[
+  {
+    "id": "design_complexo",
+    "prompt": "Crie uma apresentação chamada \"Princípios de Design de Slides\" com EXATAMENTE cinco slides, em tema claro e proporção 16:9. Slide 1: capa com título e subtítulo centralizados visualmente. Slide 2: explique contraste usando dois exemplos textuais e duas formas coloridas, com alinhamento à esquerda. Slide 3: explique proximidade com dois grupos de informações visualmente separados. Slide 4: explique camadas criando um retângulo e uma imagem local sobrepostos intencionalmente; a imagem deve ficar inicialmente por trás do retângulo e depois ser trazida para frente; o resultado final deve mostrar a imagem parcialmente por cima do retângulo. Slide 5: comparação complexa em duas colunas, com três vantagens, três limitações e um rodapé. Preserve margens, não deixe elementos fora do slide, use IDs únicos e apenas operações da SlideDSL. Utilize `assets/imagem_demo.png` na demonstração de camadas.",
+    "slides": 5,
+    "requirements": [
+      {
+        "id": "title",
+        "kind": "original",
+        "value": "title",
+        "description": "Título exato da apresentação"
+      },
+      {
+        "id": "theme",
+        "kind": "original",
+        "value": "theme",
+        "description": "Tema claro"
+      },
+      {
+        "id": "slides",
+        "kind": "original",
+        "value": "slides",
+        "description": "Exatamente cinco slides"
+      },
+      {
+        "id": "canvas",
+        "kind": "original",
+        "value": "canvas",
+        "description": "Canvas 1280 por 720"
+      },
+      {
+        "id": "cover",
+        "kind": "original",
+        "value": "cover",
+        "description": "Slide 1 com pelo menos dois textos centralizados por caixas (tolerância 32 px)"
+      },
+      {
+        "id": "contrast_content",
+        "kind": "original",
+        "value": "contrast_content",
+        "description": "Slide 2 menciona contraste"
+      },
+      {
+        "id": "contrast_examples",
+        "kind": "original",
+        "value": "contrast_examples",
+        "description": "Slide 2 com dois textos e duas formas de cores distintas"
+      },
+      {
+        "id": "left_alignment",
+        "kind": "original",
+        "value": "left_alignment",
+        "description": "Slide 2 tem relação de alinhamento à esquerda"
+      },
+      {
+        "id": "proximity_groups",
+        "kind": "original",
+        "value": "proximity_groups",
+        "description": "Slide 3 tem dois grupos não sobrepostos separados por ao menos 64 px"
+      },
+      {
+        "id": "local_image",
+        "kind": "original",
+        "value": "local_image",
+        "description": "Slide 4 usa assets/imagem_demo.png"
+      },
+      {
+        "id": "layer_actions",
+        "kind": "original",
+        "value": "layer_actions",
+        "description": "Slide 4 envia a imagem para trás e depois traz para frente"
+      },
+      {
+        "id": "final_layer",
+        "kind": "original",
+        "value": "final_layer",
+        "description": "Slide 4 tem imagem acima de retângulo e interseção parcial"
+      },
+      {
+        "id": "comparison_columns",
+        "kind": "original",
+        "value": "comparison_columns",
+        "description": "Slide 5 tem cabeçalhos lexicais de vantagens/limitações e três itens por coluna"
+      },
+      {
+        "id": "footer",
+        "kind": "original",
+        "value": "footer",
+        "description": "Slide 5 tem texto de rodapé na faixa y >= 580"
+      },
+      {
+        "id": "margins",
+        "kind": "original",
+        "value": "margins",
+        "description": "Todos os objetos não background preservam 64 px de margem"
+      },
+      {
+        "id": "unique_ids",
+        "kind": "original",
+        "value": "unique_ids",
+        "description": "IDs únicos e referências válidas"
+      },
+      {
+        "id": "valid_commands",
+        "kind": "original",
+        "value": "valid_commands",
+        "description": "Programa integralmente aceito pela GLC"
+      }
+    ]
+  },
+  {
+    "id": "integracao_equipe",
+    "prompt": "Crie tr?s slides sobre integra??o de uma equipe. Slide 1: use cards informativos com duas responsabilidades da equipe. Slide 2: use uma sequ?ncia de tr?s etapas de integra??o. Slide 3: use um diagrama de fluxo simples com tr?s n?s e rela??es next em ordem, explicando revis?o e entrega. Use cabe?alhos vazios nos componentes e frases curtas.",
+    "slides": 3,
+    "requirements": [
+      {
+        "id": "slides",
+        "kind": "slides",
+        "slide": null,
+        "minimum": 3,
+        "distinct_colors": false,
+        "value": "",
+        "description": "3 slides"
+      },
+      {
+        "id": "margins",
+        "kind": "margins",
+        "slide": null,
+        "minimum": 1,
+        "distinct_colors": false,
+        "value": "",
+        "description": "Margens de 64 px"
+      },
+      {
+        "id": "s1_component_3",
+        "kind": "component",
+        "slide": 1,
+        "minimum": 1,
+        "distinct_colors": false,
+        "value": "cards",
+        "description": "Componente cards"
+      },
+      {
+        "id": "s2_component_4",
+        "kind": "component",
+        "slide": 2,
+        "minimum": 1,
+        "distinct_colors": false,
+        "value": "sequence",
+        "description": "Componente sequence"
+      },
+      {
+        "id": "s3_component_5",
+        "kind": "component",
+        "slide": 3,
+        "minimum": 1,
+        "distinct_colors": false,
+        "value": "flow",
+        "description": "Componente flow"
+      }
+    ]
+  },
+  {
+    "id": "formas_camadas",
+    "prompt": "Crie um slide sobre camadas. No primeiro slide coloque duas formas coloridas de cores distintas, uma imagem local assets/imagem_demo.png e uma demonstra??o de camadas: imagem inicialmente atr?s e depois ? frente de um ret?ngulo, com sobreposi??o parcial. Use pouco texto e margens.",
+    "slides": 1,
+    "requirements": [
+      {
+        "id": "slides",
+        "kind": "slides",
+        "slide": null,
+        "minimum": 1,
+        "distinct_colors": false,
+        "value": "",
+        "description": "1 slides"
+      },
+      {
+        "id": "margins",
+        "kind": "margins",
+        "slide": null,
+        "minimum": 1,
+        "distinct_colors": false,
+        "value": "",
+        "description": "Margens de 64 px"
+      },
+      {
+        "id": "s1_shapes_2",
+        "kind": "shapes",
+        "slide": 1,
+        "minimum": 2,
+        "distinct_colors": true,
+        "value": "",
+        "description": "Formas solicitadas e cores"
+      },
+      {
+        "id": "s1_images_3",
+        "kind": "images",
+        "slide": 1,
+        "minimum": 1,
+        "distinct_colors": false,
+        "value": "",
+        "description": "Imagem local presente"
+      },
+      {
+        "id": "s1_layers_4",
+        "kind": "layers",
+        "slide": 1,
+        "minimum": 1,
+        "distinct_colors": false,
+        "value": "",
+        "description": "Imagem atrás e depois à frente, com sobreposição parcial"
+      }
+    ]
+  },
+  {
+    "id": "arquitetura",
+    "prompt": "Crie uma apresentação de cinco slides sobre arquitetura de software, contendo introdução, componentes, comparação, vantagens e conclusão.",
+    "slides": 5,
+    "requirements": [
+      {
+        "id": "slides",
+        "kind": "slides",
+        "slide": null,
+        "minimum": 5,
+        "distinct_colors": false,
+        "value": "",
+        "description": "5 slides"
+      },
+      {
+        "id": "margins",
+        "kind": "margins",
+        "slide": null,
+        "minimum": 1,
+        "distinct_colors": false,
+        "value": "",
+        "description": "Margens de 64 px"
+      },
+      {
+        "id": "topico_1",
+        "kind": "text",
+        "slide": 1,
+        "value": "arquitetura",
+        "description": "Slide 1 menciona arquitetura"
+      },
+      {
+        "id": "topico_2",
+        "kind": "text",
+        "slide": 2,
+        "value": "componente",
+        "description": "Slide 2 menciona componente"
+      },
+      {
+        "id": "topico_3",
+        "kind": "text",
+        "slide": 3,
+        "value": "compar",
+        "description": "Slide 3 menciona compar"
+      },
+      {
+        "id": "topico_4",
+        "kind": "text",
+        "slide": 4,
+        "value": "vantag",
+        "description": "Slide 4 menciona vantag"
+      },
+      {
+        "id": "topico_5",
+        "kind": "text",
+        "slide": 5,
+        "value": "conclu",
+        "description": "Slide 5 menciona conclu"
+      }
+    ]
+  }
+]

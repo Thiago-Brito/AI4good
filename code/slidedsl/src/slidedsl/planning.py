@@ -20,14 +20,14 @@ class DecorationPlan(OutputModel):
 
 
 class RelationPlan(OutputModel):
-    kind: Literal["left", "right", "center", "top", "front", "back"]
+    kind: Literal["left", "right", "center", "top", "front", "back", "next"]
     target: str
     reference: str
 
 
 class SlidePlan(OutputModel):
     title: str = Field(min_length=1, max_length=120)
-    layout: Literal["title_content", "two_columns", "comparison"]
+    layout: Literal["title_content", "two_columns", "comparison", "sequence", "cards", "flow"]
     columns: list[ColumnPlan] = Field(min_length=1, max_length=2)
     decorations: list[DecorationPlan] = Field(max_length=4)
     relations: list[RelationPlan] = Field(max_length=12)
@@ -54,6 +54,9 @@ Retorne somente JSON no schema. Você escreve o conteúdo; o compilador calcula 
 coordenadas, margens e tamanhos. Não inclua coordenadas ou IDs.
 Escolha title_content para uma coluna, two_columns para dois assuntos e comparison
 para comparar duas alternativas. Uma coluna para title_content; duas para os demais.
+sequence, cards e flow usam UMA coluna: items são os nós/cards (até quatro).
+Em flow declare next com reference=c1_i1 e target=c1_i2, depois reference=c1_i2 e
+target=c1_i3. next é exclusivo de flow; o compilador desenha setas para baixo.
 Cada coluna tem heading (pode ser vazio), items (frases completas, idealmente até
 90 caracteres, sem cortar palavras), group (true só quando o pedido exige proximidade).
 Títulos curtos; não repita títulos. Preserve a ordem e TODOS os requisitos do pedido.

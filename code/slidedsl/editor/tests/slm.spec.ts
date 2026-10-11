@@ -12,6 +12,10 @@ test("abre a apresentação real do SLM, modifica, revalida e exporta PPTX", asy
     "Defina SLIDEDSL_REAL_DEMO para uma demonstração real já executada.",
   );
   const folder = path.resolve("..", artifact!);
+  const evidenceFolder = process.env.SLIDEDSL_UI_ARTIFACT_OUTPUT
+    ? path.resolve("..", process.env.SLIDEDSL_UI_ARTIFACT_OUTPUT)
+    : folder;
+  await fs.mkdir(evidenceFolder, { recursive: true });
   const report = JSON.parse(
     await fs.readFile(path.join(folder, "report.json"), "utf8"),
   );
@@ -49,14 +53,14 @@ test("abre a apresentação real do SLM, modifica, revalida e exporta PPTX", asy
   await page.getByRole("button", { name: "Exportar DSL", exact: true }).click();
   const edited = await fs.readFile((await (await exported).path())!, "utf8");
   expect(edited).toContain("Título do SLM editado visualmente");
-  await fs.writeFile(path.join(folder, "editor_modified.sld"), edited);
+  await fs.writeFile(path.join(evidenceFolder, "editor_modified.sld"), edited);
   const compiled = page.waitForEvent("download");
   await page.getByRole("button", { name: "Gerar PPTX", exact: true }).click();
   const bytes = await fs.readFile((await (await compiled).path())!);
   expect(bytes.subarray(0, 2).toString()).toBe("PK");
-  await fs.writeFile(path.join(folder, "editor_modified.pptx"), bytes);
+  await fs.writeFile(path.join(evidenceFolder, "editor_modified.pptx"), bytes);
   await page.screenshot({
-    path: path.join(folder, "editor.png"),
+    path: path.join(evidenceFolder, "editor.png"),
     fullPage: true,
   });
   for (let n = 1; n <= 5; n++) {
@@ -68,6 +72,6 @@ test("abre a apresentação real do SLM, modifica, revalida e exporta PPTX", asy
       .click();
     await page
       .getByTestId("preview")
-      .screenshot({ path: path.join(folder, `preview_${n}.png`) });
+      .screenshot({ path: path.join(evidenceFolder, `preview_${n}.png`) });
   }
 });

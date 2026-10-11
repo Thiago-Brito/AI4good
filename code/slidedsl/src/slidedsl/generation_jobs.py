@@ -52,20 +52,42 @@ def _work(id, payload):
         _persist(jobs[id])
     out = project_root() / "outputs/generation_jobs" / id / "run"
     try:
-        report = generate_strategy(
-            payload["model"],
-            payload["strategy"],
-            payload["prompt"],
-            out,
-            slide_count=payload.get("slides"),
-            strict=payload["strict"],
-            seed=payload["seed"],
-            event_callback=event,
-        )
+        if payload.get("plan") is not None:
+            from .reliability import run_reliability
+
+            report = run_reliability(
+                payload["plan"],
+                payload["prompt"],
+                out,
+                count=len(payload["plan"]["slides"]),
+                requirements=payload["requirements"],
+                model=payload["model"],
+                repair_max=payload["repair_max"],
+                strict=payload["strict"],
+                seed=payload["seed"],
+                event_callback=event,
+            )
+        else:
+            report = generate_strategy(
+                payload["model"],
+                payload["strategy"],
+                payload["prompt"],
+                out,
+                slide_count=payload.get("slides"),
+                strict=payload["strict"],
+                seed=payload["seed"],
+                event_callback=event,
+                reliability=payload.get("reliability", False),
+                repair_max=payload.get("repair_max", 2),
+            )
         source_path = out / "presentation.sld"
         source = source_path.read_text(encoding="utf-8") if source_path.exists() else None
         validation = validate_source(source) if source else None
         result = {
+            "request": payload["prompt"],
+            "plan": json.loads((out / "plan.json").read_text(encoding="utf-8"))
+            if (out / "plan.json").exists()
+            else None,
             "source": source,
             "ir": validation.ir.model_dump() if validation and validation.ir else None,
             "report": {
@@ -81,6 +103,13 @@ def _work(id, payload):
                     "duration_ms",
                     "availability",
                     "compile_error",
+                    "faithful",
+                    "attempts",
+                    "calls",
+                    "visual_quality",
+                    "syntax",
+                    "semantics",
+                    "geometry",
                 )
             },
             "path": out.relative_to(project_root()).as_posix(),

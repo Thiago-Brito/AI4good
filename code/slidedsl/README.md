@@ -11,6 +11,9 @@ três layouts**, com reparos por campo. O editor agora permite escolher o modelo
 Ollama, escrever um pedido e acompanhar a geração. Abra com
 `.\.venv\Scripts\slidedsl.exe serve` e use **Gerar com IA local**.
 Veja [execução, arquitetura e comparação A/B/C/D](docs/EVOLUCAO_SLM.md).
+O editor também identifica requisitos, verifica a cena e permite correções com
+controle de progresso. Há cards, sequências e fluxos determinísticos. Veja
+[confiabilidade, novos comandos e resultados reais](docs/EVOLUCAO_CONFIABILIDADE.md).
 Os modos e resultados históricos continuam disponíveis abaixo.
 
 Atalho Windows: `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/open_slm_editor_windows.ps1`.

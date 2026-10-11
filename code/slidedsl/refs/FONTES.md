@@ -84,3 +84,10 @@ Os arquivos são produzidos por testes/demo, não substituem experimento de mode
   audit_analysis.json e ANALISE_AUDITADA.md (317 respostas reais, seis configurações);
   outputs/demo_local/windows_direct_final/audit.json e production_editor_check.json
   (cinco slides reais, zero diagnósticos, código direto e editor de produção).
+
+## Confiabilidade — consulta 11/10/2026
+- Contrato Ollama chat: JSON Schema, done/done_reason, prompt_eval_count e eval_count: https://docs.ollama.com/api/chat.
+- Exportação real de slides pelo PowerPoint desktop: https://learn.microsoft.com/en-us/office/vba/api/powerpoint.presentation.export.
+- Evidências próprias: outputs/reliability/experiment_20261011_final/configuration.json, evaluation.json, evaluation.csv, audit.json e sources_snapshot/; planos compartilhados, respostas HTTP, estados antes/depois e textos nativos de PPTX.
+- Disponibilidade de renderização: outputs/reliability/rendering_availability.json. PowerPoint COM não registrado; capturas de navegador não são renderizações de PPTX pelo Office.
+- Testes: outputs/tests/reliability-final.xml e outputs/ui-tests/results.json. Geração/correção/edição reais: outputs/reliability/ui_generation.json e ui_architecture.json.

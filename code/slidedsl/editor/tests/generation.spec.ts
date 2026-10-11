@@ -96,7 +96,10 @@ test("gera pelo formulário com SLM real, edita e exporta PowerPoint", async ({
   }
   expect(errors).toEqual([]);
   await fs.writeFile(
-    path.resolve("../outputs/evolution/ui_generation.json"),
+    path.resolve(
+      process.env.SLIDEDSL_UI_GENERATION_OUTPUT ??
+        "../outputs/evolution/ui_generation.json",
+    ),
     JSON.stringify(
       {
         id,
