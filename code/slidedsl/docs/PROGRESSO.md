@@ -1,5 +1,52 @@
 # Progresso de implementação
 
+## Evolução SLM — análise e compilação de planos (10/10/2026)
+Lidos roadmap, resultados incrementais, GLC, AST/IR, compilador, adaptador Ollama,
+geração incremental, API, editor e chamadores. Base Python: 123 testes passaram.
+Serviço local respondeu 0.40.2 com qwen3:4b-instruct instalado. Fontes oficiais
+registradas em refs/FONTES.md antes da documentação desta etapa.
+Acrescentados planejamento sem coordenadas/IDs, resolução determinística de três
+layouts e referências lógicas, sem alterar a GLC ou o backend. Conteúdo não é
+cortado para caber: excesso gera diagnóstico. Reparos autorizam apenas caminhos
+afetados, preservando os demais elementos. Etapa: 24 testes passaram, incluindo
+compilação/inspeção de objetos nativos para os três layouts e correção localizada.
+Nova comparação A/B/C/D é separada do protocolo histórico; não há taxas novas
+antes da execução real. Integração de interface e avaliação ainda em andamento.
+
+## Evolução SLM — interface e demonstração real
+Acrescentados GET /api/models, POST /api/generations e polling por ID. A fila usa
+um trabalhador, persiste eventos e não sobrescreve execuções. O editor existente
+recebe modelo, pedido, estratégia e validação estrita, exibindo diagnósticos e
+carregando a fonte/IR gerada para edição e exportação.
+Piloto qwen3:4b-instruct D gerou cinco slides de arquitetura em 17,77 s, sem reparos
+ou diagnósticos; recompilação do plano offline também passou. O teste pelo formulário
+gerou outro deck real, editou título, revalidou e exportou DSL/PPTX: seis Playwright
+passaram em 31,8 s, incluindo o artefato histórico. Suíte integrada: 136 Python e
+dois Node passaram, lint/format/TypeScript/build aprovados. Dois testes adicionais
+do harness passaram. Evidência: outputs/evolution/ui_generation.json.
+Comparação final iniciada com 2 pedidos x 4 estratégias x 5 seeds pareadas,
+registro separado em outputs/evolution/experiment_20261010/. Fontes exatas desta
+execução preservadas em sources_snapshot/. Resultados ainda não fechados.
+
+## Evolução SLM — avaliação concluída e auditoria final
+Concluídas 40 execuções reais com qwen3:4b-instruct: 2 pedidos x 4 estratégias x
+5 seeds. Auditadas 122 respostas físicas, todas stop; sem falhas de transporte.
+Validação estrita: A 0/10, B 0/10, C 10/10 e D 9/10 PPTX. Os 19 arquivos têm cenas
+e textos nativos conferidos. Arquitetura: C/D 10/10 critérios em todas as seeds.
+Design complexo: C 16,16,16,14,16/17; D 16,16,14,16,16/17. D rep 3 falhou após
+dois patches que repetiram d2 inexistente. Nenhum resultado complexo atingiu 17/17.
+Somente um dos dez pares C/D teve resposta inicial idêntica; não se atribuiu efeito
+causal ao reparo. Fontes/código executados preservados; dados em evaluation.json/csv
+e audit.json/csv de outputs/evolution/experiment_20261010/.
+Corrigida agregação de design por slide alcançado (A: 43/50, 13 erros) e título
+do draft rejeitado A/B. Auditoria preserva campos originais e registra cobertura
+sob título canônico; respostas/programas/PPTX históricos não foram alterados.
+Regressão integrada 140 Python/2 Node/7 Playwright passou; após um teste adicional
+do título, Python completo passou com 141. Lint/format/TypeScript/build aprovados.
+Atalho open_slm_editor_windows.ps1 executado com -NoBrowser; produção em localhost
+carregou cinco slides reais sem erro JS. EVOLUCAO_SLM.md registra execução, métricas,
+limites, recursos não implementados e próximos passos. Roadmap atualizado.
+
 ## 2026-10-08 — início / fase 0
 Lidos integralmente AGENTS.md da raiz, AGENTS.md do projeto acadêmico e a especificação.
 Criado repositório vazio em code/slidedsl. Nenhum protótipo consultado ou reutilizado.

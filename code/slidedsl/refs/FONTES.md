@@ -1,4 +1,24 @@
 # Fontes consultadas em 2026-10-08
+
+## Evolução SLM — consulta em 2026-10-10
+- Ollama Structured Outputs: https://docs.ollama.com/capabilities/structured-outputs.
+  A API local aceita JSON Schema em `format`; o schema deve também orientar o prompt.
+  A validação local da resposta continua necessária. Não foi encontrada uma opção
+  pública de `chat` para receber diretamente a gramática Lark da SlideDSL.
+- Ollama chat: https://docs.ollama.com/api/chat. Campos `format`, `options`, `think`,
+  `done` e `done_reason`; controles de thinking descobertos por `/api/show`.
+- Evidência prévia: docs/RESULTADOS_INCREMENTAIS.md e outputs/evaluation_incremental/.
+- Evidência inicial desta etapa: 123 testes Python passaram; serviço local respondeu
+  versão 0.40.2 e possui qwen3:4b-instruct, digest
+  0edcdef34593eac1aa2be9c7d06c432dcf81945adca5eca2f27662c18f168ba0.
+- Layouts, IDs automáticos e correções por caminhos são decisões locais de engenharia;
+  seus efeitos serão medidos em um protocolo novo, separado do histórico A/B/C.
+- Evidências finais da etapa: outputs/evolution/experiment_20261010/evaluation.json
+  e audit.json/audit.csv (40 execuções, 122 respostas HTTP, 19 PPTX nativos; fontes
+  executadas/hashes em sources_snapshot). Resultados interpretados em docs/EVOLUCAO_SLM.md.
+- Verificações: outputs/tests/evolution-final.xml (141 Python), outputs/ui-tests/results.json
+  (7 Playwright), outputs/evolution/ui_generation.json e production_editor_check.json.
+
 Registro anterior à redação acadêmica. Documentação consultada pela ferramenta web;
 smoke tests autenticados de Canva, Google e OpenAI ainda não executados.
 

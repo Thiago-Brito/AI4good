@@ -72,6 +72,30 @@ def main(argv=None) -> int:
             p.add_argument("--modes", default="direct,json")
             p.add_argument("--repetitions", type=int, default=5)
             p.add_argument("--resume", action="store_true")
+    for name in ("generate-planned", "evaluate-strategies"):
+        p = sub.add_parser(name, help="Planejamento local e comparação A/B/C/D")
+        p.add_argument("--model", default="qwen3:4b-instruct")
+        p.add_argument("--out", required=True)
+        p.add_argument("--temperature", type=float, default=0.1)
+        p.add_argument("--context-length", type=int, default=8192)
+        p.add_argument("--output-tokens", type=int, default=4096)
+        p.add_argument(
+            "--allow-warnings", action="store_true", help="Não bloquear avisos selecionados"
+        )
+        if name == "generate-planned":
+            p.add_argument("--prompt-file", required=True)
+            p.add_argument("--strategy", choices=["A", "B", "C", "D"], default="D")
+            p.add_argument("--slides", type=int)
+            p.add_argument("--seed", type=int, default=42)
+        else:
+            p.add_argument("--requests-file", default="benchmark/evolution_requests.json")
+            p.add_argument("--strategies", default="A,B,C,D")
+            p.add_argument("--repetitions", type=int, default=5)
+            p.add_argument("--resume", action="store_true")
+    p = sub.add_parser("compile-plan", help="Compilar plano JSON com layouts automáticos, sem IA")
+    p.add_argument("file")
+    p.add_argument("--out", required=True)
+    p.add_argument("--strict", action="store_true")
     p = sub.add_parser("serve", help="Abrir API/editor local")
     p.add_argument("--host", default="127.0.0.1")
     p.add_argument("--port", type=int, default=8000)
@@ -82,6 +106,54 @@ def main(argv=None) -> int:
     p.add_argument("--out", required=True)
     args = parser.parse_args(argv)
     try:
+        if args.command == "compile-plan":
+            from .layouts import compile_plan
+            from .planning import DeckPlan
+
+            report = compile_plan(
+                DeckPlan.model_validate_json(Path(args.file).read_text(encoding="utf-8-sig")),
+                Path(args.out),
+                strict=args.strict,
+            )
+            print(f"Plano compilado: {report['inspection']['slide_count']} slides editáveis.")
+            return 0
+        if args.command in {"generate-planned", "evaluate-strategies"}:
+            options = dict(
+                temperature=args.temperature,
+                context_length=args.context_length,
+                output_tokens=args.output_tokens,
+                strict=not args.allow_warnings,
+            )
+            if args.command == "generate-planned":
+                from .evolution import generate_strategy
+
+                report = generate_strategy(
+                    args.model,
+                    args.strategy,
+                    Path(args.prompt_file).read_text(encoding="utf-8-sig"),
+                    Path(args.out),
+                    slide_count=args.slides,
+                    seed=args.seed,
+                    **options,
+                )
+                print(
+                    f"Resultado em {args.out}; PPTX: {report['compile_success']}; "
+                    f"requisitos: {report['requirements']['numerator']}/{report['requirements']['denominator']}"
+                )
+                return 0 if report["compile_success"] else 1
+            from .evolution_experiment import evaluate_strategies
+
+            result = evaluate_strategies(
+                args.model,
+                json.loads(Path(args.requests_file).read_text(encoding="utf-8-sig")),
+                Path(args.out),
+                repetitions=args.repetitions,
+                strategies=args.strategies.split(","),
+                resume=args.resume,
+                **options,
+            )
+            print(json.dumps(result["summary"], ensure_ascii=False, indent=2))
+            return 0 if all(r["status"] == "EXECUTADO" for r in result["runs"]) else 1
         if args.command in {"demo-local", "evaluate-local"}:
             from .incremental import evaluate_incremental, generate_deck, publish_demo
 

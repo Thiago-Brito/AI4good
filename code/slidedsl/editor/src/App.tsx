@@ -17,6 +17,7 @@ import {
 } from "./api";
 import { DomainCard, graphFor, validConnection } from "./graph";
 import { Preview } from "./Preview";
+import { GenerationPanel } from "./GenerationPanel";
 import type { Deck, Diagnostic, Element, RelationKind } from "./types";
 
 const nodeTypes = { domain: DomainCard };
@@ -196,6 +197,22 @@ export default function App() {
         </div>
         <span className="badge">16:9 · 1280 × 720</span>
       </header>
+      <GenerationPanel
+        disabled={busy}
+        onBusy={setBusy}
+        onStatus={setStatus}
+        onResult={(result) => {
+          setDiagnostics(result.report.diagnostics);
+          setSource(result.source ?? "");
+          setDeck(result.ir);
+          select(result.ir?.slides[0].elements[0]?.id ?? "", 1);
+          setStatus(
+            result.report.compile_success
+              ? "Apresentação da IA carregada. Revise os requisitos e o conteúdo."
+              : "Geração encerrada com pendências. Consulte os diagnósticos.",
+          );
+        }}
+      />
       <section className="toolbar">
         <label className="file-button">
           Abrir .sld

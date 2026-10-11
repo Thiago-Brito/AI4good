@@ -1,0 +1,1 @@
+Crie uma apresentação de cinco slides sobre arquitetura de software, contendo introdução, componentes, comparação, vantagens e conclusão.

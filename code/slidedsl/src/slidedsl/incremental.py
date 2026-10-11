@@ -38,12 +38,23 @@ def error(code: str, message: str, **evidence) -> dict:
 
 
 def parameters(
-    model, mode, request, repair_max, temperature, seed, context_length, output_tokens, strict=False
+    model,
+    mode,
+    request,
+    repair_max,
+    temperature,
+    seed,
+    context_length,
+    output_tokens,
+    strict=False,
+    slide_count=5,
 ):
     if mode not in {"direct", "json"} or repair_max not in {0, 1, 2}:
         raise ValueError("Use modo direct/json e zero a dois reparos.")
     if not 0 <= temperature <= 1 or context_length < 4096 or output_tokens < 512:
         raise ValueError("Temperatura 0..1, contexto >=4096 e saída >=512.")
+    if not 1 <= slide_count <= 12:
+        raise ValueError("Use de 1 a 12 slides.")
     system = (project_root() / f"prompts/incremental_{mode}.txt").read_text(encoding="utf-8")
     schema = SlideOutput.model_json_schema() if mode == "json" else None
     if schema is not None:
@@ -53,7 +64,7 @@ def parameters(
         "model": model,
         "mode": mode,
         "request": request,
-        "slide_count": 5,
+        "slide_count": slide_count,
         "repair_max": repair_max,
         "temperature": temperature,
         "seed": seed,
@@ -71,13 +82,13 @@ def parameters(
     }
 
 
-def slide_prompt(request: str, number: int, previous: list[str], mode: str) -> str:
+def slide_prompt(request: str, number: int, previous: list[str], mode: str, slide_count=5) -> str:
     focus = re.search(
         rf"Slide\s+{number}\s*:\s*(.*?)(?=Slide\s+\d+\s*:|$)", request, re.IGNORECASE | re.DOTALL
     )
     return (
         f"Pedido integral do usuário:\n{request}\n\n"
-        f"Gere apenas o slide {number} de 5 correspondente ao pedido. "
+        f"Gere apenas o slide {number} de {slide_count} correspondente ao pedido. "
         "Não repita os outros slides. Crie conteúdo informativo e elementos concretos.\n"
         + ("REQUISITO DESTE SLIDE: " + focus.group(1).strip() + "\n" if focus else "")
         + (
@@ -103,9 +114,20 @@ def generate_deck(
     output_tokens=4096,
     strict=False,
     adapter=None,
+    slide_count=5,
+    event_callback=None,
 ) -> dict:
     cfg = parameters(
-        model, mode, request, repair_max, temperature, seed, context_length, output_tokens, strict
+        model,
+        mode,
+        request,
+        repair_max,
+        temperature,
+        seed,
+        context_length,
+        output_tokens,
+        strict,
+        slide_count,
     )
     out = out.resolve()
     out.mkdir(parents=True, exist_ok=False)
@@ -143,8 +165,8 @@ def generate_deck(
         return report
     started = time.perf_counter()
     accepted, titles = [], []
-    for number in range(1, 6):
-        base_prompt = slide_prompt(request, number, titles, mode)
+    for number in range(1, slide_count + 1):
+        base_prompt = slide_prompt(request, number, titles, mode, slide_count)
         current = base_prompt
         slide_record = {"number": number, "accepted": False, "rounds": [], "selected_round": None}
         for round_number in range(repair_max + 1):
@@ -287,8 +309,18 @@ def generate_deck(
             save_json(folder / "diagnostics.json", diagnostics)
             save_json(folder / "metrics.json", record)
             slide_record["rounds"].append(record)
+            if event_callback:
+                event_callback(
+                    {
+                        "stage": "slide",
+                        "slide": number,
+                        "round": round_number,
+                        "valid": valid,
+                        "diagnostics": diagnostics,
+                    }
+                )
             print(
-                f"{model} {mode} slide {number}/5 rodada {round_number}: {'válido' if valid else ','.join(d['code'] for d in diagnostics)}",
+                f"{model} {mode} slide {number}/{slide_count} rodada {round_number}: {'válido' if valid else ','.join(d['code'] for d in diagnostics)}",
                 flush=True,
             )
             if valid:
@@ -331,7 +363,7 @@ def generate_deck(
         initial_parse_success=all(s["rounds"][0]["parse_success"] for s in report["slides"]),
         initial_semantic_success=all(s["rounds"][0]["semantic_success"] for s in report["slides"]),
     )
-    if len(accepted) == 5:
+    if len(accepted) == slide_count:
         source = print_ast(PresentationNode(title=titles[0], theme="claro", slides=accepted))
         (out / "presentation.sld").write_text(source, encoding="utf-8")
         validation = validate_source(source)

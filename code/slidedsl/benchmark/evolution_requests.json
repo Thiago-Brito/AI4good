@@ -1,0 +1,26 @@
+[
+  {
+    "id": "arquitetura",
+    "prompt": "Crie uma apresentação de cinco slides sobre arquitetura de software, contendo introdução, componentes, comparação, vantagens e conclusão.",
+    "slides": 5,
+    "requirements": [
+      {"id": "introducao", "slide": 1, "keywords": ["arquitetura", "introdução", "introducao"]},
+      {"id": "componentes", "slide": 2, "keywords": ["componente", "módulo", "modulo"]},
+      {"id": "comparacao", "slide": 3, "keywords": ["compar", "monol", "micro"], "two_columns": true},
+      {"id": "vantagens", "slide": 4, "keywords": ["vantag", "benef", "flexib", "escalab"]},
+      {"id": "conclusao", "slide": 5, "keywords": ["conclu", "escolha", "resumo", "requisito"]}
+    ]
+  },
+  {
+    "id": "design_complexo",
+    "prompt": "Crie uma apresentação chamada \"Princípios de Design de Slides\" com EXATAMENTE cinco slides, em tema claro e proporção 16:9. Slide 1: capa com título e subtítulo centralizados visualmente. Slide 2: explique contraste usando dois exemplos textuais e duas formas coloridas, com alinhamento à esquerda. Slide 3: explique proximidade com dois grupos de informações visualmente separados. Slide 4: explique camadas criando um retângulo e uma imagem local sobrepostos intencionalmente; a imagem deve ficar inicialmente por trás do retângulo e depois ser trazida para frente; o resultado final deve mostrar a imagem parcialmente por cima do retângulo. Slide 5: comparação complexa em duas colunas, com três vantagens, três limitações e um rodapé. Preserve margens, não deixe elementos fora do slide, use IDs únicos e apenas operações da SlideDSL. Utilize `assets/imagem_demo.png` na demonstração de camadas.",
+    "slides": 5,
+    "original_design_rubric": true,
+    "requirements": [
+      {"id": "contraste", "slide": 2, "keywords": ["contraste"], "min_texts": 3},
+      {"id": "proximidade", "slide": 3, "keywords": ["proxim", "grupo"]},
+      {"id": "camadas", "slide": 4, "keywords": ["camada", "sobrepos"]},
+      {"id": "comparacao", "slide": 5, "two_columns": true, "min_texts": 8}
+    ]
+  }
+]

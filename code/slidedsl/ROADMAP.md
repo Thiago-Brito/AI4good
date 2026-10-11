@@ -16,3 +16,12 @@
 - [x] Validar uma demonstração SLM real de cinco slides, PPTX editável e editor
 - [x] Comparar três modelos, dois modos e cinco repetições por configuração: 317 respostas auditadas, quatro PPTX no pedido complexo; demonstrações estritas separadas
 - [x] Explicar no README o fluxo do projeto e a GLC, com exemplo executável validado e compilado
+
+## Evolução SLM — 10/10/2026
+- [x] Analisar arquitetura/evidências e verificar base: 123 testes Python passaram; Ollama 0.40.2 disponível.
+- [x] Implementar plano sem coordenadas, IDs determinísticos, três layouts e validação pela cadeia original; 24 testes de etapa passaram, incluindo PPTX reais.
+- [x] Implementar estratégias A/B sem reparos e C/D com planejamento; D aplica patches em campos diagnosticados, com limite de dois reparos.
+- [x] Integrar geração, modelos locais e progresso à interface existente; fluxo real de geração/edição/exportação verificado no navegador.
+- [x] Executar comparação A/B/C/D: 40 execuções, 122 respostas auditadas; PPTX estrito A 0/10, B 0/10, C 10/10, D 9/10. Nenhum pedido complexo atingiu 17/17.
+- [x] Verificar regressão (141 Python, 2 Node, 7 Playwright), demonstração real e editor de produção; documentar em EVOLUCAO_SLM.md.
+- [ ] Ampliar pedidos/seeds e isolar reparos a partir do mesmo plano inicial; corrigir omissões de requisitos (formas/camadas) e avaliar conteúdo com pessoas.

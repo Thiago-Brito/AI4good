@@ -1,4 +1,11 @@
 # Editor visual
+
+O painel **Gerar com IA local** consulta modelos Ollama instalados, recebe o pedido
+em português e oferece as estratégias A/B/C/D. D planeja conteúdo sem coordenadas,
+resolve IDs/layouts e permite até dois reparos por campos diagnosticados. O painel
+acompanha o progresso por `/api/generations/{id}` e carrega a IR/fonte efetivamente
+gerada. Validação estrita vem habilitada. Diagnósticos, edição e exportação usam
+os controles existentes. [Contrato e resultados](EVOLUCAO_SLM.md).
 React/Vite/TypeScript e @xyflow/react. Servidor FastAPI compartilha parser, IR,
 checker e compilador da CLI. APIs: /api/parse, validate, export, compile, relation,
 health e examples/{nome}. Build usa /editor-assets; imagens usam /assets.

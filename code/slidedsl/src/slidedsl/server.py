@@ -6,7 +6,8 @@ import tempfile
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
+from typing import Literal
 from starlette.background import BackgroundTask
 
 from .compiler import compile_ir
@@ -33,6 +34,63 @@ class IRPayload(BaseModel):
 class RelationPayload(IRPayload):
     slide: int
     relation: Relation
+
+
+class GenerationPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    model: str = Field(min_length=1, max_length=200)
+    prompt: str = Field(min_length=1, max_length=12000)
+    strategy: Literal["A", "B", "C", "D"] = "D"
+    slides: int | None = Field(default=None, ge=1, le=12)
+    strict: bool = True
+    seed: int = 42
+
+
+@app.get("/api/models")
+def local_models():
+    from .models.base import ModelError
+    from .models.ollama_model import OllamaTextModel
+
+    try:
+        model = OllamaTextModel("", timeout=5)
+        tags = model._request("GET", "/api/tags")
+        return {
+            "available": True,
+            "models": [
+                {"name": m["name"], "digest": m.get("digest")} for m in tags.get("models", [])
+            ],
+        }
+    except ModelError as exc:
+        return {"available": False, "models": [], "error": str(exc)}
+
+
+@app.post("/api/generations", status_code=202)
+def start_generation(payload: GenerationPayload):
+    from .evolution import requested_count
+    from .generation_jobs import submit_job
+
+    try:
+        if not payload.prompt.strip():
+            raise ValueError("Escreva o pedido da apresentação.")
+        requested_count(payload.prompt)  # Reject unsupported counts before queueing.
+        return submit_job(payload.model_dump())
+    except ValueError as exc:
+        raise HTTPException(422, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(409, detail=str(exc)) from exc
+
+
+@app.get("/api/generations/{id}")
+def generation_progress(id: str):
+    import re
+    from .generation_jobs import read_job
+
+    if not re.fullmatch(r"[a-f0-9]{32}", id):
+        raise HTTPException(404, detail="Geração não encontrada.")
+    try:
+        return read_job(id)
+    except KeyError as exc:
+        raise HTTPException(404, detail="Geração não encontrada.") from exc
 
 
 def normalize_ir(deck: Presentation):

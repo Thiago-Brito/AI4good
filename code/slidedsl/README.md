@@ -6,6 +6,15 @@ deck escritos para a especificação de 8 de outubro de 2026, sem usar protótip
 
 ## Como o projeto funciona
 
+A evolução local acrescenta **planejamento sem coordenadas, IDs automáticos e
+três layouts**, com reparos por campo. O editor agora permite escolher o modelo
+Ollama, escrever um pedido e acompanhar a geração. Abra com
+`.\.venv\Scripts\slidedsl.exe serve` e use **Gerar com IA local**.
+Veja [execução, arquitetura e comparação A/B/C/D](docs/EVOLUCAO_SLM.md).
+Os modos e resultados históricos continuam disponíveis abaixo.
+
+Atalho Windows: `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/open_slm_editor_windows.ps1`.
+
 A SlideDSL descreve apresentações por comandos em português controlado: cada
 comando tem palavras e ordem definidas pela linguagem. Você pode escrever um
 arquivo `.sld` ou pedir a um modelo local que produza esse código a partir de um
