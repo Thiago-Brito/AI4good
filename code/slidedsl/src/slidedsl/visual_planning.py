@@ -276,11 +276,8 @@ def visual_decoder_schema(schema, restricted=False):
             for col in columns.get("prefixItems", []):
                 col["properties"]["items"]["items"] = deepcopy(node)
         if expressive:
-            from .expressive_composition import content_array
-
             for col in [columns["items"], *columns.get("prefixItems", [])]:
-                items = col["properties"]["items"]
-                node = content_array(layout, items["minItems"], items["maxItems"])
+                node = deepcopy(col["properties"]["content"])
                 # Ollama's regex grammar does not reliably intersect pattern/maxLength.
                 # Keep completion patterns in post-decoder validation, not sampling.
                 for branch in node.get("anyOf", [node]):

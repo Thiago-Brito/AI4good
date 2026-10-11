@@ -4,6 +4,8 @@ import { request } from "./api";
 export type ContextOptions = {
   visual_planning?: boolean;
   expressive_planning?: boolean;
+  semantic_planning?: boolean;
+  semantic_review_max?: number;
   theme?: string;
   audience?: string;
   objective?: string;
@@ -195,6 +197,38 @@ export function ContextPanel({
         <p>
           O modo restrito mantém as frases literais e as composições existentes.
         </p>
+      )}
+      <label>
+        <input
+          type="checkbox"
+          aria-label="Planejamento semântico"
+          checked={settings.semantic_planning ?? false}
+          disabled={disabled || working || settings.grounding === "restricted"}
+          onChange={(e) =>
+            change({
+              semantic_planning: e.target.checked,
+              semantic_review_max: 0,
+            })
+          }
+        />
+        Planejamento semântico · papéis e relações explícitas
+      </label>
+      {settings.semantic_planning && (
+        <label>
+          Revisão localizada (Qwen3 4B local)
+          <select
+            aria-label="Revisão semântica"
+            disabled={disabled || working}
+            value={settings.semantic_review_max ?? 0}
+            onChange={(e) =>
+              change({ semantic_review_max: Number(e.target.value) })
+            }
+          >
+            <option value={0}>Somente diagnóstico</option>
+            <option value={1}>Até uma chamada</option>
+            <option value={2}>Até duas chamadas</option>
+          </select>
+        </label>
       )}
       <div className="generation-options">
         {(
@@ -497,7 +531,14 @@ export function ContextPanel({
           aria-label="Fundamentação"
           value={settings.grounding ?? "free"}
           disabled={disabled || working}
-          onChange={(e) => change({ grounding: e.target.value })}
+          onChange={(e) =>
+            change({
+              grounding: e.target.value,
+              ...(e.target.value === "restricted"
+                ? { semantic_planning: false, semantic_review_max: 0 }
+                : {}),
+            })
+          }
         >
           <option value="free">Livre</option>
           <option value="grounded">Fundamentado nos documentos</option>

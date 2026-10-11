@@ -92,6 +92,8 @@ class GenerationContext(BaseModel):
     model_config = ConfigDict(extra="forbid")
     visual_planning: bool = False
     expressive_planning: bool = False
+    semantic_planning: bool = False
+    semantic_review_max: int = Field(default=0, ge=0, le=2)
     theme: str = Field(default="", max_length=200)
     audience: str = Field(default="", max_length=200)
     objective: str = Field(default="", max_length=200)
@@ -247,6 +249,16 @@ def generate_contextual(
             "Contexto visual/referências exige estratégia C ou D; A/B continuam históricos."
         )
     context = GenerationContext.model_validate(context or {})
+    if context.semantic_review_max and not context.semantic_planning:
+        raise ValueError("Revisão semântica exige semantic_planning.")
+    if context.semantic_planning:
+        if model != "qwen3:4b-instruct":
+            raise ValueError("Esta etapa semântica usa exclusivamente qwen3:4b-instruct local.")
+        if context.grounding == "restricted":
+            raise ValueError(
+                "Modo restrito mantém contrato extrativo; desative planejamento semântico."
+            )
+        context.expressive_planning = True
     if context.expressive_planning:
         context.visual_planning = True
     from .models.ollama_model import OllamaTextModel
@@ -364,6 +376,18 @@ def generate_contextual(
                 adapter, request, supplied, count, out / "visual_outline", seed, event_callback
             )
             visual_response = json.loads((out / "visual_outline/response.json").read_text("utf-8"))
+            if context.semantic_planning and context.documents and context.grounding != "free":
+                from .documents import retrieve_for_slides
+
+                chunks, slide_chunks = retrieve_for_slides(context.documents, outline)
+                supplied["excerpts"] = chunks
+                supplied["slide_excerpts"] = slide_chunks
+                schema = contextual_schema(
+                    count,
+                    list(aliases),
+                    [c["id"] for c in chunks],
+                    named if len(named) == 1 else None,
+                )
             schema = constrain_visual_schema(
                 schema,
                 outline,
@@ -371,6 +395,10 @@ def generate_contextual(
                 context.grounding == "restricted",
                 context.expressive_planning,
             )
+            if context.semantic_planning:
+                from .semantic_planning import semantic_schema
+
+                schema = semantic_schema(schema, [c["id"] for c in chunks])
             supplied["visual_outline"] = outline
             save_json(out / "context.json", supplied)
         except (ValueError, ModelError, SchemaError) as exc:
@@ -393,6 +421,10 @@ def generate_contextual(
         from .expressive_composition import CONTENT_SYSTEM as EXPRESSIVE_SYSTEM
 
         content_system = EXPRESSIVE_SYSTEM
+    if context.semantic_planning:
+        from .semantic_planning import SYSTEM
+
+        content_system += SYSTEM
     initial = generate_strategy(
         model,
         "C",
@@ -407,6 +439,7 @@ def generate_contextual(
         system_override=content_system,
         schema_override=schema,
         schema_in_prompt=False,
+        plan_only=context.semantic_planning,
         decode_schema_override=visual_decoder_schema(schema, context.grounding == "restricted")
         if context.visual_planning
         else None,
@@ -514,6 +547,28 @@ def generate_contextual(
             "verbatim": context.grounding == "restricted",
             "requirements": deepcopy(criteria),
         }
+    semantic_review = None
+    if context.semantic_planning:
+        from .semantic_planning import review_plan
+
+        if event_callback:
+            event_callback(
+                {
+                    "stage": "validation",
+                    "message": "Verificando papéis e coerência; não verifica verdade factual",
+                }
+            )
+        plan, semantic_review = review_plan(
+            plan,
+            out / "semantic_review",
+            adapter=adapter,
+            request=request,
+            requirements=criteria,
+            chunks=chunks,
+            grounding=context.grounding,
+            max_calls=context.semantic_review_max,
+            seed=seed,
+        )
     report = run_reliability(
         deepcopy(plan),
         request,
@@ -542,6 +597,24 @@ def generate_contextual(
         report["refinement"] = refinement_report(final_plan)
         save_json(out / "refinement.json", report["refinement"])
     audit = source_audit(final_plan, chunks, context.grounding == "restricted")
+    if context.semantic_planning:
+        from .semantic_planning import audit_semantics
+
+        report["semantic_review"] = semantic_review
+        report["semantic_audit"] = audit_semantics(final_plan, chunks, context.grounding)
+        save_json(out / "semantic_audit.json", report["semantic_audit"])
+        for s in final_plan["slides"]:
+            for col in s["columns"]:
+                for node in col.get("content", []):
+                    for ref in node.get("sources", []):
+                        if ref not in {c["id"] for c in chunks}:
+                            audit["issues"].append(
+                                {
+                                    "code": "F001",
+                                    "message": "Fragmento de nó inexistente",
+                                    "source": ref,
+                                }
+                            )
     for number, slide in enumerate(final_plan["slides"], 1):
         for media in slide.get("media", []):
             if media.get("asset") and media["asset"] not in selected:
@@ -613,6 +686,15 @@ def generate_contextual(
         report["protocol"] = "visual-planning-v1"
     if context.expressive_planning and context.grounding != "restricted":
         report["protocol"] = "expressive-planning-v1"
+    if context.semantic_planning:
+        report["protocol"] = "semantic-planning-v1"
+        review_responses = [
+            json.loads(p.read_text("utf-8")) or {}
+            for p in sorted((out / "semantic_review").glob("attempt_*/response.json"))
+        ]
+        report["calls"] += semantic_review["calls"]
+        report["output_tokens"] += sum(r.get("eval_count", 0) for r in review_responses)
+        report["input_tokens"] += sum(r.get("prompt_eval_count", 0) for r in review_responses)
     save_json(out / "source_audit.json", audit)
     save_json(out / "report.json", report)
     return report

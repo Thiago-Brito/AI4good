@@ -72,6 +72,18 @@ def extract_requirements(request, count):
     for slide, clause in sections:
         if slide > count:
             continue
+        # Negation applies to coordinated lists too: "sem imagens ou rodapé".
+        # Match only known requirement nouns; do not consume arbitrary prose.
+        excluded = r"(?:rodape|imagem|imagens|formas?|retangulos?|elipses?|grupos|colunas|cards|fluxo|camadas)"
+        clause = re.sub(
+            r"\b(?:sem|nao (?:inclua|use|coloque|adicione))\s+"
+            + excluded
+            + r"(?:\s*(?:,|e|ou)\s*"
+            + excluded
+            + r")*\b",
+            "",
+            clause,
+        )
         clause = re.sub(
             r"\b(?:sem|nao (?:inclua|use|coloque|adicione))\s+(?:(?:um|uma|nenhum|nenhuma)\s+)?"
             r"(?:rodape|imagem|imagens|formas?|retangulos?|elipses?|grupos|colunas|cards|fluxo|camadas)\b",

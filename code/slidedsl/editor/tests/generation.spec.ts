@@ -185,6 +185,79 @@ test("envia planejamento expressivo opcional pela geração existente", async ({
   expect(payload.context?.visual_planning).toBe(true);
 });
 
+test("planejamento semântico envia opções e exibe limites da revisão", async ({
+  page,
+}) => {
+  let payload: {
+    context?: { semantic_planning?: boolean; semantic_review_max?: number };
+  } = {};
+  await page.route("**/api/models", (route) =>
+    route.fulfill({
+      json: { available: true, models: [{ name: "qwen3:4b-instruct" }] },
+    }),
+  );
+  await page.route("**/api/generations", async (route) => {
+    payload = route.request().postDataJSON();
+    await route.fulfill({
+      status: 202,
+      json: {
+        id: "cccccccccccccccccccccccccccccccc",
+        state: "completed",
+        error: null,
+        events: [],
+        result: {
+          source: null,
+          ir: null,
+          path: "teste",
+          report: {
+            compile_success: false,
+            valid: false,
+            diagnostics: [],
+            corrections: 0,
+            requirements: { numerator: 0, denominator: 2, all_met: false },
+            semantic_audit: {
+              diagnostics: [
+                {
+                  code: "Q003",
+                  path: "slides.0.columns.0.content.0.label",
+                  message: "Categoria abstrata",
+                },
+              ],
+            },
+            semantic_review: {
+              calls: 1,
+              attempts: [{ accepted: false, reason: "no_progress" }],
+            },
+          },
+        },
+      },
+    });
+  });
+  await page.goto("/");
+  await page
+    .getByText("Configurações avançadas, imagens e fontes (opcional)", {
+      exact: true,
+    })
+    .click();
+  await page.getByLabel("Planejamento semântico").check();
+  await page.getByLabel("Revisão semântica", { exact: true }).selectOption("1");
+  await page
+    .getByRole("button", { name: "Gerar apresentação", exact: true })
+    .click();
+  expect(payload.context?.semantic_planning).toBe(true);
+  expect(payload.context?.semantic_review_max).toBe(1);
+  const editorial = page.getByLabel("Diagnóstico editorial");
+  await editorial.locator("summary").click();
+  await expect(editorial).toContainText("não comprovam correção factual");
+  await expect(editorial).toContainText("Q003");
+  await expect(editorial).toContainText("preservado estado anterior");
+  await page
+    .getByLabel("Fundamentação", { exact: true })
+    .selectOption("restricted");
+  await expect(page.getByLabel("Planejamento semântico")).not.toBeChecked();
+  await expect(page.getByLabel("Planejamento semântico")).toBeDisabled();
+});
+
 test("exibe caminhos e diagnósticos das correções sem substituir por exemplo manual", async ({
   page,
 }) => {

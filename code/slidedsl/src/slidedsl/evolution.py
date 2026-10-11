@@ -195,7 +195,7 @@ def _metric_counts(diagnostics, reached):
             d["code"].startswith(("P", "J")) and d["severity"] == "ERRO" for d in diagnostics
         ),
         "semantic_errors": sum(
-            d["code"].startswith(("S", "L002", "L003", "L005", "G003", "G004", "G005"))
+            d["code"].startswith(("S", "K", "L002", "L003", "L005", "G003", "G004", "G005"))
             and d["severity"] == "ERRO"
             for d in diagnostics
         ),
@@ -238,6 +238,7 @@ def generate_strategy(
     schema_in_prompt=True,
     decode_schema_override=None,
     response_transform=None,
+    plan_only=False,
 ) -> dict:
     if reliability:
         from .reliability import generate_reliable
@@ -439,9 +440,13 @@ def generate_strategy(
             if schema_override is not None:
                 Draft202012Validator(schema_override).validate(candidate)
             data = candidate
-            plan, validation, mapping, ds = _validate_plan(data, count)
+            if plan_only:
+                plan, ds = DeckPlan.model_validate(data), []
+                save_json(out / "plan.json", plan.model_dump())
+            else:
+                plan, validation, mapping, ds = _validate_plan(data, count)
             diagnostics += ds
-            if plan:
+            if plan and not plan_only:
                 selected_source, _, _ = plan_to_dsl(plan)
                 (folder / "presentation.sld").write_text(selected_source, encoding="utf-8")
                 save_json(folder / "plan.json", plan.model_dump())
@@ -461,8 +466,10 @@ def generate_strategy(
         save_json(folder / "response.json", getattr(adapter, "last_response", None))
         valid = (
             complete
-            and validation is not None
-            and validation.success(strict)
+            and (
+                (plan_only and plan is not None)
+                or (validation is not None and validation.success(strict))
+            )
             and not any(d["severity"] == "ERRO" for d in diagnostics)
         )
         record = {
@@ -540,7 +547,7 @@ def generate_strategy(
         save_json(out / "element_paths.json", mapping)
         if validation and validation.ir:
             save_json(out / "ir.json", validation.ir.model_dump())
-    if report["valid"]:
+    if report["valid"] and not plan_only:
         try:
             inspection = compile_source(selected_source, out / "presentation.pptx", strict=strict)
             save_json(out / "pptx_inspection.json", inspection)

@@ -49,6 +49,14 @@ DIAGRAM_LAYOUTS = {"architecture_diagram", "comparison_visual", "visual_flow", "
 
 
 def connected(slide, column):
+    if slide.semantic:
+        from .semantic_planning import DRAWN_TYPES
+
+        ci = next(i for i, c in enumerate(slide.columns) if c is column) + 1
+        if any(
+            r.type in DRAWN_TYPES and r.source.startswith(f"c{ci}_") for r in slide.relationships
+        ):
+            return True
     return slide.layout in {"visual_flow", "visual_sequence"} or (
         slide.layout in DIAGRAM_LAYOUTS and column.representation == "stack"
     )
@@ -58,12 +66,19 @@ def modes_for(slide):
     return (
         ["vertical"]
         if any(connected(slide, c) for c in slide.columns)
+        or (
+            slide.semantic
+            and slide.layout == "comparison_visual"
+            and any(c.representation == "cards" for c in slide.columns)
+        )
         else ["grid", "row", "vertical"]
     )
 
 
 def block_schema(layout):
     node = ContentBlock.model_json_schema()
+    for key in ("role", "sources"):
+        node["properties"].pop(key)
     node["required"] = list(node["properties"])
     node["properties"]["label"]["maxLength"] = 40
     node["properties"]["detail"]["maxLength"] = 80
@@ -165,6 +180,12 @@ def build_candidate(slide, number, mode, style=""):
     """Measure first; fixed typographic roles never shrink to manufacture capacity."""
     commands, paths, failures, panels = [], {}, [], []
     base = f"slides.{number - 1}"
+    if slide.semantic or slide.relationships:
+        from .semantic_planning import relation_issues
+
+        failures.extend(
+            (code, message, base + "." + path) for code, message, path in relation_issues(slide)
+        )
 
     def add(key, path, kind, rect, text=None, font=22, role="corpo", color="texto", file=None):
         x, y, w, h = rect
@@ -217,18 +238,18 @@ def build_candidate(slide, number, mode, style=""):
         x, width = 64 + ci * 608, 544 if expected == 2 else 1152
         y = top
         if col.heading:
-            y += (
-                text(
-                    f"c{ci + 1}_heading",
-                    f"{base}.columns.{ci}.heading",
-                    col.heading,
-                    x,
-                    y,
-                    width,
-                    26,
-                )
-                + 12
+            header_h = text(
+                f"c{ci + 1}_heading",
+                f"{base}.columns.{ci}.heading",
+                col.heading,
+                x,
+                y,
+                width,
+                26,
             )
+            if slide.semantic and expected == 2:
+                header_h = max(text_height(c.heading, width, 26) for c in slide.columns)
+            y += header_h + 12
         if slide.media:
             from .media import resolve_asset
 
@@ -298,6 +319,12 @@ def build_candidate(slide, number, mode, style=""):
         )
         rows = math.ceil(count / nc)
         gap = 16 if mode == "vertical" else 24
+        if slide.semantic and any(
+            r.source.startswith(f"c{ci + 1}_")
+            and r.type in {"calls", "accesses", "depends_on", "precedes"}
+            for r in slide.relationships
+        ):
+            gap = 48
         cw = (width - (nc - 1) * gap) / nc
         inline = mode == "vertical" and width >= 500 and (not slide.media or expected == 2)
 
@@ -325,6 +352,24 @@ def build_candidate(slide, number, mode, style=""):
         ):
             inline = False
         heights = [dimensions(block, i, inline) for i, block in enumerate(blocks)]
+        if (
+            slide.semantic
+            and expected == 2
+            and all(c.representation == "cards" for c in slide.columns)
+            and len(slide.columns[0].content) == len(slide.columns[1].content)
+        ):
+            peers = [b for c in slide.columns for b in c.content]
+            inline = all(
+                text_width(word, 24, True) <= cw * 0.36 - 48
+                for b in peers
+                for word in b.label.split()
+            ) and sum(dimensions(b, 0, True) for b in peers) <= sum(
+                dimensions(b, 0, False) for b in peers
+            )
+            heights = [
+                max(dimensions(c.content[i], i, inline) for c in slide.columns)
+                for i in range(count)
+            ]
         row_heights = [max(heights[r * nc : (r + 1) * nc]) for r in range(rows)]
         used = sum(row_heights) + (rows - 1) * gap
         if used > bottom - y:
@@ -378,7 +423,17 @@ def build_candidate(slide, number, mode, style=""):
                 value = getattr(block, field)
                 if value:
                     by += text(key + "_" + field, path + "." + field, value, bx, by, bw) + 8
-            if previous and connected(slide, col):
+            edge = next(
+                (
+                    r
+                    for r in slide.relationships
+                    if r.source == f"c{ci + 1}_i{i}"
+                    and r.target == key
+                    and r.type in {"calls", "accesses", "depends_on", "precedes"}
+                ),
+                None,
+            )
+            if previous and connected(slide, col) and (not slide.semantic or edge is not None):
                 source = next(c for c in commands if c.id == previous)
                 arrow = add(
                     key + "_link",
@@ -414,6 +469,20 @@ def build_candidate(slide, number, mode, style=""):
                         ),
                     ]
                 )
+                if edge is not None:
+                    from .semantic_planning import EDGE_LABELS
+
+                    edge_index = slide.relationships.index(edge)
+                    text(
+                        key + "_edge_label",
+                        f"{base}.relationships.{edge_index}.type",
+                        EDGE_LABELS[edge.type],
+                        nx + cw / 2 + 24,
+                        ny - gap,
+                        min(180, cw / 2 - 40),
+                        18,
+                        "decoracao",
+                    )
             previous = panel
     if slide.footer:
         fh = text("rodape", base + ".footer", slide.footer, 64, 612, 1152, 12)

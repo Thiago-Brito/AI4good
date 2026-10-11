@@ -20,6 +20,13 @@ type GenerationResult = {
     semantics?: boolean;
     geometry?: boolean | null;
     settings?: ContextOptions;
+    semantic_audit?: {
+      diagnostics: { code: string; path: string; message: string }[];
+    };
+    semantic_review?: {
+      calls: number;
+      attempts: { accepted: boolean; reason: string }[];
+    };
     images?: {
       id: string;
       attribution: string;
@@ -485,6 +492,31 @@ export function GenerationPanel({
               </p>
             )}
         </div>
+      )}
+      {job?.result?.report.semantic_audit && (
+        <details aria-label="Diagnóstico editorial">
+          <summary>Coerência do conteúdo · requer revisão humana</summary>
+          <p>
+            Essas verificações não comprovam correção factual. Revisões locais:{" "}
+            {job.result.report.semantic_review?.calls ?? 0}.
+          </p>
+          <ul>
+            {job.result.report.semantic_audit.diagnostics.map((d, i) => (
+              <li key={i}>
+                {d.code} · {d.path}: {d.message}
+              </li>
+            ))}
+          </ul>
+          <ul>
+            {job.result.report.semantic_review?.attempts.map((a, i) => (
+              <li key={i}>
+                Revisão {i + 1}:{" "}
+                {a.accepted ? "aceita" : "preservado estado anterior"} ·{" "}
+                {a.reason}
+              </li>
+            ))}
+          </ul>
+        </details>
       )}
       {job?.result?.report.source_conflict && (
         <p role="alert">

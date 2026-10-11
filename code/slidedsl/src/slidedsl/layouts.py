@@ -88,6 +88,11 @@ def plan_to_dsl(plan: DeckPlan) -> tuple[str, dict[str, str], list[Diagnostic]]:
             )
             return id
 
+        if (slide.semantic or slide.relationships) and not slide.expressive:
+            from .semantic_planning import relation_issues
+
+            for code, message, path in relation_issues(slide):
+                issue(code, message, base + "." + path)
         if slide.expressive:
             from .expressive_composition import select_candidate
 

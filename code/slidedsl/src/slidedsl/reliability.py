@@ -47,7 +47,7 @@ def evaluate_state(data, count, requirements, strict=True):
 def summary(state):
     v = state["validation"]
     semantic = bool(v and v.semantic_success) and not any(
-        d["code"].startswith(("S", "L002", "L003", "L005", "G005")) for d in state["errors"]
+        d["code"].startswith(("S", "K", "L002", "L003", "L005", "G005")) for d in state["errors"]
     )
     geometric = not any(
         d["code"].startswith(("D", "V", "L001", "L004", "L006")) for d in state["errors"]

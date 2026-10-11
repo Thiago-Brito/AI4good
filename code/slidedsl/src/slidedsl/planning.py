@@ -6,11 +6,35 @@ from pydantic import Field, model_serializer, model_validator
 
 from .structured_slide import OutputModel
 
+SemanticRole = Literal[
+    "concept",
+    "component",
+    "relationship",
+    "process_step",
+    "example",
+    "claim",
+    "evidence",
+    "condition",
+    "comparison_criterion",
+    "takeaway",
+]
+
 
 class ContentBlock(OutputModel):
     label: str = Field(min_length=1, max_length=80)
     detail: str = Field(default="", max_length=180)
     explanation: str = Field(default="", max_length=360)
+    role: SemanticRole | None = None
+    sources: list[str] = Field(default_factory=list, max_length=4)
+
+    @model_serializer(mode="wrap")
+    def serialize_legacy_block(self, handler):
+        data = handler(self)
+        if self.role is None:
+            data.pop("role", None)
+        if not self.sources:
+            data.pop("sources", None)
+        return data
 
     def full_text(self):
         body = " ".join(t for t in [self.detail, self.explanation] if t)
@@ -60,6 +84,12 @@ class MediaPlan(OutputModel):
     caption: str = Field(default="", max_length=180)
 
 
+class SemanticRelation(OutputModel):
+    source: str = Field(pattern=r"^c[12]_i[1-6]$")
+    target: str = Field(pattern=r"^c[12]_i[1-6]$")
+    type: Literal["calls", "accesses", "depends_on", "precedes", "supports", "contrasts"]
+
+
 class SlidePlan(OutputModel):
     title: str = Field(min_length=1, max_length=120)
     layout: Literal[
@@ -93,6 +123,8 @@ class SlidePlan(OutputModel):
     vector_flow: bool = False
     expressive: bool = False
     composition: Literal["auto", "grid", "row", "vertical"] = "auto"
+    semantic: bool = False
+    relationships: list[SemanticRelation] = Field(default_factory=list, max_length=8)
 
     @model_serializer(mode="wrap")
     def serialize_legacy_slide(self, handler):
@@ -101,6 +133,10 @@ class SlidePlan(OutputModel):
             data.pop("expressive", None)
         if self.composition == "auto":
             data.pop("composition", None)
+        if not self.semantic:
+            data.pop("semantic", None)
+        if not self.relationships:
+            data.pop("relationships", None)
         return data
 
 
@@ -125,7 +161,8 @@ def plan_schema(slide_count: int) -> dict:
     schema["properties"].pop("refinement")  # Compiler options, never model-owned.
     schema["$defs"]["ColumnPlan"]["properties"].pop("content")
     schema["$defs"].pop("ContentBlock")  # Keep historical model contracts free of new unused types.
-    for name in ("expressive", "composition"):
+    schema["$defs"].pop("SemanticRelation")
+    for name in ("expressive", "composition", "semantic", "relationships"):
         schema["$defs"]["SlidePlan"]["properties"].pop(name)
     schema["properties"]["slides"].update(minItems=slide_count, maxItems=slide_count)
     return schema

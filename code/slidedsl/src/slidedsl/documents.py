@@ -184,6 +184,23 @@ def delete_document(id):
         folder.rmdir()
 
 
+def retrieve_for_slides(ids, outline, *, max_chars=6000):
+    """Reuse lexical retrieval by slide, sharing a bounded pool and original IDs."""
+    selected, mapping, length = {}, {}, 0
+    for number, slide in enumerate(outline["slides"], 1):
+        query = slide["message"] + " " + slide["focus"]
+        found = retrieve(ids, query, max_chars=min(1800, max_chars))
+        mapping[str(number)] = []
+        for chunk in found[:2]:
+            if chunk["id"] not in selected:
+                if len(selected) >= 8 or length + len(chunk["text"]) > max_chars:
+                    continue
+                selected[chunk["id"]] = chunk
+                length += len(chunk["text"])
+            mapping[str(number)].append(chunk["id"])
+    return list(selected.values()), mapping
+
+
 if __name__ == "__main__":
     try:
         print(json.dumps(_pdf_text(sys.argv[1]), ensure_ascii=True))

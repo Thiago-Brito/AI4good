@@ -115,3 +115,10 @@ Os arquivos são produzidos por testes/demo, não substituem experimento de mode
 - Evidências próprias: outputs/reliability/experiment_20261011_final/configuration.json, evaluation.json, evaluation.csv, audit.json e sources_snapshot/; planos compartilhados, respostas HTTP, estados antes/depois e textos nativos de PPTX.
 - Disponibilidade de renderização: outputs/reliability/rendering_availability.json. PowerPoint COM não registrado; capturas de navegador não são renderizações de PPTX pelo Office.
 - Testes: outputs/tests/reliability-final.xml e outputs/ui-tests/results.json. Geração/correção/edição reais: outputs/reliability/ui_generation.json e ui_architecture.json.
+
+## Planejamento semantico - 11/10/2026
+- Fontes oficiais consultadas: https://docs.ollama.com/capabilities/structured-outputs e https://docs.ollama.com/api/chat. Contratos JSON restritos e validacao posterior; done_reason, tokens e parametros reais. Nao comprovam verdade factual.
+- Evidencias locais anteriores: docs/EXPRESSIVIDADE_PLANEJAMENTO.md e outputs/expressiveness/comparison_06/; categorias abstratas, repeticoes e afirmacoes sem condicoes preservadas.
+- Protocolo declarado antes das chamadas: benchmark/semantic_requests.json; resultados novos em outputs/semantic/, sem alterar os historicos.
+- Inspeção de afirmações de arquitetura: https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/n-tier e https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/microservices. Separação lógica de responsabilidades não basta para garantir isolamento de falhas; implantação, contratos e operação precisam ser considerados. Essas páginas não foram fornecidas à SLM durante o experimento livre.
+- Referência oficial do domínio ciências: https://www.usgs.gov/water-science-school/water-cycle. Não substitui avaliação independente dos textos gerados.

@@ -1,5 +1,14 @@
 # Roadmap — SlideDSL
 
+## Planejamento semântico — 11/10/2026
+- [x] Snapshot e push prévios: 64a49f4cdfc68ebe4614579dc8af74f93f74e13b.
+- [x] Diagnóstico; contrato opcional de papéis, referências explícitas e fontes por nó.
+- [x] Revisor limitado com patches autorizados, validação de candidatos e rollback.
+- [x] Comparação real A/B/C em quatro domínios; planos B/C compartilhados, A 1/4 e B/C 3/4 PPTX; seis revisões finais rejeitadas, sem ganho demonstrado.
+- [x] Regressão 311 Python, dois Node e nove Playwright (quatro optativos omitidos); documentação em [EVOLUCAO_SEMANTICA.md](docs/EVOLUCAO_SEMANTICA.md).
+- [ ] Calibrar sinais/aceitação do revisor; corrigir conteúdo conceitual além dos tipos, ampliar domínios/seeds e auditoria documental.
+- [ ] Avaliação humana de correção conceitual e clareza; renderização Office real.
+
 ## Expressividade do planejamento — 11/10/2026
 - [x] Diagnóstico prévio dos limites de nós, textos, estruturas, mídia e associação intenção/composição.
 - [x] Percurso opcional com rótulo/descrição/explicação, variantes medidas, quantidades concisas/detalhadas e slots de imagens, preservando DSL e validadores.

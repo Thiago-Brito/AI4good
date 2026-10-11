@@ -131,6 +131,8 @@ def main(argv=None) -> int:
         help="Conteúdo estruturado e composições medidas; implica --visual-planning",
     )
     contextual_parser.add_argument("--out", required=True)
+    contextual_parser.add_argument("--semantic-planning", action="store_true")
+    contextual_parser.add_argument("--semantic-review-max", type=int, choices=range(3), default=0)
     contextual_parser.add_argument("--repair-max", type=int, default=2, choices=range(11))
     contextual_parser.add_argument("--seed", type=int, default=42)
     experiment_parser = sub.add_parser(
@@ -189,6 +191,10 @@ def main(argv=None) -> int:
                 }
             if args.expressive_planning:
                 context_data["expressive_planning"] = True
+            if args.semantic_planning:
+                context_data["semantic_planning"] = True
+            if args.semantic_review_max:
+                context_data["semantic_review_max"] = args.semantic_review_max
             report = generate_contextual(
                 args.model,
                 args.strategy,

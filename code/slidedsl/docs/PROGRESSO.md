@@ -1,5 +1,19 @@
 # Progresso de implementação
 
+## Planejamento semântico — 11/10/2026
+Snapshot 64a49f4 enviado antes de editar. Contrato e revisão opcionais adicionados
+ao planejamento expressivo; não geram setas sem relações declaradas nesse modo.
+Comparação declarada em benchmark/semantic_requests.json: quatro domínios, A 1/4
+e B/C 3/4 PPTX, mesmos planos B/C. Revisões finais: quatro regressões e duas
+repetições rejeitadas; sem ganho semântico demonstrado. Código/artefatos históricos
+preservados. 51 chamadas exploratórias totais, 22 únicas na comparação final.
+Negação coordenada corrigida sem reescrever critérios congelados. Auditoria
+conferiu bytes, parâmetros, snapshots, rollback e sete PPTX das condições.
+Regressão final: 311 Python, dois Node e nove Playwright; quatro optativos omitidos.
+Lint/build e cinco pares de previews passaram; Office/LibreOffice indisponíveis.
+Resultados/falhas/limites documentados em docs/EVOLUCAO_SEMANTICA.md. Avaliação
+humana e calibração do revisor permanecem pendentes.
+
 ## Expressividade do planejamento — 11/10/2026
 Diagnóstico registrado antes de editar; percurso opcional expressive-planning-v1.
 Campos tipados, variantes reais por família, capacidade concisa/detalhada, corpo

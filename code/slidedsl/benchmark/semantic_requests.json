@@ -1,0 +1,29 @@
+{
+  "protocol": "semantic-exploratory-paired-v1",
+  "model": "qwen3:4b-instruct",
+  "seed": 42,
+  "temperature": 0.1,
+  "num_ctx": 8192,
+  "num_predict": 4096,
+  "review_max": 2,
+  "strict": true,
+  "scope": "Uma repetição por domínio. A/B têm contratos/contextos diferentes; C reutiliza exatamente o plano B. Não mede verdade ou melhoria estética.",
+  "cases": [
+    {"id": "arquitetura", "domain": "arquitetura de software", "prompt_file": "benchmark/prompts/arquitetura_software.txt", "terms": ["arquitetura", "component", "compara", "vantag", "conclu"]},
+    {"id": "ciencias", "domain": "ciências", "prompt": "Crie dois slides sobre o ciclo da água para estudantes. Slide 1: explique evaporação, condensação e precipitação como etapas, com relações explícitas quando necessárias. Slide 2: explique como a temperatura influencia a evaporação com um exemplo e uma condição. Sem imagens ou rodapé.", "terms": ["evapora", "condensa", "precipita", "temperatura"]},
+    {"id": "educacao", "domain": "educação", "prompt": "Crie dois slides sobre frações para estudantes iniciantes. Slide 1: diferencie numerador e denominador, com um exemplo concreto de partes iguais. Slide 2: conclua por que partes iguais são necessárias e apresente uma aplicação do conceito. Sem imagens ou rodapé.", "terms": ["numerador", "denominador", "iguais", "fra"]},
+    {"id": "processos", "domain": "processos organizacionais", "prompt": "Crie dois slides sobre aprovação de solicitações em uma equipe. Slide 1: mostre as etapas registro, análise e decisão, com suas responsabilidades e relações explícitas. Slide 2: explique um benefício, uma condição e um exemplo de aprovação. Não afirme que o processo elimina todos os erros. Sem imagens ou rodapé.", "terms": ["registro", "análise", "decis", "aprova"]}
+  ],
+  "metrics": {
+    "json": "Schema bruto e contrato Pydantic; resposta stop não significa aprovação.",
+    "pptx": "Exportação estrita pela cadeia existente, texto nativo e conectores ancorados.",
+    "requirements": "Requisitos congelados antes da geração e termos declarados neste manifesto, sobre a IR emitida.",
+    "coherence": "K001–K006 validam papéis/referências/geometria suportada e frases completas; Q001–Q009 são avisos lexicais, não verdade factual.",
+    "examples": "Quantidade de papéis example e textos originais para inspeção humana, sem nota de relevância.",
+    "repetition": "Igualdade normalizada entre título e corpo e descrições repetidas.",
+    "support": "IDs documentais existentes quando fornecidos; implicação semântica não medida.",
+    "conceptual_accuracy": "Avaliação humana pendente, null.",
+    "legibility": "V001–V006, medição local de texto, corpo de 22 pt; renderização Office não disponível.",
+    "cost": "Chamadas e tokens reais recontados pelas respostas HTTP; tempo inclui compilação/cache. C compartilha custo inicial de B."
+  }
+}
