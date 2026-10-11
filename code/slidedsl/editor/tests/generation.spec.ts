@@ -17,12 +17,17 @@ test("gera pelo formulário com SLM real, edita e exporta PowerPoint", async ({
   await expect(page.getByLabel("Modelo local")).toHaveValue(
     "qwen3:4b-instruct",
   );
+  await expect(page.getByLabel("Estilo visual", { exact: true })).toBeVisible();
+  await expect(
+    page.getByLabel("Imagens automáticas", { exact: true }),
+  ).toBeVisible();
+  await expect(page.getByLabel("Provedor de imagens")).not.toBeVisible();
+  await expect(page.getByLabel("Estratégia de geração")).not.toBeVisible();
   await page
     .getByLabel("Pedido da apresentação")
     .fill(
-      "Crie uma apresentação de cinco slides sobre arquitetura de software, contendo introdução, componentes, comparação, vantagens e conclusão.",
+      "Crie uma apresentação de cinco slides sobre arquitetura de software, incluindo introdução, componentes, comparação entre arquitetura em camadas e microsserviços, benefícios e conclusão.",
     );
-  await page.getByLabel("Estratégia de geração").selectOption("D");
   const submitted = page.waitForResponse(
     (r) =>
       r.url().endsWith("/api/generations") && r.request().method() === "POST",
@@ -41,6 +46,20 @@ test("gera pelo formulário com SLM real, edita e exporta PowerPoint", async ({
   expect(job.result.report.is_mock).toBe(false);
   expect(job.result.report.compile_success).toBe(true);
   expect(job.result.ir.slides).toHaveLength(5);
+  expect(
+    job.result.plan.slides.map((s: { layout: string }) => s.layout),
+  ).toEqual([
+    "visual_cover",
+    "architecture_diagram",
+    "comparison_visual",
+    "benefit_cards",
+    "takeaway",
+  ]);
+  expect(
+    job.result.ir.slides[1].elements.some(
+      (e: { type: string }) => e.type === "arrow",
+    ),
+  ).toBe(true);
   expect(
     job.events.some((e: { stage: string }) => e.stage === "validation"),
   ).toBe(true);

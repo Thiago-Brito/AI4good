@@ -1,5 +1,38 @@
 # Progresso de implementação
 
+## Planejamento visual — entrega (11/10/2026)
+Documento EVOLUCAO_PLANEJAMENTO_VISUAL.md reúne causas, literatura versus
+heurísticas, composições, execuções reais, falhas preservadas e limites.
+Auditoria reconferiu três respostas antes/depois, textos nativos e 61 hashes.
+Capturas finais em captures_delivery/ conferiram a fonte e não tiveram erro JS.
+Fotografia photo_delivery_04 usou provedor automático e imagem Moon CC BY 2.0,
+1024×768, duas chamadas reais e PPTX com uma imagem e quatro textos nativos.
+Regressão completa final: 224 Python, dois Node e onze Playwright; três testes de
+imagens/contexto repetidos após ajustes e 18 testes CLI/visual após revisão final.
+Validação do schema bruto precede a normalização, inclusive rejeitando campos
+extras nos nós antes que possam ser descartados. Build e verificações passaram.
+Resultados/caches mantidos fora do Git; entrega preparada na branch dsl-visual.
+
+## Planejamento visual — implementação e inspeção (11/10/2026)
+Intenções e estruturas escolhidas pela SLM em uma chamada; conteúdo em outra.
+O compilador calcula oito composições nativas e preserva os textos. Geração real
+delivery_03 usou capa/diagrama/comparação/cards/conclusão; duas chamadas, zero
+reparos, PPTX estrito, quatro setas vetoriais. Capturas antes/depois e auditoria
+em outputs/planning_visual/. Formulário simples, parâmetros técnicos recolhidos.
+Busca automática real escolheu NASA/Openverse e baixou imagem CC BY 2.0 1024×768.
+Primeira regressão: 223 Python, dois Node, onze Playwright; compilação/lint passaram.
+Piloto adicional de fotografia revelou consulta muito ampla e altura insuficiente
+do cabeçalho no fallback; corrigidos com preservação de conteúdo, em execução nova.
+Renderização externa indisponível; inspeção do agente encontrou simplificações
+factuais na conclusão. Não se declara avaliação estética/factual com participantes.
+
+## Planejamento visual — início (11/10/2026)
+Base e44961ed confirmada em origin/dsl-visual antes de código. Reproduzido pedido
+exato: quatro title_content, uma comparação textual, nenhum diagrama; 2/2 slides
+e margens, zero diagnósticos. Schema já permite componentes, mas não exige intenção
+visual; prompt enfatiza layouts textuais. Critérios genéricos não medem adequação
+da representação. Reprodução preservada em outputs/planning_visual/before_01/.
+
 ## Evolução visual/contextual — início (11/10/2026)
 Pedido integral lido. Base 9b6a8edf80ce4b76c54c13bcbb7fc0e768aab847 limpa na SlideDSL e confirmada no remoto. Pastas não rastreadas de outros projetos excluídas do escopo. Fontes oficiais registradas antes da nova documentação. Histórico experimental preservado.
 

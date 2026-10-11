@@ -43,6 +43,10 @@ type GenerationResult = {
       conflict?: boolean | string;
     }[];
     source_conflict?: boolean;
+    visual_outline?: {
+      slides: { intent: string; message: string; reason: string }[];
+    };
+    visual_fallbacks?: { slide: number; reason: string }[];
   };
   path: string;
 };
@@ -191,11 +195,16 @@ export function GenerationPanel({
         strict,
         reliability: true,
         repair_max: repairMax,
-        ...(context && (strategy === "C" || strategy === "D")
+        ...(strategy === "C" || strategy === "D"
           ? {
               context: repair
                 ? { ...previous?.result?.report.settings, ...context }
-                : context,
+                : {
+                    visual_planning: true,
+                    provider: "auto",
+                    selection: "auto",
+                    ...context,
+                  },
             }
           : {}),
         ...(repair
@@ -259,6 +268,39 @@ export function GenerationPanel({
         <button disabled={disabled} onClick={() => void loadModels()}>
           Atualizar modelos
         </button>
+      </div>
+      <label>
+        Estilo visual (opcional)
+        <input
+          aria-label="Estilo visual"
+          value={context?.visual_style ?? ""}
+          maxLength={200}
+          disabled={disabled}
+          placeholder="Ex.: sóbrio, didático, escuro"
+          onChange={(e) =>
+            setContext({ ...context, visual_style: e.target.value })
+          }
+        />
+      </label>
+      <label>
+        <input
+          type="checkbox"
+          aria-label="Imagens automáticas"
+          checked={context?.research === "on" || context?.research === "auto"}
+          disabled={disabled}
+          onChange={(e) =>
+            setContext({
+              ...context,
+              research: e.target.checked ? "auto" : "off",
+              selection: "auto",
+              provider: "auto",
+            })
+          }
+        />
+        Imagens automáticas · busca online quando necessária
+      </label>
+      <details className="generation-advanced">
+        <summary>Opções avançadas de geração</summary>
         <label>
           Estratégia
           <select
@@ -282,7 +324,7 @@ export function GenerationPanel({
           />
           Validação estrita
         </label>
-      </div>
+      </details>
       <label>
         Pedido da apresentação
         <textarea
@@ -292,20 +334,23 @@ export function GenerationPanel({
           onChange={(e) => setPrompt(e.target.value)}
         />
       </label>
-      <label>
-        Limite de correções
-        <input
-          aria-label="Limite de correções"
-          type="number"
-          min={0}
-          max={10}
-          value={repairMax}
-          disabled={disabled}
-          onChange={(e) =>
-            setRepairMax(Math.max(0, Math.min(10, Number(e.target.value))))
-          }
-        />
-      </label>
+      <details className="generation-advanced">
+        <summary>Limite de correções</summary>
+        <label>
+          Limite de correções
+          <input
+            aria-label="Limite de correções"
+            type="number"
+            min={0}
+            max={10}
+            value={repairMax}
+            disabled={disabled}
+            onChange={(e) =>
+              setRepairMax(Math.max(0, Math.min(10, Number(e.target.value))))
+            }
+          />
+        </label>
+      </details>
       <button
         className="primary"
         disabled={disabled || !model || !prompt.trim()}
@@ -321,6 +366,24 @@ export function GenerationPanel({
         bindings={mediaBindings}
         onBindings={setMediaBindings}
       />
+      {job?.result?.report.visual_outline && (
+        <details>
+          <summary>Planejamento visual das mensagens</summary>
+          <ol>
+            {job.result.report.visual_outline.slides.map((s, i) => (
+              <li key={i}>
+                {s.message} · {s.intent}
+                <p>{s.reason}</p>
+              </li>
+            ))}
+          </ol>
+        </details>
+      )}
+      {job?.result?.report.visual_fallbacks?.map((f, i) => (
+        <p role="status" key={i}>
+          Slide {f.slide}: {f.reason}
+        </p>
+      ))}
       {error && (
         <p className="generation-error" role="alert">
           {error}

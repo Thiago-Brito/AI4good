@@ -310,7 +310,7 @@ def example(name: str):
 
 
 class ImageSearchPayload(BaseModel):
-    provider: Literal["openverse", "commons", "nasa"] = "openverse"
+    provider: Literal["auto", "openverse", "commons", "nasa"] = "auto"
     query: str = Field(min_length=1, max_length=200)
     offline: bool = False
 
@@ -322,10 +322,14 @@ class ImageSelectionPayload(BaseModel):
 
 @app.post("/api/images/search")
 def image_search(payload: ImageSearchPayload):
-    from .media import search_images
+    from .media import search_images, automatic_search
 
     try:
-        return search_images(payload.provider, payload.query, offline=payload.offline)
+        return (
+            automatic_search(payload.query, offline=payload.offline)
+            if payload.provider == "auto"
+            else search_images(payload.provider, payload.query, offline=payload.offline)
+        )
     except Exception as exc:
         raise HTTPException(
             503, detail=f"Busca indisponível; geração offline continua disponível: {exc}"

@@ -1,5 +1,12 @@
 # Roadmap — SlideDSL
 
+## Planejamento visual — 11/10/2026
+- [x] Base limpa e44961ed confirmada por push/ls-remote; diagnóstico real preservado em outputs/planning_visual/before_01.
+- [x] Intenções visuais pela SLM, componentes determinísticos e imagens com provedores automáticos.
+- [x] Formulário simples, geração real antes/depois, capturas e verificações específicas.
+- [x] Regressão (224 Python/2 Node/11 Playwright), documentação, auditoria e artefatos prontos para commit/push.
+- [ ] Avaliação humana factual/estética, renderização Office/LibreOffice e ampliação dos pedidos/seeds.
+
 ## Evolução visual/contextual — 11/10/2026
 - [x] Base limpa: 9b6a8edf80ce4b76c54c13bcbb7fc0e768aab847; hash confirmado em origin/dsl-visual, sem commit vazio.
 - [x] Imagens de APIs oficiais, segurança, cache e seis layouts editáveis; Openverse/NASA consultados, Commons real indisponível (403).

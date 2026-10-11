@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { request } from "./api";
 
 export type ContextOptions = {
+  visual_planning?: boolean;
   theme?: string;
   audience?: string;
   objective?: string;
@@ -78,7 +79,7 @@ export function ContextPanel({
     try {
       const data = await request<{ results: ImageRecord[] }>("images/search", {
         query,
-        provider: settings.provider ?? "openverse",
+        provider: settings.provider ?? "auto",
         offline,
       });
       setResults(data.results);
@@ -186,7 +187,6 @@ export function ContextPanel({
             ["audience", "Público"],
             ["objective", "Objetivo"],
             ["detail", "Nível de detalhe"],
-            ["visual_style", "Estilo visual"],
             ["tone", "Tom"],
             ["components", "Componentes desejados"],
           ] as const
@@ -245,10 +245,11 @@ export function ContextPanel({
           Provedor
           <select
             aria-label="Provedor de imagens"
-            value={settings.provider ?? "openverse"}
+            value={settings.provider ?? "auto"}
             disabled={disabled || working}
             onChange={(e) => change({ provider: e.target.value })}
           >
+            <option value="auto">Automático · disponibilidade e licença</option>
             <option value="openverse">Openverse</option>
             <option value="commons">Wikimedia Commons</option>
             <option value="nasa">NASA · temas espaciais</option>

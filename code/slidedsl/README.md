@@ -6,6 +6,12 @@ deck escritos para a especificação de 8 de outubro de 2026, sem usar protótip
 
 ## Como o projeto funciona
 
+O formulário principal usa **planejamento visual em duas chamadas locais**:
+a SLM escolhe mensagens/representações e escreve o conteúdo; o compilador resolve
+capa, diagramas, comparação, cards, etapas e conclusão com objetos editáveis.
+Estilo é opcional; imagens automáticas escolhem o provedor quando habilitadas.
+Veja [diagnóstico, capturas antes/depois e resultados reais](docs/EVOLUCAO_PLANEJAMENTO_VISUAL.md).
+
 O fluxo visual/contextual acrescenta seis layouts com imagens, busca opcional em
 APIs oficiais, referências TXT/MD/PDF locais e correção que preserva edições.
 O formulário simples continua disponível; abra as opções de contexto quando

@@ -27,6 +27,16 @@ def plan_to_dsl(plan: DeckPlan) -> tuple[str, dict[str, str], list[Diagnostic]]:
     Content is never shortened, omitted or replaced. Overflow remains observable.
     """
     slides, mapping, diagnostics = [], {}, []
+    from .visual_planning import COMPOSED_LAYOUTS
+
+    title_font = 42
+    while title_font > 24 and any(
+        text_height(s.title, 704 if s.layout == "visual_cover" else 1152, title_font)
+        > (272 if s.layout == "visual_cover" else 144)
+        for s in plan.slides
+        if s.layout in COMPOSED_LAYOUTS
+    ):
+        title_font -= 1
     for number, slide in enumerate(plan.slides, 1):
         commands, refs = [], {}
         base = f"slides.{number - 1}"
@@ -77,6 +87,13 @@ def plan_to_dsl(plan: DeckPlan) -> tuple[str, dict[str, str], list[Diagnostic]]:
                 )
             )
             return id
+
+        if slide.layout in COMPOSED_LAYOUTS:
+            from .composition import compose_slide
+
+            compose_slide(slide, base, add, issue, title_font)
+            slides.append(SlideNode(number=number, commands=commands))
+            continue
 
         if slide.layout in VISUAL_LAYOUTS:
             visual_slide(slide, base, add, issue)

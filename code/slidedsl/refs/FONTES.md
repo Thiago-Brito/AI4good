@@ -1,5 +1,12 @@
 # Fontes consultadas em 2026-10-08
 
+## Planejamento visual — consulta 11/10/2026
+- Mayer/Fiorella, capítulo sobre coerência, sinalização e contiguidade espacial: https://www.cambridge.org/core/books/cambridge-handbook-of-multimedia-learning/principles-for-reducing-extraneous-processing-in-multimedia-learning-coherence-signaling-redundancy-spatial-contiguity-and-temporal-contiguity-principles/C98AB3A6CE760DD63C048936EA0B3B44 . Resumo consultado; não se afirma ter lido o capítulo pago integralmente.
+- Michael Alley e equipe, Assertion–Evidence: https://www.assertion-evidence.org/tutorial.html e https://writing.engr.psu.edu/AE_Classroom_Teaching_Slides_Notes.pdf . Mensagem em título de frase, sustentada por evidência visual; o tutorial sinaliza migração para Craft of Scientific Communication.
+- Confirmação primária acessível: https://writing.engr.psu.edu/assertion_evidence_EA.html e https://www.writing.engr.psu.edu/AE_checklist.pdf . Mensagens completas e evidência visual. O PDF das notas de aula acima retornou timeout na leitura direta; não se atribui leitura integral a ele.
+- Diagnóstico próprio anterior às alterações: outputs/planning_visual/before_01/plan.json, report.json e initial/; Qwen3 4B, quatro title_content/uma comparison, zero diagnósticos, apenas slides/margens (2/2). Base e44961ed3fb53f513ff6485533cba2b5f57fb975 confirmada no remoto.
+- Margens, paleta, tamanhos, grid, limites de nós e associação intenção/componente são heurísticas de engenharia. Essas fontes não validam a estética ou aprendizagem das apresentações geradas.
+
 ## Evolução visual/contextual — consulta em 11/10/2026
 - PptxGenJS, imagens: https://gitbrent.github.io/PptxGenJS/docs/api-images.html . Na versão instalada 4.0.1 o código e os tipos confirmam `sizing: {type: 'contain', w, h}`; a função `imageSizingContain` não existe. Setas usam `ShapeType.downArrow`.
 - Openverse, API, limites anônimos e metadados: https://api.openverse.org/v1/ . Busca paginada; respostas 429; sem scraping.

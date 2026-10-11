@@ -1,0 +1,18 @@
+{
+  "protocol": "visual-planning-case-v1",
+  "scope": "Critérios fornecidos pelo usuário para este pedido; não são regras universais nem escala estética.",
+  "request": "Crie uma apresentação de cinco slides sobre arquitetura de software, incluindo introdução, componentes, comparação entre arquitetura em camadas e microsserviços, benefícios e conclusão.",
+  "criteria": [
+    "Capa com composição visual distinta",
+    "Componentes com diagrama editável",
+    "Comparação com duas representações visuais",
+    "Benefícios em cards ou organização equivalente",
+    "Conclusão com mensagem principal destacada",
+    "Tipografia legível",
+    "Espaçamento adequado",
+    "Ausência de sobreposição indevida",
+    "PPTX editável",
+    "Requisitos e conteúdo preservados"
+  ],
+  "evaluation": "Separar inspeção das capturas, aproximações geométricas e objetos nativos; não inferir beleza ou compreensão por uma soma automática."
+}

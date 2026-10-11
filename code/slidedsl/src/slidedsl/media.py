@@ -276,6 +276,62 @@ def cache_image(id, *, reviewed=False):
     return _store_image(candidate, data, mime, reviewed=reviewed)
 
 
+def automatic_search(query, *, offline=False):
+    """Choose providers by topic/availability; retain failures and license constraints."""
+    original_query = query
+    # Remove generic photographic qualifiers, never a standalone proper-name "Real".
+    query = re.sub(r"\b(?:real photos?|fotografias? rea(?:l|is))\b", " ", query, flags=re.I)
+    query = " ".join(query.split()) or original_query
+    space = bool(
+        re.search(
+            r"\b(nasa|space|moon|lunar|apollo|solar|planet\w*|astronom\w*)\b", query.casefold()
+        )
+    )
+    providers = ["nasa", "openverse", "commons"] if space else ["openverse", "commons"]
+    results, attempts = [], []
+    for provider in providers:
+        try:
+            response = search_images(provider, query, offline=offline)
+            results.extend(response["results"])
+            attempts.append(
+                {
+                    "provider": provider,
+                    "count": len(response["results"]),
+                    "cached": response.get("cached", False),
+                }
+            )
+            if any(automatic_candidate(i) for i in results):
+                break
+        except Exception as exc:
+            attempts.append({"provider": provider, "error": str(exc)})
+    results.sort(
+        key=lambda i: (
+            automatic_candidate(i),
+            i.get("lexical_score", 0),
+            min(i.get("width") or 0, i.get("height") or 0),
+        ),
+        reverse=True,
+    )
+    return {
+        "original_query": original_query,
+        "query": query,
+        "results": results,
+        "providers": attempts,
+        "offline": offline,
+        "ranking": "lexical + resolution + reuse eligibility; not semantic proof",
+    }
+
+
+def automatic_candidate(item):
+    return bool(
+        item.get("lexical_score") == 1
+        and (item.get("width") or 0) >= 600
+        and (item.get("height") or 0) >= 300
+        and not item.get("review_required")
+        and reusable(item.get("license_url", ""))
+    )
+
+
 def local_image(name, data, *, author="", license_note="", rights_confirmed=False):
     """Import an authorized local file without contacting an external service."""
     if not rights_confirmed or not license_note.strip():

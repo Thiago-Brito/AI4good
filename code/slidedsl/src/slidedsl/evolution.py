@@ -223,9 +223,12 @@ def generate_strategy(
     reliability=False,
     repair_max=2,
     system_context="",
+    system_override=None,
     user_context="",
     schema_override=None,
     schema_in_prompt=True,
+    decode_schema_override=None,
+    response_transform=None,
 ) -> dict:
     if reliability:
         from .reliability import generate_reliable
@@ -327,7 +330,7 @@ def generate_strategy(
     adapter = adapter or OllamaTextModel(
         model, context_length=context_length, output_tokens=output_tokens
     )
-    system = plan_system() + system_context
+    system = (system_override if system_override is not None else plan_system()) + system_context
     if schema_in_prompt:
         system += "\nSchema:\n" + json.dumps(schema, ensure_ascii=False)
     cfg = {
@@ -374,7 +377,7 @@ def generate_strategy(
     save_json(out / "report.json", report)
     current, call_schema, call_system = (
         f"Pedido integral:\n{request}\nExatamente {count} slides.\n{user_context}",
-        schema,
+        decode_schema_override or schema,
         system,
     )
     data, validation, plan, mapping, selected_source = None, None, None, {}, None
@@ -419,6 +422,11 @@ def generate_strategy(
                 candidate = json.loads(raw)
             if not isinstance(candidate, dict):
                 raise ValueError("O plano deve ser um objeto JSON.")
+            if decode_schema_override is not None and not round_number:
+                Draft202012Validator(decode_schema_override).validate(candidate)
+            if response_transform is not None and not round_number:
+                candidate = response_transform(candidate)
+                save_json(folder / "normalized_response.json", candidate)
             if schema_override is not None:
                 Draft202012Validator(schema_override).validate(candidate)
             data = candidate

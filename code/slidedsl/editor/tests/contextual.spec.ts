@@ -206,9 +206,13 @@ test("SLM real com imagem licenciada, fontes e reparo preservando edição", asy
     .getByTestId("preview")
     .screenshot({ path: path.join(folder, "preview.png") });
   expect(errors).toEqual([]);
-  await fs.mkdir(path.resolve("../outputs/contextual"), { recursive: true });
+  const evidence = path.resolve(
+    process.env.SLIDEDSL_UI_CONTEXTUAL_OUTPUT ??
+      "../outputs/contextual/ui_generation.json",
+  );
+  await fs.mkdir(path.dirname(evidence), { recursive: true });
   await fs.writeFile(
-    path.resolve("../outputs/contextual/ui_generation.json"),
+    evidence,
     JSON.stringify(
       {
         id,

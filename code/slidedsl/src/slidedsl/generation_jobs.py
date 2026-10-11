@@ -272,6 +272,8 @@ def _work(id, payload):
                     "manual_edits",
                     "manual_conflict",
                     "source_conflict",
+                    "visual_outline",
+                    "visual_fallbacks",
                 )
             },
             "path": out.relative_to(project_root()).as_posix(),

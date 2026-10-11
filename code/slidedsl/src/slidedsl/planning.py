@@ -2,7 +2,7 @@
 
 from typing import Literal
 
-from pydantic import Field
+from pydantic import Field, model_serializer
 
 from .structured_slide import OutputModel
 
@@ -11,6 +11,14 @@ class ColumnPlan(OutputModel):
     heading: str = Field(max_length=120)
     items: list[str] = Field(min_length=1, max_length=6)
     group: bool
+    representation: Literal["list", "stack", "services", "cards"] = "list"
+
+    @model_serializer(mode="wrap")
+    def serialize_legacy_column(self, handler):
+        data = handler(self)
+        if self.representation == "list":
+            data.pop("representation", None)
+        return data
 
 
 class DecorationPlan(OutputModel):
@@ -46,6 +54,14 @@ class SlidePlan(OutputModel):
         "image_comparison",
         "image_cards",
         "hero_image",
+        "visual_cover",
+        "concept_map",
+        "architecture_diagram",
+        "comparison_visual",
+        "visual_sequence",
+        "visual_flow",
+        "benefit_cards",
+        "takeaway",
     ]
     columns: list[ColumnPlan] = Field(min_length=1, max_length=2)
     decorations: list[DecorationPlan] = Field(max_length=4)

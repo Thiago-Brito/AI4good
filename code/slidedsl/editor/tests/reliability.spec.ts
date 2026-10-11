@@ -22,6 +22,7 @@ test("requisitos, correção e edição com Ollama real", async ({
     .fill(
       "Crie um slide sobre camadas. No primeiro slide coloque duas formas coloridas de cores distintas, uma imagem local assets/imagem_demo.png e uma demonstração de camadas: imagem inicialmente atrás e depois à frente de um retângulo, com sobreposição parcial. Use title_content com UMA coluna, dois textos curtos, heading vazio e sem rodapé. Só use back e front para a imagem, reference vazio, nenhuma relação next. Preserve margens.",
     );
+  await page.getByText("Limite de correções", { exact: true }).first().click();
   await page.getByLabel("Limite de correções").fill("0");
   const submitted = page.waitForResponse(
     (r) =>

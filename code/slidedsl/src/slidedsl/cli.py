@@ -118,6 +118,11 @@ def main(argv=None) -> int:
     contextual_parser.add_argument("--strategy", default="D", choices=["C", "D"])
     contextual_parser.add_argument("--prompt-file", required=True)
     contextual_parser.add_argument(
+        "--visual-planning",
+        action="store_true",
+        help="SLM escolhe intenção e representação antes do conteúdo",
+    )
+    contextual_parser.add_argument(
         "--context-file", help="JSON GenerationContext; padrão offline/livre"
     )
     contextual_parser.add_argument("--out", required=True)
@@ -165,14 +170,24 @@ def main(argv=None) -> int:
         if args.command == "generate-contextual":
             from .contextual import generate_contextual
 
+            context_data = (
+                json.loads(Path(args.context_file).read_text("utf-8-sig"))
+                if args.context_file
+                else {}
+            )
+            if args.visual_planning:
+                context_data = {
+                    "provider": "auto",
+                    "selection": "auto",
+                    **context_data,
+                    "visual_planning": True,
+                }
             report = generate_contextual(
                 args.model,
                 args.strategy,
                 Path(args.prompt_file).read_text("utf-8-sig"),
                 Path(args.out),
-                context=json.loads(Path(args.context_file).read_text("utf-8-sig"))
-                if args.context_file
-                else {},
+                context=context_data,
                 repair_max=args.repair_max,
                 seed=args.seed,
             )
