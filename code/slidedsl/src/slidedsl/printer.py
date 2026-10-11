@@ -26,9 +26,13 @@ def print_position(p: Position) -> str:
 
 def print_command(c: Command, indent: str = "    ") -> str:
     if c.op == "add":
-        kind = {"rectangle": "retangulo", "ellipse": "elipse", "text": "texto", "image": "imagem"}[
-            c.element_type
-        ]
+        kind = {
+            "rectangle": "retangulo",
+            "ellipse": "elipse",
+            "text": "texto",
+            "image": "imagem",
+            "arrow": "seta",
+        }[c.element_type]
         s = f"adicionar {kind} id {c.id}"
         if c.element_type == "text":
             s += f" {quote(c.text)}"

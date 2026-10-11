@@ -3,12 +3,13 @@ apresentacao: "apresentacao" STRING "{" tema slide+ "}"
 tema: "tema" TEMA
 slide: "slide" INT "{" instrucao+ "}"
 
-?instrucao: adicionar_retangulo | adicionar_elipse | adicionar_texto | adicionar_imagem
+?instrucao: adicionar_retangulo | adicionar_elipse | adicionar_texto | adicionar_imagem | adicionar_seta
           | remover | mover | redimensionar | mudar_cor | trazer_frente | enviar_tras
           | alinhar | agrupar | desagrupar | distribuir | definir_camada | layout
 
 adicionar_retangulo: "adicionar" "retangulo" "id" ID "em" posicao "tamanho" dimensao "cor" cor papel?
 adicionar_elipse: "adicionar" "elipse" "id" ID "em" posicao "tamanho" dimensao "cor" cor papel?
+adicionar_seta: "adicionar" "seta" "id" ID "em" posicao "tamanho" dimensao "cor" cor papel?
 adicionar_texto: "adicionar" "texto" "id" ID STRING "em" posicao "tamanho" dimensao "fonte" fonte "cor" cor papel? familia?
 adicionar_imagem: "adicionar" "imagem" "id" ID "arquivo" STRING "em" posicao "tamanho" dimensao papel?
 ?cor: COR | TOKEN_COR

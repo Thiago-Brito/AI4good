@@ -15,7 +15,7 @@ class Canvas(IRModel):
 
 class Element(IRModel):
     id: str = Field(pattern=r"^[a-zA-Z_][a-zA-Z0-9_]*$")
-    type: Literal["rectangle", "ellipse", "text", "image"]
+    type: Literal["rectangle", "ellipse", "text", "image", "arrow"]
     x: float
     y: float
     width: float

@@ -94,7 +94,10 @@ test("requisitos, correção e edição com Ollama real", async ({
   expect(errors).toEqual([]);
   await fs.mkdir(path.resolve("../outputs/reliability"), { recursive: true });
   await fs.writeFile(
-    path.resolve("../outputs/reliability/ui_generation.json"),
+    path.resolve(
+      process.env.SLIDEDSL_UI_RELIABILITY_OUTPUT ??
+        "../outputs/reliability/ui_generation.json",
+    ),
     JSON.stringify(
       {
         firstId,

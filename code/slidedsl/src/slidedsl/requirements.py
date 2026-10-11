@@ -148,7 +148,7 @@ def evaluate_requirements(validation, requirements, plan=None):
             detail = {"count": len(selected), "colors": sorted(colors)}
         elif r.kind == "images":
             witnesses = [
-                e.id for e in elements if e.type == "image" and e.file == "assets/imagem_demo.png"
+                e.id for e in elements if e.type == "image" and (not r.value or e.file == r.value)
             ]
             ok = len(witnesses) >= r.minimum
         elif r.kind == "layers":
@@ -227,7 +227,7 @@ def evaluate_requirements(validation, requirements, plan=None):
                     (e.text or "").startswith(f"{i}. ") for i, e in enumerate(bodies, 1)
                 )
             if r.value == "flow":
-                arrows = [e for e in elements if e.text == "↓"]
+                arrows = [e for e in elements if e.text == "↓" or e.type == "arrow"]
                 nodes = sorted(bodies, key=lambda e: e.y)
                 ok = ok and {e.y for e in arrows} == {e.y + e.height for e in nodes[:-1]}
             witnesses = [e.id for e in panels + bodies]

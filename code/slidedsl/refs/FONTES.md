@@ -1,5 +1,16 @@
 # Fontes consultadas em 2026-10-08
 
+## Evolução visual/contextual — consulta em 11/10/2026
+- PptxGenJS, imagens: https://gitbrent.github.io/PptxGenJS/docs/api-images.html . Na versão instalada 4.0.1 o código e os tipos confirmam `sizing: {type: 'contain', w, h}`; a função `imageSizingContain` não existe. Setas usam `ShapeType.downArrow`.
+- Openverse, API, limites anônimos e metadados: https://api.openverse.org/v1/ . Busca paginada; respostas 429; sem scraping.
+- MediaWiki, Imageinfo: https://www.mediawiki.org/wiki/API:Imageinfo . URLs, dimensões, MIME e extmetadata de arquivos Commons.
+- NASA Image and Video Library, API v1.22: https://images.nasa.gov/docs/images.nasa.gov_api_docs.pdf . Busca e assets; distinto de serviços NASA que exigem chave.
+- NASA, termos de imagens: https://www.nasa.gov/nasa-brand-center/images-and-media/ . Material de terceiros, marcas e pessoas requerem revisão; crédito não implica endosso. Seleção NASA exige revisão individual.
+- pypdf, extração textual: https://github.com/py-pdf/pypdf/blob/main/docs/user/extract-text.md . OCR de páginas digitalizadas fica fora desta etapa.
+- LibreOffice, execução: https://help.libreoffice.org/latest/en-GB/text/shared/guide/start_parameters.html . Conversão headless opcional.
+- Evidências executadas: outputs/contextual/api_probe/ (Openverse/NASA reais; Commons HTTP 403), experiment_20261011_final/evaluation.json e audit.json (17 chamadas, 462 hashes conferidos), ui_generation.json e ui-tests-final/results.json. Fontes sintéticas: benchmark/reference_aurora.txt; instrumento humano ainda não aplicado em docs/AVALIACAO_HUMANA_CONTEXTUAL.md.
+- Ambiente final: Python 3.12.10, Node 24.14.0, PptxGenJS 4.0.1, pypdf 6.20.0, Pillow 12.3.0, psutil 7.1.0; versões e fontes executadas preservadas nos snapshots. Regressão: outputs/tests/contextual-final.xml.
+
 ## Evolução SLM — consulta em 2026-10-10
 - Ollama Structured Outputs: https://docs.ollama.com/capabilities/structured-outputs.
   A API local aceita JSON Schema em `format`; o schema deve também orientar o prompt.

@@ -38,7 +38,9 @@ VERSIONS = {
     "Pygments": "2.19.2",
     "colorama": "0.4.6",
     "ruff": "0.12.0",
-    "Pillow": "11.2.1",
+    "Pillow": "12.3.0",
+    "pypdf": "6.20.0",
+    "psutil": "7.1.0",
 }
 
 

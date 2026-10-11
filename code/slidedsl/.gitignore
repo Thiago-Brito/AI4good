@@ -10,6 +10,7 @@ outputs/
 output/
 reports/
 .env
+assets/media/
 *.log
 editor/test-results/
 editor/playwright-report/

@@ -1,6 +1,6 @@
 export type Element = {
   id: string;
-  type: "rectangle" | "ellipse" | "text" | "image";
+  type: "rectangle" | "ellipse" | "text" | "image" | "arrow";
   x: number;
   y: number;
   width: number;

@@ -3,6 +3,8 @@ import path from "node:path";
 import fs from "node:fs";
 
 const root = path.resolve("..");
+const resultRoot =
+  process.env.SLIDEDSL_UI_RESULTS_ROOT ?? "../outputs/ui-tests";
 const python = path.join(
   root,
   ".venv",
@@ -17,10 +19,10 @@ export default defineConfig({
   fullyParallel: false,
   workers: 1,
   timeout: 45000,
-  outputDir: "../outputs/ui-tests",
+  outputDir: resultRoot,
   reporter: [
     ["list"],
-    ["json", { outputFile: "../outputs/ui-tests/results.json" }],
+    ["json", { outputFile: path.join(resultRoot, "results.json") }],
   ],
   use: {
     baseURL: "http://127.0.0.1:5173",

@@ -34,7 +34,7 @@ class Command(TypedNode):
         "layout",
     ]
     id: str = ""
-    element_type: Literal["rectangle", "ellipse", "text", "image"] | None = None
+    element_type: Literal["rectangle", "ellipse", "text", "image", "arrow"] | None = None
     position: Position | None = None
     size: tuple[float, float] | None = None
     color: str | None = None

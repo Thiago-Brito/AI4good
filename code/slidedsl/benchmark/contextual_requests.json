@@ -1,0 +1,23 @@
+{
+  "protocol": "contextual-exploratory-v1",
+  "seed": 42,
+  "repetitions": 1,
+  "model": "qwen3:4b-instruct",
+  "temperature": 0.1,
+  "num_ctx": 8192,
+  "num_predict": 4096,
+  "strict": true,
+  "scope": "Cinco pedidos novos; proxies lexicais não medem verdade, clareza ou beleza. Amostra exploratória, sem inferência estatística.",
+  "cases": [
+    {"id":"educacao", "domain":"Educação", "prompt":"Crie dois slides sobre frações para estudantes iniciantes. Slide 1: explique numerador e denominador. Slide 2: apresente um exemplo de fração com partes iguais. Use textos curtos, margens de 64 px, title_content com uma coluna, até três itens por slide, heading vazio, sem rodapé, decorações ou imagens.", "terms":["numerador","iguais"]},
+    {"id":"tecnologia", "domain":"Tecnologia", "prompt":"Crie dois slides sobre comunicação HTTP para desenvolvedores iniciantes. Slide 1: explique requisição e resposta. Slide 2: explique cache com um exemplo breve. Use textos curtos, margens de 64 px, title_content com uma coluna, até três itens por slide, heading vazio, sem rodapé, decorações ou imagens.", "terms":["requisi","cache"]},
+    {"id":"negocios", "domain":"Negócios", "prompt":"Crie dois slides sobre organização de estoque para gestores. Slide 1: explique registro de entrada e saída de produtos. Slide 2: explique reposição e acompanhamento. Use textos curtos, margens de 64 px, title_content com uma coluna, até três itens por slide, heading vazio, sem rodapé, decorações ou imagens.", "terms":["entrada","reposi"]},
+    {"id":"ciencia", "domain":"Ciência", "prompt":"Crie dois slides sobre ciclo da água para público geral. Slide 1: explique evaporação e condensação. Slide 2: explique precipitação. Use textos curtos, margens de 64 px, title_content com uma coluna, até três itens por slide, heading vazio, sem rodapé, decorações ou imagens.", "terms":["evapora","precipita"]},
+    {"id":"treinamento", "domain":"Treinamento profissional", "prompt":"Crie dois slides de treinamento sobre segurança digital para funcionários. Slide 1: explique senhas e autenticação. Slide 2: explique reconhecimento de phishing. Use textos curtos, margens de 64 px, title_content com uma coluna, até três itens por slide, heading vazio, sem rodapé, decorações ou imagens.", "terms":["senha","phishing"]}
+  ],
+  "hypotheses": [
+    {"id":"structure", "comparison":"A direto versus C planejado; prompts/schemas/chamadas diferentes, não isola GLC. C alimenta validator e deterministic com o mesmo plano e critérios."},
+    {"id":"media", "comparison":"Um plano visual fixo com asset selecionado versus asset pendente; verifica incorporação/diagnóstico, não relevância ou estética."},
+    {"id":"sources", "comparison":"Livre versus restrito em pedido sobre documento sintético; respostas novas, valida IDs/citações exatas, não efeito causal ou verdade factual."}
+  ]
+}

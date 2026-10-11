@@ -63,10 +63,16 @@ export function Preview({
                   height: e.height,
                   zIndex: e.z + 1,
                   background:
-                    e.type === "rectangle" || e.type === "ellipse"
+                    e.type === "rectangle" ||
+                    e.type === "ellipse" ||
+                    e.type === "arrow"
                       ? (e.color ?? "transparent")
                       : "transparent",
                   borderRadius: e.type === "ellipse" ? "50%" : 0,
+                  clipPath:
+                    e.type === "arrow"
+                      ? "polygon(30% 0,70% 0,70% 50%,100% 50%,50% 100%,0 50%,30% 50%)"
+                      : undefined,
                   color: e.color ?? undefined,
                   fontSize: ((e.font_size ?? 24) * 96) / 72,
                   fontFamily: e.font_face,

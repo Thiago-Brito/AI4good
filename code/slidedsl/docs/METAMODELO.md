@@ -13,3 +13,15 @@ API acrescenta IDs, escopo, assets e tipos; regras de design acrescentam limites
 Backend recebe somente IR validada. O serializer canônico permite percurso
 `.sld → AST → IR → DSL → AST → IR`, com estado geométrico e relações equivalentes.
 `semantic_snapshot` é a definição executável de equivalência usada nos testes.
+
+## Extensão visual/contextual
+
+O enum de elemento inclui `arrow`, forma vetorial editável emitida por `adicionar
+seta`. Os arquivos anteriores continuam legíveis; leitores antigos precisam
+conhecer esse novo tipo para importar uma cena que o utilize.
+Planos têm `media` (consulta, ativo e legenda), `sources` (IDs de fragmentos) e
+`vector_flow`. Esses campos são de planejamento, sem substituir AST/IR.
+Metadados de licença e fontes são registrados ao lado dos artefatos; créditos
+de imagens entram nas notas do PPTX. A geometria pertence ao compilador.
+Correções combinam IR original, manual e candidata por ID, com conflitos explícitos.
+Veja [arquitetura e limitações](EVOLUCAO_VISUAL_CONTEXTUAL.md).

@@ -222,6 +222,10 @@ def generate_strategy(
     event_callback=None,
     reliability=False,
     repair_max=2,
+    system_context="",
+    user_context="",
+    schema_override=None,
+    schema_in_prompt=True,
 ) -> dict:
     if reliability:
         from .reliability import generate_reliable
@@ -245,7 +249,7 @@ def generate_strategy(
     if strategy not in {"A", "B", "C", "D"}:
         raise ValueError("Estratégia deve ser A, B, C ou D.")
     count = requested_count(request) if slide_count is None else slide_count
-    schema = plan_schema(count)
+    schema = schema_override or plan_schema(count)
     if (
         not request.strip()
         or not 0 <= temperature <= 1
@@ -323,7 +327,9 @@ def generate_strategy(
     adapter = adapter or OllamaTextModel(
         model, context_length=context_length, output_tokens=output_tokens
     )
-    system = plan_system() + "\nSchema:\n" + json.dumps(schema, ensure_ascii=False)
+    system = plan_system() + system_context
+    if schema_in_prompt:
+        system += "\nSchema:\n" + json.dumps(schema, ensure_ascii=False)
     cfg = {
         "protocol": "evolution-v1",
         "strategy": strategy,
@@ -367,7 +373,7 @@ def generate_strategy(
     save_json(out / "model_show.json", getattr(adapter, "model_show", None))
     save_json(out / "report.json", report)
     current, call_schema, call_system = (
-        f"Pedido integral:\n{request}\nExatamente {count} slides.",
+        f"Pedido integral:\n{request}\nExatamente {count} slides.\n{user_context}",
         schema,
         system,
     )
@@ -413,6 +419,8 @@ def generate_strategy(
                 candidate = json.loads(raw)
             if not isinstance(candidate, dict):
                 raise ValueError("O plano deve ser um objeto JSON.")
+            if schema_override is not None:
+                Draft202012Validator(schema_override).validate(candidate)
             data = candidate
             plan, validation, mapping, ds = _validate_plan(data, count)
             diagnostics += ds

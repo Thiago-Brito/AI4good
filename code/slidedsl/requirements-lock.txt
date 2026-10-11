@@ -14,10 +14,12 @@ jsonschema==4.24.0
 jsonschema-specifications==2025.9.1
 lark==1.2.2
 packaging==26.3
-pillow==11.2.1
+pillow==12.3.0
 pluggy==1.6.0
+psutil==7.1.0
 pydantic==2.11.7
 pydantic_core==2.33.2
+pypdf==6.20.0
 Pygments==2.21.0
 pytest==8.4.1
 PyYAML==6.0.2
@@ -25,6 +27,8 @@ referencing==0.37.0
 rpds-py==2026.9.1
 ruff==0.12.0
 starlette==0.46.2
+setuptools==80.9.0
 typing-inspection==0.4.4
 typing_extensions==4.16.0
 uvicorn==0.34.3
+wheel==0.45.1

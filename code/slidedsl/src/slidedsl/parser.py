@@ -35,9 +35,13 @@ def parse_command(tree: Tree) -> Command:
     name, c = str(tree.data), tree.children
     kw = {"line": tree.meta.line, "column": tree.meta.column}
     if name.startswith("adicionar_"):
-        kind = {"retangulo": "rectangle", "elipse": "ellipse", "texto": "text", "imagem": "image"}[
-            name[10:]
-        ]
+        kind = {
+            "retangulo": "rectangle",
+            "elipse": "ellipse",
+            "texto": "text",
+            "imagem": "image",
+            "seta": "arrow",
+        }[name[10:]]
         offset = 2 if kind in ("text", "image") else 1
         args = dict(
             op="add",

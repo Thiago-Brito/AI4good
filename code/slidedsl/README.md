@@ -6,6 +6,12 @@ deck escritos para a especificação de 8 de outubro de 2026, sem usar protótip
 
 ## Como o projeto funciona
 
+O fluxo visual/contextual acrescenta seis layouts com imagens, busca opcional em
+APIs oficiais, referências TXT/MD/PDF locais e correção que preserva edições.
+O formulário simples continua disponível; abra as opções de contexto quando
+precisar de público, objetivo, fontes ou imagens. Veja
+[arquitetura, uso, experimentos e limites atuais](docs/EVOLUCAO_VISUAL_CONTEXTUAL.md).
+
 A evolução local acrescenta **planejamento sem coordenadas, IDs automáticos e
 três layouts**, com reparos por campo. O editor agora permite escolher o modelo
 Ollama, escrever um pedido e acompanhar a geração. Abra com
@@ -44,7 +50,7 @@ flowchart LR
 | Compilador PptxGenJS | Converte a IR validada em um `.pptx` com objetos editáveis. |
 | Editor React Flow/FastAPI | Permite importar o código, visualizar e modificar a cena, revalidar e exportar DSL ou PPTX. |
 
-O SLM gera um slide por solicitação, em código SlideDSL ou JSON com schema
+Nos modos históricos A/B, o SLM gera um slide por solicitação, em código SlideDSL ou JSON com schema
 restrito. O JSON é convertido deterministicamente em SlideDSL; os dois modos
 passam pelo parser e pela análise semântica descritos acima. Se a validação falhar,
 o modelo recebe os diagnósticos e pode tentar corrigir até duas vezes. Prompts,

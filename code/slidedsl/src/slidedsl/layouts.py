@@ -78,6 +78,17 @@ def plan_to_dsl(plan: DeckPlan) -> tuple[str, dict[str, str], list[Diagnostic]]:
             )
             return id
 
+        if slide.layout in VISUAL_LAYOUTS:
+            visual_slide(slide, base, add, issue)
+            if slide.decorations or slide.relations:
+                issue(
+                    "L007",
+                    "Layouts de imagem não admitem decorações/relações adicionais; use o editor.",
+                    base,
+                )
+            slides.append(SlideNode(number=number, commands=commands))
+            continue
+
         content_width = (
             1152 if slide.layout in {"title_content", "sequence", "cards", "flow"} else 544
         )
@@ -320,13 +331,14 @@ def plan_to_dsl(plan: DeckPlan) -> tuple[str, dict[str, str], list[Diagnostic]]:
                     add(
                         f"link{ri + 1}",
                         path,
-                        "text",
-                        616,
+                        "arrow" if slide.vector_flow else "text",
+                        624 if slide.vector_flow else 616,
                         a.position.y + a.size[1],
-                        48,
-                        36,
-                        text="↓",
-                        font=12,
+                        32 if slide.vector_flow else 48,
+                        20 if slide.vector_flow else 36,
+                        text=None if slide.vector_flow else "↓",
+                        font=None if slide.vector_flow else 12,
+                        color="primaria" if slide.vector_flow else "texto",
                         role="decoracao",
                     )
             else:
@@ -351,3 +363,151 @@ def compile_plan(plan: DeckPlan, out: Path, *, strict=False) -> dict:
         "source": source,
         "element_paths": mapping,
     }
+
+
+VISUAL_LAYOUTS = {
+    "text_image",
+    "image_text",
+    "image_caption",
+    "image_comparison",
+    "image_cards",
+    "hero_image",
+}
+
+
+def contain(width, height, box):
+    x, y, w, h = box
+    ratio = min(w / width, h / height)
+    actual_w, actual_h = width * ratio, height * ratio
+    return x + (w - actual_w) / 2, y + (h - actual_h) / 2, actual_w, actual_h
+
+
+def visual_slide(slide, base, add, issue):
+    """Images fit their slot without distortion/cropping; all text stays editable."""
+    from .media import resolve_asset
+
+    title_font = 42
+    while title_font > 24 and text_height(slide.title, 1152, title_font) > 120:
+        title_font -= 1
+    add(
+        "titulo",
+        f"{base}.title",
+        "text",
+        64,
+        64,
+        1152,
+        120,
+        text=slide.title,
+        font=title_font,
+        role="titulo",
+    )
+    expected = 2 if slide.layout == "image_comparison" else 1
+    if len(slide.columns) != expected:
+        issue("L001", f"Layout exige {expected} coluna(s).", f"{base}.columns")
+    slots = {
+        "text_image": [(672, 216, 544, 320)],
+        "image_text": [(64, 216, 544, 320)],
+        "image_caption": [(64, 208, 1152, 240)],
+        "image_comparison": [(64, 216, 544, 220), (672, 216, 544, 220)],
+        "image_cards": [(64 + (i % 2) * 608, 216 + (i // 2) * 192, 544, 72) for i in range(4)],
+        "hero_image": [(64, 208, 1152, 240)],
+    }[slide.layout]
+    required = len(slide.columns[0].items) if slide.layout == "image_cards" else len(slots)
+    if slide.layout == "image_cards" and required > 4:
+        issue("L006", "Até quatro cards com imagem.", f"{base}.columns.0.items")
+    if len(slide.media) != required:
+        issue("L008", f"Layout exige {required} imagem(ns)/consultas.", f"{base}.media")
+    for i, media in enumerate(slide.media):
+        if i >= len(slots):
+            issue("L008", "Imagem sem espaço no layout.", f"{base}.media.{i}")
+            continue
+        x, y, w, h = slots[i]
+        if not media.asset:
+            issue("M001", f"Selecione uma imagem para: {media.query}", f"{base}.media.{i}.asset")
+        else:
+            try:
+                asset = resolve_asset(media.asset)
+                ix, iy, iw, ih = contain(asset["width"], asset["height"], (x, y, w, h))
+                add(
+                    f"media{i + 1}",
+                    f"{base}.media.{i}.asset",
+                    "image",
+                    ix,
+                    iy,
+                    iw,
+                    ih,
+                    file=media.asset,
+                    role="decoracao",
+                )
+            except ValueError as exc:
+                issue("M002", str(exc), f"{base}.media.{i}.asset")
+        if media.caption:
+            caption_font = 12 if slide.layout == "image_cards" else 16
+            ch = text_height(media.caption, w, caption_font)
+            if ch > (40 if slide.layout == "image_cards" else 56):
+                issue("L004", "Legenda excede 56 pixels.", f"{base}.media.{i}.caption")
+            add(
+                f"caption{i + 1}",
+                f"{base}.media.{i}.caption",
+                "text",
+                x,
+                y + h + 8,
+                w,
+                ch,
+                text=media.caption,
+                font=caption_font,
+                role="decoracao",
+            )
+    for ci, column in enumerate(slide.columns):
+        if slide.layout in {"text_image", "image_text"}:
+            x, y, w, bottom = (64 if slide.layout == "text_image" else 672), 216, 544, 600
+        elif slide.layout == "image_comparison":
+            x, y, w, bottom = 64 + ci * 608, 508, 544, 600
+        else:
+            x, y, w, bottom = 64, 520, 1152, 612 if slide.footer else 640
+        if column.heading:
+            hh = text_height(column.heading, w, 24)
+            add(
+                f"c{ci + 1}_heading",
+                f"{base}.columns.{ci}.heading",
+                "text",
+                x,
+                y,
+                w,
+                hh,
+                text=column.heading,
+                font=24,
+            )
+            y += hh + 8
+        for ti, text in enumerate(column.items):
+            if slide.layout == "image_cards":
+                x, sy, w, _ = slots[min(ti, 3)]
+                y, bottom = sy + 128, sy + 192
+            font = 20
+            height = text_height(text, w, font)
+            if y + height > bottom:
+                issue(
+                    "L004",
+                    "Texto não cabe no layout visual; reduza conteúdo ou use outro layout.",
+                    f"{base}.columns.{ci}.items.{ti}",
+                )
+            add(
+                f"c{ci + 1}_i{ti + 1}",
+                f"{base}.columns.{ci}.items.{ti}",
+                "text",
+                x,
+                y,
+                w,
+                height,
+                text=text,
+                font=font,
+            )
+            y += height + 8
+        if column.group:
+            issue(
+                "L007",
+                "Agrupe os elementos visuais no editor; layout não cria grupos implícitos.",
+                f"{base}.columns.{ci}.group",
+            )
+    if slide.footer:
+        add("rodape", f"{base}.footer", "text", 64, 628, 1152, 28, text=slide.footer, font=12)

@@ -111,6 +111,24 @@ def main(argv=None) -> int:
     p.add_argument("--repair-max", type=int, default=2, choices=range(11))
     p.add_argument("--out", required=True)
     p = sub.add_parser("serve", help="Abrir API/editor local")
+    contextual_parser = sub.add_parser(
+        "generate-contextual", help="Plano visual com configurações e documentos locais opcionais"
+    )
+    contextual_parser.add_argument("--model", default="qwen3:4b-instruct")
+    contextual_parser.add_argument("--strategy", default="D", choices=["C", "D"])
+    contextual_parser.add_argument("--prompt-file", required=True)
+    contextual_parser.add_argument(
+        "--context-file", help="JSON GenerationContext; padrão offline/livre"
+    )
+    contextual_parser.add_argument("--out", required=True)
+    contextual_parser.add_argument("--repair-max", type=int, default=2, choices=range(11))
+    contextual_parser.add_argument("--seed", type=int, default=42)
+    experiment_parser = sub.add_parser(
+        "evaluate-contextual", help="Experimentos separados de estrutura, imagens e fontes"
+    )
+    experiment_parser.add_argument("--requests-file", default="benchmark/contextual_requests.json")
+    experiment_parser.add_argument("--model", default="qwen3:4b-instruct")
+    experiment_parser.add_argument("--out", required=True)
     p.add_argument("--host", default="127.0.0.1")
     p.add_argument("--port", type=int, default=8000)
     p = sub.add_parser("inspect", help="Inspecionar conteúdo de PPTX ou relatório JSON")
@@ -118,8 +136,48 @@ def main(argv=None) -> int:
     p = sub.add_parser("render-preview", help="Exportar PNG via PowerPoint COM opcional")
     p.add_argument("file")
     p.add_argument("--out", required=True)
+    p = sub.add_parser(
+        "render-optional",
+        help="PowerPoint/LibreOffice opcionais, disponibilidade e fallback explícito",
+    )
+    p.add_argument("file")
+    p.add_argument("--out", required=True)
     args = parser.parse_args(argv)
     try:
+        if args.command == "evaluate-contextual":
+            from .contextual_experiment import evaluate_contextual
+
+            report = evaluate_contextual(
+                Path(args.out),
+                json.loads(Path(args.requests_file).read_text("utf-8-sig")),
+                model=args.model,
+            )
+            print(
+                f"{len(report['rows'])} avaliações estruturais; {report['actual_http_calls']} chamadas reais; avaliação humana não aplicada."
+            )
+            return 0
+        if args.command == "render-optional":
+            from .preview import render_optional
+
+            report = render_optional(Path(args.file), Path(args.out))
+            print(f"Mecanismo: {report['engine']}; renderização real: {report['rendered']}")
+            return 0
+        if args.command == "generate-contextual":
+            from .contextual import generate_contextual
+
+            report = generate_contextual(
+                args.model,
+                args.strategy,
+                Path(args.prompt_file).read_text("utf-8-sig"),
+                Path(args.out),
+                context=json.loads(Path(args.context_file).read_text("utf-8-sig"))
+                if args.context_file
+                else {},
+                repair_max=args.repair_max,
+                seed=args.seed,
+            )
+            print(f"Geração contextual em {args.out}; PPTX: {report.get('compile_success', False)}")
+            return 0 if report.get("compile_success") else 1
         if args.command == "evaluate-reliability":
             from .reliability_experiment import evaluate_reliability
 

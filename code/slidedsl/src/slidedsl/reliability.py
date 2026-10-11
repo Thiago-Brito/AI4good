@@ -84,7 +84,7 @@ def accept_candidate(before, after):
     return True, "accepted"
 
 
-def deterministic_candidate(data, state):
+def deterministic_candidate(data, state, *, allow_demo_repair=True):
     """Only explicit missing requirements authorize additions; no phantom references."""
     result, edits = deepcopy(data), []
     for d in state["errors"]:
@@ -140,6 +140,7 @@ def deterministic_candidate(data, state):
                 edits.append(path)
         elif (
             kind == "images"
+            and allow_demo_repair
             and not any(d["kind"] == "image" for d in slide["decorations"])
             and len(slide["decorations"]) < 4
         ):
@@ -223,6 +224,7 @@ def run_reliability(
     seed=42,
     temperature=0.1,
     event_callback=None,
+    allow_demo_repair=True,
 ):
     if mode not in {"baseline", "validator", "deterministic", "slm"} or not 0 <= repair_max <= 10:
         raise ValueError("Modo inválido ou limite fora de 0..10.")
@@ -243,7 +245,7 @@ def run_reliability(
         folder.mkdir()
         save_json(folder / "before.json", data)
         save_json(folder / "before_validation.json", summary(state))
-        candidate, paths = deterministic_candidate(data, state)
+        candidate, paths = deterministic_candidate(data, state, allow_demo_repair=allow_demo_repair)
         if deterministic_rejected:
             candidate = deepcopy(data)
         method, reason, after = "deterministic", None, None

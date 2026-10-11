@@ -330,7 +330,7 @@ def validate_ir(deck: Presentation, root: Path | None = None) -> list[Diagnostic
                 or e.color is None
             ):
                 error("S005", "Texto exige conteúdo, cor e fonte de 10 a 96.", e.id)
-            elif e.type in {"rectangle", "ellipse"} and e.color is None:
+            elif e.type in {"rectangle", "ellipse", "arrow"} and e.color is None:
                 error("S006", "Forma exige cor.", e.id)
             elif e.type == "image":
                 try:

@@ -1,5 +1,8 @@
 # Progresso de implementação
 
+## Evolução visual/contextual — início (11/10/2026)
+Pedido integral lido. Base 9b6a8edf80ce4b76c54c13bcbb7fc0e768aab847 limpa na SlideDSL e confirmada no remoto. Pastas não rastreadas de outros projetos excluídas do escopo. Fontes oficiais registradas antes da nova documentação. Histórico experimental preservado.
+
 ## Evolução SLM — análise e compilação de planos (10/10/2026)
 Lidos roadmap, resultados incrementais, GLC, AST/IR, compilador, adaptador Ollama,
 geração incremental, API, editor e chamadores. Base Python: 123 testes passaram.
@@ -228,3 +231,33 @@ Evidências novas em outputs/reliability/ e outputs/tests/reliability-final.xml;
 experimentos anteriores não foram modificados. Avaliação humana e maior amostra
 continuam pendentes, assim como interpretação geral de português e reparo de plano
 após mudanças manuais da IR.
+
+## Evolução visual/contextual — 11/10/2026
+
+Base limpa 9b6a8edf80ce4b76c54c13bcbb7fc0e768aab847 confirmada no remoto;
+sem snapshot vazio. Estendidos parser/AST/IR/editor/renderer existentes.
+Pesquisa oficial opcional, cache e proteção de downloads; Openverse/NASA reais,
+Commons HTTP 403 documentado. Seis layouts proporcionais, seta vetorial nativa,
+contexto opcional e referências TXT/MD/PDF com recuperação lexical local.
+Restrito seleciona frases fornecidas, com auditoria de IDs/texto; não comprova
+verdade factual. Correções preservam manualmente campos/adições/remoções por ID
+e registram conflitos. V004–V006 e renderização externa opcional implementadas;
+PowerPoint/LibreOffice ausentes, fallback geométrico explícito.
+
+Experimento final contextual: cinco domínios, seed 42, 20 avaliações estruturais,
+17 chamadas qwen3:4b-instruct, 4.161 tokens de saída e 20.915 de entrada.
+A 1/5 PPTX; planos sem reparos/validador/determinístico 5/5 e 20/20 critérios
+cada. Planos já corretos: nenhum ganho observado dos reparos. Imagem selecionada
+compilou com aviso de baixa resolução; imagem pendente bloqueada. Livre/restrito
+compilaram; três fragmentos rastreados no restrito. Humanos não avaliados.
+Auditoria conferiu 462 hashes e conteúdo nativo de 38 PPTX com auxiliares.
+Pilotos e primeira execução com falhas permanecem registrados em outputs/contextual/.
+
+Regressão: 209 Python, dois Node, onze Playwright; lint/formatação/TypeScript/build.
+Revisão final acrescentou upload de imagem própria offline, com permissão declarada,
+validação compartilhada, seleção por slot e exclusão; testes API/navegador separados.
+Teste real de navegador gerou com imagem/documento, editou, preservou a edição
+no reparo e exportou DSL/PPTX. Evidências e limites em
+docs/EVOLUCAO_VISUAL_CONTEXTUAL.md, outputs/contextual/ e
+outputs/tests/contextual-final.xml. Pendentes avaliação humana, Office real,
+maior amostra, GPU, conectores ancorados e sincronização completa de fontes/IR.

@@ -46,4 +46,59 @@ def check_visual(deck, mapping=None):
                         "evidence": {"font_size": e.font_size, "path": (mapping or {}).get(e.id)},
                     }
                 )
+        images = [e for e in s.elements if e.type == "image"]
+        for image in images:
+            from .paths import asset_path, project_root
+            from PIL import Image
+
+            try:
+                with Image.open(asset_path(image.file, project_root())) as source:
+                    if image.width > source.width * 1.5 or image.height > source.height * 1.5:
+                        ds.append(
+                            {
+                                "code": "V006",
+                                "severity": "AVISO",
+                                "slide": s.number,
+                                "element": image.id,
+                                "message": "Imagem ampliada acima de 150% da resolução original",
+                                "evidence": {
+                                    "source_pixels": list(source.size),
+                                    "display_box": [image.width, image.height],
+                                    "path": (mapping or {}).get(image.id),
+                                },
+                                "suggestion": "Escolha uma versão com mais pixels ou reduza a caixa.",
+                            }
+                        )
+            except (ValueError, OSError):
+                pass  # The semantic asset validator reports unreadable or missing files.
+            for text in texts:
+                if intersection(box(image), box(text)):
+                    ds.append(
+                        {
+                            "code": "V004",
+                            "severity": "ERRO",
+                            "slide": s.number,
+                            "element": text.id,
+                            "message": "Imagem sobrepõe caixa de título/corpo",
+                            "evidence": {
+                                "image": image.id,
+                                "path": (mapping or {}).get(text.id),
+                                "approximation": "AABB",
+                            },
+                            "suggestion": "Reposicione a imagem ou escolha outro layout.",
+                        }
+                    )
+    titles = [e for s in deck.slides for e in s.elements if e.role == "titulo"]
+    if len({(e.font_size, e.font_face, e.color) for e in titles}) > 1:
+        ds.append(
+            {
+                "code": "V005",
+                "severity": "AVISO",
+                "slide": None,
+                "element": None,
+                "message": "Tipografia/cor de títulos varia entre slides",
+                "evidence": {"elements": [e.id for e in titles]},
+                "suggestion": "Revise se a variação é intencional.",
+            }
+        )
     return ds

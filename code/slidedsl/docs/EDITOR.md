@@ -1,5 +1,11 @@
 # Editor visual
 
+O painel opcional de contexto permite personalização, anexos TXT/MD/PDF e
+imagens do catálogo/API. Corrigir pendências combina a IR editada com o reparo,
+preservando alterações e mostrando conflitos. Seleção por slot troca a imagem
+sem regenerar o deck. Fontes, licença e limitações aparecem no resultado.
+Veja [uso, privacidade local e evidências](EVOLUCAO_VISUAL_CONTEXTUAL.md).
+
 O painel **Gerar com IA local** consulta modelos Ollama instalados, recebe o pedido
 em português e oferece as estratégias A/B/C/D. D planeja conteúdo sem coordenadas,
 resolve IDs/layouts e permite até dois reparos por campos diagnosticados. O painel

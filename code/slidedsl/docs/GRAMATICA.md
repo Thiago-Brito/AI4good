@@ -25,3 +25,9 @@ Anotações opcionais 1.1: `papel titulo|corpo|decoracao|background|nenhum`,
 fonte e rótulos no roundtrip visual. `papel nenhum` desativa inferência pelo ID.
 Tokens de tema são valores finitos definidos em `config/themes.yaml`.
 AST Pydantic é tipada, sem campos extras, com linha e coluna por comando.
+
+Extensão aditiva visual: `adicionar seta id a em (624, 300) tamanho (32, 20)
+cor primaria papel decoracao`. A produção usa posição, dimensão e cor existentes;
+a IR contém tipo `arrow`, exportado como seta vetorial nativa. Não representa
+um conector ancorado entre objetos. Parser, printer e serializer preservam a
+forma no roundtrip; arquivos anteriores continuam usando as mesmas produções.

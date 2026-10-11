@@ -19,6 +19,7 @@ from .paths import project_root
 from .pipeline import validate_source
 from .semantic import validate_ir
 from .serializer import to_dsl
+from .contextual import GenerationContext
 
 app = FastAPI(title="SlideDSL — API local", version="1.1.0")
 
@@ -48,6 +49,11 @@ class GenerationPayload(BaseModel):
     repair_max: int = Field(default=2, ge=0, le=10)
     plan: dict | None = None
     requirements: list[dict] | None = None
+    context: GenerationContext | None = None
+    base_ir: Presentation | None = None
+    current_ir: Presentation | None = None
+    media_bindings: dict[str, str] = Field(default_factory=dict, max_length=12)
+    base_source: str | None = Field(default=None, max_length=120000)
 
 
 @app.get("/api/models")
@@ -83,6 +89,24 @@ def start_generation(payload: GenerationPayload):
             DeckPlan.model_validate(payload.plan)
             if payload.requirements is None:
                 raise ValueError("Correção exige os critérios congelados da geração.")
+        if (payload.base_ir is None) != (payload.current_ir is None):
+            raise ValueError("Sincronização exige cena original e cena editada.")
+        if payload.context is not None and payload.strategy not in {"C", "D"}:
+            raise ValueError("Configurações contextuais exigem C ou D.")
+        if payload.media_bindings:
+            import re
+            from .media import cached_assets
+
+            catalog = {a["id"] for a in cached_assets()}
+            for path, id in payload.media_bindings.items():
+                match = re.fullmatch(r"slides\.(\d+)\.media\.(\d+)\.asset", path)
+                if not match or id not in catalog or payload.plan is None:
+                    raise ValueError("Seleção manual exige campo existente e imagem armazenada.")
+                si, mi = map(int, match.groups())
+                if si >= len(payload.plan["slides"]) or mi >= len(
+                    payload.plan["slides"][si].get("media", [])
+                ):
+                    raise ValueError("Campo de imagem não existe no plano.")
         if payload.requirements is not None:
             from .requirements import Requirement
 
@@ -141,7 +165,14 @@ def normalize_ir(deck: Presentation):
 
 
 def report_ir(deck: Presentation):
-    diagnostics = validate_ir(deck) + check_design(deck)
+    from .visual_validation import check_visual
+    from .diagnostics import Diagnostic
+
+    diagnostics = (
+        validate_ir(deck)
+        + check_design(deck)
+        + [Diagnostic.model_validate(d) for d in check_visual(deck)]
+    )
     return {"valid": not failed(diagnostics), "diagnostics": [d.model_dump() for d in diagnostics]}
 
 
@@ -276,6 +307,166 @@ def example(name: str):
     if name not in choices:
         raise HTTPException(404, detail="Exemplo não existe.")
     return {"source": (project_root() / "examples" / choices[name]).read_text(encoding="utf-8")}
+
+
+class ImageSearchPayload(BaseModel):
+    provider: Literal["openverse", "commons", "nasa"] = "openverse"
+    query: str = Field(min_length=1, max_length=200)
+    offline: bool = False
+
+
+class ImageSelectionPayload(BaseModel):
+    id: str = Field(pattern=r"^[a-f0-9]{64}$")
+    reviewed: bool = False
+
+
+@app.post("/api/images/search")
+def image_search(payload: ImageSearchPayload):
+    from .media import search_images
+
+    try:
+        return search_images(payload.provider, payload.query, offline=payload.offline)
+    except Exception as exc:
+        raise HTTPException(
+            503, detail=f"Busca indisponível; geração offline continua disponível: {exc}"
+        ) from exc
+
+
+@app.post("/api/images/select")
+def image_select(payload: ImageSelectionPayload):
+    from .media import cache_image
+
+    try:
+        return cache_image(payload.id, reviewed=payload.reviewed)
+    except (ValueError, OSError) as exc:
+        raise HTTPException(422, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(503, detail=f"Download indisponível: {exc}") from exc
+
+
+@app.get("/api/images/cache")
+def image_cache():
+    from .media import cached_assets
+
+    return {"results": cached_assets()}
+
+
+class DocumentPayload(BaseModel):
+    name: str = Field(min_length=1, max_length=180)
+    data_base64: str = Field(max_length=2_800_000)
+
+
+class LocalImagePayload(DocumentPayload):
+    author: str = Field(default="", max_length=200)
+    license_note: str = Field(min_length=1, max_length=300)
+    rights_confirmed: bool = False
+
+
+@app.post("/api/images/local", status_code=201)
+def add_local_image(payload: LocalImagePayload):
+    import base64
+    from .media import local_image
+
+    try:
+        return local_image(
+            payload.name,
+            base64.b64decode(payload.data_base64, validate=True),
+            author=payload.author,
+            license_note=payload.license_note,
+            rights_confirmed=payload.rights_confirmed,
+        )
+    except (ValueError, OSError) as exc:
+        raise HTTPException(422, detail=str(exc)) from exc
+
+
+@app.post("/api/documents", status_code=201)
+def add_reference(payload: DocumentPayload):
+    import base64
+    from .documents import add_document
+
+    try:
+        return add_document(payload.name, base64.b64decode(payload.data_base64, validate=True))
+    except (ValueError, OSError) as exc:
+        raise HTTPException(422, detail=str(exc)) from exc
+
+
+@app.delete("/api/documents/{id}")
+def remove_reference(id: str):
+    from .documents import delete_document
+
+    try:
+        delete_document(id)
+        return {
+            "deleted": True,
+            "note": "Trechos já usados permanecem nos trabalhos; exclua os trabalhos para remover essas cópias.",
+        }
+    except (ValueError, OSError) as exc:
+        raise HTTPException(422, detail=str(exc)) from exc
+
+
+@app.delete("/api/generations/{id}")
+def remove_generation(id: str):
+    import re
+    import shutil
+    from .generation_jobs import jobs, lock
+
+    if not re.fullmatch(r"[a-f0-9]{32}", id):
+        raise HTTPException(422, detail="Identificador inválido.")
+    with lock:
+        if id in jobs and jobs[id]["state"] in {"running", "queued"}:
+            raise HTTPException(409, detail="Aguarde o trabalho terminar antes de excluir.")
+        path = (project_root() / "outputs/generation_jobs" / id).resolve()
+        if not path.is_relative_to((project_root() / "outputs/generation_jobs").resolve()):
+            raise HTTPException(422, detail="Caminho inválido.")
+        if path.exists():
+            shutil.rmtree(path)
+        jobs.pop(id, None)
+    return {"deleted": True}
+
+
+@app.delete("/api/images/cache/{id}")
+def remove_image(id: str):
+    from .media import safe_id, store_root
+
+    try:
+        safe_id(id)
+        # Explicit deletion; callers are told existing presentations may require re-selection.
+        (project_root() / "assets/media" / f"{id}.png").unlink(missing_ok=True)
+        (store_root() / "assets" / f"{id}.json").unlink(missing_ok=True)
+        (store_root() / "candidates" / f"{id}.json").unlink(missing_ok=True)
+        for cache in (store_root() / "searches").glob("*.json"):
+            entries = json.loads(cache.read_text("utf-8"))
+            cache.write_text(json.dumps([i for i in entries if i["id"] != id]), "utf-8")
+        return {
+            "deleted": True,
+            "note": "Apresentações que usam esse arquivo precisam selecionar uma imagem novamente.",
+        }
+    except (ValueError, OSError) as exc:
+        raise HTTPException(422, detail=str(exc)) from exc
+
+
+@app.middleware("http")
+async def bounded_local_requests(request, call_next):
+    from fastapi.responses import JSONResponse
+    from urllib.parse import urlsplit
+
+    origin = request.headers.get("origin")
+    same_origin = origin and urlsplit(origin).netloc == request.headers.get("host")
+    development_origin = origin in {
+        "http://127.0.0.1:5173",
+        "http://localhost:5173",
+    } and request.url.hostname in {"127.0.0.1", "localhost"}
+    if origin and not (same_origin or development_origin):
+        return JSONResponse({"detail": "Origem externa bloqueada."}, status_code=403)
+    if request.method in {"POST", "PUT", "PATCH"}:
+        data, size = [], 0
+        async for part in request.stream():
+            size += len(part)
+            if size > 4 * 1024 * 1024:
+                return JSONResponse({"detail": "Solicitação maior que 4 MiB."}, status_code=413)
+            data.append(part)
+        request._body = b"".join(data)
+    return await call_next(request)
 
 
 app.mount("/assets", StaticFiles(directory=project_root() / "assets"), name="assets")

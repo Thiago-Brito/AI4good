@@ -1,4 +1,17 @@
 # Roadmap — SlideDSL
+
+## Evolução visual/contextual — 11/10/2026
+- [x] Base limpa: 9b6a8edf80ce4b76c54c13bcbb7fc0e768aab847; hash confirmado em origin/dsl-visual, sem commit vazio.
+- [x] Imagens de APIs oficiais, segurança, cache e seis layouts editáveis; Openverse/NASA consultados, Commons real indisponível (403).
+- [x] Personalização opcional, referências locais e rastreabilidade; restrito extrativo validado com SLM real.
+- [x] Validação V004–V006, renderização opcional e preservação conservadora de edições com conflitos.
+- [x] Experimento novo: 20 avaliações estruturais, 17 chamadas reais; cinco planos compartilhados, auditoria e documentação.
+- [x] Regressão: 209 Python, dois Node e onze Playwright; lint/formatação/build; upload de imagem própria offline.
+- [x] Revisão final para commit/push na branch dsl-visual; confirmação no relatório de entrega.
+- [ ] Renderização COM/LibreOffice real, avaliação humana, maior amostra, GPU, conectores ancorados e sincronização completa plano/IR.
+
+## Núcleo e fases históricas
+
 - [x] Fase 0: ambiente e pesquisa oficial
 - [x] Fase 1: GLC, AST e printer
 - [x] Fase 2: semântica, IR, geometria e extensões 1.1

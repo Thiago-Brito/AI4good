@@ -25,13 +25,35 @@ class RelationPlan(OutputModel):
     reference: str
 
 
+class MediaPlan(OutputModel):
+    query: str = Field(default="", max_length=200)
+    asset: str = Field(default="", max_length=180)
+    caption: str = Field(default="", max_length=180)
+
+
 class SlidePlan(OutputModel):
     title: str = Field(min_length=1, max_length=120)
-    layout: Literal["title_content", "two_columns", "comparison", "sequence", "cards", "flow"]
+    layout: Literal[
+        "title_content",
+        "two_columns",
+        "comparison",
+        "sequence",
+        "cards",
+        "flow",
+        "text_image",
+        "image_text",
+        "image_caption",
+        "image_comparison",
+        "image_cards",
+        "hero_image",
+    ]
     columns: list[ColumnPlan] = Field(min_length=1, max_length=2)
     decorations: list[DecorationPlan] = Field(max_length=4)
     relations: list[RelationPlan] = Field(max_length=12)
     footer: str = Field(max_length=240)
+    media: list[MediaPlan] = Field(default_factory=list, max_length=4)
+    sources: list[str] = Field(default_factory=list, max_length=8)
+    vector_flow: bool = False
 
 
 class DeckPlan(OutputModel):

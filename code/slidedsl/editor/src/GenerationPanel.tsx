@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { request } from "./api";
 import type { Deck, Diagnostic } from "./types";
+import { ContextPanel, type ContextOptions } from "./ContextPanel";
 
 type GenerationResult = {
   request?: string;
   plan?: Record<string, unknown> | null;
   source: string | null;
   ir: Deck | null;
+  generated_ir?: Deck | null;
   report: {
     compile_success: boolean;
     valid: boolean;
@@ -17,6 +19,30 @@ type GenerationResult = {
     syntax?: boolean;
     semantics?: boolean;
     geometry?: boolean | null;
+    settings?: ContextOptions;
+    images?: {
+      id: string;
+      attribution: string;
+      page: string;
+      license_url: string;
+    }[];
+    source_audit?: {
+      associations: {
+        id: string;
+        slide: number;
+        document_name: string;
+        page: number | null;
+        text: string;
+      }[];
+      issues: { code: string; message: string; slide: number }[];
+    };
+    manual_edits?: {
+      element?: string;
+      field?: string;
+      decision?: string;
+      conflict?: boolean | string;
+    }[];
+    source_conflict?: boolean;
   };
   path: string;
 };
@@ -77,6 +103,10 @@ export function GenerationPanel({
   const [job, setJob] = useState<Job | null>(null);
   const [error, setError] = useState("");
   const [repairMax, setRepairMax] = useState(2);
+  const [context, setContext] = useState<ContextOptions | null>(null);
+  const [mediaBindings, setMediaBindings] = useState<Record<string, string>>(
+    {},
+  );
   const [requirements, setRequirements] = useState<RequirementReport | null>(
     null,
   );
@@ -148,6 +178,7 @@ export function GenerationPanel({
   };
   const generate = async (repair = false) => {
     const previous = job;
+    if (!repair) setMediaBindings({});
     onBusy(true);
     setError("");
     setJob(null);
@@ -160,8 +191,22 @@ export function GenerationPanel({
         strict,
         reliability: true,
         repair_max: repairMax,
+        ...(context && (strategy === "C" || strategy === "D")
+          ? {
+              context: repair
+                ? { ...previous?.result?.report.settings, ...context }
+                : context,
+            }
+          : {}),
         ...(repair
-          ? { plan: previous?.result?.plan, requirements: criteria() }
+          ? {
+              plan: previous?.result?.plan,
+              requirements: criteria(),
+              base_ir: previous?.result?.generated_ir ?? previous?.result?.ir,
+              current_ir: currentDeck,
+              base_source: currentSource,
+              media_bindings: mediaBindings,
+            }
           : {}),
       });
       while (active.current) {
@@ -268,6 +313,14 @@ export function GenerationPanel({
       >
         Gerar apresentação
       </button>
+      <ContextPanel
+        disabled={disabled}
+        value={context}
+        onChange={setContext}
+        plan={job?.result?.plan}
+        bindings={mediaBindings}
+        onBindings={setMediaBindings}
+      />
       {error && (
         <p className="generation-error" role="alert">
           {error}
@@ -354,8 +407,8 @@ export function GenerationPanel({
             disabled={
               disabled ||
               !job?.result?.plan ||
-              repairMax === 0 ||
-              JSON.stringify(currentDeck) !== JSON.stringify(job.result.ir)
+              (repairMax === 0 && Object.keys(mediaBindings).length === 0) ||
+              !currentDeck
             }
             onClick={() => void generate(true)}
           >
@@ -364,11 +417,88 @@ export function GenerationPanel({
           {job?.result?.plan &&
             JSON.stringify(currentDeck) !== JSON.stringify(job.result.ir) && (
               <p>
-                O plano mudou com a edição manual. Revalide os requisitos; uma
-                nova geração inicia outro plano.
+                Há edições manuais. A correção preserva campos editados por ID e
+                registra conflitos; revalide a cena combinada.
               </p>
             )}
         </div>
+      )}
+      {job?.result?.report.source_conflict && (
+        <p role="alert">
+          Há conteúdo sem suporte nas fontes declaradas. O PPTX desta geração
+          foi bloqueado; revise os trechos e os diagnósticos.
+        </p>
+      )}
+      {job?.result?.report.source_audit && (
+        <details>
+          <summary>Rastreabilidade das fontes</summary>
+          <ul>
+            {job.result.report.source_audit.associations.map((s, i) => (
+              <li key={i}>
+                Slide {s.slide} · {s.document_name} ·{" "}
+                {s.page ? `página ${s.page}` : "sem paginação"} · {s.id}
+                <blockquote>{s.text}</blockquote>
+              </li>
+            ))}
+          </ul>
+          <ul>
+            {job.result.report.source_audit.issues.map((s, i) => (
+              <li key={i}>
+                {s.code} · slide {s.slide}: {s.message}
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
+      {job?.result?.report.images?.length ? (
+        <details>
+          <summary>Créditos das imagens usadas</summary>
+          <ul>
+            {job.result.report.images.map((image, i) => (
+              <li key={i}>
+                {image.attribution} ·{" "}
+                <a href={image.page} target="_blank" rel="noreferrer">
+                  Origem
+                </a>{" "}
+                ·{" "}
+                <a href={image.license_url} target="_blank" rel="noreferrer">
+                  Licença
+                </a>
+              </li>
+            ))}
+          </ul>
+        </details>
+      ) : null}
+      {job?.result?.report.manual_edits?.length ? (
+        <details>
+          <summary>Edições preservadas e conflitos</summary>
+          <ul>
+            {job.result.report.manual_edits.map((e, i) => (
+              <li key={i}>
+                {e.element} {e.field}: {e.decision}{" "}
+                {e.conflict ? ` · conflito: ${e.conflict}` : ""}
+              </li>
+            ))}
+          </ul>
+        </details>
+      ) : null}
+      {job?.state === "completed" && (
+        <button
+          disabled={disabled}
+          onClick={() =>
+            void fetch("/api/generations/" + job.id, { method: "DELETE" })
+              .then((r) => {
+                if (!r.ok) throw new Error("Exclusão falhou");
+                setJob(null);
+                onStatus(
+                  "Registros do trabalho excluídos; a cena atual permanece no editor.",
+                );
+              })
+              .catch((e) => setError(String(e)))
+          }
+        >
+          Excluir registros deste trabalho
+        </button>
       )}
     </section>
   );
