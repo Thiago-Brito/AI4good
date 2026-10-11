@@ -229,6 +229,10 @@ visual_sequence/visual_flow: UMA coluna com 2–3 etapas em ordem; o compilador 
 takeaway: UMA coluna; o PRIMEIRO item é a mensagem principal, demais itens são implicações.
 Não recomende microsserviços só por um projeto ser complexo nem camadas só por ser simples.
 Considere responsabilidades, implantação, escala, equipe e custo operacional conforme o pedido.
+Na conclusão escreva uma ação ou síntese contextual em vez de repetir o título.
+Não use a regra simplista 'projetos simples usam camadas e complexos usam microsserviços'.
+Não classifique uma alternativa como universalmente superior; considere custos operacionais.
+Evite repetir uma função genérica idêntica em vários componentes; descreva cada responsabilidade.
 Não declare decorações, relações ou mídia nesses componentes. group=false, sem IDs/coordenadas.
 Prefira itens com até 35 caracteres em comparação, 45 na capa e 70 nos cards.
 Conclua palavras e frases, em vez de atingir o limite máximo do decoder.

@@ -80,6 +80,9 @@ def compile_ir(deck: Presentation, out: Path, root: Path | None = None, *, stric
         )
         if result.returncode:
             raise RuntimeError(f"Renderer falhou: {result.stderr.strip()}")
+        from .connections import anchor_pptx
+
+        anchor_pptx(result_path, deck)
         inspection = inspect_pptx(result_path)
         if inspection["slide_count"] != len(deck.slides):
             raise RuntimeError("PPTX gerado não preservou a quantidade de slides.")

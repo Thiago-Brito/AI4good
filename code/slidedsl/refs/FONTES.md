@@ -1,5 +1,11 @@
 # Fontes consultadas em 2026-10-08
 
+## Refinamento visual — consulta 11/10/2026
+- Base confirmada antes de editar: f05fc8a4021b5169342c8498772956f5ccbe0d34, origin/dsl-visual. Diagnóstico sobre outputs/planning_visual/delivery_03 e suas cinco capturas: grade incompleta de três cards, rótulos e funções no mesmo tamanho, títulos repetidos na capa/conclusão, corpo mínimo 18 pt. Não se usa quantidade de formas como nota de qualidade.
+- Microsoft Open XML, conexões ancoradas: https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.presentation.nonvisualconnectorshapedrawingproperties.startconnection?view=openxml-3.0.1 e https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.presentation.nonvisualconnectorshapedrawingproperties.endconnection?view=openxml-3.0.1 . a:stCxn/a:endCxn relacionam conectores aos IDs nativos e sítios das formas; o código local PptxGenJS 4.0.1 não expõe essa associação.
+- LibreOffice, conversão PDF Impress: https://help.libreoffice.org/latest/en-GB/text/shared/guide/pdf_params.html . Investigação local de COM, executáveis e WSL; disponibilidade será registrada nas evidências, sem equiparar preview a renderização PPTX.
+- Mayer/Fiorella e Alley/Penn State permanecem as fontes de coerência, proximidade e hierarquia da seção anterior. Pesos de equilíbrio, espaço livre, distribuição, dimensões e escolha de variantes são heurísticas de engenharia, sem validação estética ou de aprendizagem.
+
 ## Planejamento visual — consulta 11/10/2026
 - Mayer/Fiorella, capítulo sobre coerência, sinalização e contiguidade espacial: https://www.cambridge.org/core/books/cambridge-handbook-of-multimedia-learning/principles-for-reducing-extraneous-processing-in-multimedia-learning-coherence-signaling-redundancy-spatial-contiguity-and-temporal-contiguity-principles/C98AB3A6CE760DD63C048936EA0B3B44 . Resumo consultado; não se afirma ter lido o capítulo pago integralmente.
 - Michael Alley e equipe, Assertion–Evidence: https://www.assertion-evidence.org/tutorial.html e https://writing.engr.psu.edu/AE_Classroom_Teaching_Slides_Notes.pdf . Mensagem em título de frase, sustentada por evidência visual; o tutorial sinaliza migração para Craft of Scientific Communication.

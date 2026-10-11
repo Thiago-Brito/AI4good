@@ -201,6 +201,32 @@ def source_audit(plan, chunks, restricted):
     }
 
 
+def explicit_layouts(request, components, count):
+    """Recognize explicit layout directives, not ordinary mentions of cards."""
+    from .layouts import VISUAL_LAYOUTS
+    from .visual_planning import COMPOSED_LAYOUTS
+    import re
+
+    return [
+        layout
+        for layout in VISUAL_LAYOUTS
+        | COMPOSED_LAYOUTS
+        | {"title_content", "two_columns", "comparison", "cards", "sequence", "flow"}
+        if re.search(
+            (
+                r"\b"
+                if "_" in layout
+                else r"\b(?:layout|use|usando|utilize)\s+(?:o\s+)?(?:layout\s+)?"
+            )
+            + layout
+            + r"\b",
+            request + " " + components,
+            re.I,
+        )
+        or (components.strip() == layout and count == 1)
+    ]
+
+
 @measured
 def generate_contextual(
     model,
@@ -259,17 +285,7 @@ def generate_contextual(
         ],
         "excerpts": chunks,
     }
-    from .layouts import VISUAL_LAYOUTS
-    from .visual_planning import COMPOSED_LAYOUTS
-    import re
-
-    named = [
-        layout
-        for layout in VISUAL_LAYOUTS
-        | COMPOSED_LAYOUTS
-        | {"title_content", "two_columns", "comparison", "cards", "sequence", "flow"}
-        if re.search(r"\b" + layout + r"\b", request + " " + context.components)
-    ]
+    named = explicit_layouts(request, context.components, count)
     schema = contextual_schema(
         count,
         list(aliases),
@@ -479,6 +495,12 @@ def generate_contextual(
                 )
     save_json(out / "visual_fallbacks.json", fallbacks)
     save_json(out / "resolved_plan.json", plan)
+    if context.visual_planning:
+        plan["refinement"] = {
+            "style": context.visual_style,
+            "verbatim": context.grounding == "restricted",
+            "requirements": deepcopy(criteria),
+        }
     report = run_reliability(
         deepcopy(plan),
         request,
@@ -495,6 +517,11 @@ def generate_contextual(
         event_callback=event_callback,
     )
     final_plan = json.loads((out / "validated/plan.json").read_text("utf-8"))
+    if final_plan.get("refinement"):
+        from .refinement import refinement_report
+
+        report["refinement"] = refinement_report(final_plan)
+        save_json(out / "refinement.json", report["refinement"])
     audit = source_audit(final_plan, chunks, context.grounding == "restricted")
     for number, slide in enumerate(final_plan["slides"], 1):
         for media in slide.get("media", []):

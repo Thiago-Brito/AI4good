@@ -35,8 +35,13 @@ export async function render(deck, output, root) {
     for (const e of [...scene.elements].sort((a,b)=>a.z-b.z)) {
       const rect={x:e.x/96,y:e.y/96,w:e.width/96,h:e.height/96};
       if (e.type==='text') {
-        slide.addText(e.text,{...rect,objectName:e.id,fontFace:e.font_face,fontSize:e.font_size,
-          color:e.color.slice(1),margin:6,breakLine:false,valign:'top',wrap:true,lang:'pt-BR',
+        const split = e.id.endsWith('_ref_inline') ? e.text.indexOf(': ') : -1;
+        const content = split < 0 ? e.text : [
+          {text:e.text.slice(0,split+2),options:{bold:true}},
+          {text:e.text.slice(split+2),options:{bold:false}},
+        ];
+        slide.addText(content,{...rect,objectName:e.id,fontFace:e.font_face,fontSize:e.font_size,
+          color:e.color.slice(1),bold:e.id.endsWith('_ref_label'),margin:6,breakLine:false,valign:'top',wrap:true,lang:'pt-BR',
           lineSpacingMultiple:1.2,align:'left',isTextBox:true});
       } else if (e.type==='image') {
         if (typeof e.file!=='string' || e.file.includes(':') || path.isAbsolute(e.file)) throw new Error('Imagem deve ser local e relativa.');

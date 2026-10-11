@@ -18,6 +18,7 @@ def rendering_available():
         except OSError:
             pass
     candidates = [
+        os.environ.get("SLIDEDSL_SOFFICE"),
         shutil.which("soffice"),
         "C:/Program Files/LibreOffice/program/soffice.com",
         "C:/Program Files/LibreOffice/program/soffice.exe",

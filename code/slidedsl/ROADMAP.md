@@ -1,5 +1,12 @@
 # Roadmap — SlideDSL
 
+## Refinamento visual — 11/10/2026
+- [x] Base f05fc8a4 limpa, push confirmado; documentação e PPTX recente inspecionados.
+- [x] Refinamento determinístico, hierarquia e conexões nativas, preservando relações, conteúdo e critérios já atendidos.
+- [x] Comparações com conteúdo fixo, nova geração Qwen3, cinco pares de capturas; COM/LibreOffice indisponíveis inclusive no Ubuntu WSL.
+- [x] Regressão (241 Python/2 Node/11 Playwright), REFINAMENTO_VISUAL.md e arquivos apropriados preparados para commit/push.
+- [ ] Renderização real, movimento das âncoras no Office e avaliação humana de estética, leitura e conteúdo.
+
 ## Planejamento visual — 11/10/2026
 - [x] Base limpa e44961ed confirmada por push/ls-remote; diagnóstico real preservado em outputs/planning_visual/before_01.
 - [x] Intenções visuais pela SLM, componentes determinísticos e imagens com provedores automáticos.

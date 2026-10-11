@@ -365,6 +365,11 @@ def plan_to_dsl(plan: DeckPlan) -> tuple[str, dict[str, str], list[Diagnostic]]:
                 # A moved target must map back to the relation rather than its text.
                 mapping[target] = path
         slides.append(SlideNode(number=number, commands=commands))
+    if plan.refinement:
+        from .refinement import refine_slides
+
+        slides, mapping, accepted, _ = refine_slides(plan, slides, mapping)
+        diagnostics = [d for d in diagnostics if not (d.slide in accepted and d.code == "L004")]
     source = print_ast(PresentationNode(title=plan.title, theme=plan.theme, slides=slides))
     return source, mapping, diagnostics
 

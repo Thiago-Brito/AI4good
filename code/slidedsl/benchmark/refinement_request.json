@@ -1,0 +1,7 @@
+{
+  "protocol": "refinement-case-v1",
+  "request": "Crie uma apresentação de cinco slides sobre arquitetura de software, incluindo introdução, componentes, comparação entre arquitetura em camadas e microsserviços, três cards de benefícios e conclusão. A conclusão deve considerar requisitos e custos operacionais, sem repetir o título e sem associar automaticamente projetos simples a camadas ou complexos a microsserviços.",
+  "criteria": ["Capa composta sem redundância", "Camadas claras com conexões editáveis", "Camadas e serviços independentes semanticamente distintos", "Três cards equilibrados", "Conclusão contextual sem regra simples/complexo", "Informações e requisitos preservados", "Hierarquia e legibilidade", "Sem sobreposição indevida"],
+  "fixed_content_baseline": "outputs/planning_visual/delivery_03/plan.json",
+  "scope": "Estudo de caso do pedido do usuário; nenhuma nota estética automática ou regra universal de três cards."
+}

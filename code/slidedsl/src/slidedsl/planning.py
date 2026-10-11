@@ -76,12 +76,21 @@ class DeckPlan(OutputModel):
     title: str = Field(min_length=1, max_length=160)
     theme: Literal["claro", "escuro"]
     slides: list[SlidePlan] = Field(min_length=1, max_length=12)
+    refinement: dict | None = None
+
+    @model_serializer(mode="wrap")
+    def serialize_legacy_deck(self, handler):
+        data = handler(self)
+        if self.refinement is None:
+            data.pop("refinement", None)
+        return data
 
 
 def plan_schema(slide_count: int) -> dict:
     if not 1 <= slide_count <= 12:
         raise ValueError("Use de 1 a 12 slides.")
     schema = DeckPlan.model_json_schema()
+    schema["properties"].pop("refinement")  # Compiler options, never model-owned.
     schema["properties"]["slides"].update(minItems=slide_count, maxItems=slide_count)
     return schema
 

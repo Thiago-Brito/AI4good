@@ -12,6 +12,11 @@ capa, diagramas, comparação, cards, etapas e conclusão com objetos editáveis
 Estilo é opcional; imagens automáticas escolhem o provedor quando habilitadas.
 Veja [diagnóstico, capturas antes/depois e resultados reais](docs/EVOLUCAO_PLANEJAMENTO_VISUAL.md).
 
+O planejamento visual passa também por refinamento determinístico de proporções,
+espaçamento e tipografia, com conservação de conteúdo e requisitos. Diagramas
+elegíveis exportam conexões ancoradas nativas. Veja
+[refinamento, comparação dos cinco slides e limites](docs/REFINAMENTO_VISUAL.md).
+
 O fluxo visual/contextual acrescenta seis layouts com imagens, busca opcional em
 APIs oficiais, referências TXT/MD/PDF locais e correção que preserva edições.
 O formulário simples continua disponível; abra as opções de contexto quando

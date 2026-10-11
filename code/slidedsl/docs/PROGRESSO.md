@@ -1,5 +1,21 @@
 # Progresso de implementação
 
+## Refinamento visual — 11/10/2026
+Base f05fc8a4021b5169342c8498772956f5ccbe0d34 limpa e confirmada no remoto antes
+de editar. Diagnóstico do PPTX histórico, fontes registradas e resultados preservados.
+Refinamento após composição compara variantes de cards e reorganiza componentes
+elegíveis, com conservação de conteúdo, requisitos congelados e rollback.
+Hierarquia 42/24/22 pt e conexões OOXML nativas; gramática e AST/IR 1.1 preservadas.
+Nova geração Qwen3 real_02: duas chamadas, 1538 tokens de saída/2776 de entrada.
+Recompilação final delivery_04 usa exatamente seu plano; comparação histórica
+fixed_07 conserva também as simplificações factuais antigas. Cinco pares de PNG
+por comparação, auditorias de conteúdo/HTTP/hashes/textos/conexões; nenhum erro JS.
+241 Python, dois Node e onze Playwright passaram; lint, formatação e build passaram.
+COM/LibreOffice ausentes no Windows e Ubuntu WSL; previews são geométricos.
+REFINAMENTO_VISUAL.md documenta o corte de Pagamentos encontrado nas capturas,
+piloto rejeitado, correções, medidas e limites. Sem notas humanas ou beleza inferida
+de pontuações; artefatos excluídos do Git, entrega preparada para commit/push.
+
 ## Planejamento visual — entrega (11/10/2026)
 Documento EVOLUCAO_PLANEJAMENTO_VISUAL.md reúne causas, literatura versus
 heurísticas, composições, execuções reais, falhas preservadas e limites.

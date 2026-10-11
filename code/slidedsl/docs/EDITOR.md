@@ -5,6 +5,8 @@ automáticas. Em C/D, a SLM escolhe mensagens e estruturas visuais antes do cont
 Estratégias/validação e orçamento de reparo ficam recolhidos; provedores, pesquisa
 manual, cache, anexos e recursos continuam nas configurações avançadas.
 Veja [planejamento visual e capturas reais](EVOLUCAO_PLANEJAMENTO_VISUAL.md).
+O refinamento reorganiza componentes elegíveis, mostra rótulos em negrito e
+conserva requisitos já atendidos. [Composições e conexões nativas](REFINAMENTO_VISUAL.md).
 
 O painel opcional de contexto permite personalização, anexos TXT/MD/PDF e
 imagens do catálogo/API. Corrigir pendências combina a IR editada com o reparo,
