@@ -1,4 +1,5 @@
 from .base import ModelError
+from .llamacpp_model import LlamaCppTextModel
 from .mock_model import MockTextModel
 from .ollama_model import OllamaTextModel
 from .openai_model import OpenAITextModel
@@ -9,6 +10,8 @@ def create_model(provider, model):
         return OllamaTextModel(model)
     if provider == "openai":
         return OpenAITextModel(model)
+    if provider == "llamacpp":
+        return LlamaCppTextModel(model)
     if provider == "mock":
         return MockTextModel()
     raise ModelError(f"Provedor não suportado: {provider}")

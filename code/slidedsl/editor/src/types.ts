@@ -13,6 +13,9 @@ export type Element = {
   color: string | null;
   role: "titulo" | "corpo" | "decoracao" | "background" | null;
   role_origin: string | null;
+  bold?: boolean;
+  align?: "left" | "center" | "right";
+  rounded?: boolean;
   source_line: number | null;
   source_column: number | null;
 };
@@ -42,6 +45,7 @@ export type Slide = {
   elements: Element[];
   groups: Group[];
   relations: Relation[];
+  notes?: string | null;
 };
 export type Deck = {
   schema_version: "1.1";

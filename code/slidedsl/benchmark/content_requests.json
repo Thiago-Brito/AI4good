@@ -1,0 +1,33 @@
+{
+  "protocol": "content-first-exploratory-v1",
+  "baseline_commit": "fea5a52fdfb7ed1bead88b81debefda537f93dc1",
+  "model": "qwen3:4b-instruct",
+  "seed": 42,
+  "num_ctx": 8192,
+  "num_predict": 4096,
+  "known_manifest": "benchmark/semantic_requests.json",
+  "held_out": [
+    {
+      "id": "fotossintese",
+      "prompt": "Crie dois slides sobre fotossíntese para alunos do ensino fundamental. Slide 1: explique o papel da luz, da água e do dióxido de carbono e os produtos glicose e oxigênio. Slide 2: dê um exemplo concreto e uma condição que limite a fotossíntese; conclua retomando o que foi explicado. Não diga que plantas obtêm seu alimento pronto do solo. Sem imagens ou rodapé.",
+      "obligations": ["Luz como energia; água e CO2 como insumos", "Glicose e oxigênio como produtos", "Exemplo concreto que aplique o conceito", "Condição limitante e síntese sustentada", "Não apresentar solo como fonte de alimento pronto"]
+    },
+    {
+      "id": "busca_binaria",
+      "prompt": "Crie dois slides sobre busca binária para estudantes iniciantes de programação. Slide 1: explique que a lista precisa estar ordenada e como comparar com o elemento central reduz o intervalo. Slide 2: mostre um exemplo concreto procurando 7 em [1, 3, 5, 7, 9], explique as comparações realizadas e conclua quando a técnica é apropriada. Não afirme que qualquer lista permite busca binária. Sem imagens ou rodapé.",
+      "obligations": ["Pré-condição de ordenação", "Comparação central e descarte do intervalo correto", "Traço para buscar 7 em [1,3,5,7,9]", "Síntese condicionada à ordenação", "Nenhuma garantia para lista arbitrária"]
+    }
+  ],
+  "rubric": {
+    "completeness": "Verificar cada obrigação do pedido por texto/caminho, presente/parcial/ausente, sem usar termos lexicais como prova.",
+    "conceptual_accuracy": "Inspecionar afirmações contra fontes de domínio registradas; apontar erros e ambiguidades. Avaliação humana independente continua null.",
+    "coherence": "Título, mensagem e corpo desenvolvem a mesma ideia e a ordem permite entendê-la.",
+    "examples": "Cenário particular, aplicação explícita e resultado compreensível; vantagem geral não conta.",
+    "relationships": "Papéis/referências válidos são uma medida estrutural. Significado das arestas exige inspeção do conteúdo.",
+    "conclusion_support": "Síntese usa conteúdo anterior sem introduzir garantia ou critério universal novo.",
+    "revision": "Diff corrige problema real, mantém conteúdo correto e não cria erro; aceitar patch não prova melhora.",
+    "dsl": "LALR, análise semântica, geometria e requisitos separados; exportação estrita e objetos nativos auditados.",
+    "cost": "Recontar todas as respostas HTTP únicas, inclusive falhas, tokens e duração; planos compartilhados não são gerações novas."
+  },
+  "scope": "Uma seed por caso; controle histórico executado novamente, tratamento inclui plano conceitual e revisão. Não isola contribuições dos mecanismos; inspeção do agente não é estudo humano. Reservados não serão usados para ajuste."
+}

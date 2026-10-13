@@ -1,0 +1,45 @@
+{
+  "protocol": "content-first-final-v1",
+  "baseline_commit": "fea5a52fdfb7ed1bead88b81debefda537f93dc1",
+  "model": "qwen3:4b-instruct",
+  "seed": 42,
+  "num_ctx": 8192,
+  "num_predict": 4096,
+  "known_manifest": "benchmark/semantic_requests.json",
+  "held_out": [
+    {
+      "id": "densidade",
+      "prompt": "Crie dois slides sobre densidade para estudantes iniciantes. Slide 1: explique a relação entre massa, volume e densidade, distinguindo massa de densidade. Slide 2: apresente um exemplo de um objeto com massa 20 g e volume 10 cm³, calcule a densidade e conclua como comparar materiais de mesmo volume. Sem imagens ou rodapé.",
+      "obligations": [
+        "Densidade = massa/volume",
+        "Distinguir massa de densidade",
+        "Exemplo 20 g/10 cm³ = 2 g/cm³",
+        "Mesmo volume: maior massa corresponde a maior densidade",
+        "Síntese sustentada no exemplo"
+      ]
+    },
+    {
+      "id": "pilhas_filas",
+      "prompt": "Crie dois slides sobre pilhas e filas para alunos de programação. Slide 1: diferencie LIFO na pilha e FIFO na fila. Slide 2: use a inserção dos valores 1, 2 e 3 nessa ordem para mostrar a ordem de remoção em cada estrutura e conclua uma aplicação adequada de cada uma. Sem imagens ou rodapé.",
+      "obligations": [
+        "LIFO na pilha",
+        "FIFO na fila",
+        "Remoções na pilha: 3,2,1",
+        "Remoções na fila: 1,2,3",
+        "Aplicações coerentes de cada estrutura"
+      ]
+    }
+  ],
+  "rubric": {
+    "completeness": "Verificar cada obrigação do pedido por texto/caminho, presente/parcial/ausente, sem usar termos lexicais como prova.",
+    "conceptual_accuracy": "Inspecionar afirmações contra fontes de domínio registradas; apontar erros e ambiguidades. Avaliação humana independente continua null.",
+    "coherence": "Título, mensagem e corpo desenvolvem a mesma ideia e a ordem permite entendê-la.",
+    "examples": "Cenário particular, aplicação explícita e resultado compreensível; vantagem geral não conta.",
+    "relationships": "Papéis/referências válidos são uma medida estrutural. Significado das arestas exige inspeção do conteúdo.",
+    "conclusion_support": "Síntese usa conteúdo anterior sem introduzir garantia ou critério universal novo.",
+    "revision": "Diff corrige problema real, mantém conteúdo correto e não cria erro; aceitar patch não prova melhora.",
+    "dsl": "LALR, análise semântica, geometria e requisitos separados; exportação estrita e objetos nativos auditados.",
+    "cost": "Recontar todas as respostas HTTP únicas, inclusive falhas, tokens e duração; planos compartilhados não são gerações novas."
+  },
+  "scope": "Quatro casos conhecidos e dois novos reservados após os pilotos. Fotossíntese/busca binária da bateria experiment_06 ficam preservados e não são apresentados como novos casos cegos. Uma seed por pedido; rubrica qualitativa do agente e campos humanos null. Pedidos novos corrigidos para UTF-8 depois de final_08; repetição sem alteração do código em final_11, conservando a execução com caracteres corrompidos."
+}

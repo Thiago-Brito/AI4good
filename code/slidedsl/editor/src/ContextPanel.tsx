@@ -5,6 +5,9 @@ export type ContextOptions = {
   visual_planning?: boolean;
   expressive_planning?: boolean;
   semantic_planning?: boolean;
+  conceptual_planning?: boolean;
+  coverage_validation?: boolean;
+  coverage_recovery?: boolean;
   semantic_review_max?: number;
   theme?: string;
   audience?: string;
@@ -208,11 +211,36 @@ export function ContextPanel({
             change({
               semantic_planning: e.target.checked,
               semantic_review_max: 0,
+              ...(e.target.checked
+                ? {}
+                : { conceptual_planning: false, coverage_validation: false }),
             })
           }
         />
         Planejamento semântico · papéis e relações explícitas
       </label>
+      <label>
+        <input
+          type="checkbox"
+          aria-label="Planejamento conceitual"
+          checked={settings.conceptual_planning ?? false}
+          disabled={disabled || working || settings.grounding === "restricted"}
+          onChange={(e) =>
+            change({
+              conceptual_planning: e.target.checked,
+              ...(e.target.checked ? {} : { coverage_validation: false }),
+              ...(e.target.checked ? { semantic_planning: true } : {}),
+            })
+          }
+        />
+        Preparar conceitos e exemplos antes de organizar os slides
+      </label>
+      {settings.conceptual_planning && (
+        <p>
+          Prepara o conteúdo e distribui os registros entre slides nativos. Use
+          sem imagens ou layout imposto. Conteúdo sujeito a revisão.
+        </p>
+      )}
       {settings.semantic_planning && (
         <label>
           Revisão localizada (Qwen3 4B local)
@@ -229,6 +257,37 @@ export function ContextPanel({
             <option value={2}>Até duas chamadas</option>
           </select>
         </label>
+      )}
+      {settings.conceptual_planning && (
+        <>
+          <label>
+            <input
+              type="checkbox"
+              aria-label="Validar cobertura de conteúdo"
+              checked={settings.coverage_validation ?? false}
+              disabled={disabled || working}
+              onChange={(e) =>
+                change({ coverage_validation: e.target.checked })
+              }
+            />
+            Rastrear requisitos e detectar conteúdo descartado (experimental)
+          </label>
+          {settings.coverage_validation && (
+            <label>
+              <input
+                type="checkbox"
+                aria-label="Recuperar conteúdo descartado"
+                checked={settings.coverage_recovery ?? true}
+                disabled={disabled || working}
+                onChange={(e) =>
+                  change({ coverage_recovery: e.target.checked })
+                }
+              />
+              Reincluir conteúdo produzido quando couber. Correção factual exige
+              revisão.
+            </label>
+          )}
+        </>
       )}
       <div className="generation-options">
         {(
@@ -535,7 +594,12 @@ export function ContextPanel({
             change({
               grounding: e.target.value,
               ...(e.target.value === "restricted"
-                ? { semantic_planning: false, semantic_review_max: 0 }
+                ? {
+                    semantic_planning: false,
+                    conceptual_planning: false,
+                    coverage_validation: false,
+                    semantic_review_max: 0,
+                  }
                 : {}),
             })
           }

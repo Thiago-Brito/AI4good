@@ -1,5 +1,50 @@
 # Roadmap — SlideDSL
 
+## Revisão e preparação do commit — 12/10/2026
+- [x] Revisar o fluxo Alto, pesquisa, sustentação/cobertura, editor e documentação.
+- [x] Conferir 388 testes Python, dois Node e 11 Playwright; cinco testes reais de interface optativos não executados.
+- [x] Validar Ruff, ESLint, TypeScript/build e formatação; adaptar testes ao fluxo anterior e à porta configurada.
+- [x] Retirar o segredo do YAML do SearXNG e validar inicialização com `.env` local ignorado pelo Git.
+- [x] Atualizar os registros do lote multitemas, distinguindo resultados anteriores aos ajustes e pendências de avaliação.
+
+## SearXNG local — 12/10/2026
+- [x] Iniciar Docker Desktop já instalado, baixar a imagem do SearXNG e subir o serviço em `127.0.0.1:8888`.
+- [x] Validar `/healthz` (HTTP 200), busca JSON (27 resultados para `microsservicos`) e detecção pelo SlideDSL (`Buscador: searxng`).
+
+## SlideDSL Alto, pesquisa e geração restrita — 12/10/2026
+- [x] Extensões 1.1: `negrito`, `alinhado`, `arredondado`, `notas` (parser, printer, IR, editor, renderer).
+- [x] GLC de alto nível com 11 tipos de slide, validação A0xx e layouts com fonte uniforme por papel.
+- [x] Pesquisa (Wikipedia/Tavily/Brave/SearXNG) com fichas verificadas por trecho literal e cache.
+- [x] Roteiro + conteúdo por slide com contrato editorial; JSON Schema, GBNF (llama.cpp) ou direto.
+- [x] Reparo por campo, best-of-N, prévia PNG sem Office e comando `criar` com auditoria completa.
+- [x] Testes offline (modelos simulados e HTTP falso); [documentação](docs/SLIDEDSL_ALTO.md).
+- [x] Testes reais multitemas (Qwen3 + SearXNG); segunda e terceira rodadas de qualidade
+  (sustentação, cobertura, truncamento, citação literal, relevância); SearXNG como buscador único.
+- [x] Registro do dia em [docs/MUDANCAS_2026-10-12.md](docs/MUDANCAS_2026-10-12.md) e referências em [docs/REFERENCIAS.md](docs/REFERENCIAS.md).
+- [ ] Repetir os casos multitemas com o código final; comparar antigo × Alto × Alto+GBNF; avaliação humana.
+- [ ] Crítica visual por modelo de visão, botão no editor e fine-tune LoRA em SlideDSL Alto.
+
+## Rastreabilidade e cobertura — 11/10/2026
+- [x] Investigar estruturas reais, preservar estado conceitual B e registrar diagnóstico antes das alterações.
+- [x] Contrato tipado de conteúdo com origem, IDs e cláusulas por seção; C001–C005 separados de validade estrutural.
+- [x] Projeção e evidência literal por campo/caminho até IR/PPTX; cumprimento semântico permanece não verificado.
+- [x] Recuperação por acréscimo de registros existentes, sem chamadas SLM, com veto de geometria/contrato/regressões.
+- [x] Flags experimentais na CLI/API/editor, desativadas por padrão; recuperação desativável.
+- [ ] Concluir regressão e comparação A/B/C congelada, duas seeds, replay pareado e auditoria de custos/textos/hashes.
+- [ ] Registrar inspeção qualitativa, limitações e relatório final em docs/EVOLUCAO_COBERTURA.md.
+- [ ] Avaliação humana independente, verificadores de domínio e extração mais completa de requisitos em português.
+
+## Investigação e planejamento conceitual — 11/10/2026
+- [x] Investigar fluxo, contratos, prompts e seis patches reais antes das alterações; registrar causas e hipóteses.
+- [x] Percurso opcional conteúdo → alocação, duas chamadas locais, projeção literal e rastro de registros descartados.
+- [x] Revisão de um slide por chamada com feedback da rejeição e proteção contra atalhos de condição; rollback mantido.
+- [x] Comparar seis pares reais e quatro revisões dos mesmos planos históricos; 3/6 → 6/6 PPTX, sem ganho geral de conteúdo; 0/6 revisões históricas aceitas.
+- [x] Auditoria de bytes, schemas, hashes, custo, rollback e 13 PPTX; preservar pilotos/negativos e repetição UTF-8.
+- [x] 325 Python, dois Node, dez Playwright ordinários; teste real pelo editor/exportação passou; lint/build; [relatório](docs/EVOLUCAO_CONTEUDO.md).
+- [ ] Cobertura por seção e seleção obrigatória de exemplos/síntese; evitar descarte de conteúdo solicitado na alocação.
+- [ ] Corrigir critérios/condições de domínio com fontes por afirmação; calibrar revisão com avaliação independente.
+- [ ] Mais pedidos/seeds e ablações; avaliação humana de completude/correção/clareza e renderização Office real.
+
 ## Planejamento semântico — 11/10/2026
 - [x] Snapshot e push prévios: 64a49f4cdfc68ebe4614579dc8af74f93f74e13b.
 - [x] Diagnóstico; contrato opcional de papéis, referências explícitas e fontes por nó.

@@ -32,6 +32,7 @@ class Command(TypedNode):
         "distribute",
         "layer",
         "layout",
+        "notes",
     ]
     id: str = ""
     element_type: Literal["rectangle", "ellipse", "text", "image", "arrow"] | None = None
@@ -47,6 +48,9 @@ class Command(TypedNode):
     axis: Literal["left", "right", "center", "top"] | None = None
     ids: list[str] = Field(default_factory=list)
     value: float | None = None
+    bold: bool = False
+    align: Literal["left", "center", "right"] = "left"
+    rounded: bool = False
     children: list["Command"] = Field(default_factory=list)
 
 

@@ -132,6 +132,9 @@ def main(argv=None) -> int:
     )
     contextual_parser.add_argument("--out", required=True)
     contextual_parser.add_argument("--semantic-planning", action="store_true")
+    contextual_parser.add_argument("--conceptual-planning", action="store_true")
+    contextual_parser.add_argument("--coverage-validation", action="store_true")
+    contextual_parser.add_argument("--no-coverage-recovery", action="store_true")
     contextual_parser.add_argument("--semantic-review-max", type=int, choices=range(3), default=0)
     contextual_parser.add_argument("--repair-max", type=int, default=2, choices=range(11))
     contextual_parser.add_argument("--seed", type=int, default=42)
@@ -154,8 +157,13 @@ def main(argv=None) -> int:
     )
     p.add_argument("file")
     p.add_argument("--out", required=True)
+    from . import alto_cli
+
+    alto_cli.add_parsers(sub)
     args = parser.parse_args(argv)
     try:
+        if args.command in alto_cli.COMMANDS:
+            return alto_cli.run(args)
         if args.command == "evaluate-contextual":
             from .contextual_experiment import evaluate_contextual
 
@@ -193,6 +201,12 @@ def main(argv=None) -> int:
                 context_data["expressive_planning"] = True
             if args.semantic_planning:
                 context_data["semantic_planning"] = True
+            if args.conceptual_planning:
+                context_data["conceptual_planning"] = True
+            if args.coverage_validation:
+                context_data["coverage_validation"] = True
+            if args.no_coverage_recovery:
+                context_data["coverage_recovery"] = False
             if args.semantic_review_max:
                 context_data["semantic_review_max"] = args.semantic_review_max
             report = generate_contextual(

@@ -276,6 +276,11 @@ def _work(id, payload):
                     "visual_fallbacks",
                     "semantic_audit",
                     "semantic_review",
+                    "conceptual_plan",
+                    "conceptual_projection",
+                    "coverage",
+                    "coverage_recovery",
+                    "content_faithful",
                 )
             },
             "path": out.relative_to(project_root()).as_posix(),

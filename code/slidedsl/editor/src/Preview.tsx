@@ -79,7 +79,8 @@ export function Preview({
                     (e.type === "arrow" && !linked)
                       ? (e.color ?? "transparent")
                       : "transparent",
-                  borderRadius: e.type === "ellipse" ? "50%" : 0,
+                  borderRadius:
+                    e.type === "ellipse" ? "50%" : e.rounded ? 12 : 0,
                   clipPath:
                     e.type === "arrow" && !linked
                       ? "polygon(30% 0,70% 0,70% 50%,100% 50%,50% 100%,0 50%,30% 50%)"
@@ -87,8 +88,8 @@ export function Preview({
                   color: e.color ?? undefined,
                   fontSize: ((e.font_size ?? 24) * 96) / 72,
                   fontFamily: e.font_face,
-                  fontWeight: e.id.endsWith("_ref_label") ? 700 : 400,
-                  textAlign: "left",
+                  fontWeight: e.bold || e.id.endsWith("_ref_label") ? 700 : 400,
+                  textAlign: e.align ?? "left",
                   padding: e.type === "text" ? 8 : 0,
                   whiteSpace: "pre-wrap",
                   lineHeight: 1.2,

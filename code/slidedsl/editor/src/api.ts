@@ -17,6 +17,10 @@ export async function request<T>(url: string, body: unknown): Promise<T> {
 }
 export const importSource = (source: string) =>
   request<{ ir: Deck; report: Report }>("parse", { source });
+export const importAlto = (source: string) =>
+  request<{ source: string; ir: Deck; report: Report }>("alto/parse", {
+    source,
+  });
 export const validateDeck = (ir: Deck) => request<Report>("validate", { ir });
 export const exportDeck = (ir: Deck) =>
   request<{ source: string }>("export", { ir });

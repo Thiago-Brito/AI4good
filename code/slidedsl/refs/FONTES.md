@@ -1,5 +1,16 @@
 # Fontes consultadas em 2026-10-08
 
+## Investigação de conteúdo — 11/10/2026
+- Código base fea5a52; evidências lidas: docs/EVOLUCAO_SEMANTICA.md, outputs/semantic/review_05/{arquitetura,ciencias,educacao,processos}/B/plan.json e C/semantic_review/attempt_*/{before_audit,candidate_audit,normalized_response,validation,decision}. Análise local de código e candidatos, sem alterar arquivos históricos.
+- Decomposição é hipótese de engenharia: https://arxiv.org/abs/2205.10625 (Least-to-Most Prompting). Resultados do artigo não se transferem automaticamente ao Qwen3 4B nem à SlideDSL.
+- Limites da autocorreção em modelos pequenos: https://arxiv.org/abs/2404.17140. Não oferece certificado de correção para nosso revisor.
+- Rubrica de arquitetura: https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/microservices (responsabilidades, contratos, isolamento condicionado e custo operacional).
+- Rubrica de frações: https://openstax.org/books/intermediate-algebra-2e/pages/1-3-fractions (numerador, denominador, partes iguais; não confundir medida matemática com justiça).
+- Rubrica de ciências: https://www.usgs.gov/water-science-school/science/evaporation-and-water-cycle?page=1 (evaporação e fatores ambientais; não usar limiar universal inventado).
+- Páginas consultadas via busca web nesta etapa; fontes usadas na inspeção, não fornecidas ao modelo nas condições livres.
+- Fotossíntese: https://openstax.org/books/concepts-biology/pages/5-1-overview-of-photosynthesis e https://openstax.org/books/biology-2e/pages/8-1-overview-of-photosynthesis. Busca binária: https://xlinux.nist.gov/dads/HTML/binarySearch.html. Consulta nesta etapa; usadas na inspeção qualitativa dos pedidos reservados, sem fornecer suas páginas ao gerador.
+- Densidade: https://openstax.org/books/university-physics-volume-1/pages/14-1-fluids-density-and-pressure (massa/volume e unidades). Pilhas e filas: https://xlinux.nist.gov/dads/HTML/stack.html e https://xlinux.nist.gov/dads/HTML/queue.html (LIFO/FIFO). Consultadas para a inspeção dos dois pedidos novos, sem alteração do código baseada nesses casos; não fornecidas ao gerador.
+
 ## Refinamento visual — consulta 11/10/2026
 - Base confirmada antes de editar: f05fc8a4021b5169342c8498772956f5ccbe0d34, origin/dsl-visual. Diagnóstico sobre outputs/planning_visual/delivery_03 e suas cinco capturas: grade incompleta de três cards, rótulos e funções no mesmo tamanho, títulos repetidos na capa/conclusão, corpo mínimo 18 pt. Não se usa quantidade de formas como nota de qualidade.
 - Microsoft Open XML, conexões ancoradas: https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.presentation.nonvisualconnectorshapedrawingproperties.startconnection?view=openxml-3.0.1 e https://learn.microsoft.com/en-us/dotnet/api/documentformat.openxml.presentation.nonvisualconnectorshapedrawingproperties.endconnection?view=openxml-3.0.1 . a:stCxn/a:endCxn relacionam conectores aos IDs nativos e sítios das formas; o código local PptxGenJS 4.0.1 não expõe essa associação.
@@ -122,3 +133,68 @@ Os arquivos são produzidos por testes/demo, não substituem experimento de mode
 - Protocolo declarado antes das chamadas: benchmark/semantic_requests.json; resultados novos em outputs/semantic/, sem alterar os historicos.
 - Inspeção de afirmações de arquitetura: https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/n-tier e https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/microservices. Separação lógica de responsabilidades não basta para garantir isolamento de falhas; implantação, contratos e operação precisam ser considerados. Essas páginas não foram fornecidas à SLM durante o experimento livre.
 - Referência oficial do domínio ciências: https://www.usgs.gov/water-science-school/water-cycle. Não substitui avaliação independente dos textos gerados.
+
+## Rastreabilidade e cobertura — consulta 11/10/2026
+- Evidência primária de implementação: requirements.py, conceptual_planning.py,
+  coverage.py, contextual.py, reliability.py e element_paths.json. Diagnóstico
+  prévio em docs/INVESTIGACAO_COBERTURA.md; snapshot B com hashes em
+  outputs/coverage/investigation_01/runtime/B. Contratos e retenção são decisões
+  de engenharia; não constituem escala validada de qualidade semântica.
+- Microsoft Azure Architecture Center, microservices (consultado):
+  https://learn.microsoft.com/en-us/azure/architecture/guide/architecture-styles/microservices.
+  Benefício de isolamento condicionado a tratamento de falhas nos consumidores;
+  seção Challenges descreve complexidade distribuída. Fonte para inspeção, não fornecida ao modelo.
+- USGS Water Science School (consultado):
+  https://www.usgs.gov/water-science-school/water-cycle. Fluxos e mudanças de fase
+  articulam o ciclo; uma lista de definições não demonstra essas relações.
+- OpenStax, Chemistry 2e, Measurements (consultado):
+  https://openstax.org/books/chemistry-2e/pages/1-4-measurements. Densidade como
+  relação entre massa e volume; fonte para conferir cálculo e comparação.
+- OpenStax, Prealgebra 2e, Visualize Fractions (consultado):
+  https://openstax.org/books/prealgebra-2e/pages/4-1-visualize-fractions.
+  Partes iguais do mesmo todo e interpretação de numerador/denominador.
+- Python 3.12 Tutorial, Data Structures (consultado):
+  https://docs.python.org/3.12/tutorial/datastructures.html.
+  Pilhas LIFO e filas FIFO, exemplos operacionais append/pop/popleft.
+- Resultados desta etapa serão registrados em novas pastas outputs/coverage/;
+  dados históricos não são reescritos. Avaliação independente permanece pendente.
+
+## SlideDSL Alto, pesquisa e GBNF — 12/10/2026
+- llama.cpp, GBNF Guide (grammars/README.md):
+  https://github.com/ggml-org/llama.cpp/blob/master/grammars/README.md.
+  Sintaxe GBNF, repetições `{m,n}` e restrição de amostragem; recursão à esquerda não suportada.
+- llama.cpp server README (tools/server): https://github.com/ggml-org/llama.cpp/tree/master/tools/server.
+  Parâmetros `grammar` e `json_schema` nos endpoints de completion/chat.
+- MediaWiki Action API, list=search e prop=extracts (TextExtracts):
+  https://www.mediawiki.org/wiki/API:Search e https://www.mediawiki.org/wiki/Extension:TextExtracts.
+- Brave Search API: https://api-dashboard.search.brave.com/app/documentation/web-search/get-started.
+- Tavily Search API: https://docs.tavily.com/documentation/api-reference/endpoint/search.
+- SearXNG Search API (format=json): https://docs.searxng.org/dev/search_api.html.
+- Conteúdo do exemplo examples/alto/microsservicos.slda (para conferência humana):
+  J. Lewis e M. Fowler, "Microservices" (2014), https://martinfowler.com/articles/microservices.html;
+  Netflix Technology Blog, "Completing the Netflix Cloud Migration" (2016);
+  Prime Video Tech, "Scaling up the Prime Video audio/video monitoring service and reducing
+  costs by 90%" (2023); M. Conway, "How Do Committees Invent?" (1968).
+
+## Fundamentação do TCC — 12/10/2026 (noite)
+Lista comentada e o uso de cada obra no projeto em [docs/REFERENCIAS.md](../docs/REFERENCIAS.md).
+- Stanford HAI, AI Index 2024 (custos de treino; via Fortune): https://dc.fortune.com/2024/04/18/google-gemini-cost-191-million-to-train-stanford-university-report-estimates
+- Stanford HAI, AI Index 2025 in 10 charts: https://hai.stanford.edu/news/ai-index-2025-state-of-ai-in-10-charts
+- Schwartz et al., Green AI: https://arxiv.org/abs/1907.10597
+- Strubell et al., Energy and Policy Considerations (ACL 2019): https://aclanthology.org/P19-1355/
+- Kapoor et al., Societal Impact of Open Foundation Models (ICML 2024): https://proceedings.mlr.press/v235/kapoor24a.html
+- Lu et al., Small Language Models survey: https://arxiv.org/abs/2409.15790
+- Qwen3 Technical Report: https://arxiv.org/abs/2505.09388
+- Mernik, Heering, Sloane, When and How to Develop DSLs: https://ir.cwi.nl/pub/4109/
+- Wang et al., Grammar Prompting (NeurIPS 2023): https://arxiv.org/abs/2305.19234
+- Geng et al., Grammar-Constrained Decoding (EMNLP 2023): https://aclanthology.org/2023.emnlp-main.674
+- Willard & Louf, Efficient Guided Generation: https://arxiv.org/abs/2307.09702
+- Scholak et al., PICARD (EMNLP 2021): https://aclanthology.org/2021.emnlp-main.779
+- Ollama, Structured outputs: https://ollama.com/blog/structured-outputs
+- Lewis et al., RAG (NeurIPS 2020): https://arxiv.org/abs/2005.11401
+- Ji et al., Survey of Hallucination: https://arxiv.org/abs/2202.03629
+- SearXNG Search API: https://docs.searxng.org/dev/search_api.html
+- SearXNG, configuração do servidor e `SEARXNG_SECRET`: https://docs.searxng.org/admin/settings/settings_server.html
+- Fu et al., DOC2PPT (AAAI 2022): https://ojs.aaai.org/index.php/AAAI/article/view/19943
+- Ge et al., AutoPresent: https://arxiv.org/abs/2501.00912
+- Zheng et al., PPTAgent: https://arxiv.org/abs/2501.03936

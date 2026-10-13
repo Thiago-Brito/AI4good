@@ -5,17 +5,23 @@ slide: "slide" INT "{" instrucao+ "}"
 
 ?instrucao: adicionar_retangulo | adicionar_elipse | adicionar_texto | adicionar_imagem | adicionar_seta
           | remover | mover | redimensionar | mudar_cor | trazer_frente | enviar_tras
-          | alinhar | agrupar | desagrupar | distribuir | definir_camada | layout
+          | alinhar | agrupar | desagrupar | distribuir | definir_camada | layout | notas
 
-adicionar_retangulo: "adicionar" "retangulo" "id" ID "em" posicao "tamanho" dimensao "cor" cor papel?
+adicionar_retangulo: "adicionar" "retangulo" "id" ID "em" posicao "tamanho" dimensao "cor" cor papel? arredondado?
 adicionar_elipse: "adicionar" "elipse" "id" ID "em" posicao "tamanho" dimensao "cor" cor papel?
 adicionar_seta: "adicionar" "seta" "id" ID "em" posicao "tamanho" dimensao "cor" cor papel?
-adicionar_texto: "adicionar" "texto" "id" ID STRING "em" posicao "tamanho" dimensao "fonte" fonte "cor" cor papel? familia?
+adicionar_texto: "adicionar" "texto" "id" ID STRING "em" posicao "tamanho" dimensao "fonte" fonte "cor" cor papel? familia? negrito? alinhamento?
 adicionar_imagem: "adicionar" "imagem" "id" ID "arquivo" STRING "em" posicao "tamanho" dimensao papel?
 ?cor: COR | TOKEN_COR
 ?fonte: INT | TOKEN_FONTE
 papel: "papel" PAPEL
 familia: "familia" STRING
+arredondado: "arredondado"
+negrito: "negrito"
+alinhamento: "alinhado" "esquerda" -> alinhado_esquerda
+           | "alinhado" "centro" -> alinhado_centro
+           | "alinhado" "direita" -> alinhado_direita
+notas: "notas" STRING
 remover: "remover" ID
 mover: "mover" ID "para" posicao
 redimensionar: "redimensionar" ID "para" dimensao

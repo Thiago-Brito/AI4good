@@ -30,6 +30,9 @@ class Element(IRModel):
     role_origin: str | None = None
     source_line: int | None = None
     source_column: int | None = None
+    bold: bool = False
+    align: Literal["left", "center", "right"] = "left"
+    rounded: bool = False
 
 
 class Group(IRModel):
@@ -53,6 +56,7 @@ class Slide(IRModel):
     elements: list[Element]
     groups: list[Group] = Field(default_factory=list)
     relations: list[Relation] = Field(default_factory=list)
+    notes: str | None = None
 
 
 class Presentation(IRModel):

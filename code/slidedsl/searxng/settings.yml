@@ -1,0 +1,21 @@
+# Configuração mínima: mantém os padrões do SearXNG e liga a resposta JSON,
+# que a SlideDSL usa (desligada por padrão no SearXNG).
+use_default_settings: true
+
+general:
+  instance_name: "SlideDSL SearXNG"
+
+server:
+  # O segredo vem de SEARXNG_SECRET, em .env local ignorado pelo Git.
+  limiter: false        # instância privada, só em 127.0.0.1
+  image_proxy: false
+
+search:
+  safe_search: 0
+  default_lang: "pt-BR"
+  formats:
+    - html
+    - json
+
+ui:
+  default_locale: "pt"

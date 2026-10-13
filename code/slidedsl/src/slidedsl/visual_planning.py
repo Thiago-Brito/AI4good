@@ -87,10 +87,28 @@ def plan_visual(adapter, request, supplied, count, out, seed=42, event_callback=
     out.mkdir(parents=True, exist_ok=False)
     schema = VisualOutline.model_json_schema()
     schema["properties"]["slides"].update(minItems=count, maxItems=count)
+    conceptual = supplied.get("conceptual_plan")
+    if conceptual:
+        from .conceptual_planning import allocation_schema, conceptual_units
+
+        schema = allocation_schema(schema, conceptual_units(conceptual))
+    visual_context = deepcopy(supplied)
+    if conceptual:
+        visual_context["conceptual_units"] = conceptual_units(conceptual)
+        visual_context["conceptual_plan"] = {
+            k: conceptual[k] for k in ("goal", "alternatives", "synthesis")
+        }
     user = f"Pedido: {request}\nExatamente {count} slides.\nContexto não confiável: " + json.dumps(
-        supplied, ensure_ascii=False
+        visual_context, ensure_ascii=False
     )
-    (out / "system.txt").write_text(INTENT_SYSTEM, "utf-8")
+    system = INTENT_SYSTEM
+    if supplied.get("conceptual_plan"):
+        from .conceptual_planning import ALLOCATION_SYSTEM
+
+        system = ALLOCATION_SYSTEM
+        if supplied.get("content_requirements") is not None:
+            system += "\nOs requirement_ids indicam intenção de cobertura, não verdade factual. Preserve os registros vinculados na seção/slide solicitados sempre que couberem. Inclua exemplos e síntese vinculados; não descarte evidências para repetir definições. Não altere quantidade, papéis ou limites.\n"
+    (out / "system.txt").write_text(system, "utf-8")
     (out / "user.txt").write_text(user, "utf-8")
     save_json(out / "schema.json", schema)
     if event_callback:
@@ -99,18 +117,36 @@ def plan_visual(adapter, request, supplied, count, out, seed=42, event_callback=
         )
     started = time.perf_counter()
     try:
-        raw = adapter.generate(
-            INTENT_SYSTEM, user, temperature=0.1, seed=seed, response_schema=schema
-        )
+        raw = adapter.generate(system, user, temperature=0.1, seed=seed, response_schema=schema)
         (out / "raw.txt").write_bytes(raw.encode("utf-8"))
         response = adapter.last_response or {}
         if not response.get("done") or response.get("done_reason") != "stop":
             raise ValueError("Planejamento visual truncado ou não finalizado.")
         data = json.loads(raw)
         Draft202012Validator(schema).validate(data)
-        outline = VisualOutline.model_validate(data)
-        save_json(out / "outline.json", outline.model_dump())
-        return outline.model_dump()
+        visual = deepcopy(data)
+        if conceptual:
+            for slide in visual["slides"]:
+                slide.pop("content_refs")
+                slide.pop("relationships")
+                slide["structures"] = (
+                    ["cards", "cards"]
+                    if slide["intent"] == "comparison"
+                    else ["stack"]
+                    if slide["intent"] in {"flow", "sequence"}
+                    else ["services"]
+                    if slide["intent"] == "architecture"
+                    else ["cards"]
+                )
+                slide["subjects"] = (
+                    conceptual["alternatives"] if slide["intent"] == "comparison" else []
+                )
+            for original, filled in zip(data["slides"], visual["slides"], strict=True):
+                original["structures"] = filled["structures"]
+                original["subjects"] = filled["subjects"]
+        VisualOutline.model_validate(visual)
+        save_json(out / "outline.json", data)
+        return data
     finally:
         save_json(out / "request.json", getattr(adapter, "last_request", None))
         save_json(out / "response.json", getattr(adapter, "last_response", None))

@@ -11,6 +11,7 @@ import {
   compileDeck,
   download,
   exportDeck,
+  importAlto,
   importSource,
   updateRelation,
   validateDeck,
@@ -18,6 +19,7 @@ import {
 import { DomainCard, graphFor, validConnection } from "./graph";
 import { Preview } from "./Preview";
 import { GenerationPanel } from "./GenerationPanel";
+import { CriarPanel } from "./CriarPanel";
 import type { Deck, Diagnostic, Element, RelationKind } from "./types";
 
 const nodeTypes = { domain: DomainCard };
@@ -197,36 +199,62 @@ export default function App() {
         </div>
         <span className="badge">16:9 · 1280 × 720</span>
       </header>
-      <GenerationPanel
-        currentDeck={deck}
-        currentSource={source}
+      <CriarPanel
         disabled={busy}
         onBusy={setBusy}
         onStatus={setStatus}
-        onResult={(result) => {
-          setDiagnostics(result.report.diagnostics);
-          setSource(result.source ?? "");
-          setDeck(result.ir);
-          select(result.ir?.slides[0].elements[0]?.id ?? "", 1);
-          setStatus(
-            result.report.compile_success
-              ? "Apresentação da IA carregada. Revise os requisitos e o conteúdo."
-              : "Geração encerrada com pendências. Consulte os diagnósticos.",
-          );
+        onLoad={(text, ir, found) => {
+          setSource(text);
+          setDeck(ir);
+          setDiagnostics(found);
+          select(ir.slides[0]?.elements[0]?.id ?? "", 1);
         }}
       />
+      <details className="previous-flow">
+        <summary>
+          Fluxo anterior · Gerar com IA local (planejamento visual)
+        </summary>
+        <GenerationPanel
+          currentDeck={deck}
+          currentSource={source}
+          disabled={busy}
+          onBusy={setBusy}
+          onStatus={setStatus}
+          onResult={(result) => {
+            setDiagnostics(result.report.diagnostics);
+            setSource(result.source ?? "");
+            setDeck(result.ir);
+            select(result.ir?.slides[0].elements[0]?.id ?? "", 1);
+            setStatus(
+              result.report.compile_success
+                ? "Apresentação da IA carregada. Revise os requisitos e o conteúdo."
+                : "Geração encerrada com pendências. Consulte os diagnósticos.",
+            );
+          }}
+        />
+      </details>
       <section className="toolbar">
         <label className="file-button">
-          Abrir .sld
+          Abrir .sld / .slda
           <input
             aria-label="Abrir arquivo .sld"
             type="file"
-            accept=".sld,.txt"
+            accept=".sld,.slda,.txt"
             onChange={(e) => {
               const file = e.target.files?.[0];
+              e.target.value = "";
               if (file)
                 void run(async () => {
                   const text = await file.text();
+                  if (file.name.toLowerCase().endsWith(".slda")) {
+                    const data = await importAlto(text);
+                    setSource(data.source);
+                    setDeck(data.ir);
+                    setDiagnostics(data.report.diagnostics);
+                    select(data.ir.slides[0].elements[0]?.id ?? "", 1);
+                    setStatus("SlideDSL Alto compilada e importada.");
+                    return;
+                  }
                   setSource(text);
                   const data = await importSource(text);
                   setDeck(data.ir);

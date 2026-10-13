@@ -3,6 +3,8 @@ import path from "node:path";
 import fs from "node:fs";
 
 const root = path.resolve("..");
+const apiPort = Number(process.env.SLIDEDSL_API_PORT ?? 8000);
+const builtEditor = process.env.SLIDEDSL_TEST_BUILT_EDITOR === "1";
 const resultRoot =
   process.env.SLIDEDSL_UI_RESULTS_ROOT ?? "../outputs/ui-tests";
 const python = path.join(
@@ -25,7 +27,9 @@ export default defineConfig({
     ["json", { outputFile: path.join(resultRoot, "results.json") }],
   ],
   use: {
-    baseURL: "http://127.0.0.1:5173",
+    baseURL: builtEditor
+      ? `http://127.0.0.1:${apiPort}`
+      : "http://127.0.0.1:5173",
     headless: true,
     viewport: { width: 1440, height: 1100 },
     launchOptions: browser ? { executablePath: browser } : {},
@@ -33,17 +37,21 @@ export default defineConfig({
   },
   webServer: [
     {
-      command: `"${python}" -m uvicorn slidedsl.server:app --host 127.0.0.1 --port 8000`,
+      command: `"${python}" -m uvicorn slidedsl.server:app --host 127.0.0.1 --port ${apiPort}`,
       cwd: root,
-      url: "http://127.0.0.1:8000/api/health",
+      url: `http://127.0.0.1:${apiPort}/api/health`,
       timeout: 30000,
-      reuseExistingServer: !process.env.CI,
+      reuseExistingServer: !process.env.CI && !process.env.SLIDEDSL_API_PORT,
     },
-    {
-      command: "npm run dev",
-      url: "http://127.0.0.1:5173",
-      timeout: 30000,
-      reuseExistingServer: !process.env.CI,
-    },
+    ...(builtEditor
+      ? []
+      : [
+          {
+            command: "npm run dev",
+            url: "http://127.0.0.1:5173",
+            timeout: 30000,
+            reuseExistingServer: !process.env.CI,
+          },
+        ]),
   ],
 });

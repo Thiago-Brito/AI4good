@@ -1,3 +1,4 @@
+import { apiBaseURL } from "./helpers";
 import { test, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -22,7 +23,7 @@ test("abre a apresentação real do SLM, modifica, revalida e exporta PPTX", asy
   expect(report.is_mock).toBe(false);
   expect(report.compile_success).toBe(true);
   await page.goto("/?demo=1");
-  await expect(page.getByRole("status")).toHaveText(
+  await expect(page.locator(".status[role='status']")).toHaveText(
     "Apresentação gerada pelo SLM importada.",
   );
   const source = await page.getByLabel("Programa SlideDSL").inputValue();
@@ -33,7 +34,7 @@ test("abre a apresentação real do SLM, modifica, revalida e exporta PPTX", asy
   expect(source.replaceAll("\r\n", "\n")).toBe(
     expected.replaceAll("\r\n", "\n"),
   );
-  const parsed = await request.post("http://127.0.0.1:8000/api/parse", {
+  const parsed = await request.post(apiBaseURL + "/api/parse", {
     data: { source },
   });
   const deck = (await parsed.json()).ir;
@@ -48,7 +49,7 @@ test("abre a apresentação real do SLM, modifica, revalida e exporta PPTX", asy
     .getByLabel("Texto", { exact: true })
     .fill("Título do SLM editado visualmente");
   await page.getByRole("button", { name: "Validar", exact: true }).click();
-  await expect(page.getByRole("status")).toContainText("válido");
+  await expect(page.locator(".status[role='status']")).toContainText("válido");
   const exported = page.waitForEvent("download");
   await page.getByRole("button", { name: "Exportar DSL", exact: true }).click();
   const edited = await fs.readFile((await (await exported).path())!, "utf8");

@@ -19,6 +19,23 @@ from .paths import project_root
 MAX_BYTES = 8 * 1024 * 1024
 MAX_PIXELS = 20_000_000
 AGENT = "SlideDSL/1.1 (local educational presentation tool; limited interactive search)"
+
+
+def user_agent(contact: str | None = None) -> str:
+    """User-Agent no formato pedido pela política da Wikimedia: nome/versão (contato).
+
+    Sem contato (e-mail ou site), a Wikipedia/Commons pode responder 403. O contato vem do
+    parâmetro ou de SLIDEDSL_CONTACT; nunca é inventado.
+    """
+    import os
+
+    contact = (contact or os.environ.get("SLIDEDSL_CONTACT") or "").strip()
+    if not contact:
+        return AGENT
+    contact = re.sub(r"[^\w@.:/+\- ]", "", contact)[:120]
+    return f"SlideDSL/1.1 ({contact}; local educational presentation tool) httpx/{httpx.__version__}"
+
+
 NASA_TERMS = "https://www.nasa.gov/nasa-brand-center/images-and-media/"
 
 
@@ -41,7 +58,9 @@ def public_target(url, resolver=socket.getaddrinfo):
     return parsed, sorted(addresses)[0]
 
 
-def fetch_public(url, *, limit=MAX_BYTES, json_only=False):
+def fetch_public(
+    url, *, limit=MAX_BYTES, json_only=False, allowed=None, headers=None, method="GET", body=None
+):
     """Validate every redirect and connect to the checked IP (including TLS SNI)."""
     started = time.monotonic()
     for _ in range(4):
@@ -50,17 +69,33 @@ def fetch_public(url, *, limit=MAX_BYTES, json_only=False):
         pinned = httpx.URL(url).copy_with(host=address)
         with httpx.Client(timeout=10, trust_env=False, follow_redirects=False) as client:
             with client.stream(
-                "GET",
+                method,
                 pinned,
-                headers={"Host": host, "User-Agent": AGENT, "Accept-Encoding": "identity"},
+                headers={
+                    "Host": host,
+                    "User-Agent": user_agent(),
+                    "Accept-Encoding": "identity",
+                    **(headers or {}),
+                },
+                json=body,
                 extensions={"sni_hostname": host},
             ) as response:
                 if response.status_code in {301, 302, 303, 307, 308}:
                     url = urljoin(url, response.headers.get("location", ""))
                     continue
-                response.raise_for_status()
+                if response.status_code >= 400:
+                    snippet = b""
+                    for block in response.iter_bytes():
+                        snippet += block
+                        if len(snippet) > 600:
+                            break
+                    text = re.sub(r"<[^>]+>|\s+", " ", snippet.decode("utf-8", "replace"))
+                    raise ValueError(
+                        f"HTTP {response.status_code} de {host}: {text.strip()[:300]}"
+                    )
                 mime = response.headers.get("content-type", "").split(";")[0].lower()
-                allowed = {"application/json"} if json_only else {"image/png", "image/jpeg"}
+                if allowed is None:
+                    allowed = {"application/json"} if json_only else {"image/png", "image/jpeg"}
                 if mime not in allowed:
                     raise ValueError(f"MIME não permitido: {mime}")
                 length = response.headers.get("content-length")

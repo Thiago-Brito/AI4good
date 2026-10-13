@@ -65,7 +65,17 @@ def parse_command(tree: Tree) -> Command:
                 args["role"] = str(item.children[0])
             if isinstance(item, Tree) and item.data == "familia":
                 args["font_face"] = json.loads(str(item.children[0]))
+            if isinstance(item, Tree) and item.data == "negrito":
+                args["bold"] = True
+            if isinstance(item, Tree) and item.data == "arredondado":
+                args["rounded"] = True
+            if isinstance(item, Tree) and str(item.data).startswith("alinhado_"):
+                args["align"] = {"esquerda": "left", "centro": "center", "direita": "right"}[
+                    str(item.data)[9:]
+                ]
         return Command(**kw, **args)
+    if name == "notas":
+        return Command(**kw, op="notes", text=json.loads(str(c[0])))
     if name == "layout":
         return Command(
             **kw,

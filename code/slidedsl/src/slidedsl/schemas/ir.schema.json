@@ -172,6 +172,26 @@
           ],
           "default": null,
           "title": "Source Column"
+        },
+        "bold": {
+          "default": false,
+          "title": "Bold",
+          "type": "boolean"
+        },
+        "align": {
+          "default": "left",
+          "enum": [
+            "left",
+            "center",
+            "right"
+          ],
+          "title": "Align",
+          "type": "string"
+        },
+        "rounded": {
+          "default": false,
+          "title": "Rounded",
+          "type": "boolean"
         }
       },
       "required": [
@@ -320,6 +340,18 @@
           },
           "title": "Relations",
           "type": "array"
+        },
+        "notes": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Notes"
         }
       },
       "required": [

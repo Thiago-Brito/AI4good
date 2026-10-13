@@ -1,3 +1,4 @@
+import { apiBaseURL, openLegacyFlow } from "./helpers";
 import { test, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -14,6 +15,7 @@ test("gera pelo formulário com SLM real, edita e exporta PowerPoint", async ({
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
+  await openLegacyFlow(page);
   await expect(page.getByLabel("Modelo local")).toHaveValue(
     "qwen3:4b-instruct",
   );
@@ -36,12 +38,12 @@ test("gera pelo formulário com SLM real, edita e exporta PowerPoint", async ({
     .getByRole("button", { name: "Gerar apresentação", exact: true })
     .click();
   const id = (await (await submitted).json()).id;
-  await expect(page.getByRole("status")).toHaveText(
+  await expect(page.locator(".status[role='status']")).toHaveText(
     "Apresentação da IA carregada. Revise os requisitos e o conteúdo.",
     { timeout: 180000 },
   );
   const job = await (
-    await request.get("http://127.0.0.1:8000/api/generations/" + id)
+    await request.get(apiBaseURL + "/api/generations/" + id)
   ).json();
   expect(job.result.report.is_mock).toBe(false);
   expect(job.result.report.compile_success).toBe(true);
@@ -84,7 +86,7 @@ test("gera pelo formulário com SLM real, edita e exporta PowerPoint", async ({
     .getByLabel("Texto", { exact: true })
     .fill("Arquitetura revisada no editor");
   await page.getByRole("button", { name: "Validar", exact: true }).click();
-  await expect(page.getByRole("status")).toContainText("válido");
+  await expect(page.locator(".status[role='status']")).toContainText("válido");
   const dslDownload = page.waitForEvent("download");
   await page.getByRole("button", { name: "Exportar DSL", exact: true }).click();
   const modified = await fs.readFile(
@@ -143,12 +145,15 @@ test("mostra indisponibilidade do Ollama e mantém importação manual acessíve
     }),
   );
   await page.goto("/");
+  await openLegacyFlow(page);
   await expect(page.getByRole("alert")).toContainText("Ollama indisponível");
   await expect(
     page.getByRole("button", { name: "Gerar apresentação", exact: true }),
   ).toBeDisabled();
   await page.getByRole("button", { name: "Importar DSL", exact: true }).click();
-  await expect(page.getByRole("status")).toHaveText("Programa importado.");
+  await expect(page.locator(".status[role='status']")).toHaveText(
+    "Programa importado.",
+  );
 });
 
 test("envia planejamento expressivo opcional pela geração existente", async ({
@@ -170,6 +175,7 @@ test("envia planejamento expressivo opcional pela geração existente", async ({
     });
   });
   await page.goto("/");
+  await openLegacyFlow(page);
   await page
     .getByText("Configurações avançadas, imagens e fontes (opcional)", {
       exact: true,
@@ -234,6 +240,7 @@ test("planejamento semântico envia opções e exibe limites da revisão", async
     });
   });
   await page.goto("/");
+  await openLegacyFlow(page);
   await page
     .getByText("Configurações avançadas, imagens e fontes (opcional)", {
       exact: true,
@@ -294,6 +301,7 @@ test("exibe caminhos e diagnósticos das correções sem substituir por exemplo 
     route.fulfill({ status: 202, json: job }),
   );
   await page.goto("/");
+  await openLegacyFlow(page);
   await expect(page.getByLabel("Modelo local")).toHaveValue("modelo-de-teste");
   await page
     .getByRole("button", { name: "Gerar apresentação", exact: true })

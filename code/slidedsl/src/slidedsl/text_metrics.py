@@ -9,10 +9,36 @@ from PIL import ImageFont
 
 from .layouts import text_height as legacy_height
 
+# Arial no Windows/macOS; Liberation Sans tem as mesmas métricas no Linux.
+FONT_CANDIDATES = {
+    False: [
+        "C:/Windows/Fonts/arial.ttf",
+        "/Library/Fonts/Arial.ttf",
+        "/System/Library/Fonts/Supplemental/Arial.ttf",
+        "/usr/share/fonts/truetype/msttcorefonts/Arial.ttf",
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+        "/usr/share/fonts/liberation-sans/LiberationSans-Regular.ttf",
+    ],
+    True: [
+        "C:/Windows/Fonts/arialbd.ttf",
+        "/Library/Fonts/Arial Bold.ttf",
+        "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+        "/usr/share/fonts/truetype/msttcorefonts/Arial_Bold.ttf",
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+        "/usr/share/fonts/liberation-sans/LiberationSans-Bold.ttf",
+    ],
+}
+
+
+def font_file(bold):
+    return next((Path(p) for p in FONT_CANDIDATES[bool(bold)] if Path(p).is_file()), None)
+
 
 @lru_cache(maxsize=32)
 def local_font(size, bold):
-    path = Path("C:/Windows/Fonts") / ("arialbd.ttf" if bold else "arial.ttf")
+    path = font_file(bold)
+    if path is None:
+        return None
     try:
         return ImageFont.truetype(str(path), round(size * 96 / 72 * 4))
     except OSError:
@@ -45,11 +71,13 @@ def text_height(value, width, size, bold=False):
 
 
 def manifest():
-    files = [Path("C:/Windows/Fonts") / name for name in ["arial.ttf", "arialbd.ttf"]]
+    files = [p for p in (font_file(False), font_file(True)) if p is not None]
     return {
-        "method": "local Arial/Pillow + word wrapping + 4% width margin"
-        if all(p.is_file() for p in files)
-        else "conservative character widths + word wrapping",
+        "method": (
+            "local Arial/Pillow + word wrapping + 4% width margin"
+            if len(files) == 2
+            else "conservative character widths + word wrapping"
+        ),
         "fonts": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in files if p.is_file()},
         "office_measurement": False,
     }

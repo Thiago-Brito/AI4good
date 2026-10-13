@@ -1,0 +1,52 @@
+// SlideDSL Alto — GLC de alto nível para geração por SLMs.
+// O modelo escolhe O QUE cada slide comunica; o compilador decide COMO fica:
+// geometria, tipografia, cores e camadas são calculadas e emitidas na SlideDSL 1.1.
+
+start: deck
+deck: "deck" STRING "{" tema? slide+ "}"
+tema: "tema" TEMA
+
+?slide: capa | secao | topicos | numeros | comparacao | etapas
+      | linha_do_tempo | citacao | grafico | imagem | conclusao
+
+capa: "capa" "{" titulo subtitulo? autor? notas? "}"
+secao: "secao" "{" titulo subtitulo? notas? "}"
+topicos: "topicos" "{" titulo item+ fontes? notas? "}"
+numeros: "numeros" "{" titulo valor+ fontes? notas? "}"
+comparacao: "comparacao" "{" titulo lado lado fontes? notas? "}"
+etapas: "etapas" "{" titulo item+ fontes? notas? "}"
+linha_do_tempo: "linha_do_tempo" "{" titulo marco+ fontes? notas? "}"
+citacao: "citacao" "{" texto autor fontes? notas? "}"
+grafico: "grafico" "{" titulo unidade? barra+ fontes? notas? "}"
+imagem: "imagem" "{" titulo origem_imagem legenda? item* fontes? notas? "}"
+conclusao: "conclusao" "{" titulo item+ fontes? notas? "}"
+
+titulo: "titulo" STRING
+subtitulo: "subtitulo" STRING
+autor: "autor" STRING
+texto: "texto" STRING
+legenda: "legenda" STRING
+unidade: "unidade" STRING
+notas: "notas" STRING
+
+item: "item" STRING STRING?
+valor: "valor" STRING STRING
+lado: "lado" STRING "{" item+ "}"
+marco: "marco" STRING STRING STRING?
+barra: "barra" STRING NUMERO
+
+?origem_imagem: "arquivo" STRING -> arquivo
+              | "buscar" STRING -> buscar
+
+fontes: "fontes" fonte_ref ("," fonte_ref)*
+?fonte_ref: FATO | STRING
+
+FATO: /F[0-9]+/
+TEMA: "claro" | "escuro"
+NUMERO: /[0-9]+(\.[0-9]+)?/
+
+%import common.ESCAPED_STRING -> STRING
+%import common.WS
+%import common.CPP_COMMENT
+%ignore WS
+%ignore CPP_COMMENT

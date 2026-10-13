@@ -121,7 +121,7 @@ def relation_issues(slide):
                     issues.append(
                         (
                             "K006",
-                            "Frase incompleta; não exportar texto cortado.",
+                            "Texto sem pontuação final; verificar se a frase está completa.",
                             f"columns.{ci}.content.{i}.{key}",
                         )
                     )
@@ -322,6 +322,14 @@ def audit_semantics(data, chunks=(), grounding="free"):
         ]
         detail_counts = Counter(normalized(b.detail) for _, b in blocks if b.detail)
         title = normalized(slide.title)
+        if re.search(r"\b(garante|garantem|sempre|sem riscos)\b", title) and not re.search(
+            r"\b(se|quando|desde que|depende|nao garante|nao garantem)\b", title
+        ):
+            warn(
+                "Q002",
+                base + ".title",
+                "Mensagem absoluta sem condição explícita; revisar sustentação.",
+            )
         body_words = set()
         for path, block in blocks:
             body_words |= words(block.full_text())
@@ -347,20 +355,28 @@ def audit_semantics(data, chunks=(), grounding="free"):
                     )
                 )
             )
-            if is_component and normalized(block.label) in {
-                "camadas",
-                "estrutura",
-                "independencia",
-                "escalabilidade",
-                "vantagens",
-                "beneficios",
-                "sistema",
-                "aplicacao",
-                "responsabilidade",
-                "exemplo",
-                "funcao",
-                "servicos",
-            }:
+            if is_component and (
+                normalized(block.label)
+                in {
+                    "camadas",
+                    "estrutura",
+                    "independencia",
+                    "escalabilidade",
+                    "vantagens",
+                    "beneficios",
+                    "sistema",
+                    "aplicacao",
+                    "responsabilidade",
+                    "exemplo",
+                    "funcao",
+                    "servicos",
+                }
+                or re.match(
+                    r"^(camadas|estrutura|responsabilidades?|exemplo|vantagens|beneficios|"
+                    r"escalabilidade|independencia)\b",
+                    normalized(block.label),
+                )
+            ):
                 warn(
                     "Q003",
                     path + ".label",
@@ -384,13 +400,14 @@ def audit_semantics(data, chunks=(), grounding="free"):
                 r"\b(sempre|nunca|garante|garantem|nao afetam|nao comprometem|sem afetar|sem riscos|qualquer)\b",
                 normalized(block.detail + " " + block.explanation),
             ) and not re.search(
-                r"\b(se|quando|desde que|depende|contrato|condicao|isolamento)\b",
-                normalized(block.full_text()),
+                r"\b(se|quando|desde que|depende|sob|contanto que)\b",
+                normalized(block.detail + " " + block.explanation),
             ):
                 warn("Q002", path + ".explanation", "Afirmação absoluta sem condição explícita.")
             if block.role == "example":
                 if re.match(
-                    r"^(cada|falhas|a estrutura|o sistema|todos)\b",
+                    r"^(cada|falhas|a estrutura|o sistema|todos|permite|facilita|reduz|"
+                    r"oferece|aumenta|isola)\b",
                     normalized(block.explanation or block.detail),
                 ):
                     warn(
@@ -486,9 +503,43 @@ def review_plan(
     out.mkdir(parents=True, exist_ok=False)
     current = deepcopy(data)
     attempts, signatures = [], set()
+    feedback = None
     for attempt in range(max_calls):
         audit = audit_semantics(current, chunks, grounding)
-        affected = audit["diagnostics"]
+        all_issues = audit["diagnostics"]
+        editable = [
+            d
+            for d in all_issues
+            if re.fullmatch(
+                r"slides\.\d+\.(title|columns\.\d+\.content\.\d+\."
+                r"(label|detail|explanation|role|sources)|relationships\.\d+\.(source|target|type))",
+                d["path"],
+            )
+        ]
+        if not editable:
+            break
+        # A single slide per call reduces coupled edits. Hard errors go first.
+        priorities = {
+            "Q002": 1,
+            "Q008": 1,
+            "Q003": 2,
+            "Q004": 2,
+            "Q009": 2,
+            "Q007": 3,
+            "Q001": 4,
+            "Q005": 4,
+            "Q006": 5,
+        }
+        first = min(
+            editable,
+            key=lambda d: (
+                d["severity"] != "ERRO",
+                priorities.get(d["code"], 0),
+                int(d["path"].split(".")[1]),
+            ),
+        )
+        index = int(first["path"].split(".")[1])
+        affected = [d for d in all_issues if int(d["path"].split(".")[1]) == index]
         # Structural arrays cannot be replaced by editorial review.
         paths = sorted(
             {
@@ -500,16 +551,15 @@ def review_plan(
                 )
             }
         )
-        # A changed entity/function or qualified benefit can affect its message.
-        # Review that same slide's title together, never titles of other slides.
-        paths = sorted(
-            set(paths)
-            | {
-                f"slides.{int(d['path'].split('.')[1])}.title"
-                for d in affected
-                if d["code"] in {"Q003", "Q002", "Q008"}
-            }
-        )
+        # Repair the entity and its responsibility together. A benefit/example
+        # may need retyping, but a title is authorized only by its own diagnostic.
+        for d in affected:
+            if d["code"] in {"Q002", "Q003", "Q004", "Q008"} and ".content." in d["path"]:
+                base = d["path"].rsplit(".", 1)[0]
+                paths += [base + "." + k for k in ("label", "detail", "explanation", "role")]
+            if d["code"] == "Q003":
+                paths.append(f"slides.{index}.title")
+        paths = sorted(set(paths))
         paths = paths[:24]
         if not paths:
             break
@@ -523,9 +573,13 @@ def review_plan(
         for variant in schema["properties"]["edits"]["items"]["anyOf"]:
             path = variant["properties"]["path"]["const"]
             if path.endswith(".detail"):
-                variant["properties"]["value"]["maxLength"] = 80
+                variant["properties"]["value"]["maxLength"] = min(
+                    80, max(64, len(value_at(current, path)))
+                )
             if path.endswith(".explanation"):
-                variant["properties"]["value"]["maxLength"] = 160
+                variant["properties"]["value"]["maxLength"] = min(
+                    160, max(80, len(value_at(current, path)))
+                )
             if variant["properties"]["path"]["const"].endswith(".sources"):
                 variant["properties"]["value"].update(
                     items={"type": "string", "enum": [c["id"] for c in chunks]}
@@ -538,9 +592,17 @@ def review_plan(
         context = {
             "request": request,
             "issues": affected,
+            "previous_rejection": feedback,
             "fields": fields,
             "allowed_fields": [
-                {"key": f"field_{i + 1}", "path": path, "current": fields[path]}
+                {
+                    "key": f"field_{i + 1}",
+                    "path": path,
+                    "current": fields[path],
+                    "max_length": schema["properties"]["edits"]["items"]["anyOf"][i]["properties"][
+                        "value"
+                    ].get("maxLength"),
+                }
                 for i, path in enumerate(paths)
             ],
             "slides": [
@@ -649,10 +711,12 @@ def review_plan(
                 },
             )
             sig = json.dumps(candidate, sort_keys=True)
-            old_d = Counter((d["code"], d["path"]) for d in affected)
+            old_d = Counter((d["code"], d["path"]) for d in all_issues)
             new_d = Counter((d["code"], d["path"]) for d in revised["diagnostics"])
             erased = any(
-                isinstance(fields[e["path"]], str) and fields[e["path"]] and not e["value"]
+                isinstance(fields[e["path"]], str)
+                and fields[e["path"]]
+                and not str(e["value"]).strip()
                 for e in patch["edits"]
             )
             lost_source = any(
@@ -667,6 +731,19 @@ def review_plan(
             blockers = Counter(
                 (d["code"], d.get("evidence", {}).get("path")) for d in after["errors"]
             ) - Counter((d["code"], d.get("evidence", {}).get("path")) for d in before["errors"])
+            decision["regressions"] = {
+                "new_diagnostics": [
+                    d for d in revised["diagnostics"] if (d["code"], d["path"]) in new_d - old_d
+                ],
+                "new_errors": [
+                    d
+                    for d in after["errors"]
+                    if (d["code"], d.get("evidence", {}).get("path")) in blockers
+                ],
+                "erased_text": erased,
+                "lost_source": bool(lost_source),
+                "lost_requirement": lost,
+            }
             if sig in signatures or candidate == current:
                 decision["reason"] = "repeated"
             elif erased or lost_source or lost or blockers or new_d - old_d:
@@ -675,8 +752,19 @@ def review_plan(
                 current = candidate
                 decision.update(accepted=True, reason="fewer_flags_without_regression")
             signatures.add(sig)
+            feedback = (
+                None
+                if decision["accepted"]
+                else {
+                    "reason": decision["reason"],
+                    "proposed_edits": patch["edits"],
+                    "regressions": decision["regressions"],
+                    "instruction": "Corrija a regressão mantendo a revisão curta. Não repita o candidato rejeitado.",
+                }
+            )
         except Exception as exc:
             decision.update(reason="invalid_review", error=str(exc))
+            feedback = {"reason": "invalid_review", "error": str(exc)[:1200]}
         finally:
             save_json(folder / "request.json", getattr(adapter, "last_request", None))
             save_json(folder / "response.json", getattr(adapter, "last_response", None))

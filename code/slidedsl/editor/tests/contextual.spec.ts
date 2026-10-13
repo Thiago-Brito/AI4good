@@ -1,3 +1,4 @@
+import { apiBaseURL, openLegacyFlow } from "./helpers";
 import { test, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -6,6 +7,7 @@ test("anexa documentos locais e exclui sem exigir configurações", async ({
   page,
 }) => {
   await page.goto("/");
+  await openLegacyFlow(page);
   await expect(page.getByLabel("Público", { exact: true })).not.toBeVisible();
   await page
     .getByText("Configurações avançadas, imagens e fontes (opcional)", {
@@ -41,6 +43,7 @@ test("importa imagem própria offline com permissão e exclusão", async ({
   page,
 }) => {
   await page.goto("/");
+  await openLegacyFlow(page);
   await page
     .getByText("Configurações avançadas, imagens e fontes (opcional)", {
       exact: true,
@@ -85,10 +88,11 @@ test("SLM real com imagem licenciada, fontes e reparo preservando edição", asy
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   const cache = await (
-    await request.get("http://127.0.0.1:8000/api/images/cache")
+    await request.get(apiBaseURL + "/api/images/cache")
   ).json();
   expect(cache.results.length).toBeGreaterThan(0);
   await page.goto("/");
+  await openLegacyFlow(page);
   await page
     .getByText("Configurações avançadas, imagens e fontes (opcional)", {
       exact: true,
@@ -135,7 +139,7 @@ test("SLM real com imagem licenciada, fontes e reparo preservando edição", asy
     page.getByRole("button", { name: "Revalidar requisitos" }),
   ).toBeEnabled({ timeout: 180000 });
   const job = await (
-    await request.get("http://127.0.0.1:8000/api/generations/" + id)
+    await request.get(apiBaseURL + "/api/generations/" + id)
   ).json();
   expect(job.result.report.is_mock).toBe(false);
   expect(job.result.report.compile_success).toBe(true);
@@ -175,7 +179,7 @@ test("SLM real com imagem licenciada, fontes e reparo preservando edição", asy
     /Exploração lunar revisada/,
   );
   const final = await (
-    await request.get("http://127.0.0.1:8000/api/generations/" + repairId)
+    await request.get(apiBaseURL + "/api/generations/" + repairId)
   ).json();
   expect(final.result.report.compile_success).toBe(true);
   expect(
@@ -185,7 +189,7 @@ test("SLM real com imagem licenciada, fontes e reparo preservando edição", asy
   ).toBe(true);
   await page.getByRole("button", { name: "Revalidar requisitos" }).click();
   await page.getByRole("button", { name: "Validar", exact: true }).click();
-  await expect(page.getByRole("status")).toContainText("válido");
+  await expect(page.locator(".status[role='status']")).toContainText("válido");
   const folder = path.resolve("..", final.result.path);
   for (const [button, file] of [
     ["Exportar DSL", "editor_modified.sld"],

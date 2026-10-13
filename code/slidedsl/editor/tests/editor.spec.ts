@@ -1,3 +1,4 @@
+import { apiBaseURL } from "./helpers";
 import { test, expect } from "@playwright/test";
 import path from "node:path";
 import fs from "node:fs/promises";
@@ -14,7 +15,9 @@ test("importa cinco slides, edita, valida, exporta DSL e gera PPTX real", async 
   await page
     .getByLabel("Abrir arquivo .sld")
     .setInputFiles(path.join(root, "examples/cinco_slides.sld"));
-  await expect(page.getByRole("status")).toHaveText("Arquivo importado.");
+  await expect(page.locator(".status[role='status']")).toHaveText(
+    "Arquivo importado.",
+  );
   await expect(page.getByText("Grafo do documento")).toBeVisible();
   await page
     .getByRole("button", { name: "Selecionar titulo", exact: true })
@@ -23,14 +26,14 @@ test("importa cinco slides, edita, valida, exporta DSL e gera PPTX real", async 
     .getByLabel("Texto", { exact: true })
     .fill("Título editado pelo teste");
   await page.getByRole("button", { name: "Validar", exact: true }).click();
-  await expect(page.getByRole("status")).toContainText("válido");
+  await expect(page.locator(".status[role='status']")).toContainText("válido");
   const exported = page.waitForEvent("download");
   await page.getByRole("button", { name: "Exportar DSL", exact: true }).click();
   const dsl = await exported;
   const location = await dsl.path();
   const source = await fs.readFile(location!, "utf8");
   expect(source).toContain("Título editado pelo teste");
-  const parsed = await request.post("http://127.0.0.1:8000/api/parse", {
+  const parsed = await request.post(apiBaseURL + "/api/parse", {
     data: { source },
   });
   expect(parsed.ok()).toBeTruthy();
@@ -67,7 +70,9 @@ test("corrige objeto fora do slide pelo painel de propriedades", async ({
   await page
     .getByLabel("Abrir arquivo .sld")
     .setInputFiles(path.join(root, "examples/negativo_fora.sld"));
-  await expect(page.getByRole("status")).toHaveText("Arquivo importado.");
+  await expect(page.locator(".status[role='status']")).toHaveText(
+    "Arquivo importado.",
+  );
   await page.getByRole("button", { name: "Validar", exact: true }).click();
   await expect(page.locator(".diagnostics")).toContainText("D001");
   await page.screenshot({
@@ -76,7 +81,7 @@ test("corrige objeto fora do slide pelo painel de propriedades", async ({
   });
   await page.getByLabel("X", { exact: true }).fill("80");
   await page.getByRole("button", { name: "Validar", exact: true }).click();
-  await expect(page.getByRole("status")).toContainText("válido");
+  await expect(page.locator(".status[role='status']")).toContainText("válido");
   await expect(page.locator(".diagnostics")).not.toContainText("D001");
   const download = page.waitForEvent("download");
   await page.getByRole("button", { name: "Exportar DSL", exact: true }).click();

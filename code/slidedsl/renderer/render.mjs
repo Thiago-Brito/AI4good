@@ -16,6 +16,8 @@ export function validateScene(deck) {
       if (![e.x,e.y,e.width,e.height,e.z].every(Number.isFinite) || e.width<=0 || e.height<=0 || !Number.isInteger(e.z)) throw new Error('Geometria inválida.');
       if (e.x<0 || e.y<0 || e.x+e.width>1280 || e.y+e.height>720) throw new Error('Objeto fora do canvas.');
       if (e.type!=='image' && !/^#[0-9A-Fa-f]{6}$/.test(e.color)) throw new Error('Cor inválida.');
+      if (e.type!=='text' && (e.bold || (e.align && e.align!=='left'))) throw new Error('Estilo de texto em forma.');
+      if (e.align && !['left','center','right'].includes(e.align)) throw new Error('Alinhamento inválido.');
       if (e.type==='text' && (typeof e.text!=='string' || !Number.isInteger(e.font_size) || e.font_size<10 || e.font_size>96)) throw new Error('Texto/fonte inválidos.');
     }
   }
@@ -41,8 +43,9 @@ export async function render(deck, output, root) {
           {text:e.text.slice(split+2),options:{bold:false}},
         ];
         slide.addText(content,{...rect,objectName:e.id,fontFace:e.font_face,fontSize:e.font_size,
-          color:e.color.slice(1),bold:e.id.endsWith('_ref_label'),margin:6,breakLine:false,valign:'top',wrap:true,lang:'pt-BR',
-          lineSpacingMultiple:1.2,align:'left',isTextBox:true});
+          color:e.color.slice(1),bold:Boolean(e.bold)||e.id.endsWith('_ref_label'),margin:6,breakLine:false,
+          valign:e.align==='center'?'middle':'top',wrap:true,lang:'pt-BR',
+          lineSpacingMultiple:1.2,align:e.align||'left',isTextBox:true});
       } else if (e.type==='image') {
         if (typeof e.file!=='string' || e.file.includes(':') || path.isAbsolute(e.file)) throw new Error('Imagem deve ser local e relativa.');
         const asset=await fs.realpath(path.resolve(realRoot,e.file));
@@ -55,11 +58,13 @@ export async function render(deck, output, root) {
           credits.push(`${metadata.attribution}\nOrigem: ${metadata.page}\nLicença: ${metadata.license_url}\nArquivo convertido para PNG; exibição sem corte.`);
         }
       } else {
-        slide.addShape(e.type==='arrow'?pres.ShapeType.downArrow:e.type==='rectangle'?pres.ShapeType.rect:pres.ShapeType.ellipse,
-          {...rect,objectName:e.id,fill:{color:e.color.slice(1)},line:{color:e.color.slice(1),transparency:100}});
+        const shape=e.type==='arrow'?pres.ShapeType.downArrow:e.type==='rectangle'
+          ?(e.rounded?pres.ShapeType.roundRect:pres.ShapeType.rect):pres.ShapeType.ellipse;
+        slide.addShape(shape,{...rect,objectName:e.id,fill:{color:e.color.slice(1)},
+          line:{color:e.color.slice(1),transparency:100},...(e.rounded?{rectRadius:0.12}:{})});
       }
     }
-    slide.addNotes(`Slide ${scene.number}; objetos: ${scene.elements.map(e=>e.id).join(', ')}. Cena gerada pela SlideDSL.\n${credits.join('\n\n')}`);
+    slide.addNotes(`${scene.notes?scene.notes+'\n\n':''}Slide ${scene.number}; objetos: ${scene.elements.map(e=>e.id).join(', ')}. Cena gerada pela SlideDSL.\n${credits.join('\n\n')}`);
   }
   await pres.writeFile({fileName:output,compression:true});
 }

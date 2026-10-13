@@ -54,6 +54,18 @@ type GenerationResult = {
       slides: { intent: string; message: string; reason: string }[];
     };
     visual_fallbacks?: { slide: number; reason: string }[];
+    coverage?: {
+      represented_required: number;
+      required_count: number;
+      requirements: {
+        id: string;
+        description: string;
+        represented: boolean;
+        unselected: string[];
+        slides: number[];
+      }[];
+    };
+    coverage_recovery?: { accepted: number; rejected: number };
   };
   path: string;
 };
@@ -491,6 +503,36 @@ export function GenerationPanel({
                 registra conflitos; revalide a cena combinada.
               </p>
             )}
+        </div>
+      )}
+      {job?.result?.report.coverage && (
+        <div aria-label="Cobertura de conteúdo">
+          <p>
+            Requisitos com evidência preservada:{" "}
+            {job.result.report.coverage.represented_required}/
+            {job.result.report.coverage.required_count}. Associações de conteúdo
+            exigem revisão de completude e correção factual.
+          </p>
+          <p>
+            Recuperações: {job.result.report.coverage_recovery?.accepted ?? 0}{" "}
+            aceitas,
+            {job.result.report.coverage_recovery?.rejected ?? 0} tentativas
+            rejeitadas.
+          </p>
+          <ul>
+            {job.result.report.coverage.requirements.map((r) => (
+              <li key={r.id}>
+                {r.description}:{" "}
+                {r.represented
+                  ? `evidência nos slides ${r.slides.join(", ")}`
+                  : "sem evidência preservada"}
+                .
+                {r.unselected.length > 0
+                  ? ` Registros descartados ou em outra seção: ${r.unselected.join(", ")}.`
+                  : ""}
+              </li>
+            ))}
+          </ul>
         </div>
       )}
       {job?.result?.report.semantic_audit && (

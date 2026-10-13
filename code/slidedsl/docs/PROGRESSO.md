@@ -1,5 +1,72 @@
 # Progresso de implementação
 
+## Revisão e preparação do commit — 12/10/2026
+Revisadas as mudanças do projeto SlideDSL: fluxo Alto, pesquisa local, verificação de
+sustentação/cobertura, extensões da DSL 1.1, editor e planejamento conceitual/experimental.
+388 testes Python, dois testes Node e 11 Playwright passaram; cinco testes reais de
+interface permaneceram optativos. Ruff, ESLint, TypeScript/build e formatação conferidos.
+Os testes antigos foram adaptados ao painel recolhido, ao status específico do editor
+e à porta de API configurada. O segredo do SearXNG ficou no `.env` local ignorado pelo Git;
+o script de início cria o arquivo em novas instalações. Compose e busca real validados.
+README e registro do dia agora refletem os 12 pedidos/21 execuções/13 PPTX do lote
+anterior aos últimos ajustes, cuja avaliação real continua pendente.
+
+## Qualidade, SearXNG e documentação do TCC — 12/10/2026 (noite)
+Testes reais multitemas com Qwen3 4B e SearXNG geraram PPTX com fatos de fontes reais e revelaram
+cortes de título pelo decoder, fatos usados com outro sentido, citações mal atribuídas, itens do
+pedido omitidos e fatos fora do assunto. Correções: limites folgados + A013, verificação de
+sustentação (A014), citação literal (A015), cobertura de tópicos (A016), números por valor
+inteiro, filtro de termos centrais, slides de dados condicionados a dados, layout (rodapé, 16 pt,
+capas). SearXNG passou a ser o único buscador do painel e o padrão da CLI. README reescrito parte
+por parte; registro em MUDANCAS_2026-10-12.md; referências em REFERENCIAS.md. 387 testes Python.
+
+## SearXNG local — 12/10/2026
+Docker Desktop já estava instalado (CLI/Engine 27.5.1). Aplicativo iniciado,
+imagem `searxng/searxng:latest` baixada e contêiner `slidedsl-searxng` iniciado
+com o Compose existente. `/healthz` respondeu HTTP 200 e a busca JSON por
+`microsservicos` retornou 27 resultados. O Python do ambiente local confirmou
+`provider_auto() == "searxng"` e URL `http://127.0.0.1:8888`.
+
+## SlideDSL Alto, pesquisa e geração restrita — 12/10/2026
+Diagnóstico: slides gerados corretos mas genéricos e visualmente repetitivos. Nova GLC de
+alto nível compila para a SlideDSL 1.1 com 11 layouts; extensões de estilo na 1.1. Pesquisa
+na internet produz fichas com trecho literal verificado; o roteiro e o conteúdo usam schemas
+que só aceitam IDs de fatos reais; A007 acusa números ausentes das fontes. Modos JSON, GBNF
+(conversor Lark→GBNF próprio, testado por reconhecedor) e direto, com reparo por campo e
+best-of-N. Regressão: 372 Python (24 novos) e dois Node passaram no ambiente Linux de
+desenvolvimento; Playwright/editor não executados nesta etapa. Sem SLM real nem rede externa
+neste ambiente: medições com Qwen3 pendentes. Documentação em docs/SLIDEDSL_ALTO.md.
+
+## Rastreabilidade e cobertura — 11/10/2026
+Diagnóstico antes das alterações em INVESTIGACAO_COBERTURA.md, com snapshot B
+preservado. Contrato tipado de cláusulas explícitas, origem por posições/trecho,
+requirement_ids nos registros, rastro de campos por slide e C001–C005 serializáveis.
+Recuperação acrescenta registros já produzidos, somente quando validadores de
+geometria, contratos e requisitos permitem, sem perda de conteúdo ou novos sinais.
+Flags experimentais CLI/API/editor; padrão histórico preservado. Integração inicial
+passou 38 testes Python, incluindo PPTX nativo e perdas de campos na IR/PPTX.
+Regressão completa e A/B/C congelado em execução em outputs/coverage/abc_02,
+seeds 42/43, sem serviços de linguagem online. Retenção literal/IDs não comprovam
+correção factual; avaliação independente permanece null. Sem commit/push.
+
+## Investigação e planejamento conceitual — 11/10/2026
+Base fea5a52; investigação registrada antes de alterar código. Duas chamadas
+Qwen3 4B local: conteúdo conceitual sem geometria e seleção por slide. Projeção
+preserva registros selecionados; alocação ainda pode omitir exemplos/síntese.
+Revisor de um slide com feedback, critérios conservadores e rollback. Comparação
+final: controle 3/6, conceitual 6/6 PPTX; seis propostas sobre B históricos rejeitadas.
+Uma revisão lexical de título aceita em frações não corrige sua síntese. Não há
+ganho geral de conteúdo demonstrado: integração de arquitetura, sequência/atores
+e completude dos pedidos novos permanecem problemáticos. Casos novos UTF-8
+repetidos sem alterar código; pilotos/entradas corrompidas preservados. Auditoria
+confere fontes Python realmente usadas, HTTP/schema, 31 chamadas finais, 13 PPTX
+incluindo download real do editor. Desenvolvimento: 86 chamadas, falhas incluídas.
+325 Python, dois Node, dez Playwright ordinários; nova execução isolada passa
+transporte e geração/exportação reais. Ruff/ESLint/Prettier/TypeScript/build passam.
+Servidor antigo recusou campo novo; teste repetido na mesma origem isolada sem
+interrompê-lo. Preview geométrico, Office indisponível, avaliação humana pendente.
+Relatório em docs/EVOLUCAO_CONTEUDO.md. Sem commit/push; opção desativada por padrão.
+
 ## Planejamento semântico — 11/10/2026
 Snapshot 64a49f4 enviado antes de editar. Contrato e revisão opcionais adicionados
 ao planejamento expressivo; não geram setas sem relações declaradas nesse modo.

@@ -44,6 +44,7 @@ def analyze(ast: PresentationNode, root: Path | None = None) -> Presentation:
                 )
             )
         scene: dict[str, Element] = {}
+        notes: list[str] = []
         groups: dict[str, Group] = {}
         relations: list[Relation] = []
 
@@ -108,6 +109,10 @@ def analyze(ast: PresentationNode, root: Path | None = None) -> Presentation:
         def execute(c: Command):
             if c.op in {"add", "resize"} and any(v <= 0 or not math.isfinite(v) for v in c.size):
                 raise ValueError("S004|Largura e altura devem ser finitas e maiores que zero.")
+            if c.op == "notes":
+                if c.text.strip():
+                    notes.append(c.text.strip())
+                return
             if c.op == "layout":
                 before = set(scene)
                 for child in c.children:
@@ -156,6 +161,9 @@ def analyze(ast: PresentationNode, root: Path | None = None) -> Presentation:
                     role_origin=origin,
                     source_line=c.line,
                     source_column=c.column,
+                    bold=c.bold,
+                    align=c.align,
+                    rounded=c.rounded,
                 )
                 return
             if c.op == "group":
@@ -273,6 +281,7 @@ def analyze(ast: PresentationNode, root: Path | None = None) -> Presentation:
                 elements=sorted(scene.values(), key=lambda e: e.z),
                 groups=list(groups.values()),
                 relations=relations,
+                notes="\n\n".join(notes) or None,
             )
         )
     if diagnostics:
@@ -320,6 +329,8 @@ def validate_ir(deck: Presentation, root: Path | None = None) -> list[Diagnostic
                 or (e.type != "image" and e.file is not None)
                 or (e.type == "image" and e.color is not None)
                 or (e.type != "text" and e.font_face != "Arial")
+                or (e.type != "text" and (e.bold or e.align != "left"))
+                or (e.type != "rectangle" and e.rounded)
             )
             if incompatible:
                 error("S006", "Propriedades incompatíveis com o tipo de elemento.", e.id)

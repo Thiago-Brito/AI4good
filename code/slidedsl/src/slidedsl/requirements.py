@@ -32,6 +32,108 @@ class Requirement(BaseModel):
     description: str
 
 
+class RequirementOrigin(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    source: Literal["request"] = "request"
+    start: int = Field(ge=0)
+    end: int = Field(ge=1)
+    quote: str = Field(min_length=1)
+
+
+class ContentRequirement(Requirement):
+    """A requested clause, never a model-authored claim of fulfillment."""
+
+    kind: Literal["content"] = "content"
+    required: bool = True
+    polarity: Literal["include", "exclude"] = "include"
+    origin: RequirementOrigin
+    verification: Literal["manual"] = "manual"
+
+
+def content_requirements(request, count, supplied=None):
+    """Freeze exact request spans; clause boundaries are conservative, not semantic parsing."""
+    if supplied is not None:
+        rows = [ContentRequirement.model_validate(r) for r in supplied]
+    else:
+        marks = list(re.finditer(r"\bslide\s+(\d+)\s*:\s*", request, re.IGNORECASE))
+        sections = [
+            (int(m[1]), m.end(), marks[i + 1].start() if i + 1 < len(marks) else len(request))
+            for i, m in enumerate(marks)
+        ] or [(None, 0, len(request))]
+        # Explicit enumerations preserve each item as a span, without inventing a predicate.
+        if not marks:
+            enumeration = re.search(r"\b(?:contendo|incluindo)\s+", request, re.IGNORECASE)
+            if enumeration:
+                list_start = enumeration.end()
+                list_end = (
+                    next(
+                        (m.start() for m in re.finditer(r"[.!?]", request[list_start:])),
+                        len(request) - list_start,
+                    )
+                    + list_start
+                )
+                separators = list(re.finditer(r",\s*", request[list_start:list_end]))
+                last_and = list(re.finditer(r"\s+e\s+", request[list_start:list_end]))
+                if separators and last_and and last_and[-1].start() > separators[-1].start():
+                    separators.append(last_and[-1])
+                if separators:
+                    positions = [list_start] + [list_start + m.end() for m in separators]
+                    endings = [list_start + m.start() for m in separators] + [list_end]
+                    sections = (
+                        [(None, 0, enumeration.start())]
+                        + [(None, a, b) for a, b in zip(positions, endings, strict=True)]
+                        + ([(None, list_end + 1, len(request))] if list_end < len(request) else [])
+                    )
+        rows = []
+        # Keep coordinated subject nouns together; split only requested actions or adjuncts.
+        boundary = re.compile(
+            r"[.!?;]\s+|,\s+(?=(?:com\b|inclu\w+\b))|\s+e\s+(?="
+            r"(?:explique|mostre|apresente|conclua|calcule|diferencie|distinguindo|"
+            r"compare|inclua|use|uma?\s+(?:exemplo|condição|aplicação))\b)",
+            re.IGNORECASE,
+        )
+        for slide, start, end in sections:
+            cursor = start
+            cuts = [
+                (m.start() + start, m.end() + start) for m in boundary.finditer(request[start:end])
+            ]
+            for stop, following in [*cuts, (end, end)]:
+                a, b = cursor, stop
+                while a < b and request[a].isspace():
+                    a += 1
+                while b > a and request[b - 1] in " \r\n\t.,;":
+                    b -= 1
+                quote = request[a:b]
+                words = normalized(quote)
+                # These remain the responsibility of the existing structural contract.
+                structural_only = bool(
+                    re.fullmatch(
+                        r"(?:sem|nao (?:inclua|use|coloque|adicione))\s+"
+                        r"(?:imagens?|rodape)(?:\s+(?:ou|e)\s+(?:imagens?|rodape))*",
+                        words,
+                    )
+                )
+                if quote and not structural_only:
+                    rows.append(
+                        ContentRequirement(
+                            id=f"R{len(rows) + 1}",
+                            description=quote,
+                            slide=slide,
+                            polarity="exclude" if re.match(r"(?:nao|sem)\b", words) else "include",
+                            origin=RequirementOrigin(start=a, end=b, quote=quote),
+                        )
+                    )
+                cursor = following
+    if len({r.id for r in rows}) != len(rows):
+        raise ValueError("Requisitos de conteúdo devem ter IDs únicos.")
+    for row in rows:
+        if request[row.origin.start : row.origin.end] != row.origin.quote:
+            raise ValueError(f"Origem do requisito {row.id} não corresponde ao pedido.")
+        if row.slide and row.slide > count:
+            raise ValueError(f"Requisito {row.id} aponta para slide fora do pedido.")
+    return [r.model_dump() for r in rows]
+
+
 def normalized(text):
     return "".join(
         c for c in unicodedata.normalize("NFD", text.casefold()) if unicodedata.category(c) != "Mn"

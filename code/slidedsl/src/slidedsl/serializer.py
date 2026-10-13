@@ -34,6 +34,9 @@ def ir_to_ast(deck: Presentation) -> PresentationNode:
                     font_face=e.font_face if e.type == "text" else None,
                     position=Position(kind="absolute", x=e.x, y=e.y),
                     size=(e.width, e.height),
+                    bold=e.bold,
+                    align=e.align,
+                    rounded=e.rounded,
                 )
             )
         for g in s.groups:
@@ -63,6 +66,8 @@ def ir_to_ast(deck: Presentation) -> PresentationNode:
                 commands.append(
                     Command(op="move", id=e.id, position=Position(kind="absolute", x=e.x, y=e.y))
                 )
+        if s.notes:
+            commands.append(Command(op="notes", text=s.notes))
         slides.append(SlideNode(number=s.number, commands=commands))
     return PresentationNode(title=deck.title, theme=deck.theme, slides=slides)
 

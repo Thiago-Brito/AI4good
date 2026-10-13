@@ -1,0 +1,51 @@
+// Exemplo escrito na SlideDSL Alto, no formato que o pipeline pede ao SLM.
+// Os fatos vêm de fontes públicas; em uma geração real eles chegam como fichas F1, F2...
+deck "Monolito ou microsserviços?" {
+  tema claro
+  capa {
+    titulo "Monolito ou microsserviços: quando cada um compensa"
+    subtitulo "O que Netflix, Amazon e Prime Video aprenderam ao dividir (e reunir) sistemas"
+    autor "SlideDSL Alto — exemplo"
+  }
+  comparacao {
+    titulo "A diferença está em como o sistema é implantado e escalado"
+    lado "Monolito" {
+      item "Uma unidade de implantação" "Toda mudança exige recompilar e publicar a aplicação inteira."
+      item "Escala em bloco" "Para atender um módulo sobrecarregado, replica-se o sistema todo."
+      item "Chamadas em memória" "Módulos conversam por funções, sem latência de rede."
+    }
+    lado "Microsserviços" {
+      item "Serviços independentes" "Cada serviço tem implantação, dados e equipe próprios."
+      item "Escala por serviço" "Só o serviço sob carga recebe mais instâncias."
+      item "Chamadas pela rede" "Cada interação passa por HTTP ou filas e pode falhar."
+    }
+    fontes "Lewis & Fowler, Microservices (martinfowler.com, 2014)"
+  }
+  linha_do_tempo {
+    titulo "A ideia amadureceu ao longo de duas décadas"
+    marco "1968" "Lei de Conway" "Sistemas espelham a estrutura de comunicação de quem os projeta."
+    marco "2002" "Mandato de APIs na Amazon" "Equipes passam a se comunicar apenas por interfaces de serviço."
+    marco "2008" "Netflix inicia migração" "Falha grave de banco de dados motiva a ida para a nuvem."
+    marco "2014" "Artigo de Lewis e Fowler" "O termo microsserviços ganha definição de referência."
+    marco "2023" "Prime Video volta ao monolito" "Um serviço de monitoramento é reunido em um único processo."
+  }
+  numeros {
+    titulo "Os resultados dependem do problema, não da moda"
+    valor "7 anos" "duração da migração da Netflix para a nuvem, de 2008 a 2016"
+    valor "90%" "redução de custo de infraestrutura no monitoramento do Prime Video ao abandonar a versão distribuída"
+    fontes "Netflix Tech Blog (2016)", "Prime Video Tech Blog (2023)"
+  }
+  etapas {
+    titulo "Como migrar sem parar o sistema: o padrão strangler fig"
+    item "Mapear fronteiras" "Identificar domínios com dados e regras próprios."
+    item "Extrair uma borda" "Começar por uma funcionalidade periférica e de baixo risco."
+    item "Rotear o tráfego" "Um proxy envia as chamadas da função extraída ao novo serviço."
+    item "Desligar o legado" "Remover o código antigo quando o novo serviço estiver estável."
+  }
+  conclusao {
+    titulo "Comece simples e divida quando a dor for real"
+    item "Monolito modular primeiro" "Fronteiras claras dentro de um processo custam pouco e facilitam a divisão futura."
+    item "Divida por escala ou equipe" "Microsserviços compensam quando partes escalam ou evoluem em ritmos diferentes."
+    item "Meça antes e depois" "Custos de rede, observabilidade e operação devem entrar na decisão."
+  }
+}

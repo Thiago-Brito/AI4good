@@ -1,3 +1,4 @@
+import { apiBaseURL, openLegacyFlow } from "./helpers";
 import { test, expect } from "@playwright/test";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -14,6 +15,7 @@ test("requisitos, correção e edição com Ollama real", async ({
   const errors: string[] = [];
   page.on("pageerror", (e) => errors.push(e.message));
   await page.goto("/");
+  await openLegacyFlow(page);
   await expect(page.getByLabel("Modelo local")).toHaveValue(
     "qwen3:4b-instruct",
   );
@@ -53,7 +55,7 @@ test("requisitos, correção e edição com Ollama real", async ({
     page.getByRole("button", { name: "Revalidar requisitos" }),
   ).toBeEnabled({ timeout: 180000 });
   const job = await (
-    await request.get(`http://127.0.0.1:8000/api/generations/${id}`)
+    await request.get(`${apiBaseURL}/api/generations/${id}`)
   ).json();
   expect(job.result.report.is_mock).toBe(false);
   expect(job.result.report.compile_success).toBe(true);
@@ -72,7 +74,7 @@ test("requisitos, correção e edição com Ollama real", async ({
   await page.getByLabel("Texto", { exact: true }).fill("Camadas revisadas");
   await page.getByRole("button", { name: "Revalidar requisitos" }).click();
   await page.getByRole("button", { name: "Validar", exact: true }).click();
-  await expect(page.getByRole("status")).toContainText("válido");
+  await expect(page.locator(".status[role='status']")).toContainText("válido");
   const folder = path.resolve("..", job.result.path);
   for (const [label, file] of [
     ["Exportar DSL", "editor_modified.sld"],

@@ -47,6 +47,12 @@ def print_command(c: Command, indent: str = "    ") -> str:
             s += f" papel {c.role}"
         if c.element_type == "text" and c.font_face is not None:
             s += f" familia {quote(c.font_face)}"
+        if c.element_type == "text" and c.bold:
+            s += " negrito"
+        if c.element_type == "text" and c.align != "left":
+            s += " alinhado " + {"center": "centro", "right": "direita"}[c.align]
+        if c.element_type == "rectangle" and c.rounded:
+            s += " arredondado"
     elif c.op == "move":
         s = f"mover {c.id} para {print_position(c.position)}"
     elif c.op == "resize":
@@ -69,6 +75,8 @@ def print_command(c: Command, indent: str = "    ") -> str:
         s = f"distribuir horizontalmente [{', '.join(c.ids)}] com intervalo {number(c.value)}"
     elif c.op == "layer":
         s = f"definir camada de {c.id} como {number(c.value)}"
+    elif c.op == "notes":
+        s = f"notas {quote(c.text)}"
     elif c.op == "layout":
         body = "\n".join(print_command(x, indent + "  ") for x in c.children)
         return f"{indent}grupo {quote(c.text)} {{\n{body}\n{indent}}}"

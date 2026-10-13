@@ -1,0 +1,47 @@
+// Catálogo dos 11 tipos de slide da SlideDSL Alto (conteúdo ilustrativo).
+deck "Catálogo de layouts" {
+  tema claro
+  capa {
+    titulo "Catálogo de layouts da SlideDSL Alto"
+    subtitulo "Onze tipos de slide; o compilador calcula geometria, tipografia e cores"
+    autor "Conteúdo ilustrativo"
+  }
+  secao {
+    titulo "Estruturas de texto"
+    subtitulo "Tópicos, etapas e conclusões"
+  }
+  topicos {
+    titulo "Até três tópicos alternam entre lista e cards"
+    item "Mensagem" "O título afirma a ideia que o slide precisa provar ao público."
+    item "Evidência" "Cada card traz um fato, número ou exemplo verificável com fonte."
+    item "Ressalva" "Quando a conclusão depende de contexto, a condição aparece aqui."
+  }
+  topicos {
+    titulo "Quatro ou cinco tópicos viram uma lista numerada"
+    item "Rótulo curto" "Duas a cinco palavras que nomeiam a ideia sem repetir o título."
+    item "Detalhe concreto" "Uma frase com dado, exemplo ou condição em vez de adjetivos vagos."
+    item "Fonte citada" "IDs de fatos do dossiê aparecem no rodapé e nas notas do apresentador."
+    item "Tamanho uniforme" "Todos os rótulos usam a mesma fonte, escolhida para caber em todas as linhas."
+  }
+  grafico {
+    titulo "Gráficos de barras são formas editáveis"
+    unidade "valores ilustrativos, em unidades"
+    barra "Norte" 18
+    barra "Nordeste" 54
+    barra "Centro-Oeste" 16
+    barra "Sudeste" 84
+    barra "Sul" 30
+    fontes "Exemplo ilustrativo"
+  }
+  citacao {
+    texto "A simplicidade é o último grau de sofisticação."
+    autor "Frase popularmente atribuída a Leonardo da Vinci"
+  }
+  imagem {
+    titulo "Imagem com legenda e itens explicativos"
+    arquivo "assets/imagem_demo.png"
+    legenda "Asset demonstrativo local do projeto"
+    item "Imagem contida" "A imagem é redimensionada sem corte dentro da moldura."
+    item "Busca opcional" "Com buscar, a imagem vem de APIs com licença registrada."
+  }
+}

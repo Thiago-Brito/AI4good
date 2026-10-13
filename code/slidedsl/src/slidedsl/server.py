@@ -132,6 +132,77 @@ def generation_progress(id: str):
         raise HTTPException(404, detail="Geração não encontrada.") from exc
 
 
+class CriarPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    pedido: str = Field(min_length=3, max_length=4000)
+    model: str = Field(min_length=1, max_length=200)
+    provider: Literal["ollama", "llamacpp"] = "ollama"
+    slides: int = Field(default=6, ge=3, le=12)
+    candidatos: int = Field(default=2, ge=1, le=4)
+    reparos: int = Field(default=2, ge=0, le=3)
+    buscador: Literal["searxng", "nenhum"] = "searxng"
+    idiomas: list[Literal["pt", "en", "es"]] = Field(default_factory=lambda: ["pt", "en"])
+    tema: Literal["claro", "escuro"] = "claro"
+    imagens: bool = False
+    contato: str | None = Field(default=None, max_length=120)
+    permitir_sem_fatos: bool = False
+    modo: Literal["json", "gramatica", "direto"] | None = None
+
+
+@app.post("/api/criar", status_code=202)
+def start_creation(payload: CriarPayload):
+    """Fluxo SlideDSL Alto: pesquisa → roteiro → slides → PPTX (docs/SLIDEDSL_ALTO.md)."""
+    from .alto_jobs import submit
+
+    if not payload.pedido.strip():
+        raise HTTPException(422, detail="Escreva o pedido da apresentação.")
+    if payload.modo == "gramatica" and payload.provider != "llamacpp":
+        raise HTTPException(422, detail="O modo gramática (GBNF) exige o provedor llama.cpp.")
+    try:
+        return submit(payload.model_dump())
+    except RuntimeError as exc:
+        raise HTTPException(409, detail=str(exc)) from exc
+
+
+@app.get("/api/searxng/status")
+def searxng_health():
+    """Estado do SearXNG local, mostrado no painel antes de criar."""
+    from .research import searxng_status
+
+    return searxng_status()
+
+
+@app.get("/api/criar/{id}")
+def creation_progress(id: str):
+    import re
+    from .alto_jobs import read_job
+
+    if not re.fullmatch(r"[a-f0-9]{32}", id):
+        raise HTTPException(404, detail="Criação não encontrada.")
+    try:
+        return read_job(id)
+    except KeyError as exc:
+        raise HTTPException(404, detail="Criação não encontrada.") from exc
+
+
+@app.post("/api/alto/parse")
+def parse_alto_document(payload: SourcePayload):
+    """Abre um .slda no editor: compila para SlideDSL 1.1 e devolve a cena."""
+    from .alto_compile import build_alto
+
+    result = build_alto(payload.source)
+    if result.validation is None or result.validation.ir is None:
+        raise HTTPException(422, detail=[d.model_dump() for d in result.all_diagnostics])
+    return {
+        "source": result.dsl,
+        "ir": result.validation.ir,
+        "report": {
+            **result.validation.report(),
+            "diagnostics": [d.model_dump() for d in result.all_diagnostics],
+        },
+    }
+
+
 class RequirementsPayload(IRPayload):
     requirements: list[dict]
     source: str | None = None
