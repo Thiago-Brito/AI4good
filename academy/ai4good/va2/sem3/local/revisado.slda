@@ -1,0 +1,62 @@
+deck "Seminário 3 do SlideDSL" {
+  tema claro
+  capa {
+    titulo "Diagramas que a IA sozinha não desenha bem"
+    subtitulo "Como vai ser o teste do SlideDSL em 25/11, com a regra escrita antes do resultado"
+    notas "O SlideDSL separa a escrita do conteúdo do desenho: a IA escreve o diagrama na DSL e o compilador desenha o SVG. A IA sozinha escreve o SVG inteiro. Hoje não tem resultado: tem a regra, decidida antes."
+  }
+  comparacao {
+    titulo "Competidor: a mesma IA fazendo tudo sozinha"
+    lado "IA faz tudo" {
+      item "Decks válidos" "11 de 12"
+      item "Design" "1 erro e 89 avisos"
+      item "Custo e tempo" "US$ 0,0080 e 18,8 s por deck"
+    }
+    lado "SlideDSL Alto" {
+      item "Decks válidos" "12 de 12"
+      item "Design" "0 erros e 5 avisos"
+      item "Custo e tempo" "US$ 0,0062 e 15,0 s por deck"
+    }
+    fontes "comparacao_alto_sld, 01/11/2026"
+    notas "Sem número publicado comparável, medi o jeito de hoje: pedir os slides direto a uma IA. gpt-4.1-mini, temperatura 0,2, seeds 42 a 44, 4 temas de 5 slides, 12 execuções por condição. Esse teste mediu validade e avisos, não diagramas: o número abre a comparação, mas não é o meu alvo."
+  }
+  topicos {
+    titulo "O que quero mostrar"
+    item "Passou" "SlideDSL acerta pelo menos 90% e fica 20 pontos acima da IA sozinha, nas 3 seeds"
+    item "Caiu" "Diferença abaixo de 5 pontos, ou a IA sozinha ganha"
+    item "Inconclusivo" "Resultado entre os dois, ou mais de 10% das chamadas falhando por rede"
+    fontes "sem3_slidedsl.md"
+    notas "Quero mostrar que o SlideDSL aumenta a proporção de diagramas corretos nos slides de estudantes, comparado à mesma IA desenhando o SVG sozinha. Um diagrama é correto quando bate com o gabarito em tudo: elementos, ordem, texto dentro da figura, contraste e proporção das barras. A métrica é a taxa de diagramas corretos, não a estética."
+  }
+  comparacao {
+    titulo "Comparações IA sozinha vs SlideDSL"
+    lado "IA sozinha" {
+      item "Quem escreve" "A IA recebe o pedido e escreve o código SVG do diagrama"
+      item "Quem desenha" "A própria IA, com as coordenadas"
+    }
+    lado "SlideDSL" {
+      item "Quem escreve" "A IA escreve só o bloco etapas, ciclo ou grafico na DSL"
+      item "Quem desenha" "O compilador, com posições e alturas calculadas"
+    }
+    fontes "experiments/svg/pedidos.json"
+    notas "12 pedidos congelados, 3 seeds: 36 diagramas por condição. Fica igual: modelo, temperatura, seeds, pedido, 1 reparo e tamanho da figura. O mesmo conferidor e o mesmo gabarito, escrito antes, valem para as duas. 3 colegas voluntários conferem 12 diagramas às cegas."
+  }
+  topicos {
+    titulo "Teste 18/11 e o que quebrou"
+    item "Modelo local" "IA sozinha 0 de 3; SlideDSL 2 de 3, com erro de conteúdo: Precipita-ção"
+    item "API" "IA sozinha 0 de 3; SlideDSL 3 de 3, a US$ 0,0007 contra US$ 0,0051"
+    item "O que mudou" "O conferidor passou a checar contraste e setas; ciclo virou bloco da gramática"
+    fontes "teste_svg/piloto3_qwen_20261118", "teste_svg/piloto_api_20261118"
+    notas "Rodei o teste do começo ao fim com 3 pedidos e 1 seed, com o modelo local e com a API. Erros da IA sozinha: caixa cortada, texto atravessando círculos, barras de cabeça para baixo. O que quebrou: o conferidor aprovava um ciclo ilegível, e o modelo escreveu ciclo, que a gramática não tinha. É ensaio: 3 diagramas não decidem nada."
+  }
+  linha_do_tempo {
+    titulo "Caminho até o pitch"
+    marco "18/11" "Regra no commit" "Passou, caiu e inconclusivo"
+    marco "24/11" "Código congelado" "Commit antes de rodar"
+    marco "25/11" "Teste" "72 diagramas, teto de US$ 1,00"
+    marco "27/11" "Conferência" "Ciclos à mão e 3 colegas às cegas"
+    marco "02/12" "Pitch" "Tabela final para a banca"
+    fontes "sem3_slidedsl.md"
+    notas "Teste principal sem pessoas, com dados fictícios. Checagem com colegas como exercício de ensino: voluntária, termo curto, pode desistir, ninguém identificado. Plano B: se a API falhar em 25/11, o teste roda com o Qwen3 4B local nas duas condições."
+  }
+}

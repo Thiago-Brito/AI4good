@@ -432,3 +432,7 @@ contraste); o modelo escreveu `ciclo`, ausente da gramática (virou bloco). Ensa
 Deck do seminário: gerado com o Qwen local em `outputs/sem3/gerado_v1/` (faltou o competidor e
 inventou "estudantes reais" nas notas) e versão final editada à mão em `outputs/sem3/final/`
 (sem3.slda, sem3.pptx, prévia). Roteiro em `academy/ai4good/va2/sem3_slidedsl.md`.
+Depois (18/11): chave nova da API; teste pequeno com gpt-4.1-mini: A 0/3 (US$ 0,0051), B 3/3
+(US$ 0,0007), em `outputs/sem3/teste_svg/piloto_api_20261118/`. Deck v2 gerado nos dois modos a partir
+do roteiro atualizado (local 200 s; API 172 s, US$ 0,038) e revisado; ambos omitiram o competidor.
+Registro completo, decks e diffs em `academy/ai4good/va2/sem3/REGISTRO.md`.

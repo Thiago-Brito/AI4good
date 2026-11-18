@@ -1,0 +1,53 @@
+deck "Seminário 3 do SlideDSL: Diagramas SVG pelo compilador" {
+  tema claro
+  capa {
+    titulo "Diagramas SVG desenhados pelo compilador"
+    subtitulo "Mostrar que o SlideDSL gera diagramas claros com regras para avaliação"
+    notas "Este slide apresenta a ideia central do SlideDSL para diagramas SVG, que é a separação entre conteúdo e desenho. O foco é explicar que a IA escreve o conteúdo na DSL e o compilador desenha o SVG, calculando posições e tamanhos. Ressalte que isso evita problemas comuns em diagramas gerados diretamente pela IA."
+  }
+  topicos {
+    titulo "Objetivo e regras do teste SlideDSL"
+    item "Aumentar diagramas corretos" "O SlideDSL aumenta a proporção de diagramas corretos em slides de estudantes comparado à IA sozinha."
+    item "Critérios de correção" "Um diagrama é correto se bate com o gabarito em elementos, ordem, contraste e proporção de barras."
+    item "Critério de aprovação" "Passa se o SlideDSL acerta pelo menos 90% e fica 20 pontos acima da IA sozinha nas 3 seeds."
+    fontes F12, F13, F14, F15
+    notas "Explique que o teste tem regras claras para definir se o SlideDSL é melhor que a IA sozinha. O gabarito é rigoroso e a avaliação é automática e manual para ordem. A aprovação exige desempenho muito superior da solução."
+  }
+  comparacao {
+    titulo "Comparação entre IA sozinha e SlideDSL"
+    lado "IA sozinha" {
+      item "Desenho direto do SVG" "A IA sozinha escreve o código SVG do diagrama, incluindo posições e formas."
+      item "Problemas visuais comuns" "A IA gera formas decorativas, texto fora da caixa e barras fora de proporção."
+    }
+    lado "SlideDSL" {
+      item "Conteúdo na DSL" "A IA escreve só o conteúdo do diagrama na DSL, e o compilador desenha o SVG."
+      item "Diagramas mais corretos" "O SlideDSL aumenta a proporção de diagramas corretos nos slides de estudantes."
+    }
+    fontes F2, F6, F11, F12
+    notas "Mostre que a principal diferença é que o SlideDSL delega o desenho ao compilador, evitando erros comuns da IA sozinha. Isso resulta em diagramas mais corretos e funcionais."
+  }
+  numeros {
+    titulo "Resultados do teste pequeno"
+    valor "0 de 3" "Pedidos corretos pela IA sozinha com modelo local no teste pequeno"
+    valor "2 de 3" "Pedidos corretos pelo SlideDSL com modelo local no teste pequeno"
+    valor "3 de 3" "Pedidos corretos pelo SlideDSL com API no teste pequeno, contra 0 da IA sozinha"
+    fontes F26, F27, F28, F29
+    notas "Apresente os resultados do teste pequeno mostrando que o SlideDSL teve desempenho superior, especialmente com a API. Destaque o custo menor do SlideDSL e o erro de conteúdo que o compilador não corrige."
+  }
+  topicos {
+    titulo "O que quebrou no teste pequeno com a IA sozinha com a API"
+    item "Caixa do fluxo cortada" "A última caixa do fluxo saiu cortada no diagrama gerado pela IA sozinha com a API"
+    item "Texto atravessando círculos" "O texto do ciclo atravessa os círculos no diagrama gerado pela IA sozinha com a API"
+    item "Barras invertidas" "As barras saíram de cabeça para baixo no diagrama gerado pela IA sozinha com a API"
+    fontes F30
+    notas "Esses erros mostram as limitações da IA sozinha para desenhar SVGs complexos, evidenciando a necessidade do SlideDSL para garantir diagramas corretos e visualmente adequados."
+  }
+  conclusao {
+    titulo "Caminho até o pitch"
+    item "Provar valor em 25/11" "O SlideDSL vai provar no dia 25/11 que o problema do estudante não é só ter texto nos slides, mas também figuras que explicam ciclos, fluxos e gráficos."
+    item "Compilador pronto" "O compilador já desenha SVGs dos blocos etapas, ciclo e gráfico com testes automáticos."
+    item "Script de teste finalizado" "O script do teste com condições, custo e seeds está pronto para avaliação final."
+    fontes F1, F31, F32
+    notas "Conclua mostrando que o próximo passo é a prova de valor em 25/11, com o compilador e o script de teste prontos para garantir resultados confiáveis no pitch."
+  }
+}

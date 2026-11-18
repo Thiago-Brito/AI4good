@@ -134,6 +134,7 @@
 - [x] SVG pelo compilador para etapas, ciclo e grafico (`alto-svg`), com testes.
 - [x] Pedidos congelados com gabarito, script A × B e conferidor automático.
 - [x] Teste pequeno rodou uma vez (Qwen3 4B local; API com 401).
-- [ ] Renovar a chave da API e repetir o teste pequeno com gpt-4.1-mini (até 23/11).
+- [x] Chave nova; teste pequeno com gpt-4.1-mini: A 0/3, B 3/3 (18/11).
+- [x] Decks do seminário gerados com local e API e revisados (`academy/ai4good/va2/sem3/`).
 - [ ] Congelar o código num commit (24/11) e rodar 12 pedidos × 3 seeds × 2 condições (25/11).
 - [ ] Conferir ciclos à mão e checagem às cegas com 3 colegas (27/11); tabela no pitch (02/12).

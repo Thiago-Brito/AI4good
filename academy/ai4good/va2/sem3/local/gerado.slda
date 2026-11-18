@@ -1,0 +1,53 @@
+deck "Seminário 3 do SlideDSL" {
+  tema claro
+  capa {
+    titulo "Comparações IA sozinha vs SlideDSL"
+    subtitulo "Comparações visíveis entre IA sozinha e SlideDSL"
+    notas "O SlideDSL separa a escrita do conteúdo da geração visual. A IA sozinha escreve tudo diretamente no SVG, sem validação. O teste 18/11 mostrou falhas de layout e conteúdo. O caminho até o pitch inclui validação automática e testes com backup local."
+  }
+  topicos {
+    titulo "O que quero mostrar"
+    item "Proporção de diagramas corretos" "O que quero mostrar: aumentar a proporção de diagramas corretos nos slides de estudantes."
+    item "Definição de diagrama correto" "Um diagrama é correto quando bate com o gabarito em todos os elementos: ordem, texto, posição, contraste e proporções."
+    fontes F8, F9
+    notas "A métrica central é a taxa de diagramas corretos. O gabarito é fixo e usado para validar cada elemento do diagrama. O foco é a precisão técnica, não a estética."
+  }
+  comparacao {
+    titulo "Regras de avaliação"
+    lado "Passou" {
+      item "Passou" "Passou: 90% de acerto e 20+ pontos acima da IA sozinha em todas as seeds."
+    }
+    lado "Caiu" {
+      item "Caiu" "Caiu: diferença <5 pontos ou IA sozinha ganha o desempenho."
+    }
+    fontes F10, F11, F12
+    notas "O teste define sucesso com 90% de acerto e margem mínima de 20 pontos. Resultados entre os dois ou com falhas de rede são inconclusivos. A avaliação é objetiva e baseada em dados."
+  }
+  comparacao {
+    titulo "Comparações IA sozinha vs SlideDSL"
+    lado "IA sozinha" {
+      item "IA sozinha" "A IA sozinha recebe o pedido e escreve o código SVG do diagrama."
+    }
+    lado "SlideDSL" {
+      item "SlideDSL" "O SlideDSL escreve a DSL e o compilador gera o SVG com validação."
+    }
+    fontes F2, F16, F17, F18
+    notas "A separação de tarefas é crítica: a IA escreve conteúdo, o compilador desenha e valida. Isso evita erros de layout e conteúdo que a IA sozinha comete."
+  }
+  topicos {
+    titulo "Teste 18/11 e o que quebrou"
+    item "Modelo local" "Com modelo local: IA sozinha 0 de 3 corretos; SlideDSL 2 de 3, com erro de conteúdo 'Precipita-ção'."
+    item "API" "Com API: IA sozinha 0 de 3; SlideDSL 3 de 3, custando US$ 0,0007 contra US$ 0,0051 da IA sozinha."
+    item "Erros de layout" "Erros da IA sozinha: caixa cortada, texto atravessa círculos, barras saem de cabeça para baixo."
+    fontes F24, F25, F26
+    notas "O teste de 18/11 mostrou que a IA sozinha falhou em todos os casos. O SlideDSL teve um erro de conteúdo no modelo local, mas conseguiu 3 de 3 com a API. Os erros de layout da IA sozinha foram visíveis e não corrigidos."
+  }
+  conclusao {
+    titulo "Caminho até o pitch"
+    item "Backup local" "Se a API falhar em 25/11, o teste roda com o Qwen3 4B local, garantindo continuidade."
+    item "Validação automática" "A validação automática do gabarito é aplicada em todos os diagramas, antes da entrega final."
+    item "Evolução contínua" "A evolução contínua inclui ajustes de gramática e testes com novos pedidos congelados."
+    fontes F31, F32, F13
+    notas "O caminho até o pitch é seguro: com backup, validação e iteração. O teste é replicável e escalável para mais estudantes e diagramas."
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "provedor": "openai",
+  "modelo": "gpt-4.1-mini",
+  "temperatura": 0.2,
+  "seeds": [
+    42
+  ],
+  "resumo": {
+    "A": {
+      "diagramas": 3,
+      "corretos": 0,
+      "custo_usd": 0.0051228,
+      "chamadas": 3,
+      "uso_desconhecido": 0
+    },
+    "B": {
+      "diagramas": 3,
+      "corretos": 3,
+      "custo_usd": 0.0006688,
+      "chamadas": 3,
+      "uso_desconhecido": 0
+    }
+  },
+  "linhas": [
+    {
+      "condicao": "A",
+      "pedido": "fotossintese_etapas",
+      "tipo": "etapas",
+      "seed": 42,
+      "gerou_svg": true,
+      "reparos": 0,
+      "erro": null,
+      "arquivo": "fotossintese_etapas_s42.svg",
+      "correto": false,
+      "problemas": [
+        "texto cruza a borda de uma caixa: \"Glicose produzida\"",
+        "texto cruza a borda de uma caixa: \"a planta guarda energia\""
+      ]
+    },
+    {
+      "condicao": "B",
+      "pedido": "fotossintese_etapas",
+      "tipo": "etapas",
+      "seed": 42,
+      "gerou_svg": true,
+      "reparos": 0,
+      "erro": null,
+      "arquivo": "fotossintese_etapas_s42.svg",
+      "correto": true,
+      "problemas": []
+    },
+    {
+      "condicao": "A",
+      "pedido": "fotossintese_barras",
+      "tipo": "barras",
+      "seed": 42,
+      "gerou_svg": true,
+      "reparos": 0,
+      "erro": null,
+      "arquivo": "fotossintese_barras_s42.svg",
+      "correto": false,
+      "problemas": [
+        "texto fora da figura: \"24\"",
+        "texto fora da figura: \"15\"",
+        "texto fora da figura: \"6\"",
+        "texto fora da figura: \"1\"",
+        "texto cruza a borda de uma caixa: \"Altura de plantas após 4 seman\"",
+        "texto cruza a borda de uma caixa: \"24\"",
+        "texto cruza a borda de uma caixa: \"15\"",
+        "texto cruza a borda de uma caixa: \"6\"",
+        "esperava 4 barras, achei 1"
+      ]
+    },
+    {
+      "condicao": "B",
+      "pedido": "fotossintese_barras",
+      "tipo": "barras",
+      "seed": 42,
+      "gerou_svg": true,
+      "reparos": 0,
+      "erro": null,
+      "arquivo": "fotossintese_barras_s42.svg",
+      "correto": true,
+      "problemas": []
+    },
+    {
+      "condicao": "A",
+      "pedido": "agua_ciclo",
+      "tipo": "ciclo",
+      "seed": 42,
+      "gerou_svg": true,
+      "reparos": 0,
+      "erro": null,
+      "arquivo": "agua_ciclo_s42.svg",
+      "correto": false,
+      "problemas": [
+        "texto cruza a borda de uma caixa: \"O sol aquece a água dos oceano\"",
+        "texto cruza a borda de uma caixa: \"Condensação\"",
+        "texto cruza a borda de uma caixa: \"O vapor esfria e forma nuvens\"",
+        "texto cruza a borda de uma caixa: \"A água cai como chuva\"",
+        "texto cruza a borda de uma caixa: \"Escoamento\"",
+        "texto cruza a borda de uma caixa: \"A água volta aos rios e mares\"",
+        "linha ou seta passa sobre o texto: \"O sol aquece a água dos oceano\""
+      ]
+    },
+    {
+      "condicao": "B",
+      "pedido": "agua_ciclo",
+      "tipo": "ciclo",
+      "seed": 42,
+      "gerou_svg": true,
+      "reparos": 0,
+      "erro": null,
+      "arquivo": "agua_ciclo_s42.svg",
+      "correto": true,
+      "problemas": []
+    }
+  ]
+}

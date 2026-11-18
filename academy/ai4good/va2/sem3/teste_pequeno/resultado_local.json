@@ -1,0 +1,121 @@
+{
+  "provedor": "ollama",
+  "modelo": "qwen3:4b-instruct",
+  "temperatura": 0.2,
+  "seeds": [
+    42
+  ],
+  "resumo": {
+    "A": {
+      "diagramas": 3,
+      "corretos": 0,
+      "custo_usd": 0,
+      "chamadas": 4,
+      "uso_desconhecido": 0
+    },
+    "B": {
+      "diagramas": 3,
+      "corretos": 2,
+      "custo_usd": 0,
+      "chamadas": 3,
+      "uso_desconhecido": 0
+    }
+  },
+  "linhas": [
+    {
+      "condicao": "A",
+      "pedido": "fotossintese_etapas",
+      "tipo": "etapas",
+      "seed": 42,
+      "gerou_svg": false,
+      "reparos": 1,
+      "erro": "SVG inválido: mismatched tag: line 17, column 87",
+      "arquivo": "fotossintese_etapas_s42.svg",
+      "correto": false,
+      "problemas": [
+        "sem SVG"
+      ]
+    },
+    {
+      "condicao": "B",
+      "pedido": "fotossintese_etapas",
+      "tipo": "etapas",
+      "seed": 42,
+      "gerou_svg": true,
+      "reparos": 0,
+      "erro": null,
+      "arquivo": "fotossintese_etapas_s42.svg",
+      "correto": true,
+      "problemas": []
+    },
+    {
+      "condicao": "A",
+      "pedido": "fotossintese_barras",
+      "tipo": "barras",
+      "seed": 42,
+      "gerou_svg": true,
+      "reparos": 0,
+      "erro": null,
+      "arquivo": "fotossintese_barras_s42.svg",
+      "correto": false,
+      "problemas": [
+        "texto cruza a borda de uma caixa: \"24\"",
+        "texto cruza a borda de uma caixa: \"15\"",
+        "texto cruza a borda de uma caixa: \"6\"",
+        "texto cruza a borda de uma caixa: \"1\"",
+        "barras fora de proporção (erro 28.3%)"
+      ]
+    },
+    {
+      "condicao": "B",
+      "pedido": "fotossintese_barras",
+      "tipo": "barras",
+      "seed": 42,
+      "gerou_svg": true,
+      "reparos": 0,
+      "erro": null,
+      "arquivo": "fotossintese_barras_s42.svg",
+      "correto": true,
+      "problemas": []
+    },
+    {
+      "condicao": "A",
+      "pedido": "agua_ciclo",
+      "tipo": "ciclo",
+      "seed": 42,
+      "gerou_svg": true,
+      "reparos": 0,
+      "erro": null,
+      "arquivo": "agua_ciclo_s42.svg",
+      "correto": false,
+      "problemas": [
+        "texto cruza a borda de uma caixa: \"Evaporação\"",
+        "texto cruza a borda de uma caixa: \"Condensação\"",
+        "texto cruza a borda de uma caixa: \"Precipitação\"",
+        "texto cruza a borda de uma caixa: \"Escoamento\"",
+        "linha ou seta passa sobre o texto: \"Evaporação\"",
+        "linha ou seta passa sobre o texto: \"Condensação\"",
+        "linha ou seta passa sobre o texto: \"Precipitação\"",
+        "linha ou seta passa sobre o texto: \"Escoamento\"",
+        "contraste baixo (1.0:1): \"Evaporação\"",
+        "contraste baixo (1.0:1): \"Condensação\"",
+        "contraste baixo (1.0:1): \"Precipitação\"",
+        "contraste baixo (1.0:1): \"Escoamento\""
+      ]
+    },
+    {
+      "condicao": "B",
+      "pedido": "agua_ciclo",
+      "tipo": "ciclo",
+      "seed": 42,
+      "gerou_svg": true,
+      "reparos": 0,
+      "erro": null,
+      "arquivo": "agua_ciclo_s42.svg",
+      "correto": false,
+      "problemas": [
+        "falta elemento: \"Precipitação\""
+      ]
+    }
+  ]
+}

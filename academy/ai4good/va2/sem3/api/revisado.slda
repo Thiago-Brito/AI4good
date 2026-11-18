@@ -1,0 +1,63 @@
+deck "Seminário 3 do SlideDSL: Diagramas SVG pelo compilador" {
+  tema claro
+  capa {
+    titulo "Diagramas SVG desenhados pelo compilador"
+    subtitulo "Como vai ser o teste de 25/11, com a regra escrita antes do resultado"
+    notas "O estudante precisa de figuras que explicam: um ciclo, um fluxo, um gráfico com os valores certos. A ideia, pedida pelo professor: a IA escreve só o conteúdo do diagrama na DSL e o compilador desenha o SVG, calculando posições e tamanhos. Hoje não tem resultado: tem a regra, decidida antes."
+  }
+  comparacao {
+    titulo "Competidor: a mesma IA fazendo tudo sozinha"
+    lado "IA faz tudo" {
+      item "Decks válidos" "11 de 12"
+      item "Design" "1 erro e 89 avisos"
+      item "Custo e tempo" "US$ 0,0080 e 18,8 s por deck"
+    }
+    lado "SlideDSL Alto" {
+      item "Decks válidos" "12 de 12"
+      item "Design" "0 erros e 5 avisos"
+      item "Custo e tempo" "US$ 0,0062 e 15,0 s por deck"
+    }
+    fontes "comparacao_alto_sld, 01/11/2026"
+    notas "Sem número publicado comparável, medi o jeito de hoje: pedir os slides direto a uma IA. gpt-4.1-mini, temperatura 0,2, seeds 42 a 44, 4 temas de 5 slides, 12 execuções por condição. Esse teste mediu validade e avisos, não diagramas: o número abre a comparação, mas não é o meu alvo."
+  }
+  topicos {
+    titulo "Quero mostrar: mais diagramas corretos que a IA sozinha"
+    item "Passou" "SlideDSL acerta pelo menos 90% e fica 20 pontos acima da IA sozinha, nas 3 seeds"
+    item "Caiu" "A diferença fica abaixo de 5 pontos, ou a IA sozinha ganha"
+    item "Inconclusivo" "Qualquer resultado entre os dois, ou mais de 10% das chamadas falhando por rede"
+    fontes "sem3_slidedsl.md"
+    notas "Quero mostrar que o SlideDSL aumenta a proporção de diagramas corretos nos slides de estudantes que preparam seminário, comparado à mesma IA desenhando o SVG sozinha. Correto é bater com o gabarito em tudo: elementos escritos certo e na ordem, nenhum texto fora da figura, sobreposto ou cruzando borda, nenhuma seta sobre texto, contraste de pelo menos 3:1, barras proporcionais com erro de até 2%. A regra está no commit de 18/11."
+  }
+  comparacao {
+    titulo "Comparação entre IA sozinha e SlideDSL"
+    lado "A · IA sozinha" {
+      item "Desenho direto do SVG" "A IA escreve o código SVG inteiro, com posições e formas"
+      item "Medida" "Conferidor no navegador contra o gabarito"
+    }
+    lado "B · SlideDSL" {
+      item "Conteúdo na DSL" "A IA escreve só o bloco etapas, ciclo ou grafico; o compilador desenha"
+      item "Medida" "O mesmo conferidor e o mesmo gabarito"
+    }
+    fontes "experiments/svg/pedidos.json"
+    notas "Entram 12 pedidos congelados de 6 temas, com 3 seeds: 36 diagramas por condição. Fica igual: modelo, temperatura 0,2, seeds, texto do pedido, 1 reparo e tamanho da figura. O gabarito foi escrito por mim antes de rodar. Para validar o conferidor, 3 colegas voluntários conferem 12 diagramas às cegas pelo mesmo gabarito."
+  }
+  imagem {
+    titulo "Teste pequeno de 18/11: ensaio, não resultado"
+    arquivo "outputs/sem3/revisado_api/piloto_barras_api.png"
+    legenda "Mesmo pedido de barras, gpt-4.1-mini"
+    item "IA sozinha" "0 de 3 com a API e 0 de 3 com o modelo local"
+    item "SlideDSL" "3 de 3 com a API e 2 de 3 com o modelo local"
+    fontes "teste_svg/piloto_api_20261118"
+    notas "Rodei o teste do começo ao fim com 3 pedidos e 1 seed, com a API e com o Qwen3 4B local. Com a API, a IA sozinha cortou a última caixa do fluxo, pôs o texto do ciclo atravessando os círculos e desenhou as barras de cabeça para baixo; o SlideDSL custou US$ 0,0007 contra US$ 0,0051. O que quebrou e mudou: o conferidor aprovava um ciclo ilegível e passou a checar contraste e setas; o modelo escreveu ciclo, que virou bloco da gramática; a primeira chave da API foi recusada. 3 diagramas não decidem nada."
+  }
+  linha_do_tempo {
+    titulo "Caminho até o pitch"
+    marco "18/11" "Regra no commit" "Passou, caiu e inconclusivo"
+    marco "24/11" "Código congelado" "Commit antes de rodar"
+    marco "25/11" "Teste" "72 diagramas, teto de US$ 1,00"
+    marco "27/11" "Conferência" "Ciclos à mão e 3 colegas às cegas"
+    marco "02/12" "Pitch" "Tabela final para a banca"
+    fontes "sem3_slidedsl.md"
+    notas "O teste principal é sem pessoas: pedidos montados por mim, com dados fictícios. A checagem com colegas é exercício de ensino: voluntária, termo curto, pode desistir, ninguém identificado, nenhum menor. Plano B: se a API falhar no dia 25, o teste inteiro roda com o Qwen3 4B local, que já rodou no teste pequeno."
+  }
+}
