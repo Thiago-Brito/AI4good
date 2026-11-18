@@ -1,0 +1,51 @@
+deck "Seminário 3 do SlideDSL: Diagramas SVG e Competição" {
+  tema claro
+  capa {
+    titulo "IA escreve conteúdo e compilador desenha SVG"
+    subtitulo "SlideDSL cria diagramas SVG com IA e compilador integrados"
+    notas "Este slide apresenta a ideia central do SlideDSL: a IA escreve o conteúdo do diagrama em uma linguagem DSL, e o compilador transforma esse conteúdo em um desenho SVG calculando posições, setas e tamanhos. Isso diferencia o SlideDSL de abordagens onde a IA tenta desenhar o SVG diretamente."
+  }
+  topicos {
+    titulo "Presenton é o principal competidor"
+    item "Competidor Presenton" "Presenton é gerador open source de apresentações com licença Apache 2.0."
+    item "Execução local e API" "Presenton roda localmente com Ollama ou via API OpenAI, Gemini e Anthropic."
+    item "Exportação e gráficos" "Exporta PowerPoint editável e escolhe layout de gráfico a partir de tabelas numéricas."
+    fontes F3, F4, F5, F6
+    notas "Este slide apresenta o Presenton como o principal competidor do SlideDSL, destacando sua natureza open source, as opções de execução local e via API, e sua capacidade de exportar apresentações em PowerPoint editável, além de escolher layouts gráficos baseados em tabelas numéricas. Importante notar que fluxos e ciclos não são documentados no Presenton."
+  }
+  topicos {
+    titulo "Regras de avaliação definem diagramas corretos"
+    item "Critérios de correção" "Um diagrama é correto quando bate com o gabarito em tudo, sem sobreposição ou erros de ordem."
+    item "Contraste mínimo" "O contraste do diagrama deve ser pelo menos 3:1 para ser considerado correto."
+    item "Critério para passar" "Passou quando acerta pelo menos 90% e fica pelo menos 20 pontos acima da IA sozinha nas 3 seeds."
+    fontes F13, F14, F16
+    notas "Este slide apresenta as regras de avaliação que definem se um diagrama está correto, incluindo critérios visuais e quantitativos. Destaca a importância do contraste mínimo e o critério para passar, que exige alta precisão e vantagem sobre a IA sozinha."
+  }
+  comparacao {
+    titulo "Comparação entre IA, SlideDSL e Presenton"
+    lado "IA sozinha" {
+      item "Geração direta de SVG" "Modelo recebe pedido e escreve código SVG do diagrama diretamente."
+    }
+    lado "SlideDSL e Presenton" {
+      item "SlideDSL" "Modelo escreve código DSL e compilador desenha o SVG automaticamente."
+      item "Presenton" "API gera slides conferidos manualmente, sem exportar SVG."
+    }
+    fontes F18, F19, F20, F21
+    notas "Este slide explica como a comparação entre as três condições é feita: IA sozinha gera SVG direto, SlideDSL usa código DSL com compilador para SVG, e Presenton gera slides via API conferidos manualmente, mostrando as diferenças no processo e avaliação."
+  }
+  numeros {
+    titulo "Teste pequeno revelou quebras importantes"
+    valor "0 de 3" "IA sozinha não acertou nenhum diagrama com modelo local."
+    valor "2 de 3" "SlideDSL acertou 2 de 3 diagramas com modelo local."
+    valor "3 de 3" "SlideDSL acertou todos os diagramas com API paga."
+    fontes F28, F29, F31
+    notas "O teste pequeno rodou com 3 pedidos e 1 seed, usando modelo local Qwen3 4B e API paga gpt-4.1-mini. A IA sozinha não acertou nenhum diagrama com o modelo local, enquanto o SlideDSL acertou 2 de 3. Com a API paga, o SlideDSL acertou todos os diagramas. O teste revelou quebras importantes, como o erro de conteúdo 'Precipita-ção' que o compilador não corrige, indicando falhas a resolver."
+  }
+  conclusao {
+    titulo "Caminho do teste até o pitch final"
+    item "Congelar código em 24/11" "Realizar commit para congelar o código em 24/11."
+    item "Consolidar 12 pedidos com gabarito" "Manter os 12 pedidos congelados com gabarito."
+    fontes F36, F37
+    notas "Este slide destaca as ações concretas entre o teste realizado e o pitch final, como o congelamento do código em 24/11 e a consolidação dos 12 pedidos com gabarito. Essas etapas são essenciais para garantir a estabilidade e a qualidade da apresentação final."
+  }
+}

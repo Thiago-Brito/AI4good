@@ -1,0 +1,7 @@
+capa | IA escreve conteúdo e compilador desenha SVG | ['diagramas SVG', 'A ideia: a IA escreve o conteúdo e o compilador desenha']
+topicos | Presenton é o principal competidor do SlideDSL | ['competidor Presenton', 'O competidor: Presenton']
+topicos | Regras de avaliação definem diagramas corretos | ['regras de avaliação']
+comparacao | Comparação entre IA sozinha, SlideDSL e Presenton | ['comparação', 'Como é a comparação']
+numeros | Teste pequeno de 18/11 revelou quebras importantes | ['teste pequeno', 'quebras', 'O teste pequeno de 18/11 e o que quebrou']
+conclusao | Caminho do teste até o pitch final em 02/12 | ['caminho até pitch', 'O caminho do dia 18/11 ao pitch de 02/12']
+0.0443752

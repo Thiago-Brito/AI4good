@@ -1,6 +1,6 @@
 # Seminário 3 do SlideDSL: como vai ser o teste dos diagramas SVG
 
-## O que o SlideDSL vai provar no dia 25/11
+## A ideia: a IA escreve o conteúdo e o compilador desenha
 O problema do estudante não é só ter texto nos slides, é ter figuras que explicam: um ciclo, um fluxo de etapas, um gráfico de barras com os valores certos. Pedir isso a uma IA sozinha dá formas decorativas, texto saindo da caixa e barras fora de proporção. A ideia nova do SlideDSL, pedida pelo professor: a IA só escreve o conteúdo do diagrama na DSL, por exemplo ciclo { item "Evaporação" item "Condensação" item "Chuva" }, e o compilador desenha o SVG, calculando posições, setas, tamanhos de texto e altura das barras. Isso já funciona para três diagramas: fluxo de etapas, ciclo e gráfico de barras. O teste compara isso com a mesma IA desenhando o SVG sozinha. Hoje ainda não há resultado: há a regra, escrita antes.
 
 ## O competidor: Presenton

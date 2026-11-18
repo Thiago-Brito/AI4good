@@ -16,6 +16,7 @@ Os números do competidor e do teste pequeno vêm dos arquivos citados; nada foi
 | 6 | Deck v1 com a API: sem competidor, conclusão "confirmar que o SlideDSL melhora" (só pode dar sim) | `code/slidedsl/outputs/sem3/gerado_api_v1/` (fora do git) |
 | 7 | Roteiro atualizado com o teste pela API; v2 gerado nos dois modos a partir dele; revisão de cada um | `api/`, `local/` |
 | 8 | Competidor trocado para o Presenton (pedido do estudante, a partir da folha cmp). O Presenton não publica métrica; o número do slide continua sendo a medição própria, e o Presenton entra no dia 25 como condição C. Tentativa de rodar o Presenton em Docker com a chave da API: bloqueada pela permissão do ambiente (a chave iria para software de terceiros); nada rodou. Celular entrou na linha do tempo como passo depois do pitch | `FONTES.md`, `api/`, `local/` |
+| 9 | Deck gerado pela interface e enviado ao Google Slides saiu fora do tema (sem competidor, regras erradas, "provar mais correção"). Causas: o título "O que o SlideDSL vai provar no dia 25/11" virou fato F1; a extração de tópicos do pedido perdeu o competidor. Correção: título do md trocado; no SlideDSL, título de seção não vira fato e as seções `##` do documento viram tópicos obrigatórios do roteiro, na ordem. v3 pela API (US$ 0,044, 193 s) seguiu as 6 seções, com o Presenton no slide 2; ainda sem número do competidor, sem caiu/inconclusivo e com 2 datas | `api_v3/` |
 
 ## Geração v2: custo e o que veio errado
 
