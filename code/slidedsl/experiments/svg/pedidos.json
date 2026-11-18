@@ -1,0 +1,65 @@
+{
+  "_sobre": "Pedidos congelados do teste SVG (sem3). Cada pedido traz todo o conteúdo; o teste mede só se o diagrama sai correto. Valores das barras são dados fictícios escritos no pedido, não fatos. O gabarito é o que conta como correto e foi escrito antes de rodar.",
+  "pedidos": [
+    {
+      "id": "fotossintese_etapas", "tipo": "etapas",
+      "pedido": "Faça um diagrama de fluxo, da esquerda para a direita, com as etapas da fotossíntese, nesta ordem: 1) Luz absorvida (a clorofila capta a luz do sol); 2) Água quebrada (a água se divide e libera oxigênio); 3) Gás carbônico fixado (o CO2 do ar entra na folha); 4) Glicose produzida (a planta guarda energia).",
+      "gabarito": {"elementos": ["Luz absorvida", "Água quebrada", "Gás carbônico fixado", "Glicose produzida"], "ordem": "x"}
+    },
+    {
+      "id": "fotossintese_barras", "tipo": "barras",
+      "pedido": "Faça um gráfico de barras verticais com a altura de plantas (em cm) após 4 semanas, num experimento fictício de turma: Luz plena 24; Meia sombra 15; Sombra 6; Escuro 1. Mostre o valor em cima de cada barra.",
+      "gabarito": {"elementos": ["Luz plena", "Meia sombra", "Sombra", "Escuro"], "barras": [{"rotulo": "Luz plena", "valor": 24}, {"rotulo": "Meia sombra", "valor": 15}, {"rotulo": "Sombra", "valor": 6}, {"rotulo": "Escuro", "valor": 1}]}
+    },
+    {
+      "id": "agua_ciclo", "tipo": "ciclo",
+      "pedido": "Faça um diagrama de ciclo, com setas fechando o ciclo, para o ciclo da água, nesta ordem: Evaporação (o sol aquece a água dos oceanos); Condensação (o vapor esfria e forma nuvens); Precipitação (a água cai como chuva); Escoamento (a água volta aos rios e mares).",
+      "gabarito": {"elementos": ["Evaporação", "Condensação", "Precipitação", "Escoamento"], "ordem": null}
+    },
+    {
+      "id": "agua_barras", "tipo": "barras",
+      "pedido": "Faça um gráfico de barras verticais com a chuva (em mm) de uma cidade fictícia em cinco meses: Janeiro 240; Fevereiro 210; Março 180; Abril 90; Maio 45. Mostre o valor em cima de cada barra.",
+      "gabarito": {"elementos": ["Janeiro", "Fevereiro", "Março", "Abril", "Maio"], "barras": [{"rotulo": "Janeiro", "valor": 240}, {"rotulo": "Fevereiro", "valor": 210}, {"rotulo": "Março", "valor": 180}, {"rotulo": "Abril", "valor": 90}, {"rotulo": "Maio", "valor": 45}]}
+    },
+    {
+      "id": "git_etapas", "tipo": "etapas",
+      "pedido": "Faça um diagrama de fluxo, da esquerda para a direita, com o caminho de uma mudança no Git, nesta ordem: 1) Editar arquivo (mudar o código na pasta); 2) git add (separar a mudança para o commit); 3) git commit (gravar a versão no histórico); 4) git push (enviar ao repositório remoto); 5) Revisão (um colega confere a mudança).",
+      "gabarito": {"elementos": ["Editar arquivo", "git add", "git commit", "git push", "Revisão"], "ordem": "x"}
+    },
+    {
+      "id": "git_barras", "tipo": "barras",
+      "pedido": "Faça um gráfico de barras verticais com o número de commits por pessoa num projeto fictício de turma: Ana 42; Bruno 35; Carla 28; Diego 9. Mostre o valor em cima de cada barra.",
+      "gabarito": {"elementos": ["Ana", "Bruno", "Carla", "Diego"], "barras": [{"rotulo": "Ana", "valor": 42}, {"rotulo": "Bruno", "valor": 35}, {"rotulo": "Carla", "valor": 28}, {"rotulo": "Diego", "valor": 9}]}
+    },
+    {
+      "id": "solar_etapas", "tipo": "etapas",
+      "pedido": "Faça um diagrama de fluxo, da esquerda para a direita, de como a energia solar chega à tomada de uma casa, nesta ordem: 1) Painel solar (converte luz em corrente contínua); 2) Inversor (transforma em corrente alternada); 3) Quadro de luz (distribui para os circuitos); 4) Tomada (a energia chega aos aparelhos).",
+      "gabarito": {"elementos": ["Painel solar", "Inversor", "Quadro de luz", "Tomada"], "ordem": "x"}
+    },
+    {
+      "id": "solar_barras", "tipo": "barras",
+      "pedido": "Faça um gráfico de barras verticais com a geração de um painel fictício (em kWh) por estação do ano: Verão 520; Outono 380; Inverno 260; Primavera 450. Mostre o valor em cima de cada barra.",
+      "gabarito": {"elementos": ["Verão", "Outono", "Inverno", "Primavera"], "barras": [{"rotulo": "Verão", "valor": 520}, {"rotulo": "Outono", "valor": 380}, {"rotulo": "Inverno", "valor": 260}, {"rotulo": "Primavera", "valor": 450}]}
+    },
+    {
+      "id": "carbono_ciclo", "tipo": "ciclo",
+      "pedido": "Faça um diagrama de ciclo, com setas fechando o ciclo, para o ciclo do carbono, nesta ordem: Fotossíntese (plantas tiram CO2 do ar); Alimentação (animais comem as plantas); Respiração (seres vivos devolvem CO2); Decomposição (restos voltam ao solo e ao ar); Combustão (queima de combustíveis libera CO2).",
+      "gabarito": {"elementos": ["Fotossíntese", "Alimentação", "Respiração", "Decomposição", "Combustão"], "ordem": null}
+    },
+    {
+      "id": "internet_barras", "tipo": "barras",
+      "pedido": "Faça um gráfico de barras verticais com horas por semana de uso de internet, numa pesquisa fictícia de turma: Estudo 12; Redes sociais 18; Vídeos 15; Jogos 7; Notícias 3. Mostre o valor em cima de cada barra.",
+      "gabarito": {"elementos": ["Estudo", "Redes sociais", "Vídeos", "Jogos", "Notícias"], "barras": [{"rotulo": "Estudo", "valor": 12}, {"rotulo": "Redes sociais", "valor": 18}, {"rotulo": "Vídeos", "valor": 15}, {"rotulo": "Jogos", "valor": 7}, {"rotulo": "Notícias", "valor": 3}]}
+    },
+    {
+      "id": "internet_etapas", "tipo": "etapas",
+      "pedido": "Faça um diagrama de fluxo, da esquerda para a direita, do que acontece ao abrir um site, nesta ordem: 1) Digitar o endereço (o usuário escreve a URL); 2) DNS (o nome vira um número IP); 3) Pedido HTTP (o navegador pede a página); 4) Resposta do servidor (o servidor envia o HTML); 5) Página na tela (o navegador desenha o site).",
+      "gabarito": {"elementos": ["Digitar o endereço", "DNS", "Pedido HTTP", "Resposta do servidor", "Página na tela"], "ordem": "x"}
+    },
+    {
+      "id": "celula_ciclo", "tipo": "ciclo",
+      "pedido": "Faça um diagrama de ciclo, com setas fechando o ciclo, para o ciclo celular, nesta ordem: G1 (a célula cresce); Síntese (o DNA é copiado); G2 (a célula se prepara para dividir); Mitose (a célula se divide em duas).",
+      "gabarito": {"elementos": ["G1", "Síntese", "G2", "Mitose"], "ordem": null}
+    }
+  ]
+}

@@ -4,7 +4,7 @@ import json
 import sys
 from pathlib import Path
 
-COMMANDS = {"alto-validate", "alto-compile", "alto-dsl", "previa", "pesquisar", "criar", "gbnf"}
+COMMANDS = {"alto-validate", "alto-compile", "alto-dsl", "previa", "pesquisar", "criar", "gbnf", "alto-svg"}
 
 
 def add_parsers(sub):
@@ -22,6 +22,9 @@ def add_parsers(sub):
     p.add_argument("file")
     p.add_argument("--out", required=True)
     p.add_argument("--dossie")
+    p = sub.add_parser("alto-svg", help="Desenhar em SVG os slides etapas/grafico de um .slda")
+    p.add_argument("file")
+    p.add_argument("--out", required=True, help="Pasta de saída")
     p = sub.add_parser("previa", help="Prévia PNG aproximada de .slda ou .sld (sem Office)")
     p.add_argument("file")
     p.add_argument("--out", required=True, help="Pasta de saída")
@@ -114,6 +117,21 @@ def _print_diagnostics(diagnostics):
 def run(args) -> int:
     from .alto_compile import build_alto, compile_alto
 
+    if args.command == "alto-svg":
+        from .alto import parse_alto
+        from .svg_diagrams import deck_svgs
+
+        deck = parse_alto(Path(args.file).read_text(encoding="utf-8-sig"))
+        out = Path(args.out)
+        out.mkdir(parents=True, exist_ok=True)
+        diagrams = deck_svgs(deck)
+        for number, result in diagrams:
+            target = out / f"slide{number:02d}_{result.kind}.svg"
+            target.write_text(result.svg, "utf-8")
+            for warning in result.warnings:
+                print(f"AVISO {target.name}: {warning}", file=sys.stderr)
+        print(f"{len(diagrams)} diagrama(s) SVG em {out}")
+        return 0
     if args.command in {"alto-validate", "alto-compile", "alto-dsl", "previa"}:
         source = Path(args.file).read_text(encoding="utf-8-sig")
         facts = _facts(getattr(args, "dossie", None))

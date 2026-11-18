@@ -116,6 +116,7 @@ class AltoSlide(AltoModel):
     sides: list[Side] = Field(default_factory=list)
     milestones: list[Milestone] = Field(default_factory=list)
     bars: list[Bar] = Field(default_factory=list)
+    cycle: bool = False  # etapas escritas como "ciclo": a última volta à primeira
     sources: list[str] = Field(default_factory=list)
     notes: str | None = None
     line: int | None = None
@@ -159,6 +160,8 @@ def _items(trees) -> list[Item]:
 def _slide(tree: Tree) -> AltoSlide:
     kind = str(tree.data)
     data = {"kind": kind, "line": tree.meta.line, "column": tree.meta.column}
+    if kind == "ciclo":
+        data.update(kind="etapas", cycle=True)
     simple = {
         "titulo": "title",
         "subtitulo": "subtitle",
@@ -253,7 +256,7 @@ def _num(value: float) -> str:
 
 def print_slide(s: AltoSlide, indent: str = "  ") -> str:
     inner = indent + "  "
-    lines = [f"{indent}{s.kind} {{"]
+    lines = [f"{indent}{'ciclo' if s.cycle else s.kind} {{"]
 
     def add(text):
         lines.append(inner + text)

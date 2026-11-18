@@ -129,3 +129,11 @@
 - [x] Interface de requisitos/correções/revalidação; fluxo real com Ollama e exportação.
 - [x] Documentar arquitetura, evidências e limites em docs/EVOLUCAO_CONFIABILIDADE.md.
 - [ ] Ampliar amostra e avaliação humana; resolver overflow persistente, interpretação de pedidos e reparo depois de edição manual.
+
+## Seminário 3 — teste dos diagramas SVG (18/11/2026)
+- [x] SVG pelo compilador para etapas, ciclo e grafico (`alto-svg`), com testes.
+- [x] Pedidos congelados com gabarito, script A × B e conferidor automático.
+- [x] Teste pequeno rodou uma vez (Qwen3 4B local; API com 401).
+- [ ] Renovar a chave da API e repetir o teste pequeno com gpt-4.1-mini (até 23/11).
+- [ ] Congelar o código num commit (24/11) e rodar 12 pedidos × 3 seeds × 2 condições (25/11).
+- [ ] Conferir ciclos à mão e checagem às cegas com 3 colegas (27/11); tabela no pitch (02/12).

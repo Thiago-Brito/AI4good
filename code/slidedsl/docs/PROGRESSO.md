@@ -413,3 +413,22 @@ no reparo e exportou DSL/PPTX. Evidências e limites em
 docs/EVOLUCAO_VISUAL_CONTEXTUAL.md, outputs/contextual/ e
 outputs/tests/contextual-final.xml. Pendentes avaliação humana, Office real,
 maior amostra, GPU, conectores ancorados e sincronização completa de fontes/IR.
+
+## Seminário 3 — diagramas SVG pelo compilador — 18/11/2026
+Novo `src/slidedsl/svg_diagrams.py`: o compilador desenha em SVG os blocos `etapas` (fluxo),
+`ciclo` (novo bloco da gramática, lido como etapas com `cycle=True`) e `grafico` (barras com
+altura exatamente proporcional). Texto medido com `text_metrics`; aviso quando não cabe.
+Comando `slidedsl alto-svg arquivo.slda --out pasta`. Testes em `tests/test_svg_diagrams.py`;
+suíte completa: 703 passaram (uma falha só por caminho > 260 caracteres no basetemp, repetida
+com caminho curto e aprovada).
+Teste do sem3: `experiments/svg/pedidos.json` (12 pedidos com gabarito), `scripts/teste_svg.py`
+(A: IA escreve o SVG; B: IA escreve o bloco, compilador desenha) e `scripts/conferir_svg.mjs`
+(renderiza no Chrome e confere elementos, ordem, sobreposição, bordas, setas sobre texto,
+contraste ≥ 3:1 e proporção das barras ≤ 2%).
+Teste pequeno (3 pedidos, seed 42): OpenAI respondeu 401 (chave recusada); rodou com
+qwen3:4b-instruct local. A 0/3, B 2/3 (`outputs/sem3/teste_svg/piloto3_qwen_20261118/`).
+O que quebrou: o conferidor aprovava um ciclo ilegível (passou a checar círculos, setas e
+contraste); o modelo escreveu `ciclo`, ausente da gramática (virou bloco). Ensaio, não resultado.
+Deck do seminário: gerado com o Qwen local em `outputs/sem3/gerado_v1/` (faltou o competidor e
+inventou "estudantes reais" nas notas) e versão final editada à mão em `outputs/sem3/final/`
+(sem3.slda, sem3.pptx, prévia). Roteiro em `academy/ai4good/va2/sem3_slidedsl.md`.
