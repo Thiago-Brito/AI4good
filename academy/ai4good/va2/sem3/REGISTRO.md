@@ -15,6 +15,7 @@ Os números do competidor e do teste pequeno vêm dos arquivos citados; nada foi
 | 5 | Chave nova da API. Teste pequeno com gpt-4.1-mini: A 0/3 (US$ 0,0051), B 3/3 (US$ 0,0007) | `teste_pequeno/resultado_api.json` |
 | 6 | Deck v1 com a API: sem competidor, conclusão "confirmar que o SlideDSL melhora" (só pode dar sim) | `code/slidedsl/outputs/sem3/gerado_api_v1/` (fora do git) |
 | 7 | Roteiro atualizado com o teste pela API; v2 gerado nos dois modos a partir dele; revisão de cada um | `api/`, `local/` |
+| 8 | Competidor trocado para o Presenton (pedido do estudante, a partir da folha cmp). O Presenton não publica métrica; o número do slide continua sendo a medição própria, e o Presenton entra no dia 25 como condição C. Tentativa de rodar o Presenton em Docker com a chave da API: bloqueada pela permissão do ambiente (a chave iria para software de terceiros); nada rodou. Celular entrou na linha do tempo como passo depois do pitch | `FONTES.md`, `api/`, `local/` |
 
 ## Geração v2: custo e o que veio errado
 
@@ -53,6 +54,10 @@ Nas duas rodadas (v1 e v2), nenhum dos dois modelos fez o slide do competidor, e
 7. Conclusão: virou linha do tempo; saiu "escalável para mais estudantes".
 
 As duas versões revisadas passaram na validação estrita na primeira tentativa e compilaram para 6 slides editáveis.
+
+## Pendente
+
+- Medir o Presenton (condição C): precisa da autorização do estudante para rodar o container com a chave, ou rodar com Ollama local, sem chave.
 
 ## Leitura honesta
 

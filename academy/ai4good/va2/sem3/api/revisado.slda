@@ -6,19 +6,19 @@ deck "Seminário 3 do SlideDSL: Diagramas SVG pelo compilador" {
     notas "O estudante precisa de figuras que explicam: um ciclo, um fluxo, um gráfico com os valores certos. A ideia, pedida pelo professor: a IA escreve só o conteúdo do diagrama na DSL e o compilador desenha o SVG, calculando posições e tamanhos. Hoje não tem resultado: tem a regra, decidida antes."
   }
   comparacao {
-    titulo "Competidor: a mesma IA fazendo tudo sozinha"
-    lado "IA faz tudo" {
-      item "Decks válidos" "11 de 12"
-      item "Design" "1 erro e 89 avisos"
-      item "Custo e tempo" "US$ 0,0080 e 18,8 s por deck"
+    titulo "Competidor: Presenton, aberto e com modelo local"
+    lado "Presenton" {
+      item "O que faz" "Código aberto, modelo local ou API, PowerPoint editável"
+      item "Visual" "A IA preenche o JSON do layout; gráfico a partir de tabela"
+      item "Número" "Não publica avaliação: meço em 25/11, como condição C"
     }
-    lado "SlideDSL Alto" {
-      item "Decks válidos" "12 de 12"
-      item "Design" "0 erros e 5 avisos"
-      item "Custo e tempo" "US$ 0,0062 e 15,0 s por deck"
+    lado "IA sozinha, medida por mim" {
+      item "Decks válidos" "11 de 12, com 1 erro e 89 avisos"
+      item "Diagramas" "0 de 3 corretos no teste pequeno"
+      item "Custo" "US$ 0,0080 por deck"
     }
-    fontes "comparacao_alto_sld, 01/11/2026"
-    notas "Sem número publicado comparável, medi o jeito de hoje: pedir os slides direto a uma IA. gpt-4.1-mini, temperatura 0,2, seeds 42 a 44, 4 temas de 5 slides, 12 execuções por condição. Esse teste mediu validade e avisos, não diagramas: o número abre a comparação, mas não é o meu alvo."
+    fontes "github.com/presenton/presenton", "comparacao_alto_sld, 01/11/2026"
+    notas "O competidor mais forte é o Presenton: código aberto, licença Apache 2.0, roda com Ollama ou com API e exporta PowerPoint editável. No modo create from JSON ele já separa conteúdo e visual, como o SlideDSL. Gráfico ele escolhe a partir de tabela; fluxo e ciclo não aparecem na documentação. Ele não publica número de qualidade, custo ou tokens, só estrelas do GitHub. Por isso o número é medido por mim: a IA sozinha em 01/11, gpt-4.1-mini, 4 temas, 12 execuções; e o Presenton entra no dia 25 com os mesmos pedidos."
   }
   topicos {
     titulo "Quero mostrar: mais diagramas corretos que a IA sozinha"
@@ -39,7 +39,7 @@ deck "Seminário 3 do SlideDSL: Diagramas SVG pelo compilador" {
       item "Medida" "O mesmo conferidor e o mesmo gabarito"
     }
     fontes "experiments/svg/pedidos.json"
-    notas "Entram 12 pedidos congelados de 6 temas, com 3 seeds: 36 diagramas por condição. Fica igual: modelo, temperatura 0,2, seeds, texto do pedido, 1 reparo e tamanho da figura. O gabarito foi escrito por mim antes de rodar. Para validar o conferidor, 3 colegas voluntários conferem 12 diagramas às cegas pelo mesmo gabarito."
+    notas "Entram 12 pedidos congelados de 6 temas, com 3 seeds: 36 diagramas por condição. O Presenton entra como condição C, conferido à mão pelo mesmo gabarito. Fica igual: modelo, temperatura 0,2, seeds, texto do pedido, 1 reparo e tamanho da figura. O gabarito foi escrito por mim antes de rodar. Para validar o conferidor, 3 colegas voluntários conferem 12 diagramas às cegas pelo mesmo gabarito."
   }
   imagem {
     titulo "Teste pequeno de 18/11: ensaio, não resultado"
@@ -54,10 +54,11 @@ deck "Seminário 3 do SlideDSL: Diagramas SVG pelo compilador" {
     titulo "Caminho até o pitch"
     marco "18/11" "Regra no commit" "Passou, caiu e inconclusivo"
     marco "24/11" "Código congelado" "Commit antes de rodar"
-    marco "25/11" "Teste" "72 diagramas, teto de US$ 1,00"
+    marco "25/11" "Teste" "A, B e Presenton, teto de US$ 1,00"
     marco "27/11" "Conferência" "Ciclos à mão e 3 colegas às cegas"
     marco "02/12" "Pitch" "Tabela final para a banca"
+    marco "depois" "Celular" "Criar e editar pelo telefone, com voz"
     fontes "sem3_slidedsl.md"
-    notas "O teste principal é sem pessoas: pedidos montados por mim, com dados fictícios. A checagem com colegas é exercício de ensino: voluntária, termo curto, pode desistir, ninguém identificado, nenhum menor. Plano B: se a API falhar no dia 25, o teste inteiro roda com o Qwen3 4B local, que já rodou no teste pequeno."
+    notas "O teste principal é sem pessoas: pedidos montados por mim, com dados fictícios. A checagem com colegas é exercício de ensino: voluntária, termo curto, pode desistir, ninguém identificado, nenhum menor. Se o Presenton não rodar até 24/11, fica A contra B. Depois do pitch vem o celular: criar e editar pelo telefone, com voz que vira texto revisável. Plano B: se a API falhar no dia 25, o teste inteiro roda com o Qwen3 4B local, que já rodou no teste pequeno."
   }
 }
