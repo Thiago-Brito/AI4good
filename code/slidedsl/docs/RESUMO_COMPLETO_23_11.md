@@ -23,7 +23,7 @@ Tudo o que é número abaixo foi medido e tem arquivo de origem; interpretaçõe
   página por página e corrigi: resumo mais direto, E1–E11 definidos, figura com um deck gerado pelo
   Qwen3 4B e a tela do app, tabelas no lugar certo, fonte nítida.
 - Cada número tem um comentário `% fonte:` no `.tex` apontando o arquivo de evidência.
-- O que ainda está em vermelho (`[PENDENTE]`): Teste 4 (celular real) e, se não tiver entrado, o Teste 3.
+- O que ainda está em vermelho (`[PENDENTE]`): só o Teste 4 (celular real).
 
 ### Teste 1 — custo do formato (sem IA)
 - 127 decks, 694 slides, tokenizador do Qwen3. Para o mesmo slide final:
@@ -43,7 +43,16 @@ Tudo o que é número abaixo foi medido e tem arquivo de origem; interpretaçõe
 ### Teste 3 — gramática × JSON × direto
 - `llama-server` oficial (b12648, CUDA) + Qwen3-4B-Instruct-2507 Q4_K_M (SHA-256 conferido) na RTX 3060.
 - Microbenchmark: a gramática deixa a geração **~15% mais lenta por token** (78 → 68 tokens/s).
-- Matriz 12 pedidos × 3 modos × 1 semente: ver [RESULTADOS_T3.md](RESULTADOS_T3.md).
+- Matriz 12 pedidos × 3 modos × 1 semente (36 execuções, todas concluídas):
+  | Modo | Válidos | Erros de sintaxe | Tokens de saída | Tempo total |
+  |---|---:|---:|---:|---:|
+  | JSON Schema | 11/12 | 0 | 9.902 | 142 s |
+  | Gramática | 10/12 | 0 | 6.945 | 108 s |
+  | Direto | 5/12 | 6 | 5.183 | 79 s |
+- Leitura: a gramática garante a sintaxe; as falhas que sobram são de conteúdo (texto longo demais). Mesmo
+  com cada token 15% mais lento, a gramática sai ~30% mais barata e ~24% mais rápida que JSON. Com 12 pares as
+  diferenças de validade não chegam a p < 0,05 (gramática × direto: 5–0, p = 0,06) — o artigo diz isso.
+  Detalhes: [RESULTADOS_T3.md](RESULTADOS_T3.md).
 
 ### APK
 - O primeiro teste real no emulador falhou com `<think>` antes do JSON → corrigido (gramática estrita
