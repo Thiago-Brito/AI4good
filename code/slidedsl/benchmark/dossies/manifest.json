@@ -86,5 +86,13 @@
     "sources": 7,
     "model": "qwen3:4b-instruct",
     "usage_dir": "outputs\\dossies_uso\\sono_detalhado"
+  },
+  "sono_obrigatorio": {
+    "created": "2026-11-23T04:34:08+00:00",
+    "provider": "searxng",
+    "facts": 12,
+    "sources": 7,
+    "model": "qwen3:4b-instruct",
+    "usage_dir": "outputs\\dossies_uso\\sono_obrigatorio"
   }
 }

@@ -1,0 +1,315 @@
+{
+  "topic": "Apresente para universitários a relação entre sono e desempenho nos estudos. Inclua obrigatoriamente: a quantidade de sono recomendada para adultos, o papel do sono na consolidação da memória, o efeito da luz de telas à noite e um hábito prático de higiene do sono.",
+  "queries": [
+    "quantidade sono recomendada adultos",
+    "sono e consolidação memória",
+    "efeito sono aprendizado estudantes",
+    "duração sono estudantes resultados"
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "title": "Quantas horas de sono por dia são ideais para cada idade",
+      "url": "https://www.nationalgeographicbrasil.com/ciencia/2023/04/quantas-horas-de-sono-por-dia-sao-ideais-para-cada-idade",
+      "provider": "searxng",
+      "snippet": "24 de abr. de 2023 ... Adultos de 18 a 60 anos devem ter 7 ou mais horas de descanso por noite; indivíduos de 61 a 64 anos, entre 7 e 9 horas; e pessoas com mais de 65 ...",
+      "text_chars": 2396
+    },
+    {
+      "id": "S2",
+      "title": "Quanto tempo de sono você precisa? Esqueça a regra das oito horas",
+      "url": "https://super.abril.com.br/saude/quanto-tempo-de-sono-preciso-por-que-voce-pode-esquecer-a-regra-das-oito-horas/",
+      "provider": "searxng",
+      "snippet": "Estudos com caçadores-coletores e grandes pesquisas de saúde sugerem que a regra das oito horas é simplista: a necessidade de sono varia de pessoa para ...",
+      "text_chars": 155
+    },
+    {
+      "id": "S3",
+      "title": "A Relação Entre O Sono E A Consolidação Da Memória",
+      "url": "https://mancinipsiquiatria.com.br/a-relacao-entre-o-sono-e-a-consolidacao-da-memoria/",
+      "provider": "searxng",
+      "snippet": "Pesquisas mostram que a privação de sono prejudica diretamente a memória e o desempenho cognitivo. Quando dormimos pouco, o cérebro não tem tempo suficiente para consolidar adequadamente as informações, resultando em esquecimentos, dificuldade de concentração e aprendizado ineficiente.",
+      "text_chars": 4632
+    },
+    {
+      "id": "S4",
+      "title": "Qual é a relação entre sono e memória? - Portal Drauzio Varella",
+      "url": "https://drauziovarella.uol.com.br/neurologia/qual-e-a-relacao-entre-sono-e-memoria/",
+      "provider": "searxng",
+      "snippet": "O médico diz que uma das várias hipóteses para explicar a função do sono no nosso organismo é que o sono tem importância fundamental no processo de consolidação da memória.",
+      "text_chars": 7622
+    },
+    {
+      "id": "S5",
+      "title": "Como o sono ajuda a memória e o aprendizado? - Santo André - FSA",
+      "url": "https://www.fsa.br/sono-memoria-aprendizado/",
+      "provider": "searxng",
+      "snippet": "15 de ago. de 2026 ... Sim. O sono participa tanto da capacidade de aprender novas informações quanto da consolidação das memórias formadas depois do estudo. Dormir ...",
+      "text_chars": 10388
+    },
+    {
+      "id": "S6",
+      "title": "Como o sono afeta os estudos? Melhore seu desempenho - Unifaveni",
+      "url": "https://unifaveni.com.br/como-o-sono-afeta-os-estudos-entenda-a-relacao-entre-descanso-e-desempenho-academico/",
+      "provider": "searxng",
+      "snippet": "10 de dez. de 2025 ... A falta de sono tem efeitos negativos no desempenho acadêmico ... A instituição oferece flexibilidade no ensino EAD, permitindo que os alunos ...",
+      "text_chars": 6600
+    },
+    {
+      "id": "S7",
+      "title": "PDF Revista Psicoloia e Sade . 1 de 22 Qualidade e Duração do Sono em uma ...",
+      "url": "https://pepsic.bvsalud.org/pdf/rpsaude/v16/2177-093X-rpsaude-16-e16232160.pdf",
+      "provider": "searxng",
+      "snippet": "a covid-19. Foram incluídas medidas de duração e qualidade do sono, bem como informações relativas a alguns desequilíbrios de sono. O principal achado deste estudo foi uma relação inversa entre duração e qualidade do sono: comparando essas duas variáveis",
+      "text_chars": 254
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "A quantidade de horas de sono é diferente para adultos, crianças e bebês.",
+      "kind": "definicao",
+      "quote": "A quantidade de horas, no entanto, é diferente para adultos, crianças e bebês.",
+      "source_id": "S1",
+      "url": "https://www.nationalgeographicbrasil.com/ciencia/2023/04/quantas-horas-de-sono-por-dia-sao-ideais-para-cada-idade",
+      "source_title": "Quantas horas de sono por dia são ideais para cada idade",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F2",
+      "claim": "O sono é importante para ajudar a manter a mente e o corpo saudáveis.",
+      "kind": "definicao",
+      "quote": "O sono é importante para ajudar a manter a mente e o corpo saudáveis.",
+      "source_id": "S1",
+      "url": "https://www.nationalgeographicbrasil.com/ciencia/2023/04/quantas-horas-de-sono-por-dia-sao-ideais-para-cada-idade",
+      "source_title": "Quantas horas de sono por dia são ideais para cada idade",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F3",
+      "claim": "A Organização Mundial da Saúde (OMS) estabeleceu algumas recomendações a respeito do tempo adequado de sono.",
+      "kind": "definicao",
+      "quote": "Em diretriz publicada em 2019, a Organização Mundial da Saúde (OMS) estabeleceu algumas recomendações a respeito.",
+      "source_id": "S1",
+      "url": "https://www.nationalgeographicbrasil.com/ciencia/2023/04/quantas-horas-de-sono-por-dia-sao-ideais-para-cada-idade",
+      "source_title": "Quantas horas de sono por dia são ideais para cada idade",
+      "value": "2019",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F4",
+      "claim": "O sono exerce papel fundamental na consolidação da memória.",
+      "kind": "definicao",
+      "quote": "O sono exerce papel fundamental na consolidação da memória, ou seja, no processo pelo qual as informações recém-adquiridas são estabilizadas e integradas ao conhecimento já existente.",
+      "source_id": "S3",
+      "url": "https://mancinipsiquiatria.com.br/a-relacao-entre-o-sono-e-a-consolidacao-da-memoria/",
+      "source_title": "A Relação Entre O Sono E A Consolidação Da Memória",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F5",
+      "claim": "A gente precisa dar ao nosso corpo a quantidade de sono adequada.",
+      "kind": "definicao",
+      "quote": "A gente precisa dar ao nosso corpo a quantidade de sono adequada.",
+      "source_id": "S4",
+      "url": "https://drauziovarella.uol.com.br/neurologia/qual-e-a-relacao-entre-sono-e-memoria/",
+      "source_title": "Qual é a relação entre sono e memória? - Portal Drauzio Varella",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F6",
+      "claim": "Respeitar seu horário de dormir, sua necessidade de dormir, saber ouvir a necessidade do seu corpo – da mesma forma que a gente sabe sentir quando a gente está com fome e comer quando tem fome, a gente precisa dormir quando tem sono",
+      "kind": "definicao",
+      "quote": "Respeitar seu horário de dormir, sua necessidade de dormir, saber ouvir a necessidade do seu corpo – da mesma forma que a gente sabe sentir quando a gente está com fome e comer quando tem fome, a gente precisa dormir quando tem sono",
+      "source_id": "S4",
+      "url": "https://drauziovarella.uol.com.br/neurologia/qual-e-a-relacao-entre-sono-e-memoria/",
+      "source_title": "Qual é a relação entre sono e memória? - Portal Drauzio Varella",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F7",
+      "claim": "A gente precisa dormir quando tem sono",
+      "kind": "exemplo",
+      "quote": "a gente precisa dormir quando tem sono",
+      "source_id": "S4",
+      "url": "https://drauziovarella.uol.com.br/neurologia/qual-e-a-relacao-entre-sono-e-memoria/",
+      "source_title": "Qual é a relação entre sono e memória? - Portal Drauzio Varella",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F8",
+      "claim": "Os adultos precisam de 7 a 9 horas de sono por noite para se sentir descansados.",
+      "kind": "numero",
+      "quote": "Durma o suficiente: A quantidade ideal de sono varia de pessoa para pessoa, mas, em média, os adultos precisam de 7 a 9 horas de sono por noite para se sentir descansados e preparados para o dia seguinte.",
+      "source_id": "S6",
+      "url": "https://unifaveni.com.br/como-o-sono-afeta-os-estudos-entenda-a-relacao-entre-descanso-e-desempenho-academico/",
+      "source_title": "Como o sono afeta os estudos? Melhore seu desempenho - Unifaveni",
+      "value": "7 a 9",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F9",
+      "claim": "O sono inadequado prejudica a memória e a concentração.",
+      "kind": "definicao",
+      "quote": "Não deixe para estudar até tarde: Evite estudar até a madrugada, pois o sono inadequado prejudica a memória e a concentração.",
+      "source_id": "S6",
+      "url": "https://unifaveni.com.br/como-o-sono-afeta-os-estudos-entenda-a-relacao-entre-descanso-e-desempenho-academico/",
+      "source_title": "Como o sono afeta os estudos? Melhore seu desempenho - Unifaveni",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F10",
+      "claim": "Uma boa noite de sono permite que as pessoas se concentrem com facilidade e tenham um melhor desempenho na escola ou no trabalho.",
+      "kind": "exemplo",
+      "quote": "uma boa noite de sono diminui a frequência de doenças, reduz o estresse, melhora o humor, permite que as pessoas se concentrem com facilidade, tenham um melhor desempenho na escola ou no trabalho e tomem melhores decisões.",
+      "source_id": "S1",
+      "url": "https://www.nationalgeographicbrasil.com/ciencia/2023/04/quantas-horas-de-sono-por-dia-sao-ideais-para-cada-idade",
+      "source_title": "Quantas horas de sono por dia são ideais para cada idade",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F11",
+      "claim": "Um sono de má qualidade pode causar dificuldade de concentração e maior propensão a erros.",
+      "kind": "definicao",
+      "quote": "Um sono de má qualidade pode causar mau humor, cansaço, dificuldade de concentração, maior propensão a erros e, a longo prazo, até aumentar o risco de uma série de doenças.",
+      "source_id": "S4",
+      "url": "https://drauziovarella.uol.com.br/neurologia/qual-e-a-relacao-entre-sono-e-memoria/",
+      "source_title": "Qual é a relação entre sono e memória? - Portal Drauzio Varella",
+      "value": "dificuldade de concentração",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F12",
+      "claim": "O sono e a memória estão intrinsecamente correlacionados.",
+      "kind": "definicao",
+      "quote": "segundo Leticia Azevedo Soster, neurologista e médica do sono do Hospital Israelita Albert Einstein, em São Paulo, sono e memória estão intrinsecamente correlacionados.",
+      "source_id": "S4",
+      "url": "https://drauziovarella.uol.com.br/neurologia/qual-e-a-relacao-entre-sono-e-memoria/",
+      "source_title": "Qual é a relação entre sono e memória? - Portal Drauzio Varella",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    }
+  ],
+  "rejected": [
+    {
+      "afirmacao": "Estudos com caçadores-coletores e grandes pesquisas de saúde sugerem que a regra das oito horas é simplista",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Estudos com caçadores-coletores e grandes pesquisas de saúde sugerem que a regra das oito horas é simplista: a necessidade de sono varia de pessoa para ...",
+      "valor": "",
+      "source_id": "S2",
+      "reason": "trecho incompleto ou com caracteres inválidos"
+    },
+    {
+      "afirmacao": "Dormir bem não apenas restaura o organismo, mas também organiza e fortalece as experiências cognitivas vividas durante o dia.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Dormir bem não apenas restaura o organismo, mas também organiza e fortalece as experiências cognitivas vividas durante o dia.",
+      "valor": "",
+      "source_id": "S3",
+      "reason": "fora do assunto central (não menciona sono, desempenho, memória)"
+    },
+    {
+      "afirmacao": "Maiara Ribeiro é jornalista e integra a redação do Portal Drauzio Varella desde 2018",
+      "autor": "Maiara Ribeiro",
+      "relevancia": "baixa",
+      "tipo": "definicao",
+      "trecho": "Maiara Ribeiro é jornalista e integra a redação do Portal Drauzio Varella desde 2018.",
+      "valor": "2018",
+      "source_id": "S4",
+      "reason": "pouco relevante para o assunto central"
+    },
+    {
+      "afirmacao": "Um cochilo curto de 20-30 minutos é benéfico, mas cochilos longos podem prejudicar a qualidade do sono à noite.",
+      "autor": "",
+      "relevancia": "baixa",
+      "tipo": "exemplo",
+      "trecho": "Evite cochilos longos durante o dia: Embora um cochilo curto de 20-30 minutos seja benéfico, cochilos longos podem prejudicar a qualidade do sono à noite.",
+      "valor": "20-30",
+      "source_id": "S6",
+      "reason": "pouco relevante para o assunto central"
+    },
+    {
+      "afirmacao": "Adultos de 18 a 60 anos devem ter 7 ou mais horas de descanso por noite.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Adultos de 18 a 60 anos devem ter 7 ou mais horas de descanso por noite;",
+      "valor": "7",
+      "source_id": "S1",
+      "reason": "fora do assunto central (não menciona sono, desempenho, memória)"
+    },
+    {
+      "afirmacao": "A informação sobre a importância do sono é do Office of Disease Prevention and Health Promotion (ODPHP).",
+      "autor": "ODPHP",
+      "relevancia": "baixa",
+      "tipo": "definicao",
+      "trecho": "A informação é do Office of Disease Prevention and Health Promotion (ODPHP), órgão ligado ao Departamento de Saúde dos Estados Unidos.",
+      "valor": "",
+      "source_id": "S1",
+      "reason": "pouco relevante para o assunto central"
+    },
+    {
+      "afirmacao": "Durante o sono, o corpo realiza o processo de transformar memórias de curto prazo em memórias de longo prazo.",
+      "autor": "Leticia Azevedo Soster",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Durante o sono, vários processos metabólicos acontecem, e dentre eles, esse processo da gente conseguir levar [a memória] de curto prazo para um local de longo prazo",
+      "valor": "",
+      "source_id": "S4",
+      "reason": "limite de 5 fatos por fonte"
+    }
+  ],
+  "log": [
+    {
+      "query": "quantidade sono recomendada adultos",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "sono e consolidação memória",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "efeito sono aprendizado estudantes",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "duração sono estudantes resultados",
+      "provider": "searxng",
+      "results": 2
+    }
+  ],
+  "central_terms": [
+    "sono",
+    "desempenho",
+    "memória",
+    "estudos",
+    "consolidação"
+  ],
+  "created_at": "2026-11-23T04:33:15+00:00"
+}

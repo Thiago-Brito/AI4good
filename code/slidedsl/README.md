@@ -1,10 +1,18 @@
 # SlideDSL
 
-> Evolução de APIs, voz e celular: a branch `feature/slidedsl-api-voz-mobile` já permite
-> selecionar OpenAI no fluxo Alto e acompanhar consumo por chamada. Configure o `.env`
-> local a partir de [.env.example](.env.example) e execute `slidedsl serve`; a chave fica
-> no servidor. A validação remota ainda depende da conexão com a API.
-> Estado, testes e próxima tarefa: [registro de continuidade](docs/CONTINUIDADE_API_VOZ_MOBILE.md).
+> **Novidades (novembro de 2026, TCC):**
+> - **App Android** em [mobile/app](mobile/app): gera apresentações **no próprio celular**, sem internet,
+>   a partir de texto, **voz** ou **documento** (PDF, DOCX, TXT, MD, inclusive pelo "Compartilhar").
+>   Modelo Qwen3 (0,6B/1,7B/4B) baixado ou importado, conferido por SHA-256. Build:
+>   `scripts/mobile_build.ps1` (ambiente em `scripts/android_env.ps1`). Detalhes:
+>   [APK_APP_RELATORIO.md](docs/APK_APP_RELATORIO.md), [APK_DOCUMENTOS_RELATORIO.md](docs/APK_DOCUMENTOS_RELATORIO.md).
+> - **Núcleo em TypeScript** em [packages/slidedsl-core](packages/slidedsl-core): validação, layout, IR e
+>   PPTX, gerado a partir do Python e conferido por paridade de IR (261/261 decks).
+>   [APK_CORE_RELATORIO.md](docs/APK_CORE_RELATORIO.md).
+> - **Custo por chamada** (tokens, tempo de prompt e de geração) em `chamadas.jsonl` e `custo.json`
+>   por apresentação; base comum dos testes (12 pedidos, dossiês fixos, execução retomável).
+> - Plano do TCC e estado dos testes: [PLANO_TCC.md](docs/PLANO_TCC.md); OpenAI opcional continua
+>   disponível ([continuidade](docs/CONTINUIDADE_API_VOZ_MOBILE.md)).
 
 **IA local (SLMs) + linguagem específica de domínio (DSL) para gerar apresentações de slides
 automaticamente.**
