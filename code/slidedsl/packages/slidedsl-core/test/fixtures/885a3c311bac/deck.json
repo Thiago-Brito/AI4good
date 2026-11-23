@@ -1,0 +1,305 @@
+{
+  "title": "Apresentação do TCC SlideDSL para a banca",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "SlideDSL transforma código em slides editáveis",
+      "subtitle": "Esta apresentação mostra como a SlideDSL aproxima o código de uma descrição verbal e o torna legível para não programadores.",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": "assets/media/0df7307fb54df708a8745c4520fa3f996c3072232743c3922ed010145caffde3.png",
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A capa já antecipa a promessa central do TCC: controlar a geração sem perder editabilidade. O texto do próprio slide reforça essa ideia com a frase “Código controlado vira slides editáveis.”. Como é uma capa, não há necessidade de detalhar arquitetura ou avaliação aqui.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "A SlideDSL separa alto e baixo nível",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Gramática de alto nível",
+          "detail": "O arquivo src/slidedsl/grammar/slidedsl_alto.lark define a GLC que o SLM escreve."
+        },
+        {
+          "label": "Gramática de baixo nível",
+          "detail": "O arquivo src/slidedsl/grammar/slidedsl.lark define a GLC da versão 1.1."
+        },
+        {
+          "label": "AST e validação",
+          "detail": "O arquivo alto.py reúne AST, impressão e validação A0xx da SlideDSL Alto."
+        },
+        {
+          "label": "Layouts por tipo",
+          "detail": "O arquivo alto_layout.py gera layouts por tipo de slide para a SlideDSL 1.1."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F11",
+        "F12",
+        "F13",
+        "F14"
+      ],
+      "notes": "A arquitetura separa a escrita do SLM da forma final que vira slide editável. Isso permite manter uma camada de alto nível para intenção e outra de baixo nível para controle. Os arquivos citados mostram onde cada responsabilidade fica no repositório, sem misturar geração, validação e layout.",
+      "line": 9,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "A SlideDSL usa uma DSL própria",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "X",
+          "items": [
+            {
+              "label": "DOC2PPT",
+              "detail": "Parte de um documento pronto e não pesquisa nem usa DSL."
+            },
+            {
+              "label": "PPTAgent",
+              "detail": "Edita slides de referência em duas etapas."
+            }
+          ]
+        },
+        {
+          "name": "Y",
+          "items": [
+            {
+              "label": "AutoPresent",
+              "detail": "Gera um programa Python com python-pptx e usa SlidesBench."
+            },
+            {
+              "label": "SlideDSL",
+              "detail": "Usa uma DSL própria com GLC, modelo de 4B sem ajuste fino e pesquisa local."
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F18",
+        "F19",
+        "F20",
+        "F21"
+      ],
+      "notes": "A comparação destaca o eixo de implementação: DOC2PPT parte de um documento pronto, enquanto PPTAgent edita a partir de slides de referência. AutoPresent gera um programa Python com python-pptx, e o SlideDSL usa uma DSL própria com GLC. A banca pode ler isso como uma escolha de arquitetura para restringir a saída e tornar a geração auditável.",
+      "line": 18,
+      "column": 3
+    },
+    {
+      "kind": "imagem",
+      "title": "A decisão torna o código legível",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": "A escolha de palavras e a ordem fixa aproximam o comando de uma descrição verbal.",
+      "unit": null,
+      "image_file": null,
+      "image_query": "code syntax highlight",
+      "items": [
+        {
+          "label": "Palavras sem acentos",
+          "detail": "A SlideDSL 1.1 escreve comandos como adicionar e retangulo, sem acentos nem pontuação final."
+        },
+        {
+          "label": "Texto entre aspas",
+          "detail": "Os trechos entre aspas aceitam acentos e escapes JSON."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F22",
+        "F23",
+        "F25"
+      ],
+      "notes": "A mensagem central é que a sintaxe foi desenhada para leitura humana, não para parecer código tradicional. O exemplo deve reforçar a combinação de palavras em português, ordem fixa e aspas para texto livre. Vale evitar qualquer promessa de facilidade universal; o ponto aqui é legibilidade para usuários não programadores.",
+      "line": 31,
+      "column": 3
+    },
+    {
+      "kind": "numeros",
+      "title": "Execuções repetidas e auditáveis",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [
+        {
+          "value": "5",
+          "label": "O comando evaluate-strategies repete cada conjunto de pedidos cinco vezes no benchmark evolution_requests.json."
+        },
+        {
+          "value": "2",
+          "label": "O comando evaluate-reliability executa duas repetições para medir confiabilidade com repair-max 2."
+        }
+      ],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1",
+        "F2",
+        "F3"
+      ],
+      "notes": "Use este slide para mostrar que a avaliação não depende de uma única execução. O primeiro experimento testa estratégias com cinco repetições e gera saída em outputs/evolution/novo; depois, o script audit_evolution.py audita esse resultado. O segundo experimento mede confiabilidade com duas repetições e permite até dois reparos, o que deixa o processo mais controlado.",
+      "line": 40,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "O fluxo vai da escrita à validação",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Criar o tema",
+          "detail": "O comando criar gera um teste para \"Monolito ou microsserviços para uma startup\" com dois candidatos."
+        },
+        {
+          "label": "Pesquisar referências",
+          "detail": "O comando pesquisar monta um dossiê JSON sobre \"energia solar residencial\" usando o provider ollama."
+        },
+        {
+          "label": "Compilar o arquivo alto",
+          "detail": "O comando alto-compile converte examples\\alto\\microsservicos.slda em micro.pptx com a opção --strict."
+        },
+        {
+          "label": "Pré-visualizar o catálogo",
+          "detail": "O comando previa gera uma prévia de examples\\alto\\catalogo.slda em outputs\\alto\\previa."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F4",
+        "F5",
+        "F6",
+        "F7"
+      ],
+      "notes": "A sequência mostra o caminho operacional do usuário: primeiro ele cria ou pesquisa, depois compila e visualiza. Os exemplos do README deixam claro que a mesma interface cobre geração, preparação de conteúdo e saída em PPTX. A ressalva é que os comandos exibidos são exemplos documentais, então a banca deve lê-los como evidência do fluxo, não como medição de desempenho.",
+      "line": 47,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Há limites claros no escopo avaliado",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Retomada com hash",
+          "detail": "A retomada `--resume` é recusada quando os hashes divergirem."
+        },
+        {
+          "label": "Modo GBNF",
+          "detail": "O modo `--modo gramatica` não foi avaliado neste trabalho."
+        },
+        {
+          "label": "Próxima avaliação",
+          "detail": "A próxima avaliação sugerida repete os casos multitemas com o código final."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F8",
+        "F10",
+        "F26"
+      ],
+      "notes": "Este slide delimita o que a banca pode cobrar como evidência do TCC e o que ainda não foi medido. A retomada só vale quando o estado anterior bate com o código atual, então o sistema bloqueia divergências. O modo GBNF ficou fora da avaliação, e a próxima rodada deve repetir os casos multitemas com o código final para fechar a validação.",
+      "line": 56,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "O TCC deve considerar critérios e custo",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Adotar critérios do PPTEval",
+          "detail": "A avaliação deve considerar pessoas, conteúdo, design e coerência como critérios do PPTEval."
+        },
+        {
+          "label": "Registrar custo por configuração",
+          "detail": "O projeto deve registrar chamadas e tempo de cada configuração."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F27",
+        "F28"
+      ],
+      "notes": "A conclusão deve transformar a defesa em decisão: primeiro, adotar os critérios do PPTEval; depois, exigir o registro de custo por configuração. Isso mantém a próxima etapa comparável e auditável sem acrescentar métricas não informadas.",
+      "line": 64,
+      "column": 3
+    }
+  ]
+}

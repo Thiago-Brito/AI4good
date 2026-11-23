@@ -1,0 +1,207 @@
+{
+  "title": "Monolito ou Microsserviços para uma Startup: Quando cada um\n",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Uma startup deve usar monolito para lançar rápido",
+      "subtitle": "Permitindo lançar rápido e entregar funcionalidades básicas com um MVP",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O slide apresenta a ideia central: monolitos aceleram o lançamento. O exemplo de uma loja online mostra o cenário comum. A decisão é baseada na velocidade de entrega inicial.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Monolitos são ideais quando a equipe é pequena e o tempo de lanç",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "equipe pequena",
+          "detail": "uma startup de alimentação saudável entrega MVP em semanas com um monolito"
+        },
+        {
+          "label": "lançamento rápido",
+          "detail": "um app de eventos simples é lançado em semanas por um time de três membros"
+        },
+        {
+          "label": "entrega funcional",
+          "detail": "um projeto de vendas digitais funciona com uma pessoa e uma semana de desenvolvimento"
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Em equipes pequenas, monolito permite foco em MVP. Exemplo: app de eventos. O tempo é curto e o produto é funcional. A limitação é que o crescimento futuro pode exigir mudança. A decisão é viável para lançamentos rápidos com poucos recursos.",
+      "line": 8,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "Microsserviços reduzem o risco de falhas em sistemas críticos",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Monolito",
+          "items": [
+            {
+              "label": "Falha global",
+              "detail": "Um monolito que quebra causa paralisação total de um aplicativo de entregas"
+            },
+            {
+              "label": "Recuperação lenta",
+              "detail": "A equipe de um sistema de loja online precisa reiniciar todo o serviço para recuperar"
+            }
+          ]
+        },
+        {
+          "name": "Microsserviços",
+          "items": [
+            {
+              "label": "Falha isolada",
+              "detail": "Um sistema com microsserviços isolam falhas em um aplicativo de entregas"
+            },
+            {
+              "label": "Recuperação rápida",
+              "detail": "O serviço de uma loja online continua operando mesmo com um módulo falhando"
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Em um aplicativo de entregas, um monolito que quebra afeta toda a operação. Em microsserviços, cada serviço funciona separadamente. Isso evita paralisação. A recomendação é para sistemas críticos com alto volume de usuários, como entregas ou pagamentos. A falha em um módulo não afeta o restante do sistema, permitindo continuidade de serviço e recuperação mais rápida.",
+      "line": 15,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "A evolução de um sistema de monolito para microsserviços é um at",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Identificar módulos críticos",
+          "detail": "quando a equipe cresce, um aplicativo de entregas divide o módulo de pedidos em um serviço independente"
+        },
+        {
+          "label": "Extrair serviços independentes",
+          "detail": "um sistema de loja online separa a funcionalidade de pagamento em um serviço próprio"
+        },
+        {
+          "label": "Validar integração",
+          "detail": "com testes automatizados, cada serviço é integrado com segurança e sem interrupções"
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O processo começa quando a equipe cresce. Um exemplo é um app de entregas que separa pedidos. A validação garante que os serviços funcionem juntos sem interrupções. Evita que a mudança quebre o MVP existente.",
+      "line": 27,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Microsserviigos são mais escaláveis quando o negócio cresce rápi",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Escalabilidade por módulo",
+          "detail": "uma loja online expande seu serviço de entrega quando o volume de pedidos cresce"
+        },
+        {
+          "label": "Escala seletiva",
+          "detail": "um aplicativo de entregas aumenta a capacidade de rastreamento sem afetar o cadastro de usuários"
+        },
+        {
+          "label": "Crescimento diferenciado",
+          "detail": "quando a equipe cresce, os serviços de pagamento são escalados separadamente dos de perfil do usuário"
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O crescimento do negócio exige escalabilidade focada. Exemplos reais mostram que módulos ativos podem ser ampliados sem impactar outros. A escolha depende do perfil do negócio e da carga de uso real. Não há dados numéricos, então os exemplos são genéricos e baseados em cenários comuns de startups digitais.",
+      "line": 34,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Decida com base no tamanho da equipe e no tempo",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Lançamento rápido",
+          "detail": "Comece com um monolito para lançar um MVP rápido em um aplicativo de entregas."
+        },
+        {
+          "label": "Crescimento escalável",
+          "detail": "Migre para microsserviços quando a equipe cresce e o negócio expande para uma loja online."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A recomendação é prática: monolito para MVP, microsserviços com o crescimento. Exemplos reais como aplicativos de entregas e lojas online mostram a aplicação. A transição é natural com o tempo e equipe maior.",
+      "line": 41,
+      "column": 3
+    }
+  ]
+}

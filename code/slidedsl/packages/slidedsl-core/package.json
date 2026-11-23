@@ -1,0 +1,17 @@
+{
+  "name": "@slidedsl/core",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {".": "./dist/index.js", "./render": "./dist/render.js"},
+  "engines": {"node": ">=22"},
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build && node --test test/*.test.mjs",
+    "parity:full": "npm run build && node test/full.mjs"
+  },
+  "dependencies": {"pptxgenjs": "4.0.1"},
+  "devDependencies": {"typescript": "5.9.3", "@types/node": "22.19.1"}
+}

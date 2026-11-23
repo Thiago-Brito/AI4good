@@ -1,0 +1,182 @@
+{
+  "F1": {
+    "id": "F1",
+    "claim": "40% das aplicações empresariais terão agentes de IA até 2026.",
+    "kind": "data",
+    "quote": "A Gartner projeta que 40% das aplicações empresariais terão agentes de IA integrados até o final de 2026.",
+    "source_id": "S1",
+    "url": "https://www.alura.com.br/empresas/artigos/arquitetura-de-software",
+    "source_title": "Arquitetura de software: o que é, tipos e importância - Alura",
+    "value": "40%"
+  },
+  "F2": {
+    "id": "F2",
+    "claim": "82% das lideranças de TI veem integração como principal desafio com IA.",
+    "kind": "data",
+    "quote": "o \"Connectivity Benchmark Report 2026\" da MuleSoft revela que 82% das lideranças de TI apontam a integração como um dos principais desafios no uso de IA.",
+    "source_id": "S1",
+    "url": "https://www.alura.com.br/empresas/artigos/arquitetura-de-software",
+    "source_title": "Arquitetura de software: o que é, tipos e importância - Alura",
+    "value": "82%"
+  },
+  "F3": {
+    "id": "F3",
+    "claim": "Organizações sem investimento em arquitetura não conseguem escalar IA.",
+    "kind": "ressalva",
+    "quote": "as organizações que não investiram em arquitetura estão encontrando uma barreira invisível: conseguem fazer pilotos de IA, mas não conseguem escalar essa tecnologia.",
+    "source_id": "S1",
+    "url": "https://www.alura.com.br/empresas/artigos/arquitetura-de-software",
+    "source_title": "Arquitetura de software: o que é, tipos e importância - Alura",
+    "value": ""
+  },
+  "F4": {
+    "id": "F4",
+    "claim": "A arquitetura de software define os componentes, relações e princípios de projeto e evolução de um sistema de software.",
+    "kind": "definicao",
+    "quote": "Arquitetura de software é a estrutura fundamental ou o esqueleto de um sistema de software, que define seus componentes, suas relações e seus princípios de projeto e evolução.",
+    "source_id": "S3",
+    "url": "https://www.alura.com.br/artigos/padroes-arquiteturais-arquitetura-software-descomplicada",
+    "source_title": "Padrões arquiteturais: arquitetura de software descomplicada - Alura",
+    "value": ""
+  },
+  "F5": {
+    "id": "F5",
+    "claim": "A arquitetura de software é um conjunto de normas, princípios e técnicas para construção de software.",
+    "kind": "definicao",
+    "quote": "Arquitetura de software pode ser entendida como um conjunto de normas, princípios e técnicas para construção de software.",
+    "source_id": "S3",
+    "url": "https://www.alura.com.br/artigos/padroes-arquiteturais-arquitetura-software-descomplicada",
+    "source_title": "Padrões arquiteturais: arquitetura de software descomplicada - Alura",
+    "value": ""
+  },
+  "F6": {
+    "id": "F6",
+    "claim": "A arquitetura de software se assemelha à ideia de arquitetura de edificações que delimita padrões para casas em ambientes variados.",
+    "kind": "comparacao",
+    "quote": "De certa forma, assemelha-se à ideia de arquitetura que conhecemos e que delimita os padrões de edificações para casas em ambientes pequenos, frios, quentes etc., mas será que é isso mesmo?",
+    "source_id": "S3",
+    "url": "https://www.alura.com.br/artigos/padroes-arquiteturais-arquitetura-software-descomplicada",
+    "source_title": "Padrões arquiteturais: arquitetura de software descomplicada - Alura",
+    "value": ""
+  },
+  "F7": {
+    "id": "F7",
+    "claim": "Brasil tem 1,65% dos investimentos em tecnologia global.",
+    "kind": "numero",
+    "quote": "o Brasil hoje manteve 1,65% dos investimentos em tecnologia em nível global",
+    "source_id": "S4",
+    "url": "https://abes.org.br/dados-do-setor/",
+    "source_title": "Dados do Setor - ABES",
+    "value": "1,65"
+  },
+  "F8": {
+    "id": "F8",
+    "claim": "Brasil tem 36% dos investimentos em América Latina.",
+    "kind": "numero",
+    "quote": "e 36% dos investimentos em toda a América Latina (contra 40% na pesquisa anterior)",
+    "source_id": "S4",
+    "url": "https://abes.org.br/dados-do-setor/",
+    "source_title": "Dados do Setor - ABES",
+    "value": "36"
+  },
+  "F9": {
+    "id": "F9",
+    "claim": "O faturamento do mercado de softwares alcançará US$ 698,80 bilhões em 2024.",
+    "kind": "ressalva",
+    "quote": "O faturamento do mercado de softwares deve alcançar a cifra de US$ 698,80 bilhões a nível mundial em 2024.",
+    "source_id": "S5",
+    "url": "https://abracd.org/2024/02/09/mercado-de-softwares-estudo-preve-us-698-bi-em-receitas/",
+    "source_title": "Mercado de softwares: estudo prevê US$ 698 bi em receitas",
+    "value": "698,80"
+  },
+  "F10": {
+    "id": "F10",
+    "claim": "O mercado de softwares terá crescimento de 5,27% nos próximos anos.",
+    "kind": "citacao",
+    "quote": "a estimativa é que o mercado de softwares apresente uma taxa de crescimento de 5,27% nos próximos anos",
+    "source_id": "S5",
+    "url": "https://abracd.org/2024/02/09/mercado-de-softwares-estudo-preve-us-698-bi-em-receitas/",
+    "source_title": "Mercado de softwares: estudo prevê US$ 698 bi em receitas",
+    "value": "5,27"
+  },
+  "F11": {
+    "id": "F11",
+    "claim": "O faturamento do setor pode chegar a US$ 858,10 bilhões até 2028.",
+    "kind": "citacao",
+    "quote": "o que pode alavancar o faturamento do setor para US$ 858,10 bilhões até 2028.",
+    "source_id": "S5",
+    "url": "https://abracd.org/2024/02/09/mercado-de-softwares-estudo-preve-us-698-bi-em-receitas/",
+    "source_title": "Mercado de softwares: estudo prevê US$ 698 bi em receitas",
+    "value": "858,10"
+  },
+  "F12": {
+    "id": "F12",
+    "claim": "A arquitetura de microsserviços é uma abordagem para construir aplicações como coleção de serviços pequenos e independentes.",
+    "kind": "definicao",
+    "quote": "A arquitetura de microsserviços é uma abordagem para construir aplicações de software como uma coleção de serviços pequenos e independentes, que são implementados de forma modular e comunicam-se entre si por meio de APIs.",
+    "source_id": "S7",
+    "url": "https://programadoresbrasil.com/engenharia-de-software/guia-completo-arquitetura-de-microsservicos/",
+    "source_title": "Arquitetura de Microsserviços: Guia Completo em 2025",
+    "value": ""
+  },
+  "F13": {
+    "id": "F13",
+    "claim": "Os serviços comunicam-se entre si por meio de APIs.",
+    "kind": "comparacao",
+    "quote": "que são implementados de forma modular e comunicam-se entre si por meio de APIs.",
+    "source_id": "S7",
+    "url": "https://programadoresbrasil.com/engenharia-de-software/guia-completo-arquitetura-de-microsservicos/",
+    "source_title": "Arquitetura de Microsserviços: Guia Completo em 2025",
+    "value": ""
+  },
+  "F14": {
+    "id": "F14",
+    "claim": "A arquitetura de software define a organização do sistema, comunicação entre componentes e sua capacidade de crescimento.",
+    "kind": "definicao",
+    "quote": "Arquitetura de software é o conjunto de decisões estruturais que define como um sistema é organizado, como seus componentes se comunicam e como ele deve crescer.",
+    "source_id": "S1",
+    "url": "https://www.alura.com.br/empresas/artigos/arquitetura-de-software",
+    "source_title": "Arquitetura de software: o que é, tipos e importância - Alura",
+    "value": ""
+  },
+  "F15": {
+    "id": "F15",
+    "claim": "A escolha entre monolito e microsserviços é estratégica e depende da maturidade do time e do custo de escalar.",
+    "kind": "definicao",
+    "quote": "A escolha entre monolito e microsserviços não é técnica: é estratégica. Depende da maturidade do time e do custo real de escalar antes da hora.",
+    "source_id": "S1",
+    "url": "https://www.alura.com.br/empresas/artigos/arquitetura-de-software",
+    "source_title": "Arquitetura de software: o que é, tipos e importância - Alura",
+    "value": "maturidade do time, cust"
+  },
+  "F16": {
+    "id": "F16",
+    "claim": "Com a chegada da IA, a arquitetura de software passou a ser uma capacidade competitiva e sistemas não projetados para IA precisam ser repensados.",
+    "kind": "definicao",
+    "quote": "Com a chegada da IA, a arquitetura de software deixou de ser só infraestrutura e virou capacidade competitiva. Sistemas que não foram projetados para incorporar IA precisam ser repensados.",
+    "source_id": "S1",
+    "url": "https://www.alura.com.br/empresas/artigos/arquitetura-de-software",
+    "source_title": "Arquitetura de software: o que é, tipos e importância - Alura",
+    "value": "IA"
+  },
+  "F17": {
+    "id": "F17",
+    "claim": "Arquitetura pipes-and-filters usa componentes que processam dados em sequência linear.",
+    "kind": "exemplo",
+    "quote": "Na arquitetura de software pipes-and-filters, um sistema funciona como uma série de componentes que processam dados em uma sequência linear, em que cada componente (filtro) realiza uma transformação nos dados antes de passá-los para o próximo.",
+    "source_id": "S2",
+    "url": "https://www.softdesign.com.br/blog/desenvolvimento-ou-consultoria-em-arquitetura-de-software-como-escolher/",
+    "source_title": "Arquitetura de software: conceitos, objetivos, tipos e consultoria",
+    "value": "sequência linear"
+  },
+  "F18": {
+    "id": "F18",
+    "claim": "A arquitetura pipes-and-filters é usada em processamento de dados e pipelines ETL.",
+    "kind": "exemplo",
+    "quote": "Se você busca exemplos para esse tipo de arquitetura de software, vale apontar que essa abordagem é frequentemente utilizada em processamento de dados e pipelines de ETL (Extract, Transform, Load).",
+    "source_id": "S2",
+    "url": "https://www.softdesign.com.br/blog/desenvolvimento-ou-consultoria-em-arquitetura-de-software-como-escolher/",
+    "source_title": "Arquitetura de software: conceitos, objetivos, tipos e consultoria",
+    "value": "ETL"
+  }
+}

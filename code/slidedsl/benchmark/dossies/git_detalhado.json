@@ -1,0 +1,419 @@
+{
+  "topic": "Apresente Git para estudantes que nunca usaram controle de versão: por que usar, o ciclo básico de trabalho e como colaborar com outras pessoas.",
+  "queries": [
+    "definição git controle versão",
+    "exemplo git trabalho básico",
+    "como usar git com colegas",
+    "git ciclo de trabalho passo a passo"
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "title": "O que é controle de versão? | Tutorial da Atlassian sobre o Git",
+      "url": "https://www.atlassian.com/br/git/tutorials/what-is-version-control",
+      "provider": "searxng",
+      "snippet": "O controle de versão, também conhecido como controle de fonte, é a prática de rastrear e gerenciar as alterações em um código de software. Os sistemas de controle de versão são ferramentas de software que ajudam as equipes de software a gerenciar as alterações ao código-fonte ao longo do tempo.",
+      "text_chars": 8368
+    },
+    {
+      "id": "S2",
+      "title": "O que é o controle de versão do Git? - GitLab",
+      "url": "https://about.gitlab.com/pt-br/topics/version-control/what-is-git-version-control/",
+      "provider": "searxng",
+      "snippet": "O que é o controle de versão do Git? O Git é um sistema de controle de versão distribuído de código aberto que ajuda as equipes de software a criar projetos de qualquer tamanho com eficiência, velocidade e assincronicidade.",
+      "text_chars": 6390
+    },
+    {
+      "id": "S3",
+      "title": "Os 20 principais comandos do Git com exemplos: Um guia prático",
+      "url": "https://www.datacamp.com/pt/blog/git-commands",
+      "provider": "searxng",
+      "snippet": "Neste guia prático, você aprenderá os comandos mais importantes do Git com exemplos. Domine os fluxos de trabalho essenciais do Git para controle de versão, ramificação, mesclagem e muito mais.",
+      "text_chars": 193
+    },
+    {
+      "id": "S4",
+      "title": "Primeiros passos com o Git - Documentos do GitHub",
+      "url": "https://docs.github.com/pt/get-started/learning-to-code/getting-started-with-git",
+      "provider": "searxng",
+      "snippet": "Aprenda noções básicas sobre o Git trabalhando em um cenário de exemplo ... Fluxos de trabalho do Git · Sobre repositórios remotos · Gerenciar repositórios ...",
+      "text_chars": 9886
+    },
+    {
+      "id": "S5",
+      "title": "Colaborando em Equipe com Git e Github | Lucas Santos - DIO",
+      "url": "https://www.dio.me/articles/colaborando-em-equipe-com-git-e-github",
+      "provider": "searxng",
+      "snippet": "Crio o presente artigo com o intuito de auxiliar novos desenvolvedores para colaborar em seus projetos usando Git e GitHub, destacando um excelente costume de trabalhar em equipe e gerenciar versões de código do projeto.",
+      "text_chars": 2708
+    },
+    {
+      "id": "S6",
+      "title": "Como trabalhar em equipe no git/github - YouTube",
+      "url": "https://www.youtube.com/watch?v=JMdaVlihpXM",
+      "provider": "searxng",
+      "snippet": "17 de nov. de 2021 ... Comments · Como usar o git/github para trabalho em equipe · Getting Started with Git and GitHub - Git and GitHub #01 · Curso Completo de Git e ...",
+      "text_chars": 194
+    },
+    {
+      "id": "S7",
+      "title": "Git Flow: o que é, quando utilizar e como funciona com passo a passo",
+      "url": "https://www.alura.com.br/artigos/git-flow-o-que-e-como-quando-utilizar",
+      "provider": "searxng",
+      "snippet": "Se você está procurando um git flow tutorial prático, a seguir está um guia passo a passo para instalar e utilizar o gitflow, desde o git flow install, passando pelo git flow init, até os principais comandos de criação e finalização de features, hotfix e releases.",
+      "text_chars": 14320
+    },
+    {
+      "id": "S8",
+      "title": "Fluxo de trabalho Gitflow | Tutorial da Atlassian sobre o Git",
+      "url": "https://www.atlassian.com/br/git/tutorials/comparing-workflows/gitflow-workflow",
+      "provider": "searxng",
+      "snippet": "Passo 1. Crie o repositório. Cada novo recurso deve residir na própria ... trabalho ou esperar o próximo ciclo de lançamento. Você pode pensar nas ...",
+      "text_chars": 9782
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "O Git é gratuito e de código aberto.",
+      "kind": "definicao",
+      "quote": "Assim como muitos dos sistemas VCS mais populares disponíveis hoje, o Git é gratuito e de código aberto.",
+      "source_id": "S1",
+      "url": "https://www.atlassian.com/br/git/tutorials/what-is-version-control",
+      "source_title": "O que é controle de versão? | Tutorial da Atlassian sobre o Git",
+      "value": "gratuito",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F2",
+      "claim": "O Git mantém um histórico completo e a longo prazo de todas as alterações feitas em arquivos.",
+      "kind": "definicao",
+      "quote": "Um histórico de alterações completo e a longo prazo de todos os arquivos. Isso significa todas as alterações feitas por muitas pessoas ao longo dos anos.",
+      "source_id": "S1",
+      "url": "https://www.atlassian.com/br/git/tutorials/what-is-version-control",
+      "source_title": "O que é controle de versão? | Tutorial da Atlassian sobre o Git",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F3",
+      "claim": "O Git permite que equipes tenham várias cópias locais do codebase do projeto.",
+      "kind": "definicao",
+      "quote": "O Git é um sistema de controle de versão distribuído que permite que as equipes de desenvolvimento de software tenham várias cópias locais do codebase do projeto, independentemente umas das outras.",
+      "source_id": "S2",
+      "url": "https://about.gitlab.com/pt-br/topics/version-control/what-is-git-version-control/",
+      "source_title": "O que é o controle de versão do Git? - GitLab",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F4",
+      "claim": "O Git é conhecido por sua velocidade e compatibilidade de fluxo de trabalho.",
+      "kind": "definicao",
+      "quote": "O Git é conhecido por sua velocidade, compatibilidade de fluxo de trabalho{data-ga-name ='workflow compatibility'data-ga-location ='body'} e base de código aberto.",
+      "source_id": "S2",
+      "url": "https://about.gitlab.com/pt-br/topics/version-control/what-is-git-version-control/",
+      "source_title": "O que é o controle de versão do Git? - GitLab",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F5",
+      "claim": "O Git tem base de código aberto.",
+      "kind": "definicao",
+      "quote": "O Git é conhecido por sua velocidade, compatibilidade de fluxo de trabalho{data-ga-name ='workflow compatibility'data-ga-location ='body'} e base de código aberto.",
+      "source_id": "S2",
+      "url": "https://about.gitlab.com/pt-br/topics/version-control/what-is-git-version-control/",
+      "source_title": "O que é o controle de versão do Git? - GitLab",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F6",
+      "claim": "O guia prático ensina fluxos de trabalho essenciais do Git para controle de versão, ramificação e mesclagem.",
+      "kind": "definicao",
+      "quote": "Domine os fluxos de trabalho essenciais do Git para controle de versão, ramificação, mesclagem e muito mais.",
+      "source_id": "S3",
+      "url": "https://www.datacamp.com/pt/blog/git-commands",
+      "source_title": "Os 20 principais comandos do Git com exemplos: Um guia prático",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F7",
+      "claim": "O Git é um sistema de controle de versão que ajuda a controlar alterações em código.",
+      "kind": "definicao",
+      "quote": "Se você não está familiarizado com o Git, trata-se de um sistema de controle de versão que ajuda você a controlar alterações em seu código.",
+      "source_id": "S4",
+      "url": "https://docs.github.com/pt/get-started/learning-to-code/getting-started-with-git",
+      "source_title": "Primeiros passos com o Git - Documentos do GitHub",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F8",
+      "claim": "O Git permite salvar um snapshot de um projeto em um ponto no tempo.",
+      "kind": "exemplo",
+      "quote": "Você pode salvar um snapshot de seu projeto em um determinado ponto no tempo e fazer alterações experimentais sem arriscar seu trabalho, já que você sempre pode voltar ao snapshot.",
+      "source_id": "S4",
+      "url": "https://docs.github.com/pt/get-started/learning-to-code/getting-started-with-git",
+      "source_title": "Primeiros passos com o Git - Documentos do GitHub",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F9",
+      "claim": "Ao usar o Git, é possível fazer alterações experimentais sem arriscar o trabalho original.",
+      "kind": "exemplo",
+      "quote": "Você pode salvar um snapshot de seu projeto em um determinado ponto no tempo e fazer alterações experimentais sem arriscar seu trabalho, já que você sempre pode voltar ao snapshot.",
+      "source_id": "S4",
+      "url": "https://docs.github.com/pt/get-started/learning-to-code/getting-started-with-git",
+      "source_title": "Primeiros passos com o Git - Documentos do GitHub",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F10",
+      "claim": "O artigo tem o intuito de auxiliar novos desenvolvedores a colaborar em projetos usando Git e GitHub.",
+      "kind": "definicao",
+      "quote": "Crio o presente artigo com o intuito de auxiliar novos desenvolvedores para colaborar em seus projetos usando Git e GitHub, destacando um excelente costume de trabalhar em equipe e gerenciar versões de código do projeto.",
+      "source_id": "S5",
+      "url": "https://www.dio.me/articles/colaborando-em-equipe-com-git-e-github",
+      "source_title": "Colaborando em Equipe com Git e Github | Lucas Santos - DIO",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F11",
+      "claim": "O artigo destaca um excelente costume de trabalhar em equipe e gerenciar versões de código do projeto.",
+      "kind": "definicao",
+      "quote": "destacando um excelente costume de trabalhar em equipe e gerenciar versões de código do projeto.",
+      "source_id": "S5",
+      "url": "https://www.dio.me/articles/colaborando-em-equipe-com-git-e-github",
+      "source_title": "Colaborando em Equipe com Git e Github | Lucas Santos - DIO",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F12",
+      "claim": "O usuário deve navegar até o repositório que deseja colaborar no GitHub.",
+      "kind": "exemplo",
+      "quote": "No GitHub, navegue até o repositório que deseja colaborar.",
+      "source_id": "S5",
+      "url": "https://www.dio.me/articles/colaborando-em-equipe-com-git-e-github",
+      "source_title": "Colaborando em Equipe com Git e Github | Lucas Santos - DIO",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F13",
+      "claim": "O Git é uma ferramenta essencial para controle de versão de código.",
+      "kind": "definicao",
+      "quote": "O Git é uma ferramenta essencial para controle de versão de código",
+      "source_id": "S7",
+      "url": "https://www.alura.com.br/artigos/git-flow-o-que-e-como-quando-utilizar",
+      "source_title": "Git Flow: o que é, quando utilizar e como funciona com passo a passo",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F14",
+      "claim": "As equipes preferem o Git por sua adaptabilidade, velocidade e estabilidade.",
+      "kind": "definicao",
+      "quote": "as equipes de desenvolvimento de software preferem o Git a outros sistemas de controle de versão, como CVS, Mercurial e Perforce, porque o Git possui a adaptabilidade, velocidade e estabilidade necessárias para prosperar em mercados dinâmicos.",
+      "source_id": "S2",
+      "url": "https://about.gitlab.com/pt-br/topics/version-control/what-is-git-version-control/",
+      "source_title": "O que é o controle de versão do Git? - GitLab",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F15",
+      "claim": "87,2% dos desenvolvedores usam o Git para controle de versão.",
+      "kind": "numero",
+      "quote": "Não é à toa que 87,2% dos desenvolvedores usam o Git para controle de versão.",
+      "source_id": "S2",
+      "url": "https://about.gitlab.com/pt-br/topics/version-control/what-is-git-version-control/",
+      "source_title": "O que é o controle de versão do Git? - GitLab",
+      "value": "87,2%",
+      "author": "",
+      "relevance": "alta"
+    }
+  ],
+  "rejected": [
+    {
+      "afirmacao": "O histórico inclui criação, exclusão e edições de arquivos.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "As alterações incluem a criação e exclusão de arquivos, assim como as edições em seus conteúdos.",
+      "valor": "",
+      "source_id": "S1",
+      "reason": "fora do assunto central (não menciona git, controle versão, ciclo trabalho)"
+    },
+    {
+      "afirmacao": "O histórico inclui o autor, a data e as notas sobre o objetivo de cada alteração.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Esse histórico também deve incluir o autor, a data e as notas escritas sobre o objetivo de cada alteração.",
+      "valor": "",
+      "source_id": "S1",
+      "reason": "fora do assunto central (não menciona git, controle versão, ciclo trabalho)"
+    },
+    {
+      "afirmacao": "As cópias do codebase, ou branches, podem ser criadas, mescladas e deletadas rapidamente.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Essas cópias, ou branches, podem ser criadas, mescladas e deletadas rapidamente, permitindo que as equipes experimentem, com pouco custo computacional, antes de fazer o merge no branch principal (às vezes chamado de branch primário).",
+      "valor": "",
+      "source_id": "S2",
+      "reason": "fora do assunto central (não menciona git, controle versão, ciclo trabalho)"
+    },
+    {
+      "afirmacao": "O guia prático ensina os comandos mais importantes do Git com exemplos.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Neste guia prático, você aprenderá os comandies mais importantes do Git com exemplos.",
+      "valor": "",
+      "source_id": "S3",
+      "reason": "trecho não encontrado literalmente no texto"
+    },
+    {
+      "afirmacao": "Em projetos pessoais, é comum utilizar apenas uma branch para realizar commits.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "em projetos pessoais, é comum utilizar apenas uma branch para realizar commits",
+      "valor": "",
+      "source_id": "S7",
+      "reason": "fora do assunto central (não menciona git, controle versão, ciclo trabalho)"
+    },
+    {
+      "afirmacao": "Ao colaborar em equipe, é necessário controlar diferentes tarefas, correções e lançamentos realizados por várias pessoas ao mesmo tempo.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "ao colaborar em equipe, é necessário controlar diferentes tarefas, correções e lançamentos realizados por várias pessoas ao mesmo tempo",
+      "valor": "",
+      "source_id": "S7",
+      "reason": "trecho não encontrado literalmente no texto"
+    },
+    {
+      "afirmacao": "Em todo projeto real, é importantíssimo que se tenha controle total do que está sendo produzido por uma equipe de pessoas desenvolvedoras.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "em todo projeto real, é importantíssimo que se tenha controle total do que está sendo produzido por uma equipe de pessoas desenvolvedoras",
+      "valor": "",
+      "source_id": "S7",
+      "reason": "fora do assunto central (não menciona git, controle versão, ciclo trabalho)"
+    },
+    {
+      "afirmacao": "Cada novo recurso deve residir na própria ramificação.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Cada novo recurso deve residir na própria ramificação, que pode ser enviada por push para o repositório central para backup/colaboração.",
+      "valor": "1",
+      "source_id": "S8",
+      "reason": "valor não aparece no trecho citado"
+    },
+    {
+      "afirmacao": "As ramificações feature usam a ramificação develop como pai.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "em vez de serem ramificações da ramificação principal, as ramificações feature usam a ramificação develop como pai.",
+      "valor": "1",
+      "source_id": "S8",
+      "reason": "valor não aparece no trecho citado"
+    },
+    {
+      "afirmacao": "Quando um recurso é concluído, ele passa por merge de volta para a ramificação de desenvolvimento.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Quando um recurso é concluído, ele passa por merge de volta para a ramificação de desenvolvimento.",
+      "valor": "1",
+      "source_id": "S8",
+      "reason": "valor não aparece no trecho citado"
+    },
+    {
+      "afirmacao": "Os recursos não devem nunca interagir direto com a ramificação main.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Os recursos não devem nunca interagir direto com a ramificação main.",
+      "valor": "1",
+      "source_id": "S8",
+      "reason": "valor não aparece no trecho citado"
+    },
+    {
+      "afirmacao": "O uso do controle de versิอamento melhora significativamente a produtividade da equipe e a qualidade do software.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "O uso do controle de versão resulta em melhorias consideráveis na produtividade da equipe e na qualidade do software.",
+      "valor": "87,2%",
+      "source_id": "S2",
+      "reason": "valor não aparece no trecho citado"
+    },
+    {
+      "afirmacao": "O controle de versão do Git é a maneira mais simples de capacitar os desenvolvedores.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Se as empresas quiserem atender rapidamente à demanda dos clientes e aos objetivos de negócios, o controle de versão do Git é a maneira mais simples de capacitar os desenvolvedores.",
+      "valor": "",
+      "source_id": "S2",
+      "reason": "limite de 5 fatos por fonte"
+    }
+  ],
+  "log": [
+    {
+      "query": "definição git controle versão",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "exemplo git trabalho básico",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "como usar git com colegas",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "git ciclo de trabalho passo a passo",
+      "provider": "searxng",
+      "results": 2
+    }
+  ],
+  "central_terms": [
+    "git",
+    "controle versão",
+    "ciclo trabalho",
+    "colaboração",
+    "versão"
+  ],
+  "created_at": "2026-11-23T04:28:02+00:00"
+}

@@ -1,0 +1,9 @@
+node_modules/
+/android/
+/ios/
+modules/*/android/build/
+modules/*/android/.gradle/
+.expo/
+outputs/
+*.apk
+*.gguf

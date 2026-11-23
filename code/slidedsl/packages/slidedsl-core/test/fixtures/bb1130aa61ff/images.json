@@ -1,0 +1,38 @@
+{
+  "assets/media/0b016a710272aba5aede438d34ffb73cf05a4e0ef969cc6b15ca7c04095ec1bc.png": {
+    "width": 1280,
+    "height": 610,
+    "metadata": {
+      "id": "0b016a710272aba5aede438d34ffb73cf05a4e0ef969cc6b15ca7c04095ec1bc",
+      "provider": "commons",
+      "title": "File:Toolchain.png",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dc/Toolchain.png/1280px-Toolchain.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Toolchain.png",
+      "author": "D. Justen",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0",
+      "attribution": "File:Toolchain.png — D. Justen — CC BY 4.0",
+      "width": 1280,
+      "height": 610,
+      "description": "C/C++ Toolchain unter Darstellung der Ein- und Ausgabeformate von Compiler, Linker und Loader",
+      "categories": [
+        "Category:CC-BY-4.0",
+        "Category:Compilers",
+        "Category:Computer science",
+        "Category:Self-published work",
+        "Category:Toolchain",
+        "Computer science",
+        "Compilers",
+        "Self-published work",
+        "Toolchain"
+      ],
+      "lexical_score": 1.0,
+      "query": "compiler",
+      "asset": "assets/media/0b016a710272aba5aede438d34ffb73cf05a4e0ef969cc6b15ca7c04095ec1bc.png",
+      "downloaded_utc": "2026-11-11T04:32:46.861512+00:00",
+      "source_sha256": "b32ebe2f185a3019cdde2311171f8c85a170754d6e24419c5382f8025a3625d9",
+      "reviewed": false,
+      "asset_sha256": "897775c58699a0dd586b0a2166791b2eaf17e7aa858a91dcbcd4ed863694b81f"
+    }
+  }
+}

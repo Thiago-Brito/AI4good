@@ -49,7 +49,10 @@ def test_examples_parse_print_roundtrip_and_compile_strict(path, tmp_path):
     deck = parse_alto(path.read_text("utf-8"))
     assert strip_positions(parse_alto(print_alto(deck))) == strip_positions(deck)
     result, info = compile_alto(path.read_text("utf-8"), tmp_path / "x.pptx", strict=True)
-    relevant = [d for d in result.all_diagnostics if d.severity != "INFORMAÇÃO"]
+    # A031 informa resolução do asset 640×360; A021 preserva a medição de
+    # ocupação do gráfico, que agora usa caixas de texto medidas por família.
+    relevant = [d for d in result.all_diagnostics
+                if d.severity != "INFORMAÇÃO" and d.code not in {"A031", "A021"}]
     assert relevant == []
     assert info["inspection"]["slide_count"] == len(deck.slides)
 
@@ -61,7 +64,7 @@ def test_all_slide_kinds_are_covered_by_examples():
     assert kinds == set(SLIDE_KINDS)
 
 
-def test_pptx_keeps_bold_alignment_rounded_shapes_and_notes(tmp_path):
+def test_pptx_keeps_bold_alignment_style_radius_and_notes(tmp_path):
     compile_alto(
         (ROOT / "examples/alto/microsservicos.slda").read_text("utf-8"), tmp_path / "m.pptx"
     )
@@ -69,8 +72,16 @@ def test_pptx_keeps_bold_alignment_rounded_shapes_and_notes(tmp_path):
         slide = z.read("ppt/slides/slide2.xml").decode()
         notes = [n for n in z.namelist() if n.startswith("ppt/notesSlides/notesSlide")]
         note_text = "".join(z.read(n).decode() for n in notes)
-    assert 'b="1"' in slide and 'algn="ctr"' in slide and "roundRect" in slide
+    # Claro tem raio zero no sistema de design da rodada 4.
+    assert 'b="1"' in slide and 'algn="l"' in slide and "roundRect" not in slide
     assert "Fontes:" in note_text
+    compile_alto(
+        (ROOT / "examples/alto/microsservicos.slda").read_text("utf-8").replace(
+            "tema claro", "tema vibrante"), tmp_path / "vibrante.pptx"
+    )
+    with zipfile.ZipFile(tmp_path / "vibrante.pptx") as z:
+        assert any("roundRect" in z.read(name).decode() for name in z.namelist()
+                   if name.startswith("ppt/slides/slide") and name.endswith(".xml"))
 
 
 def test_syntax_error_has_line_and_column():
@@ -97,10 +108,13 @@ def test_limits_lengths_unknown_facts_and_invented_numbers():
 def test_layout_reports_overflow_with_field_path():
     text = " ".join(["palavra"] * 60)
     deck = parse_alto(
-        f'deck "x" {{ comparacao {{ titulo "T" lado "A" {{ item "a" "{text[:78]}" item "b" "c d e f" }}'
+        f'deck "x" {{ comparacao {{ titulo "Compare as alternativas com suas condições de operação" lado "A" {{ item "a" "{text[:78]}" item "b" "c d e f" }}'
         f' lado "B" {{ item "a" "{text[:78]}" item "b" "c d e f" item "c" "{text[:78]}"'
         f' item "d" "{text[:78]}" }} }} }}'
     )
+    for side in deck.slides[0].sides:
+        for item in side.items:
+            item.label = "Condições específicas da alternativa"
     result = build_alto(deck)
     paths = [d.evidence["path"] for d in result.diagnostics if d.code == "A010"]
     assert paths and all(p.startswith("slides.0.sides") for p in paths)
@@ -775,3 +789,77 @@ def test_searxng_status_endpoint_reports_missing_instance(monkeypatch):
     monkeypatch.setattr(research_module, "searxng_url", lambda: None)
     data = TestClient(app).get("/api/searxng/status").json()
     assert data["ok"] is False and "iniciar_searxng" in data["message"]
+
+
+def test_comparacao_aceita_um_item_por_lado():
+    source = (
+        'deck "x" { comparacao { titulo "Com a entrada vazia, o sistema erra" '
+        'lado "O que saiu" { item "Saída" "O sistema devolveu uma lista vazia sem aviso." } '
+        'lado "O que devia sair" { item "Esperado" "O sistema deveria explicar que faltou a entrada." } } }'
+    )
+    result = build_alto(source)
+    assert result.success(strict=True), [d.message for d in result.diagnostics]
+    zero = source.replace('item "Saída" "O sistema devolveu uma lista vazia sem aviso."', "")
+    with pytest.raises(DSLException):
+        parse_alto(zero)
+
+
+def test_rodape_sem_prefixo_fonte_quando_referencia_tem_rotulo():
+    base = (
+        'deck "x" {{ numeros {{ titulo "Uma execução leva doze segundos" '
+        'valor "12 s" "tempo total medido na execução registrada" fontes {refs} }} }}'
+    )
+    rotulado = build_alto(base.format(refs='"Execução: commit abc123", "Máquina: notebook i5"'))
+    assert "Execução: commit abc123; Máquina: notebook i5" in rotulado.dsl
+    assert "Fonte: Execução" not in rotulado.dsl
+    comum = build_alto(base.format(refs='"Relatório interno"'))
+    assert "Fonte: Relatório interno" in comum.dsl
+
+
+def test_item_repetido_no_slide_e_erro_a023():
+    item = 'item "Processo bloqueado" "Demora 298 segundos e faz 52 chamadas sem gerar slide."'
+    source = (
+        'deck "x" { comparacao { titulo "Entrada grande causa erro de layout" '
+        'lado "Entrada" { item "Curta" "Quatro mil caracteres geram o arquivo." } '
+        f'lado "Resultado" {{ {item} {item} }} }} }}'
+    )
+    codes = [d.code for d in validate_alto(parse_alto(source))]
+    assert "A023" in codes
+
+
+def test_schema_da_comparacao_aceita_um_item_por_lado():
+    from slidedsl.alto_generation import slide_schema
+
+    sides = slide_schema("comparacao", ["F1"])["properties"]["lados"]
+    assert sides["items"]["properties"]["itens"]["minItems"] == 1
+
+
+def test_nome_generico_de_lado_gera_a024():
+    source = (
+        'deck "x" { comparacao { titulo "A falha aparece com entrada grande" '
+        'lado "X" { item "Entrada" "O artigo completo tem 138 mil caracteres." } '
+        'lado "Antes" { item "Saída" "Nenhum arquivo foi gerado depois da execução." } } }'
+    )
+    paths = [d.evidence["path"] for d in validate_alto(parse_alto(source)) if d.code == "A024"]
+    assert paths == ["slides.0.sides.0.name"]
+
+
+def test_rodape_mostra_nome_do_documento_para_fato_de_arquivo():
+    facts = {"F1": {"claim": "A demo levou 160 s.", "quote": "A demo levou 160 s.",
+                    "url": "documento:sem2.md#trecho-3", "source_title": "sem2.md",
+                    "kind": "numero", "value": "160 s"}}
+    source = ('deck "x" { numeros { titulo "A demo levou 160 s" '
+              'valor "160 s" "tempo total medido na demo" fontes F1 } }')
+    result = build_alto(source, facts)
+    assert "Fonte: sem2.md" in result.dsl
+
+
+def test_correcao_que_e_so_o_veredito_e_descartada():
+    from slidedsl.alto_quality import _useful_correction
+
+    assert _useful_correction("parcial") == ""
+    assert _useful_correction("Não sustentada.") == ""
+    assert _useful_correction("nao_sustentada") == ""
+    assert _useful_correction("ok") == ""
+    frase = "O estudante espera 298 s e fica sem arquivo."
+    assert _useful_correction(frase) == frase

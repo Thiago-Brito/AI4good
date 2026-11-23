@@ -1,0 +1,389 @@
+{
+  "topic": "Apresente energia solar residencial para moradores que pensam em instalar painéis em casa: como funciona, quanto custa e em quanto tempo o investimento se paga.",
+  "queries": [
+    "how solar panels work home",
+    "average cost solar panels home",
+    "payback time solar panels",
+    "solar panel efficiency data"
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "title": "How Does Solar Power Work for a Home? | Solar & Storage - Generac",
+      "url": "https://www.generac.com/resources/home-management/how-does-solar-work-for-home/",
+      "provider": "searxng",
+      "snippet": "14 de set. de 2026 ... Solar power works by using solar panels to capture sunlight and turn it into direct current, or DC, electricity. An inverter then converts that ...",
+      "text_chars": 10412
+    },
+    {
+      "id": "S2",
+      "title": "How Home Solar Systems Work: A Beginner's Guide - YouTube",
+      "url": "https://www.youtube.com/watch?v=D7w3ZTecMYw",
+      "provider": "searxng",
+      "snippet": "20 de jul. de 2025 ... Thinking about solar? This video goes through the basic principles of residential solar energy. This is part one of my popular three-part ...",
+      "text_chars": 194
+    },
+    {
+      "id": "S3",
+      "title": "Solar Panel Cost In 2026: It May Be Lower Than You Think",
+      "url": "https://www.energysage.com/local-data/solar-panel-cost/",
+      "provider": "searxng",
+      "snippet": "It costs about $30500 to install solar panels. That's a big number, but it can save you $37000 to $154000 over 25 years.",
+      "text_chars": 16091
+    },
+    {
+      "id": "S4",
+      "title": "How Much Do Solar Panels Cost? (2026) - Consumer Affairs",
+      "url": "https://www.consumeraffairs.com/solar-energy/how-much-do-solar-panels-cost.html",
+      "provider": "searxng",
+      "snippet": "Solar panel installations typically cost between $13,962 and $27,924 in 2026. The actual price tag depends on your home's energy needs, roof characteristics, local incentives and other...",
+      "text_chars": 23781
+    },
+    {
+      "id": "S5",
+      "title": "Solar Payback Period: How Soon Will It Pay Off? - EnergySage",
+      "url": "https://www.energysage.com/solar/understanding-your-solar-panel-payback-period/",
+      "provider": "searxng",
+      "snippet": "Your solar payback period is the time it takes to break even on your initial solar investment · The average EnergySage solar shopper breaks even in 10.8 years.",
+      "text_chars": 7982
+    },
+    {
+      "id": "S6",
+      "title": "Solar Panel ROI: Are Solar Panels a Good Investment in 2026?",
+      "url": "https://switchtogether.co.uk/resource-hub/blog/solar-panel-return-on-investment/",
+      "provider": "searxng",
+      "snippet": "13 de jan. de 2026 ... The solar panel payback period is the time it takes for your savings and earnings to equal your installation cost. A simple way to estimate it:.",
+      "text_chars": 10329
+    },
+    {
+      "id": "S7",
+      "title": "Best Research-Cell Efficiency Chart | Photovoltaic Research | NLR",
+      "url": "https://www.nlr.gov/pv/cell-efficiency",
+      "provider": "searxng",
+      "snippet": "Best Research-Cell Efficiency Chart NLR maintains a chart of the highest confirmed conversion efficiencies for research cells for a range of photovoltaic technologies, plotted from 1976 to the present.",
+      "text_chars": 2659
+    },
+    {
+      "id": "S8",
+      "title": "Interactive Best Research-Cell Efficiency Chart",
+      "url": "https://www.nlr.gov/pv/interactive-cell-efficiency",
+      "provider": "searxng",
+      "snippet": "Interactive Best Research-Cell Efficiency Chart NLR maintains a chart of the highest confirmed conversion efficiencies for research cells for a range of photovoltaic technologies.",
+      "text_chars": 885
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "O custo de um sistema de 12 kW de painéis solares em 2026 pode ser acessado por meio de comparações de preços locais.",
+      "kind": "numero",
+      "quote": "How much does a 12 kW solar panel system cost in 2026?",
+      "source_id": "S3",
+      "url": "https://www.energysage.com/local-data/solar-panel-cost/",
+      "source_title": "Solar Panel Cost In 2026: It May Be Lower Than You Think",
+      "value": "12 kW",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F2",
+      "claim": "Em 2026, os painéis solares geralmente são considerados um bom investimento.",
+      "kind": "definicao",
+      "quote": "Are solar panels worth it? In 2026, they usually are",
+      "source_id": "S3",
+      "url": "https://www.energysage.com/local-data/solar-panel-cost/",
+      "source_title": "Solar Panel Cost In 2026: It May Be Lower Than You Think",
+      "value": "usually",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F3",
+      "claim": "A instalação de painéis solares pode exigir a remoção ou poda de árvores para evitar sombras que bloqueiam a luz solar",
+      "kind": "definicao",
+      "quote": "You might need to remove or trim trees before installing solar panels, especially if shade blocks sunlight from reaching the roof. Tree work can add anywhere from a few hundred to several thousand dollars to the total project cost, depending on the size and location of the trees. Even partial shade can reduce solar production, so installers may recommend trimming or removal to improve efficiency.",
+      "source_id": "S4",
+      "url": "https://www.consumeraffairs.com/solar-energy/how-much-do-solar-panels-cost.html",
+      "source_title": "How Much Do Solar Panels Cost? (2026) - Consumer Affairs",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F4",
+      "claim": "A sombra parcial reduz a produção de energia solar",
+      "kind": "definicao",
+      "quote": "Even partial shade can reduce solar production, so installers may recommend trimming or removal to improve efficiency.",
+      "source_id": "S4",
+      "url": "https://www.consumeraffairs.com/solar-energy/how-much-do-solar-panels-cost.html",
+      "source_title": "How Much Do Solar Panels Cost? (2026) - Consumer Affairs",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F5",
+      "claim": "O período médio de retorno do investimento é de 10,8 anos.",
+      "kind": "numero",
+      "quote": "The average EnergySage solar shopper breaks even in 10.8 years",
+      "source_id": "S5",
+      "url": "https://www.energysage.com/solar/understanding-your-solar-panel-payback-period/",
+      "source_title": "Solar Payback Period: How Soon Will It Pay Off? - EnergySage",
+      "value": "10.8",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F6",
+      "claim": "O pagamento do SEG pode somar milhares de libras ao longo da vida do sistema.",
+      "kind": "definicao",
+      "quote": "Earning Money Through the Smart Export Guarantee (SEG) If your panels produce more electricity than you use, you can sell the excess back to the grid through the Smart Export Guarantee (SEG). Over the lifespan of a system, SEG payments can add up to thousands of pounds — significantly boosting your solar energy return on investment.",
+      "source_id": "S6",
+      "url": "https://switchtogether.co.uk/resource-hub/blog/solar-panel-return-on-investment/",
+      "source_title": "Solar Panel ROI: Are Solar Panels a Good Investment in 2026?",
+      "value": "milhares de libras",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F7",
+      "claim": "O período de retorno do investimento em painéis solares é de aproximadamente 8 anos.",
+      "kind": "numero",
+      "quote": "How Long Until Solar Panels Pay for Themselves? The solar panel payback period is the time it takes for your savings and earnings to equal your installation cost. £5,000 system ÷ £60 0 annual benefit ≈ 8 years",
+      "source_id": "S6",
+      "url": "https://switchtogether.co.uk/resource-hub/blog/solar-panel-return-on-investment/",
+      "source_title": "Solar Panel ROI: Are Solar Panels a Good Investment in 2026?",
+      "value": "8 anos",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F8",
+      "claim": "O investimento em painéis solares tem um período médio de 10 anos para o retorno do dinheiro.",
+      "kind": "numero",
+      "quote": "It takes an average of about 10 years to earn back the money you spend on installing solar panels.",
+      "source_id": "S3",
+      "url": "https://www.energysage.com/local-data/solar-panel-cost/",
+      "source_title": "Solar Panel Cost In 2026: It May Be Lower Than You Think",
+      "value": "10",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F9",
+      "claim": "A maioria dos moradores economiza entre $41.000 e $155.000 ao longo de 25 anos com painéis solares.",
+      "kind": "exemplo",
+      "quote": "Most homeowners will save $41,000 to $155,000 over 25 years with solar.",
+      "source_id": "S3",
+      "url": "https://www.energysage.com/local-data/solar-panel-cost/",
+      "source_title": "Solar Panel Cost In 2026: It May Be Lower Than You Think",
+      "value": "41,000 a 155,000",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F10",
+      "claim": "O retorno do investimento pode ser calculado dividindo o custo final pelo benefício anual.",
+      "kind": "definicao",
+      "quote": "You can calculate your break-even point, or solar payback period, by dividing the final cost (the total cost of your solar panel system minus any upfront incentives) by your annual financial benefit (the amount you save on electricity combined with annual incentives).",
+      "source_id": "S3",
+      "url": "https://www.energysage.com/local-data/solar-panel-cost/",
+      "source_title": "Solar Panel Cost In 2026: It May Be Lower Than You Think",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    }
+  ],
+  "rejected": [
+    {
+      "afirmacao": "Um array solar de 8 kW não produzirá sempre 8 kW no telhado.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "An 8 kW solar array will not always produce 8 kW on the roof",
+      "valor": "8 kW",
+      "source_id": "S1",
+      "reason": "fora do assunto central (não menciona energia solar, painéis solares, residencial)"
+    },
+    {
+      "afirmacao": "Um painel de 400 watts não produzirá sempre 40-than 400 watts.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "a 400-watt panel will not always produce 400 watts",
+      "valor": "400 watts",
+      "source_id": "S1",
+      "reason": "número da afirmação não está no texto"
+    },
+    {
+      "afirmacao": "O rendimento real de um sistema solar é afetado por calor, sombra, clima, inclinação do telhado, temporada, projeto do sistema e o nível de potência do inversor.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Heat, shade, weather, roof angle, season, system design and inverter power rating all affect real-world output",
+      "valor": "",
+      "source_id": "S1",
+      "reason": "fora do assunto central (não menciona energia solar, painéis solares, residencial)"
+    },
+    {
+      "afirmacao": "Entender a diferença entre produção indicada e real ajuda os moradores a fazer perguntas melhores ao revisar um orçamento.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Understanding this gap between rated and actual production helps homeowners ask better questions when reviewing a quote",
+      "valor": "",
+      "source_id": "S1",
+      "reason": "fora do assunto central (não menciona energia solar, painéis solares, residencial)"
+    },
+    {
+      "afirmacao": "Você pode obter equipamentos de alta qualidade sem pagar um preço premium.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Choose less expensive equipment. While some of the best solar panels, like Maxeon, are the priciest, you can still get high-quality equipment without paying a premium.",
+      "valor": "premium",
+      "source_id": "S3",
+      "reason": "fora do assunto central (não menciona energia solar, painéis solares, residencial)"
+    },
+    {
+      "afirmacao": "É possível economizar muito ao comparar orçamentos de instaladores.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "Get multiple quotes. By comparing quotes, you can save big—and EnergySage makes it easy.",
+      "valor": "big",
+      "source_id": "S3",
+      "reason": "fora do assunto central (não menciona energia solar, painéis solares, residencial)"
+    },
+    {
+      "afirmacao": "A atualização do painel elétrico custa entre $1.500 e $4.0",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "numero",
+      "trecho": "Electrical panel upgrades: $1,500 to $4,000 Many older homes need electrical panel upgrades to handle solar power systems. Your installer should assess this during the site evaluation, but it’s one of the most commonly overlooked costs. For instance, if your home has a 100-amp panel and you’re adding an 8 kW system, you’ll likely need to upgrade to 200 amps. You might need to remove or trim trees before installing solar panels, especially if shade blocks sunlight from reaching the roof. Tree work can add anywhere from a few hundred to several thousand dollars to the total project cost, depending on the size and location of the trees. Even partial shade can reduce solar production, so installers may recommend trimming or removal to improve efficiency.",
+      "valor": "1500",
+      "source_id": "S4",
+      "reason": "número da afirmação não está no texto"
+    },
+    {
+      "afirmacao": "A poda ou remoção de árvores pode custar de algumas centenas a vários milhares de dólares",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "numero",
+      "trecho": "Tree work can add anywhere from a few hundred to several thousand dollars to the total project cost, depending on the size and location of the trees.",
+      "valor": "few hundred",
+      "source_id": "S4",
+      "reason": "fora do assunto central (não menciona energia solar, painéis solares, residencial)"
+    },
+    {
+      "afirmacao": "Alguns compradores atingem o break even em cinco anos.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "Some shoppers break even in five years.",
+      "valor": "5",
+      "source_id": "S5",
+      "reason": "valor não aparece no trecho citado"
+    },
+    {
+      "afirmacao": "Outros compradores levam cerca de 15 anos para atingir o break even.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "Others take closer to 15.",
+      "valor": "15",
+      "source_id": "S5",
+      "reason": "fora do assunto central (não menciona energia solar, painéis solares, residencial)"
+    },
+    {
+      "afirmacao": "A maioria dos moradores economiza cerca de $60.000 ao longo de 25 anos com solar.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "numero",
+      "trecho": "Most homeowners save around $60,000 over 25 years",
+      "valor": "60000",
+      "source_id": "S5",
+      "reason": "fora do assunto central (não menciona energia solar, painéis solares, residencial)"
+    },
+    {
+      "afirmacao": "Um sistema de £5.000 gera um benefício anual de £600.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "numero",
+      "trecho": "£5,000 system ÷ £600 annual benefit ≈ 8 years",
+      "valor": "£5,000",
+      "source_id": "S6",
+      "reason": "fora do assunto central (não menciona energia solar, painéis solares, residencial)"
+    },
+    {
+      "afirmacao": "Inverters têm sua própria classificação de potência, separada dos painéis.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Inverters have their own power output rating, separate from the panels—and if that rating is lower than what the panels can produce, it caps the system's output even on a perfectly sunny day.",
+      "valor": "",
+      "source_id": "S1",
+      "reason": "fora do assunto central (não menciona energia solar, painéis solares, residencial)"
+    },
+    {
+      "afirmacao": "Os microinversores PWRmicro da Generac entregam até 28% mais potência do que a linha líder do mercado.",
+      "autor": "Generac",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "Generac's PWRmicro microinverters are high-powered, delivering up to 28% more power* than the leading product line, so homeowners can capture more usable energy from every panel.",
+      "valor": "28%",
+      "source_id": "S1",
+      "reason": "fora do assunto central (não menciona energia solar, painéis solares, residencial)"
+    },
+    {
+      "afirmacao": "A comparação de potência máxima é baseada nos valores de 2 x 410 W = 820 W para os microinversores PWRmicro.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "numero",
+      "trecho": "*Comparison based on maximum power output of PWRmicro (2 x 410 W = 820 W) versus the industry leading microinverter product line as of August 2026.",
+      "valor": "820",
+      "source_id": "S1",
+      "reason": "fora do assunto central (não menciona energia solar, painéis solares, residencial)"
+    },
+    {
+      "afirmacao": "A instalação de painéis solares elimina ou reduz significativamente a conta de luz dos moradores.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Solar is worth it for most homeowners because it eliminates or significantly reduces your electric bill.",
+      "valor": "41,000 a 155,000",
+      "source_id": "S3",
+      "reason": "valor não aparece no trecho citado"
+    }
+  ],
+  "log": [
+    {
+      "query": "how solar panels work home",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "average cost solar panels home",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "payback time solar panels",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "solar panel efficiency data",
+      "provider": "searxng",
+      "results": 2
+    }
+  ],
+  "central_terms": [
+    "energia solar",
+    "painéis solares",
+    "residencial",
+    "pagamento",
+    "investimento"
+  ],
+  "created_at": "2026-11-23T04:25:32+00:00"
+}

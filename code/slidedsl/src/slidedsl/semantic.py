@@ -324,6 +324,10 @@ def validate_ir(deck: Presentation, root: Path | None = None) -> list[Diagnostic
             if r.target not in ids or r.reference not in ids or r.target == r.reference:
                 error("S003", "Referência espacial inválida.", r.target)
         for e in slide.elements:
+            # A família por texto pertence ao contrato IR existente; títulos e corpo
+            # podem usar famílias distintas sem alterar o tema-base claro/escuro.
+            if e.type == "text" and not e.font_face.strip():
+                error("S005", "Texto exige uma família tipográfica não vazia.", e.id)
             incompatible = (
                 (e.type != "text" and (e.text is not None or e.font_size is not None))
                 or (e.type != "image" and e.file is not None)

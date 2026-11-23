@@ -39,18 +39,25 @@ def known_background(text: Element, elements: list[Element], default: str) -> st
 
 
 def estimated_overflow(e: Element, cfg: dict) -> dict:
+    from .text_metrics import text_height, text_width
     width = max(0, e.width - 2 * cfg["text_padding"])
     height = max(0, e.height - 2 * cfg["text_padding"])
     font_px = (e.font_size or 24) * 96 / 72
     capacity = max(1, math.floor(width / (cfg["character_width_factor"] * font_px)))
     lines = sum(max(1, math.ceil(len(line) / capacity)) for line in (e.text or "").split("\n"))
     needed = lines * font_px * cfg["line_height_factor"]
+    measured = text_height(e.text or "", e.width, e.font_size or 24, e.bold, e.font_face)
+    longest = max((text_width(w, e.font_size or 24, e.bold, e.font_face)
+                   for w in (e.text or "").split()), default=0)
     return {
         "estimated_lines": lines,
-        "estimated_height": needed,
+        "estimated_height": max(needed, measured - 18) if e.font_face == "Arial" else measured - 18,
         "available_height": height,
+        "longest_word": longest,
+        "available_width": width,
+        "font_family": e.font_face,
         "characters_per_line": capacity,
-        "approximation": "AABB; largura média de caracteres; não mede glifos",
+        "approximation": "AABB; quebra por família/Pillow com margem; Arial mantém piso por caracteres",
     }
 
 
@@ -110,6 +117,10 @@ def check_design(deck: Presentation, config: dict | None = None) -> list[Diagnos
                     suggestion="Mova ou redimensione o elemento para dentro da tela.",
                 )
             if e.type == "text":
+                if e.role == "corpo" and (e.font_size or 24) < 16:
+                    emit("D006", "Corpo abaixo do mínimo legível de 16 pt.", e,
+                         {"minimum": 16, "actual": e.font_size},
+                         "Encurte o texto antes de reduzir a fonte.")
                 bg = known_background(e, valid, theme["colors"]["fundo"])
                 if bg is None:
                     emit(
@@ -137,6 +148,13 @@ def check_design(deck: Presentation, config: dict | None = None) -> list[Diagnos
                         theme["colors"]["texto"],
                         theme["font_face"],
                     )
+                    from .design_system import title_style
+                    expected = title_style(e, bg) or expected
+                    # Sobre um fundo sólido próprio (slide de abertura/fechamento), a cor do
+                    # título acompanha esse fundo; o contraste já foi conferido acima.
+                    own_background = bg is not None and bg.upper() != theme["colors"]["fundo"].upper()
+                    if own_background:
+                        expected = (expected[0], e.color, expected[2])
                     if actual != expected:
                         emit(
                             "D003",
@@ -146,7 +164,8 @@ def check_design(deck: Presentation, config: dict | None = None) -> list[Diagnos
                             "Use os tokens titulo e texto do tema ou justifique a variação.",
                         )
                 estimate = estimated_overflow(e, cfg)
-                if estimate["estimated_height"] > estimate["available_height"]:
+                if (estimate["estimated_height"] > estimate["available_height"] or
+                        estimate["longest_word"] > estimate["available_width"]):
                     emit(
                         "D010",
                         "Possível overflow de texto (estimativa aproximada).",

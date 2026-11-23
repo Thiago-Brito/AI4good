@@ -1,0 +1,52 @@
+{
+  "assets/media/8231d39a8aa072c6a77eb66a3c2262acea6e28715ebbe61f1265881fa731ae2f.png": {
+    "width": 1280,
+    "height": 960,
+    "metadata": {
+      "id": "8231d39a8aa072c6a77eb66a3c2262acea6e28715ebbe61f1265881fa731ae2f",
+      "provider": "commons",
+      "title": "File:Sunlight Through Leaf.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/6/65/Sunlight_Through_Leaf.jpg/1280px-Sunlight_Through_Leaf.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Sunlight_Through_Leaf.jpg",
+      "author": "QUEENBELLAAA",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0",
+      "attribution": "File:Sunlight Through Leaf.jpg — QUEENBELLAAA — CC BY 4.0",
+      "width": 1280,
+      "height": 960,
+      "description": "Sunlight shining through a hole in the leaf of a small plant",
+      "lexical_score": 1.0,
+      "query": "plant leaf sunlight",
+      "asset": "assets/media/8231d39a8aa072c6a77eb66a3c2262acea6e28715ebbe61f1265881fa731ae2f.png",
+      "downloaded_utc": "2026-11-11T04:04:22.679411+00:00",
+      "source_sha256": "fc88cd392c6de44fb1c6a627a48d517c9a497f5254229423ab135e3a7284e378",
+      "reviewed": false,
+      "asset_sha256": "9bfd31359663219eddb3b3ee311c372c4a68c226c4908d23ab2f07ce43d4144d"
+    }
+  },
+  "assets/media/ca10e41b203ba16bdd11d50ceb6d48942250b863ead02264667e5235df97d84d.png": {
+    "width": 1280,
+    "height": 1707,
+    "metadata": {
+      "id": "ca10e41b203ba16bdd11d50ceb6d48942250b863ead02264667e5235df97d84d",
+      "provider": "commons",
+      "title": "File:Plant seek photosynthesis.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/2/21/Plant_seek_photosynthesis.jpg/1280px-Plant_seek_photosynthesis.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Plant_seek_photosynthesis.jpg",
+      "author": "Adamu mc",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "attribution": "File:Plant seek photosynthesis.jpg — Adamu mc — CC BY-SA 4.0",
+      "width": 1280,
+      "height": 1707,
+      "description": "natural plant seek photosynthesis",
+      "lexical_score": 1.0,
+      "query": "plant photosynthesis",
+      "asset": "assets/media/ca10e41b203ba16bdd11d50ceb6d48942250b863ead02264667e5235df97d84d.png",
+      "downloaded_utc": "2026-11-02T00:54:56.309857+00:00",
+      "source_sha256": "97d05224416b9bf53dba9dd30127a8718615591967df6fb2572eecf4bd9306da",
+      "reviewed": false,
+      "asset_sha256": "1b22015db5fb7f739313ef7f6947bb63fbf57f3ef439f31e86e4f7bd2467a3a7"
+    }
+  }
+}

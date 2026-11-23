@@ -1,13 +1,75 @@
+from copy import deepcopy
+import json
 import os
 
 import httpx
+from jsonschema import ValidationError, validate
 
 from .base import ModelError
+from ..https import system_tls_context
+
+
+def strict_schema(schema: dict) -> dict:
+    """Adaptar os schemas do domínio ao contrato estrito sem alterar o original."""
+    result = deepcopy(schema)
+
+    def visit(node):
+        if not isinstance(node, dict):
+            return
+        if node.get("type") == "object":
+            node["additionalProperties"] = False
+            node["required"] = list(node.get("properties", {}))
+        if node.get("type") == "array":
+            node.setdefault("items", {"type": "string"})
+        # Comprimentos continuam sendo validados localmente; não são portáveis
+        # entre todos os modelos com Structured Outputs.
+        node.pop("minLength", None)
+        node.pop("maxLength", None)
+        for value in node.values():
+            if isinstance(value, dict):
+                visit(value)
+            elif isinstance(value, list):
+                for item in value:
+                    visit(item)
+
+    visit(result)
+    return result
+
+
+def fit_to_schema(value, schema: dict):
+    """Cortar textos e listas acima do máximo, como o decoder restrito do Ollama faz.
+
+    O schema estrito enviado à OpenAI não leva maxLength; sem este corte, um campo
+    um pouco longo (ex.: um trecho literal de documento) derrubava a geração inteira.
+    Mínimos e enums continuam sendo exigidos pela validação local.
+    """
+    if not isinstance(schema, dict):
+        return value
+    if isinstance(value, str) and isinstance(schema.get("maxLength"), int):
+        return value[: schema["maxLength"]]
+    if isinstance(value, list):
+        items = [fit_to_schema(item, schema.get("items", {})) for item in value]
+        limit = schema.get("maxItems")
+        return items[:limit] if isinstance(limit, int) else items
+    if isinstance(value, dict):
+        props = schema.get("properties", {})
+        return {k: fit_to_schema(v, props.get(k, {})) for k, v in value.items()}
+    return value
 
 
 class OpenAITextModel:
-    def __init__(self, model: str, timeout: float = 300, client: httpx.Client | None = None):
+    supports_response_schema = True
+    supports_grammar = False
+
+    def __init__(
+        self,
+        model: str,
+        timeout: float = 300,
+        client: httpx.Client | None = None,
+        output_tokens: int = 2048,
+    ):
         self.model, self.timeout, self.client = model, timeout, client
+        self.output_tokens = output_tokens
         self.metadata = {
             "provider": "openai",
             "model_requested": model,
@@ -26,7 +88,9 @@ class OpenAITextModel:
                     method, "https://api.openai.com/v1" + endpoint, headers=headers, **kwargs
                 )
             else:
-                with httpx.Client(timeout=self.timeout) as client:
+                # Repositório do sistema: antivírus/proxies corporativos que inspecionam TLS
+                # instalam a raiz ali, não no certifi. A verificação continua ativa.
+                with httpx.Client(timeout=self.timeout, verify=system_tls_context()) as client:
                     response = client.request(
                         method, "https://api.openai.com/v1" + endpoint, headers=headers, **kwargs
                     )
@@ -57,11 +121,16 @@ class OpenAITextModel:
         *,
         temperature: float = 0,
         seed: int | None = None,
+        response_schema: dict | None = None,
     ) -> str:
+        # Nunca reutilizar uso da resposta anterior em erro de transporte/recusa.
+        self.metadata.update(
+            usage=None, model_returned=None, finish_reason=None, schema_truncated=False
+        )
         payload = {
             "model": self.model,
             "temperature": temperature,
-            "max_completion_tokens": 8192,
+            "max_completion_tokens": self.output_tokens,
             "messages": [
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_prompt},
@@ -70,21 +139,43 @@ class OpenAITextModel:
         }
         if seed is not None:
             payload["seed"] = seed
+        if response_schema is not None:
+            payload["response_format"] = {
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "slidedsl",
+                    "strict": True,
+                    "schema": strict_schema(response_schema),
+                },
+            }
         d = self._request("POST", "/chat/completions", json=payload)
+        self.metadata.update(
+            model_returned=d.get("model"),
+            usage=d.get("usage"),
+            system_fingerprint=d.get("system_fingerprint"),
+            temperature=temperature,
+            seed=seed,
+        )
         try:
-            content = d["choices"][0]["message"]["content"]
+            choice = d["choices"][0]
+            self.metadata["finish_reason"] = choice.get("finish_reason")
+            if choice["message"].get("refusal"):
+                raise ModelError("O modelo recusou o pedido; revise o conteúdo solicitado.")
+            if choice.get("finish_reason") != "stop":
+                raise ModelError("Resposta OpenAI interrompida; verifique o limite de saída.")
+            content = choice["message"]["content"]
             if not isinstance(content, str):
                 raise KeyError("content")
         except (KeyError, IndexError, TypeError) as exc:
             raise ModelError("OpenAI não retornou conteúdo textual.") from exc
-        self.metadata.update(
-            {
-                "model_returned": d.get("model"),
-                "system_fingerprint": d.get("system_fingerprint"),
-                "usage": d.get("usage"),
-                "temperature": temperature,
-                "seed": seed,
-                "finish_reason": d["choices"][0].get("finish_reason"),
-            }
-        )
+        if response_schema is not None:
+            try:
+                data = json.loads(content)
+                fitted = fit_to_schema(data, response_schema)
+                validate(fitted, response_schema)
+                if fitted != data:
+                    self.metadata["schema_truncated"] = True
+                    content = json.dumps(fitted, ensure_ascii=False)
+            except (ValueError, ValidationError) as exc:
+                raise ModelError("A resposta OpenAI não atende ao schema do domínio.") from exc
         return content

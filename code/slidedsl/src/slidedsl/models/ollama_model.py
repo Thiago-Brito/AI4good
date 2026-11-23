@@ -6,6 +6,9 @@ from .base import ModelError
 
 
 class OllamaTextModel:
+    supports_response_schema = True
+    supports_grammar = False
+
     def __init__(
         self,
         model: str,
@@ -132,6 +135,18 @@ class OllamaTextModel:
                 "eval_count": d.get("eval_count"),
                 "prompt_eval_count": d.get("prompt_eval_count"),
                 "done_reason": d.get("done_reason"),
+                "finish_reason": d.get("done_reason"),
+                # Durações do Ollama vêm em nanossegundos; ficam brutas aqui e são
+                # convertidas para ms em model_usage.normalized_usage.
+                **{
+                    key: d.get(key)
+                    for key in (
+                        "prompt_eval_duration",
+                        "eval_duration",
+                        "load_duration",
+                        "total_duration",
+                    )
+                },
                 "thinking_output_chars": len(d.get("message", {}).get("thinking") or ""),
             }
         )

@@ -1,0 +1,132 @@
+{
+  "F1": {
+    "id": "F1",
+    "claim": "A depuração de arquitetura monolítica é mais fácil porque os dados e o código são rastreáveis no mesmo ambiente.",
+    "kind": "comparacao",
+    "quote": "Ao depurar a arquitetura monolítica, o desenvolvedor pode rastrear a movimentação de dados ou examinar o comportamento do código no mesmo ambiente de programação.",
+    "source_id": "S1",
+    "url": "https://aws.amazon.com/pt/compare/the-difference-between-monolithic-and-microservices-architecture/",
+    "source_title": "Qual é a diferença entre arquitetura monolítica e de microsserviços?",
+    "value": ""
+  },
+  "F2": {
+    "id": "F2",
+    "claim": "A depuração de microsserviços exige coordenação entre múltiplos desenvolvedores, aumentando o tempo e os recursos necessários.",
+    "kind": "comparacao",
+    "quote": "Pode ser mais difícil depurar aplicações de microsserviços porque vários desenvolvedores podem ser responsáveis por muitos microsserviços. Por exemplo, a depuração pode exigir testes coordenados, discussões e feedback entre os membros da equipe, o que exige mais tempo e recursos.",
+    "source_id": "S1",
+    "url": "https://aws.amazon.com/pt/compare/the-difference-between-monolithic-and-microservices-architecture/",
+    "source_title": "Qual é a diferença entre arquitetura monolítica e de microsserviços?",
+    "value": ""
+  },
+  "F3": {
+    "id": "F3",
+    "claim": "A Atlassian usou integração de Jira e Trello para atribuir 500 clientes difíceis a engenheiros.",
+    "kind": "exemplo",
+    "quote": "Quando a gente chegou aos últimos 500 clientes, que eram os mais difíceis de migrar, a gente usou a integração do Jira e do Trello para atribuir cada um deles a um engenheiro da Atlassian.",
+    "source_id": "S2",
+    "url": "https://www.atlassian.com/br/microservices/microservices-architecture/microservices-vs-monolith",
+    "source_title": "Microsserviços versus arquitetura monolítica - Atlassian",
+    "value": "500"
+  },
+  "F4": {
+    "id": "F4",
+    "claim": "A Atlassian tinha cerca de 15 microsserviços em janeiro de 2016.",
+    "kind": "data",
+    "quote": "Em janeiro de 2016, tínhamos cerca de 15 microsserviços ao todo, e agora temos mais de 1.300.",
+    "source_id": "S2",
+    "url": "https://www.atlassian.com/br/microservices/microservices-architecture/microservices-vs-monolith",
+    "source_title": "Microsserviços versus arquitetura monolítica - Atlassian",
+    "value": "15"
+  },
+  "F5": {
+    "id": "F5",
+    "claim": "A Atlassian tem mais de 1.300 microsserviços atualmente.",
+    "kind": "numero",
+    "quote": "Em janeiro de 2016, tínhamos cerca de 15 microsserviços ao todo, e agora temos mais de 1.300.",
+    "source_id": "S2",
+    "url": "https://www.atlassian.com/br/microservices/microservices-architecture/microservices-vs-monolith",
+    "source_title": "Microsserviços versus arquitetura monolítica - Atlassian",
+    "value": "1.300"
+  },
+  "F6": {
+    "id": "F6",
+    "claim": "A Atlassian mudou 100 mil clientes para a nuvem.",
+    "kind": "exemplo",
+    "quote": "Mudamos 100 mil clientes para a nuvem, construímos a nova plataforma ao longo do caminho, transformamos a cultura e acabamos com novas ferramentas.",
+    "source_id": "S2",
+    "url": "https://www.atlassian.com/br/microservices/microservices-architecture/microservices-vs-monolith",
+    "source_title": "Microsserviços versus arquitetura monolítica - Atlassian",
+    "value": "100 mil"
+  },
+  "F7": {
+    "id": "F7",
+    "claim": "A Modular Monolith Architecture combina simplicidade de monolito com modularidade de microsserviços.",
+    "kind": "definicao",
+    "quote": "A arquitetura de software é um dos pilares fundamentais para o sucesso de qualquer projeto de desenvolvimento. E entre as diversas abordagens disponíveis, a Modular Monolith Architecture — que pode ser compreendida como Arquitetura Monolito Modular, em tradução livre — tem ganhado destaque por combinar a simplicidade de um monolito com a modularidade de microsserviços.",
+    "source_id": "S3",
+    "url": "https://www.locaweb.com.br/blog/temas/codigo-aberto/modular-monolith-architecture-o-que-e-e-como-colocar-em-pratica/",
+    "source_title": "Modular Monolith Architecture: o que é e como colocar em prática",
+    "value": ""
+  },
+  "F8": {
+    "id": "F8",
+    "claim": "Microsserviços permitem escalar recursos independentemente de cada componente do sistema.",
+    "kind": "comparacao",
+    "quote": "Cada componente de software recebe seus próprios recursos computacionais em um sistema distribuído. Esses recursos podem ser escalados de forma independente com base nas capacidades atuais e nas demandas previstas. Assim, por exemplo, você pode alocar mais recursos para um serviço de localização geográfica em vez de todo o sistema.",
+    "source_id": "S1",
+    "url": "https://aws.amazon.com/pt/compare/the-difference-between-monolithic-and-microservices-architecture/",
+    "source_title": "Qual é a diferença entre arquitetura monolítica e de microsserviços?",
+    "value": "independente"
+  },
+  "F9": {
+    "id": "F9",
+    "claim": "Microsservi们s ajudam a inovar com mais rapidez, reduzem riscos e aceleram o tempo de entrada no mercado.",
+    "kind": "comparacao",
+    "quote": "Os microsserviços ajudam você a inovar com mais rapidez, reduzem riscos, aceleram o tempo de entrada no mercado e diminuem o custo total de propriedade.",
+    "source_id": "S1",
+    "url": "https://aws.amazon.com/pt/compare/the-difference-between-monolithic-and-microservices-architecture/",
+    "source_title": "Qual é a diferença entre arquitetura monolítica e de microsserviços?",
+    "value": "mais rapidez"
+  },
+  "F10": {
+    "id": "F10",
+    "claim": "A arquitetura de microsserviços reduz o custo total de propriedade do sistema.",
+    "kind": "comparacao",
+    "quote": "Os microsserviços ajudam você a inovar com mais rapidez, reduzem riscos, aceleram o tempo de entrada no mercado e diminuem o custo total de propriedade.",
+    "source_id": "S1",
+    "url": "https://aws.amazon.com/pt/compare/the-difference-between-monolithic-and-microservices-architecture/",
+    "source_title": "Qual é a diferença entre arquitetura monolítica e de microsserviços?",
+    "value": "diminuem"
+  },
+  "F11": {
+    "id": "F11",
+    "claim": "A arquitetura de microsserviços oferece suporte a sistemas distribuídos.",
+    "kind": "comparacao",
+    "quote": "Enquanto isso, a arquitetura de microsserviços oferece suporte a sistemas distribuídos.",
+    "source_id": "S1",
+    "url": "https://aws.amazon.com/pt/compare/the-difference-between-monolithic-and-microservices-architecture/",
+    "source_title": "Qual é a diferença entre arquitetura monolítica e de microsserviços?",
+    "value": "suporte"
+  },
+  "F12": {
+    "id": "F12",
+    "claim": "A Netflix migrou de arquitetura monolítica para microsserviços em 2009 para lidar com crescimento de demanda de streaming.",
+    "kind": "exemplo",
+    "quote": "Em 2009, a Netflix enfrentou as dificuldades iniciais. Sua infraestrutura não conseguiu acompanhar a demanda por serviços de streaming de vídeo em rápido crescimento. A empresa decidiu migrar a infraestrutura de TI dos data centers privados para a nuvem pública e substituir a arquitetura monolítica para arquitetura de microsserviço.",
+    "source_id": "S2",
+    "url": "https://www.atlassian.com/br/microservices/microservices-architecture/microservices-vs-monolith",
+    "source_title": "Microsserviços versus arquitetura monolítica - Atlassian",
+    "value": "2009"
+  },
+  "F13": {
+    "id": "F13",
+    "claim": "A migração da Netflix foi parte da razão pela qual a empresa ganhou o prêmio JAX Special Jury em 2015.",
+    "kind": "exemplo",
+    "quote": "Ganhou o prêmio JAX Special Jury em 2015 em parte devido a essa nova infraestrutura que internalizou o DevOps.",
+    "source_id": "S2",
+    "url": "https://www.atlassian.com/br/microservices/microservices-architecture/microservices-vs-monolith",
+    "source_title": "Microsserviços versus arquitetura monolítica - Atlassian",
+    "value": "2015"
+  }
+}

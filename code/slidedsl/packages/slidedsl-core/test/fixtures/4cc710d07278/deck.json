@@ -1,0 +1,189 @@
+{
+  "title": "Breve história da internet para adolescentes",
+  "theme": "noturno",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "A internet virou o mundo conectado",
+      "subtitle": "Uma breve história de como a internet saiu dos laboratórios e entrou no cotidiano dos adolescentes.",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": "assets/media/c85f0ebc73aaf9a32d87af19ba139d328870ba7d161db806348e1875550154d1.png",
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A capa deve prometer a mudança central: de rede técnica para ambiente cotidiano. Como não há fatos específicos neste slide, a formulação precisa ficar qualitativa e ampla. O foco é preparar o público para a linha do tempo que vem a seguir.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Tudo começou como rede de pesquisa",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Troca entre laboratórios",
+          "detail": "A rede ligava universidades e centros de pesquisa para compartilhar mensagens e arquivos entre computadores distantes."
+        },
+        {
+          "label": "Uso acadêmico inicial",
+          "detail": "Pesquisadores usavam a internet para enviar resultados, consultar bases de dados e colaborar em projetos científicos."
+        },
+        {
+          "label": "Comunicação entre equipes",
+          "detail": "As equipes trocavam informações mais rápido do que por correio ou telefone, o que acelerava estudos conjuntos."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A ideia central é mostrar que a internet nasceu como infraestrutura de pesquisa, não como produto de consumo. Vale destacar que o uso era restrito a instituições acadêmicas e científicas, com foco em colaboração. Depois, a expansão para o público veio quando outras funções passaram a ser incorporadas.",
+      "line": 9,
+      "column": 3
+    },
+    {
+      "kind": "imagem",
+      "title": "A web facilitou o acesso",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": "A web transformou a internet em um ambiente navegável por páginas e links.",
+      "unit": null,
+      "image_file": "assets/media/cc15f985aecb588ef34435d688f38f159db7626d71a8535e9f4801c799714027.png",
+      "image_query": null,
+      "items": [
+        {
+          "label": "Páginas interligadas",
+          "detail": "A web organizou conteúdos em páginas conectadas por links clicáveis."
+        },
+        {
+          "label": "Navegadores simples",
+          "detail": "Os navegadores permitiram abrir sites sem comandos técnicos complexos."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A ideia central é a mudança de interface: a internet deixou de exigir conhecimento técnico para ser explorada. Vale destacar que a web não criou a internet; ela criou uma forma mais simples de acessar seus conteúdos. Para adolescentes, a comparação mais clara é entre usar um sistema difícil e navegar por páginas como em um catálogo digital.",
+      "line": 16,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "O acesso saiu do computador fixo",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Conexão no bolso",
+          "detail": "Os celulares levaram a internet para fora de casa, permitindo acesso em qualquer lugar com sinal."
+        },
+        {
+          "label": "Uso em movimento",
+          "detail": "Os aplicativos mantiveram mensagens, mapas e vídeos disponíveis durante deslocamentos e esperas."
+        },
+        {
+          "label": "Tela sempre presente",
+          "detail": "A conexão passou a acompanhar estudos, lazer e conversa ao longo do dia, sem depender do desktop."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A ideia central é mostrar a passagem do acesso fixo para o acesso móvel, sem entrar em marcas ou datas. Vale destacar que o celular não substituiu tudo de uma vez; ele ampliou o uso cotidiano. Se quiser, o próximo slide pode ligar essa mobilidade ao surgimento das redes sociais e da produção de conteúdo.",
+      "line": 24,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Redes sociais mudaram a participação",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "De leitura a resposta",
+          "detail": "Os fóruns permitiram que leitores respondessem mensagens e continuassem discussões em tópicos públicos."
+        },
+        {
+          "label": "Publicação sem intermediários",
+          "detail": "Os blogs deram espaço para qualquer pessoa publicar textos e receber comentários diretamente dos leitores."
+        },
+        {
+          "label": "Criação em rede",
+          "detail": "As redes sociais juntaram perfis, curtidas e compartilhamentos para ampliar conversas e conteúdos entre amigos."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A ideia central é mostrar a passagem de consumo passivo para participação ativa. Fóruns e blogs abriram espaço para resposta e autoria, enquanto as redes sociais aceleraram a circulação entre pessoas. Como não há fatos numéricos fornecidos, o slide usa exemplos qualitativos sem atribuir datas ou estatísticas.",
+      "line": 31,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Use a internet com propósito",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Defina o objetivo",
+          "detail": "Antes de abrir um app, escolha se você quer estudar, conversar, se informar ou criar algo."
+        },
+        {
+          "label": "Compare fontes confiáveis",
+          "detail": "Ao buscar respostas, confira mais de uma fonte e prefira páginas com autoria e data visíveis."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A conclusão deve transformar a história em decisão prática para o adolescente. O foco é mostrar que a internet funciona melhor quando o uso tem intenção clara. A ressalva é que nem toda informação online é confiável, então a checagem precisa vir antes de compartilhar ou repetir.",
+      "line": 38,
+      "column": 3
+    }
+  ]
+}

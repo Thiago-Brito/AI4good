@@ -6,7 +6,7 @@ Não prova fidelidade do Office: fontes e quebras podem diferir levemente.
 
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 from .ir import Presentation
 from .paths import project_root
@@ -18,11 +18,16 @@ FALLBACK_FONTS = {
 }
 
 
-def _font(size_pt: int, bold: bool, scale: float):
+def _font(size_pt: int, bold: bool, scale: float, text: str = "", family="Arial"):
     from .text_metrics import font_file
 
-    metric = font_file(bold)
-    candidates = [metric] + [Path(p) for p in FALLBACK_FONTS[bold]]
+    metric = font_file(family, bold)
+    unicode_font = Path("C:/Windows/Fonts/" + ("segoeuib.ttf" if bold else "segoeui.ttf"))
+    candidates = []
+    # Suplência Unicode só quando a família pedida não foi encontrada.
+    if metric is None and any(c in text for c in "₀₁₂₃₄₅₆₇₈₉"):
+        candidates.append(unicode_font)
+    candidates += [metric] + [Path(p) for p in FALLBACK_FONTS[bold]]
     for path in candidates:
         if path and Path(path).is_file():
             # DejaVu é ~9% mais larga que Arial; compensa para aproximar as quebras.
@@ -80,7 +85,10 @@ def render_slide(deck: Presentation, index: int, scale: float = 1.0, root: Path 
                 with Image.open(root / e.file) as src:
                     src = src.convert("RGB")
                     w, h = round(e.width * scale), round(e.height * scale)
-                    src.thumbnail((w, h))
+                    if e.x == 664 and e.y == 0 and "_imagem_" in e.id:
+                        src = ImageOps.fit(src, (w, h))
+                    else:
+                        src.thumbnail((w, h))
                     image.paste(
                         src,
                         (round(box[0] + (w - src.width) / 2), round(box[1] + (h - src.height) / 2)),
@@ -88,7 +96,7 @@ def render_slide(deck: Presentation, index: int, scale: float = 1.0, root: Path 
             except OSError:
                 draw.rectangle(box, outline="#94A3B8", width=2)
         elif e.type == "text":
-            font = _font(e.font_size or 24, e.bold, scale)
+            font = _font(e.font_size or 24, e.bold, scale, e.text or "", e.font_face)
             pad = 6 * scale
             lines = _wrap(draw, e.text or "", font, (e.width * scale) - 2 * pad)
             line_h = (e.font_size or 24) * 96 / 72 * 1.2 * scale
@@ -113,7 +121,12 @@ def render_deck(deck: Presentation, out_dir: Path, scale: float = 0.75, root: Pa
     paths = []
     for index in range(len(deck.slides)):
         path = out_dir / f"slide_{index + 1:02d}.png"
-        render_slide(deck, index, scale, root).save(path)
+        # Quebra na resolução lógica evita que o arredondamento da fonte em miniatura
+        # mude a linha de um texto que cabe na caixa original.
+        im = render_slide(deck, index, 1., root)
+        if scale != 1:
+            im = im.resize((round(1280 * scale), round(720 * scale)), Image.Resampling.LANCZOS)
+        im.save(path)
         paths.append(path)
     return paths
 

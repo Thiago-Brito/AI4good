@@ -61,7 +61,7 @@ DESCRIPTIONS = {
     "secao": "divisória entre partes; título curto e subtítulo opcional",
     "topicos": "2–5 ideias paralelas, cada uma com rótulo e explicação concreta",
     "numeros": "1–3 números grandes que sustentam a mensagem (dados reais, com fonte)",
-    "comparacao": "duas alternativas lado a lado, 2–4 itens em cada lado",
+    "comparacao": "duas alternativas lado a lado, 1–4 itens em cada lado",
     "etapas": "processo em 2–5 passos ordenados",
     "linha_do_tempo": "2–6 marcos com data, rótulo e detalhe",
     "citacao": "frase literal de uma pessoa ou documento, com autor",
@@ -125,7 +125,7 @@ class AltoSlide(AltoModel):
 
 class AltoDeck(AltoModel):
     title: str
-    theme: Literal["claro", "escuro"] = "claro"
+    theme: Literal["claro", "escuro", "editorial", "vibrante", "natural", "noturno"] = "claro"
     slides: list[AltoSlide]
 
 
@@ -274,6 +274,8 @@ def print_slide(s: AltoSlide, indent: str = "  ") -> str:
         add(f"subtitulo {q(s.subtitle)}")
     if s.kind == "capa" and s.author:
         add(f"autor {q(s.author)}")
+    if s.kind == "capa" and (s.image_file or s.image_query):
+        add(f"arquivo {q(s.image_file)}" if s.image_file else f"buscar {q(s.image_query)}")
     if s.kind == "grafico" and s.unit:
         add(f"unidade {q(s.unit)}")
     if s.kind == "imagem":
@@ -410,16 +412,45 @@ def validate_alto(deck: AltoDeck, facts: dict[str, dict] | None = None) -> list[
                     "Declare dois blocos lado.",
                 )
             for k, side in enumerate(s.sides):
-                if not 2 <= len(side.items) <= 4:
+                if not 1 <= len(side.items) <= 4:
                     emit(
                         "A003",
                         "ERRO",
-                        "Cada lado da comparação exige 2–4 itens.",
+                        "Cada lado da comparação exige 1–4 itens.",
                         n,
                         s,
                         f"{base}.sides.{k}.items",
-                        "Use de 2 a 4 itens por lado.",
+                        "Use de 1 a 4 itens por lado.",
                     )
+        for k, side in enumerate(s.sides):
+            if re.fullmatch(r"\W*(?:lado\s*)?[a-z0-9]?\W*", (side.name or "").casefold()):
+                emit(
+                    "A024",
+                    "AVISO",
+                    "Nome do lado da comparação é genérico (letra ou vazio).",
+                    n,
+                    s,
+                    f"{base}.sides.{k}.name",
+                    "Nomeie o lado pela própria alternativa comparada.",
+                )
+        # Item repetido no mesmo slide: o modelo preenche vagas obrigatórias copiando.
+        entries = [(f"{base}.items.{k}", i) for k, i in enumerate(s.items)]
+        entries += [(f"{base}.sides.{k}.items.{j}", i)
+                    for k, side in enumerate(s.sides) for j, i in enumerate(side.items)]
+        seen_items: set[str] = set()
+        for path, item in entries:
+            key = _norm(f"{item.label} {item.detail or ''}")
+            if key and key in seen_items:
+                emit(
+                    "A023",
+                    "AVISO",
+                    "Item repetido no mesmo slide.",
+                    n,
+                    s,
+                    path,
+                    "Remova a repetição ou escreva um item com informação diferente.",
+                )
+            seen_items.add(key)
         if s.kind == "imagem" and not (s.image_file or s.image_query):
             emit(
                 "A002",
@@ -513,6 +544,7 @@ def validate_alto(deck: AltoDeck, facts: dict[str, dict] | None = None) -> list[
                         "Use números presentes nas fichas e cite o fato correspondente.",
                     )
             texts = [(f"{base}.title", s.title), (f"{base}.subtitle", s.subtitle)]
+            texts += [(f"{base}.{key}", getattr(s, key)) for key in ("caption", "text", "unit", "author")]
             texts += [(f"{base}.items.{k}.detail", i.detail) for k, i in enumerate(s.items)]
             texts += [(f"{base}.items.{k}.label", i.label) for k, i in enumerate(s.items)]
             texts += [
@@ -520,6 +552,11 @@ def validate_alto(deck: AltoDeck, facts: dict[str, dict] | None = None) -> list[
                 for k, side in enumerate(s.sides)
                 for j, i in enumerate(side.items)
             ]
+            texts += [(f"{base}.sides.{k}.name", side.name) for k, side in enumerate(s.sides)]
+            texts += [(f"{base}.sides.{k}.items.{j}.label", item.label)
+                      for k, side in enumerate(s.sides) for j, item in enumerate(side.items)]
+            texts += [(f"{base}.milestones.{k}.label", m.label) for k, m in enumerate(s.milestones)]
+            texts += [(f"{base}.bars.{k}.label", b.label) for k, b in enumerate(s.bars)]
             texts += [(f"{base}.milestones.{k}.date", m.date) for k, m in enumerate(s.milestones)]
             texts += [
                 (f"{base}.milestones.{k}.detail", m.detail) for k, m in enumerate(s.milestones)

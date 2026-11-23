@@ -1,0 +1,52 @@
+{
+  "expo": {
+    "name": "SlideDSL",
+    "slug": "slidedsl",
+    "version": "0.3.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "android": {
+      "package": "br.slidedsl.app",
+      "versionCode": 3,
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.ACCESS_NETWORK_STATE",
+        "android.permission.INTERNET"
+      ],
+      "predictiveBackGestureEnabled": false
+    },
+    "plugins": [
+      "./plugins/withDocuments",
+      "llama.rn",
+      [
+        "expo-speech-recognition",
+        {
+          "microphonePermission": "O SlideDSL usa o microfone para você ditar o pedido da apresentação.",
+          "speechRecognitionPermission": "O SlideDSL transcreve sua fala para escrever o pedido.",
+          "androidSpeechServicePackages": [
+            "com.google.android.googlequicksearchbox",
+            "com.google.android.as"
+          ]
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "buildArchs": [
+              "arm64-v8a",
+              "x86_64"
+            ]
+          }
+        }
+      ]
+    ]
+  }
+}

@@ -1,0 +1,239 @@
+{
+  "title": "Seminário 2 do SlideDSL",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Seminário 2 do SlideDSL",
+      "subtitle": "Demo, GLC, custo, falha e o que mudou desde o sem1.",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A capa promete uma leitura prática do sistema, da demonstração ao que mudou desde o primeiro seminário. O foco é mostrar o fluxo completo e as decisões que a demo confirma. Não há autoria informada, então o campo fica vazio.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "A demo vai do pedido ao slide",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Pedido em texto",
+          "detail": "O estudante começa com um pedido em texto, como \"Seminário em 6 slides sobre o meu projeto\"."
+        },
+        {
+          "label": "Arquivo de apoio",
+          "detail": "A demo também recebe um arquivo curto em Markdown com cerca de 4 mil caracteres."
+        },
+        {
+          "label": "Fatos na base",
+          "detail": "O SlideDSL busca fatos na web ou usa arquivos de base enviados pelo estudante."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F2",
+        "F3",
+        "F4",
+        "F5"
+      ],
+      "notes": "A sequência começa no texto do pedido e termina com a montagem do slide. O arquivo de apoio entra junto para orientar o conteúdo, mas a ferramenta ainda pode recorrer à web. O exemplo é de um estudante apresentando o próprio trabalho.",
+      "line": 8,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "A GLC do SlideDSL funciona em quatro etapas",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Definir a estrutura",
+          "detail": "A GLC do SlideDSL funciona em quatro etapas."
+        },
+        {
+          "label": "Escrever valor e legenda",
+          "detail": "Na GLC, cada valor tem o número e a legenda."
+        },
+        {
+          "label": "Exemplo com 160 s",
+          "detail": "O modelo escreve numeros { titulo \"A demo levou 160 s\" valor \"160 s\" \"tempo total da demo\" }."
+        },
+        {
+          "label": "Recusar sem legenda",
+          "detail": "Se o modelo escreve só valor \"160 s\", sem a legenda, o slide é recusado com o erro P001."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F6",
+        "F7",
+        "F8",
+        "F9"
+      ],
+      "notes": "Aqui a ideia é mostrar que a gramática não é decorativa: ela define o formato aceito. O exemplo com 160 s ilustra a saída correta, enquanto a ausência da legenda dispara recusa. O LALR lê da esquerda para a direita uma vez só, conferindo a conformidade com a GLC.",
+      "line": 16,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "O modelo local custa zero na demo",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Modelo local",
+          "items": [
+            {
+              "label": "Execução medida",
+              "detail": "A medição usou o commit 168c29f no Windows 10 com i5-10400 e RTX 3060."
+            },
+            {
+              "label": "Tempo da demo",
+              "detail": "Com o Qwen3 4B no Ollama, a demo levou 160 s e custou US$ 0."
+            }
+          ]
+        },
+        {
+          "name": "API paga",
+          "items": [
+            {
+              "label": "Comparação ausente",
+              "detail": "Os fatos fornecidos não trazem dados sobre a API paga nesta execução."
+            },
+            {
+              "label": "Custo não informado",
+              "detail": "A base enviada não traz valor medido para a API paga."
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F14",
+        "F15",
+        "F16",
+        "F17"
+      ],
+      "notes": "Os dois lados usam a mesma máquina para isolar a diferença de modelo. No local, o custo medido foi zero; na API paga, os fatos não trazem o valor. A comparação não mistura ambientes nem altera a base de hardware.",
+      "line": 25,
+      "column": 3
+    },
+    {
+      "kind": "numeros",
+      "title": "A falha aparece com entrada grande",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [
+        {
+          "value": "138 mil caracteres",
+          "label": "Tamanho do artigo completo do TCC usado para forçar a falha."
+        },
+        {
+          "value": "298 s",
+          "label": "Tempo decorrido até a execução terminar sem gerar PowerPoint."
+        },
+        {
+          "value": "52 chamadas",
+          "label": "Número de chamadas feitas antes de a demo falhar de propósito."
+        }
+      ],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F20",
+        "F21",
+        "F22",
+        "F23"
+      ],
+      "notes": "A falha é intencional e serve para mostrar o limite do fluxo quando a entrada cresce demais. O caso usa o artigo completo do TCC, com 138 mil caracteres, e termina sem PowerPoint após 298 s. O slide também registra a troca de conteúdo no exemplo de números, com datas e modelo no lugar de números.",
+      "line": 38,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Desde o sem1, o SlideDSL melhorou a qualidade dos slides gerados.",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Manter a qualidade",
+          "detail": "Desde o sem1, o SlideDSL melhorou a qualidade dos slides gerados."
+        },
+        {
+          "label": "Rejeitar inconsistências",
+          "detail": "Agora o SlideDSL recusa e manda reescrever o slide com item repetido e a comparação com lados chamados só de \"X\" e \"Y\"."
+        },
+        {
+          "label": "Usar mais fontes",
+          "detail": "Os documentos do estudante viraram mais uma fonte ao lado da pesquisa na web."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F24",
+        "F25",
+        "F27"
+      ],
+      "notes": "A conclusão confirma que o sistema ficou mais rígido e mais útil ao mesmo tempo. A melhora aparece na qualidade dos slides e na recusa de estruturas inconsistentes. Também mudou a base de evidências, porque os documentos do estudante passaram a contar como fonte adicional.",
+      "line": 46,
+      "column": 3
+    }
+  ]
+}

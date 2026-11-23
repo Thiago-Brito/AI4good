@@ -1,0 +1,52 @@
+{
+  "assets/media/92b13d6ce4deb66bb9bf0b86056a6833ceacfdb5c1db1bc7b24f0e3cfbfdaf2c.png": {
+    "width": 1280,
+    "height": 1920,
+    "metadata": {
+      "id": "92b13d6ce4deb66bb9bf0b86056a6833ceacfdb5c1db1bc7b24f0e3cfbfdaf2c",
+      "provider": "commons",
+      "title": "File:Brianna Wu (Video Game Developer) REF-105735.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4d/Brianna_Wu_%28Video_Game_Developer%29_REF-105735.jpg/1280px-Brianna_Wu_%28Video_Game_Developer%29_REF-105735.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Brianna_Wu_(Video_Game_Developer)_REF-105735.jpg",
+      "author": "William Murphy",
+      "license": "CC BY-SA 2.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/2.0",
+      "attribution": "File:Brianna Wu (Video Game Developer) REF-105735.jpg — William Murphy — CC BY-SA 2.0",
+      "width": 1280,
+      "height": 1920,
+      "description": "Brianna Wu speaks at InspireFest in 2015",
+      "lexical_score": 0.5,
+      "query": "developer using",
+      "asset": "assets/media/92b13d6ce4deb66bb9bf0b86056a6833ceacfdb5c1db1bc7b24f0e3cfbfdaf2c.png",
+      "downloaded_utc": "2026-11-11T04:05:10.706837+00:00",
+      "source_sha256": "94e7c35abf46e2d286ef65373954e42b45a3fab3becc3428220937f37b5128c0",
+      "reviewed": false,
+      "asset_sha256": "89e77de4fd4ce2fcb74f873c69c0a3a2032e811ed62c2a9d0d884331e1961201"
+    }
+  },
+  "assets/media/92735306ee4e53d935f0879c4c62111e242884f55ee42124ec39eef1cc741655.png": {
+    "width": 336,
+    "height": 252,
+    "metadata": {
+      "id": "92735306ee4e53d935f0879c4c62111e242884f55ee42124ec39eef1cc741655",
+      "provider": "commons",
+      "title": "File:Roman Coin Timeline.jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/b/b4/Roman_Coin_Timeline.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "page": "https://commons.wikimedia.org/wiki/File:Roman_Coin_Timeline.jpg",
+      "author": "Bendianajones",
+      "license": "CC BY-SA 3.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+      "attribution": "File:Roman Coin Timeline.jpg — Bendianajones — CC BY-SA 3.0",
+      "width": 336,
+      "height": 252,
+      "description": "A snapshot of the timeline of Roman Emperors and their coins",
+      "lexical_score": 1.0,
+      "query": "snapshot timeline",
+      "asset": "assets/media/92735306ee4e53d935f0879c4c62111e242884f55ee42124ec39eef1cc741655.png",
+      "downloaded_utc": "2026-11-11T04:05:16.649040+00:00",
+      "source_sha256": "776a967de5b39d050a504f662fbe965929a690307acaff55b5f8f049fd477e34",
+      "reviewed": false,
+      "asset_sha256": "1facef7b7d3adb17c837aeaccab8ce4ed031b07a45ef5e355a50e7ce9f9a055b"
+    }
+  }
+}

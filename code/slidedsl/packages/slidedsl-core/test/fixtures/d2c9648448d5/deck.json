@@ -1,0 +1,193 @@
+{
+  "title": "Como funciona a fotossíntese",
+  "theme": "vibrante",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "A planta fabrica seu alimento",
+      "subtitle": "Entenda como a fotossíntese usa luz, água e gás carbônico para sustentar a planta.",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": "assets/media/8231d39a8aa072c6a77eb66a3c2262acea6e28715ebbe61f1265881fa731ae2f.png",
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Abra com a ideia central: a planta não “come” como os animais, ela produz seu próprio alimento. Explique que esse processo depende de luz, água e gás carbônico, e que o oxigênio aparece como resultado. Evite entrar em etapas detalhadas nesta capa; o objetivo é criar a pergunta que a apresentação vai responder.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "A fotossíntese acontece nas folhas",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Captura de luz",
+          "detail": "As folhas recebem a luz do Sol e usam essa energia para iniciar a fotossíntese."
+        },
+        {
+          "label": "Troca de gases",
+          "detail": "Os poros das folhas permitem a entrada de gás carbônico e a saída de oxigênio."
+        },
+        {
+          "label": "Produção de alimento",
+          "detail": "Dentro das folhas, a planta transforma água e gás carbônico em alimento para crescer."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Mostre que a folha é a principal parte envolvida porque reúne luz, gases e produção de alimento. Evite entrar em detalhes de células ou clorofila neste slide, para manter a explicação acessível. Se quiser reforçar a ideia, destaque que outras partes ajudam, mas a fotossíntese acontece principalmente nas folhas.",
+      "line": 9,
+      "column": 3
+    },
+    {
+      "kind": "imagem",
+      "title": "Luz, água e ar viram alimento",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": "A planta usa luz, água e gás carbônico para produzir alimento e liberar oxigênio.",
+      "unit": null,
+      "image_file": "assets/media/ca10e41b203ba16bdd11d50ceb6d48942250b863ead02264667e5235df97d84d.png",
+      "image_query": null,
+      "items": [
+        {
+          "label": "Entradas da planta",
+          "detail": "A planta recebe luz do Sol, água pelas raízes e gás carbônico do ar."
+        },
+        {
+          "label": "Saídas do processo",
+          "detail": "A fotossíntese produz alimento e libera oxigênio para o ambiente."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Mostre a fotossíntese como uma troca: a planta capta recursos do ambiente e devolve oxigênio. Evite falar em etapas detalhadas aqui, porque o próximo slide já organiza a sequência. Como não há fatos numéricos, use uma imagem clara de planta ao sol, com água e ar como elementos visuais.",
+      "line": 16,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "A planta transforma matéria em energia",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Captar a luz",
+          "detail": "A folha absorve a luz do Sol e inicia a fotossíntese com essa energia."
+        },
+        {
+          "label": "Levar água até a folha",
+          "detail": "As raízes puxam água do solo e a conduzem até as folhas para a reação começar."
+        },
+        {
+          "label": "Receber gás carbônico",
+          "detail": "Os poros da folha deixam o gás carbônico entrar do ar para a planta usar."
+        },
+        {
+          "label": "Formar o alimento",
+          "detail": "A planta produz seu alimento na folha e usa esse material para crescer e se manter."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Mostre a sequência como um processo contínuo, não como partes isoladas. A ideia central é que a folha reúne luz, água e gás carbônico para fabricar alimento. Evite falar em energia como se fosse um produto separado; para este público, vale ligar energia à transformação que sustenta o crescimento da planta.",
+      "line": 24,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "O oxigênio é liberado no processo",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Saída de oxigênio",
+          "detail": "A planta libera oxigênio para o ar enquanto produz seu alimento nas folhas."
+        },
+        {
+          "label": "Ar ao redor",
+          "detail": "O oxigênio liberado se mistura ao ambiente e fica disponível para outros seres vivos respirarem."
+        },
+        {
+          "label": "Troca com o ambiente",
+          "detail": "Durante a fotossíntese, a planta usa gás carbônico e devolve oxigênio ao ar."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Mostre que a fotossíntese não serve só para a planta: ela também altera o ar ao redor. Vale reforçar que o oxigênio é um produto do processo, não a entrada principal. Como não há fatos numéricos neste slide, a explicação deve ficar qualitativa e simples para a turma.",
+      "line": 32,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Sem luz, a planta não produz alimento",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Observe a luz disponível",
+          "detail": "Verifique se a planta recebe luz suficiente, porque sem luz ela não inicia a fotossíntese."
+        },
+        {
+          "label": "Regue e deixe ar",
+          "detail": "Mantenha água no solo e circulação de ar, pois a planta precisa desses elementos para produzir alimento."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Peça aos alunos que pensem no que acontece com uma planta mantida no escuro por alguns dias. Depois, relacione a necessidade de luz, água e gás carbônico com o crescimento da planta. Como não há fatos numéricos neste slide, a conclusão deve ficar qualitativa e direta.",
+      "line": 39,
+      "column": 3
+    }
+  ]
+}

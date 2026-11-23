@@ -1,0 +1,211 @@
+{
+  "title": "Introdução ao Git para estudantes de programação",
+  "theme": "escuro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Git organiza o histórico do código",
+      "subtitle": "Aprenda Git do zero e entenda por que ele ajuda no dia a dia da programação.",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": "assets/media/92b13d6ce4deb66bb9bf0b86056a6833ceacfdb5c1db1bc7b24f0e3cfbfdaf2c.png",
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A abertura promete uma visão prática, sem pressupor experiência prévia com controle de versão. O foco é mostrar como o Git ajuda a registrar mudanças, revisar o passado e trabalhar com mais segurança. Como não há fatos numéricos, a formulação fica qualitativa e direta.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Git resolve três dores básicas",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Acompanhar mudanças",
+          "detail": "O Git registra cada alteração no histórico, então a equipe identifica quem mudou o quê em cada versão."
+        },
+        {
+          "label": "Voltar atrás com segurança",
+          "detail": "Quando um erro aparece, o Git permite recuperar uma versão anterior sem reescrever todo o projeto."
+        },
+        {
+          "label": "Colaborar sem bagunça",
+          "detail": "Em um trabalho em grupo, o Git junta contribuições diferentes e ajuda a evitar sobrescrita de código."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Mostre que o valor do Git não é só guardar código, mas dar controle sobre a evolução dele. Use exemplos de sala de aula ou de um projeto em dupla para tornar as três dores concretas. Evite entrar em comandos agora; o foco é a motivação para aprender a ferramenta.",
+      "line": 9,
+      "column": 3
+    },
+    {
+      "kind": "imagem",
+      "title": "Commit é uma foto do projeto",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": "Um commit guarda o estado do código em um ponto específico.",
+      "unit": null,
+      "image_file": "assets/media/92735306ee4e53d935f0879c4c62111e242884f55ee42124ec39eef1cc741655.png",
+      "image_query": null,
+      "items": [
+        {
+          "label": "Ponto de salvamento",
+          "detail": "O commit registra o projeto naquele instante, como um salvamento que você pode revisitar depois."
+        },
+        {
+          "label": "Comparar versões",
+          "detail": "Ao revisar commits, o estudante vê o que mudou entre estados diferentes do mesmo código."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Use a ideia de “salvamento” para tornar o conceito intuitivo sem entrar em comandos. O foco aqui é mostrar que cada commit preserva um estado consultável, não apenas uma lista de alterações. Se houver tempo, conecte isso ao hábito de fazer commits pequenos para comparar mudanças com mais clareza.",
+      "line": 16,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "Um fluxo simples cobre o básico",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Editar o código",
+          "detail": "Você altera os arquivos localmente e testa a mudança antes de registrar qualquer versão."
+        },
+        {
+          "label": "Registrar as mudanças",
+          "detail": "Você cria um commit para guardar o estado atual e descrever o que foi feito."
+        },
+        {
+          "label": "Revisar o histórico",
+          "detail": "Você consulta os commits para entender a sequência das alterações e comparar versões anteriores."
+        },
+        {
+          "label": "Sincronizar com o repositório",
+          "detail": "Você envia ou atualiza o trabalho no repositório para manter a cópia alinhada com o time."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Mostre o fluxo como rotina mínima: editar, registrar, revisar e sincronizar. A ideia é dar ao estudante um caminho prático para começar sem decorar comandos ainda. Se quiser, destaque que cada etapa protege o trabalho anterior e facilita retomar depois.",
+      "line": 24,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "Branch separa trabalho sem risco",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Na linha principal",
+          "items": [
+            {
+              "label": "Mudança direta",
+              "detail": "A equipe altera a linha principal quando a tarefa já está pronta para entrar."
+            },
+            {
+              "label": "Risco de conflito",
+              "detail": "Dois ajustes podem se chocar quando a mesma parte do código muda ao mesmo tempo."
+            }
+          ]
+        },
+        {
+          "name": "Em uma branch",
+          "items": [
+            {
+              "label": "Trabalho isolado",
+              "detail": "A equipe cria uma branch para testar uma ideia sem mexer no código comum."
+            },
+            {
+              "label": "Integração depois",
+              "detail": "A equipe junta a branch ao final, quando a revisão confirma a consistência."
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Use a comparação para mostrar que branch não é sinônimo de complexidade, e sim de isolamento temporário. O contraste principal é entre mexer no fluxo compartilhado e proteger o trabalho em andamento. Vale reforçar que a branch faz mais sentido quando há tarefas paralelas ou risco de conflito na mesma área do código.",
+      "line": 32,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Git vira hábito com uso constante",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Faça commits pequenos",
+          "detail": "Você registra mudanças curtas para localizar erros mais rápido e revisar o que entrou em cada passo."
+        },
+        {
+          "label": "Use branches por tarefa",
+          "detail": "Você separa cada atividade em uma branch para testar ideias sem misturar entregas diferentes."
+        },
+        {
+          "label": "Leia o histórico sempre",
+          "detail": "Você consulta os commits com frequência para entender decisões antigas antes de continuar o trabalho."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Feche a apresentação com uma orientação prática: o estudante não precisa dominar tudo de uma vez. O hábito vem de repetir três ações simples no dia a dia. Se quiser, destaque que commits pequenos e branches curtas reduzem retrabalho quando algo dá errado.",
+      "line": 44,
+      "column": 3
+    }
+  ]
+}

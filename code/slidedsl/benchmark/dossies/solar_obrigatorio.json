@@ -1,0 +1,206 @@
+{
+  "topic": "Apresente energia solar residencial para moradores que pensam em instalar painéis em casa. Inclua obrigatoriamente: o papel do inversor, a compensação de energia com a distribuidora, o tempo de retorno do investimento e um cuidado de manutenção.",
+  "queries": [
+    "inversor solar funcao",
+    "compensacao energia distribuidora exemplo",
+    "tempo retorno investimento solar casa",
+    "casa solar painel eficiencia dados"
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "title": "Inversor solar: o que é, como funciona e como escolher - Portal Solar",
+      "url": "https://www.portalsolar.com.br/inversor-solar-o-que-e",
+      "provider": "searxng",
+      "snippet": "O inversor solar é um item essencial do kit de energia solar, com função de converter a energia elétrica gerada pelos painéis de corrente contínua (CC) para corrente alternada (CA), possibilitando o uso da energia elétrica gerada pela energia solar fotovoltaica.",
+      "text_chars": 67
+    },
+    {
+      "id": "S2",
+      "title": "Inversor solar: O que é, como funciona e para que serve?",
+      "url": "https://canalsolar.com.br/inversor-solar-o-que-e-e-pra-que-serve/",
+      "provider": "searxng",
+      "snippet": "Qual a função de um inversor solar? Basicamente, a função principal de um inversor solar é converter a corrente contínua (CC) dos painéis em corrente alternada (CA), compatível com os padrões da rede elétrica e com os equipamentos elétricos que utilizamos no dia a dia.",
+      "text_chars": 16662
+    },
+    {
+      "id": "S3",
+      "title": "Como funciona o sistema de compensação de créditos de energia",
+      "url": "https://fitenergia.com.br/blog/como-funciona-o-sistema-de-compensacao-de-creditos-de-energia",
+      "provider": "searxng",
+      "snippet": "23 de abr. de 2026 ... O excedente é injetado na rede elétrica da distribuidora, e aqui entra o ponto chave do sistema de compensação de créditos: com o sistema em ...",
+      "text_chars": 4516
+    },
+    {
+      "id": "S4",
+      "title": "Compensação de energia: como funciona na prática",
+      "url": "https://consultorsolar.com.br/legislacao/compensacao-de-energia/",
+      "provider": "searxng",
+      "snippet": "O SCEE funciona como um empréstimo de energia: a unidade injeta na rede o que não consome e a distribuidora devolve em energia nos ciclos seguintes. O que esta página mostra é a mecânica da apuração, ciclo a ciclo, com os artigos da Lei 14.300 que a definem.",
+      "text_chars": 7145
+    },
+    {
+      "id": "S5",
+      "title": "Investimento em energia solar: tipos, vantagens e como calcular",
+      "url": "https://canalsolar.com.br/em-quanto-tempo-o-sistema-solar-retorna-o-investimento/",
+      "provider": "searxng",
+      "snippet": "5 de jan. de 2026 ... Como calcular o retorno de investimento (Payback). O Payback é o tempo necessário para que a economia gerada na conta de luz pague o valor ...",
+      "text_chars": 9864
+    },
+    {
+      "id": "S6",
+      "title": "Em quanto tempo se paga a energia solar? Payback real em 2026",
+      "url": "https://reonic.com/pt-br/blog/em-quanto-tempo-se-paga-energia-solar/",
+      "provider": "searxng",
+      "snippet": "21 de out. de 2026 ... Em quanto tempo se paga a energia solar? O payback residencial em 2026 fica entre 4 e 6 anos com o Fio B a 60%. Veja o calculo por regiao e ...",
+      "text_chars": 12408
+    },
+    {
+      "id": "S7",
+      "title": "Saiba o que é eficiência de painéis solares e veja como calculá-la",
+      "url": "https://www.weg.net/solar/blog/saiba-o-que-e-eficiencia-de-paineis-solares-e-veja-como-calcula-la/",
+      "provider": "searxng",
+      "snippet": "Por exemplo, se um painel solar tem eficiência de 15%, ele converte esse mesmo percentual em energia elétrica por m² por meio da irradiação solar captada em sua ...",
+      "text_chars": 164
+    },
+    {
+      "id": "S8",
+      "title": "Painel solar - Minha Casa Solar",
+      "url": "https://www.minhacasasolar.com.br/painel-solar",
+      "provider": "searxng",
+      "snippet": "A Minha Casa Solar é uma das maiores e mais tradicionais empresas de equipamentos de energia solar para sistemas Off-Grid, On-Grid e Híbridos.",
+      "text_chars": 10929
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "O art. 16 limita a compensação ao valor mínimo faturável definido na regulamentação.",
+      "kind": "definicao",
+      "quote": "O art. 16 limita a compensação ao valor mínimo faturável definido na regulamentação.",
+      "source_id": "S4",
+      "url": "https://consultorsolar.com.br/legislacao/compensacao-de-energia/",
+      "source_title": "Compensação de energia: como funciona na prática",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    }
+  ],
+  "rejected": [
+    {
+      "afirmacao": "A distribuidora apura consumo e injeção separadamente por posto tarifário a cada ciclo.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "A distribuidora apura consumo e injeção separadamente por posto tarifário a cada ciclo.",
+      "valor": "",
+      "source_id": "S4",
+      "reason": "trecho não encontrado literalmente no texto"
+    },
+    {
+      "afirmacao": "Em baixa tensão, o custo de disponibilidade vale o equivalente a 30 kWh (monofásico), 50 kWh (bifásico) ou 100 kWh (trifásico).",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "numero",
+      "trecho": "em baixa tensão, o custo de disponibilidade vale o equivalente a 30 kWh (monofásico), 50 kWh (bifásico) ou 100 kWh (trifásico), cobrado mesmo que a injeção supere o consumo.",
+      "valor": "30",
+      "source_id": "S4",
+      "reason": "fora do assunto central (não menciona energia solar residencial, inversor, compensacao)"
+    },
+    {
+      "afirmacao": "O custo de disponibilidade é cobrado mesmo que a injeção supere o consumo.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "cobrado mesmo que a injeção supere o consumo.",
+      "valor": "",
+      "source_id": "S4",
+      "reason": "fora do assunto central (não menciona energia solar residencial, inversor, compensacao)"
+    },
+    {
+      "afirmacao": "O tempo de retorno do investimento gira em torno de 4 a 5 anos, dependendo do local onde é instalado",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "numero",
+      "trecho": "O tempo de retorno do investimento gira em torno de 4 a 5 anos, dependendo do local onde é instalado",
+      "valor": "4 a 5",
+      "source_id": "S5",
+      "reason": "fora do assunto central (não menciona energia solar residencial, inversor, compensacao)"
+    },
+    {
+      "afirmacao": "Um sistema de 4 kWp custa em média R$ 19.500 instalado",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "numero",
+      "trecho": "Um sistema de 4 kWp custa em média R$ 6.500 instalado, segundo dados de mercado de 2026.",
+      "valor": "19.500",
+      "source_id": "S6",
+      "reason": "trecho não encontrado literalmente no texto"
+    },
+    {
+      "afirmacao": "O payback residencial em 2026 fica entre 4 e 6 anos na maior parte das capitais",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "numero",
+      "trecho": "O payback residencial em 2026 fica entre 4 e 6 anos na maior parte das capitais, contra os 3 a 4 anos comuns antes da cobrança do Fio B",
+      "valor": "4 a 6",
+      "source_id": "S6",
+      "reason": "fora do assunto central (não menciona energia solar residencial, inversor, compensacao)"
+    },
+    {
+      "afirmacao": "O sistema gera energia por mais de 25 anos",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Um sistema bem dimensionado gera energia por mais de 25 anos",
+      "valor": "25",
+      "source_id": "S6",
+      "reason": "fora do assunto central (não menciona energia solar residencial, inversor, compensacao)"
+    },
+    {
+      "afirmacao": "Sobram de 19 a 21 anos de retorno líquido depois de pago o investimento",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "numero",
+      "trecho": "com vida útil acima de 25 anos, sobram de 19 a 21 anos de retorno líquido depois de pago o investimento",
+      "valor": "19 a 21",
+      "source_id": "S6",
+      "reason": "fora do assunto central (não menciona energia solar residencial, inversor, compensacao)"
+    }
+  ],
+  "log": [
+    {
+      "query": "inversor solar funcao",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "compensacao energia distribuidora exemplo",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "tempo retorno investimento solar casa",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "casa solar painel eficiencia dados",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "warning": "poucos fatos ou fonte única",
+      "facts": 1,
+      "sources": 1
+    }
+  ],
+  "central_terms": [
+    "energia solar residencial",
+    "inversor",
+    "compensacao",
+    "distribuidora",
+    "tempo retorno"
+  ],
+  "created_at": "2026-11-23T04:26:28+00:00"
+}

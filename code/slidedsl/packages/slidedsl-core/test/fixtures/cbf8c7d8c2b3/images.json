@@ -1,0 +1,75 @@
+{
+  "assets/media/086498f3f45ebf3ff19060ecf80800f1650132c453736fe5742dd040e2b5952f.png": {
+    "width": 88,
+    "height": 88,
+    "metadata": {
+      "id": "086498f3f45ebf3ff19060ecf80800f1650132c453736fe5742dd040e2b5952f",
+      "provider": "commons",
+      "title": "File:Code example (test).png",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/9/9e/Code_example_%28test%29.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "page": "https://commons.wikimedia.org/wiki/File:Code_example_(test).png",
+      "author": "Own work",
+      "license": "CC0",
+      "license_url": "http://creativecommons.org/publicdomain/zero/1.0/deed.en",
+      "attribution": "File:Code example (test).png — Own work — CC0",
+      "width": 88,
+      "height": 88,
+      "description": "A sample snippet of code.",
+      "categories": [
+        "Category:CC-Zero",
+        "Category:Coding",
+        "Category:Self-published work",
+        "CC-Zero",
+        "Coding",
+        "Self-published work"
+      ],
+      "lexical_score": 1.0,
+      "query": "code to",
+      "asset": "assets/media/086498f3f45ebf3ff19060ecf80800f1650132c453736fe5742dd040e2b5952f.png",
+      "downloaded_utc": "2026-11-11T04:30:39.018341+00:00",
+      "source_sha256": "65c4553a8667dd71f1e46f343d2dea26459e2108d6018558efdd4095be8b536e",
+      "reviewed": false,
+      "asset_sha256": "3a4caf3d8e7fb29dc91de58ecc3b6270e7eaa914ac372376a7fc72f1fcab8da2"
+    }
+  },
+  "assets/media/2ac25e0bb3ba3183e41781684f1aa5f9c381088ffa10a591768ec36c9221a3a4.png": {
+    "width": 1172,
+    "height": 1523,
+    "metadata": {
+      "id": "2ac25e0bb3ba3183e41781684f1aa5f9c381088ffa10a591768ec36c9221a3a4",
+      "provider": "commons",
+      "title": "File:Innsbruck-Warning sign snow groomer-04ASD.jpg",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/4/4d/Innsbruck-Warning_sign_snow_groomer-04ASD.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "page": "https://commons.wikimedia.org/wiki/File:Innsbruck-Warning_sign_snow_groomer-04ASD.jpg",
+      "author": "Asurnipal",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "attribution": "File:Innsbruck-Warning sign snow groomer-04ASD.jpg — Asurnipal — CC BY-SA 4.0",
+      "width": 1172,
+      "height": 1523,
+      "description": "Warning sign snow groomer with winch",
+      "categories": [
+        "Category:CC-BY-SA-4.0",
+        "Category:Folding signs",
+        "Category:Photographs by Asurnipal-Innsbruck",
+        "Category:Self-published work",
+        "Category:Snow groomer warning signs",
+        "Category:Vehicle warning road signs",
+        "Category:Warning signs in Austria",
+        "Folding signs",
+        "Self-published work",
+        "Warning signs in Austria",
+        "Snow groomer warning signs",
+        "Vehicle warning road signs",
+        "Photographs by Asurnipal-Innsbruck"
+      ],
+      "lexical_score": 1.0,
+      "query": "warning",
+      "asset": "assets/media/2ac25e0bb3ba3183e41781684f1aa5f9c381088ffa10a591768ec36c9221a3a4.png",
+      "downloaded_utc": "2026-11-11T04:30:43.504251+00:00",
+      "source_sha256": "7444ac77df2ac3be2acdef136bd1a2c7d1d7f983a9c05284c2dd90a20bc09cd4",
+      "reviewed": false,
+      "asset_sha256": "32ca082152aa7e663b4179cc17694c74b5c03ef815d2080bcec8293bca750788"
+    }
+  }
+}

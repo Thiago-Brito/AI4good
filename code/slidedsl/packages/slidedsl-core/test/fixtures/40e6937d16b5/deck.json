@@ -1,0 +1,215 @@
+{
+  "title": "Catálogo de layouts",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Catálogo de layouts da SlideDSL Alto",
+      "subtitle": "Onze tipos de slide; o compilador calcula geometria, tipografia e cores",
+      "author": "Conteúdo ilustrativo",
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": null,
+      "line": 4,
+      "column": 3
+    },
+    {
+      "kind": "secao",
+      "title": "Estruturas de texto",
+      "subtitle": "Tópicos, etapas e conclusões",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": null,
+      "line": 9,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Até três tópicos alternam entre lista e cards",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Mensagem",
+          "detail": "O título afirma a ideia que o slide precisa provar ao público."
+        },
+        {
+          "label": "Evidência",
+          "detail": "Cada card traz um fato, número ou exemplo verificável com fonte."
+        },
+        {
+          "label": "Ressalva",
+          "detail": "Quando a conclusão depende de contexto, a condição aparece aqui."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": null,
+      "line": 13,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Quatro ou cinco tópicos viram uma lista numerada",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Rótulo curto",
+          "detail": "Duas a cinco palavras que nomeiam a ideia sem repetir o título."
+        },
+        {
+          "label": "Detalhe concreto",
+          "detail": "Uma frase com dado, exemplo ou condição em vez de adjetivos vagos."
+        },
+        {
+          "label": "Fonte citada",
+          "detail": "IDs de fatos do dossiê aparecem no rodapé e nas notas do apresentador."
+        },
+        {
+          "label": "Tamanho uniforme",
+          "detail": "Todos os rótulos usam a mesma fonte, escolhida para caber em todas as linhas."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": null,
+      "line": 19,
+      "column": 3
+    },
+    {
+      "kind": "grafico",
+      "title": "Gráficos de barras são formas editáveis",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": "valores ilustrativos, em unidades",
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [
+        {
+          "label": "Norte",
+          "value": 18.0
+        },
+        {
+          "label": "Nordeste",
+          "value": 54.0
+        },
+        {
+          "label": "Centro-Oeste",
+          "value": 16.0
+        },
+        {
+          "label": "Sudeste",
+          "value": 84.0
+        },
+        {
+          "label": "Sul",
+          "value": 30.0
+        }
+      ],
+      "cycle": false,
+      "sources": [
+        "Exemplo ilustrativo"
+      ],
+      "notes": null,
+      "line": 26,
+      "column": 3
+    },
+    {
+      "kind": "citacao",
+      "title": null,
+      "subtitle": null,
+      "author": "Frase popularmente atribuída a Leonardo da Vinci",
+      "text": "A simplicidade é o último grau de sofisticação.",
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": null,
+      "line": 36,
+      "column": 3
+    },
+    {
+      "kind": "imagem",
+      "title": "Imagem com legenda e itens explicativos",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": "Asset demonstrativo local do projeto",
+      "unit": null,
+      "image_file": "assets/imagem_demo.png",
+      "image_query": null,
+      "items": [
+        {
+          "label": "Imagem contida",
+          "detail": "A imagem é redimensionada sem corte dentro da moldura."
+        },
+        {
+          "label": "Busca opcional",
+          "detail": "Com buscar, a imagem vem de APIs com licença registrada."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": null,
+      "line": 40,
+      "column": 3
+    }
+  ]
+}

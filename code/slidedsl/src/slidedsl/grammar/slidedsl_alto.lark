@@ -9,7 +9,7 @@ tema: "tema" TEMA
 ?slide: capa | secao | topicos | numeros | comparacao | etapas | ciclo
       | linha_do_tempo | citacao | grafico | imagem | conclusao
 
-capa: "capa" "{" titulo subtitulo? autor? notas? "}"
+capa: "capa" "{" titulo subtitulo? autor? origem_imagem? notas? "}"
 secao: "secao" "{" titulo subtitulo? notas? "}"
 topicos: "topicos" "{" titulo item+ fontes? notas? "}"
 numeros: "numeros" "{" titulo valor+ fontes? notas? "}"
@@ -43,7 +43,7 @@ fontes: "fontes" fonte_ref ("," fonte_ref)*
 ?fonte_ref: FATO | STRING
 
 FATO: /F[0-9]+/
-TEMA: "claro" | "escuro"
+TEMA: "claro" | "escuro" | "editorial" | "vibrante" | "natural" | "noturno"
 NUMERO: /[0-9]+(\.[0-9]+)?/
 
 %import common.ESCAPED_STRING -> STRING

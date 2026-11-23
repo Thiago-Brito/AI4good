@@ -1,0 +1,229 @@
+{
+  "title": "Como estudar uma disciplina difícil: um plano prático para o",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Planejar estudos para disciplinas difíceis começa com metas pequ",
+      "subtitle": "Um plano prático para dividir o conteúdo em partes menores e mensuráveis",
+      "author": "Equipe de Estudos Universitários",
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O slide começa com uma afirmação prática: dividir o conteúdo em partes menores torna o estudo mensurável. Exemplo: uma disciplina de programação pode ser dividida em tópicos como 'estruturas de dados' ou 'algoritmos de busca'. A ideia é que metas pequenas permitem feedback imediato e evitam o esgotamento. Isso se aplica a qualquer área, desde matemática até ciências sociais. A apresentação não promete resultados rápidos, apenas uma abordagem estruturada.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Re ler é insuficiente: o reconhecimento ao reler não garantecomp",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Reconhecimento passivo",
+          "detail": "um estudante de programação lê um conceito sobre funções, mas não entende como aplicar no código."
+        },
+        {
+          "label": "Copiar sem compreender",
+          "detail": "um estudante copia um exemplo de código sem entender a lógica por trás da estrutura."
+        },
+        {
+          "label": "Prática sem feedback",
+          "detail": "um estudante tenta resolver um problema sem referência, mas erra e não identifica a falha."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O reler não gera compreensão profunda. Um estudante de programação pode ler sobre funções, mas não saber aplicar. Copiar código sem entender é vazio. Praticar sem identificar erros é ineficaz. A diferença está na interação ativa com o conteúdo, não na repetição passiva.",
+      "line": 9,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "Recuperação ativa é mais eficaz que reler",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Recuperação ativa",
+          "items": [
+            {
+              "label": "Ação prática",
+              "detail": "Um aluno entende um conceito de algoritmo e escreve código sem copiar do material."
+            },
+            {
+              "label": "Feedback imediato",
+              "detail": "O código é testado em um ambiente de execução e erros são identificados com precisão."
+            }
+          ]
+        },
+        {
+          "name": "Relever",
+          "items": [
+            {
+              "label": "Ação prática",
+              "detail": "Um aluno relê o material sem escrever nada, apenas lendo o conteúdo passivamente."
+            },
+            {
+              "label": "Feedback imediato",
+              "detail": "Não há testes nem identificação de erros; o conteúdo é apenas memorizado."
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O exemplo mostra que escrever código ativa a compreensão. Reler não gera feedback prático. A diferença está na aplicação, não na leitura. Isso é válido para qualquer disciplina com conteúdo prático, como programação ou engenharia. A técnica não se aplica a matérias puramente teóricas, como filosofia ou história, onde a aplicação é difícil de simular.",
+      "line": 16,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "Aplicar, testar, identificar e reescrever",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Aplicar conceito",
+          "detail": "Um estudante entende um conceito de algoritmo e o aplica ao escrever código sem copiar um exemplo existente."
+        },
+        {
+          "label": "Testar código",
+          "detail": "O aluno testa o código em um ambiente de execução e observa se o resultado corresponde ao esperado."
+        },
+        {
+          "label": "Identificar erro",
+          "detail": "Ao identificar um erro, ele revisa o que foi escrito e compara com o que deveria funcionar."
+        },
+        {
+          "label": "Reescrever com base",
+          "detail": "Na próxima sessão, ele reescreve o código com base nas observações feitas anteriormente."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Essas etapas mostram como a aplicação prática transforma compreensão em habilidade. O ciclo se repete quando o erro é detectado. O exemplo de programação ilustra bem a sequência. A prática não é automática — exige atenção e reflexão.",
+      "line": 28,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "Resumos, flashcards e simulados têm usos específicos, não são un",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Resumos",
+          "items": [
+            {
+              "label": "contexto claro",
+              "detail": "em um grupo de estudantes, um resumo ajuda a identificar os pontos-chave de uma disciplina"
+            },
+            {
+              "label": "dificuldade baixa",
+              "detail": "um aluno com dificuldade em matemática usa resumos para lembrar fórmulas básicas"
+            }
+          ]
+        },
+        {
+          "name": "Flashcards e simulados",
+          "items": [
+            {
+              "label": "contexto claro",
+              "detail": "um aluno de programação usa flashcards para revisar conceitos como variáveis e loops"
+            },
+            {
+              "label": "dificuldade alta",
+              "detail": "quando a equipe cresce, um aplicativo de entregas usa simulados para treinar equipes em cí"
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Os resumos são úteis para fixar estruturas básicas em disciplinas com conteúdo organizado. Flashcards funcionam bem para revisão rápida de conceitos. Simulados são mais adequados em situações de alta complexidade, como programação. A escolha depende do nível de dificuldade e da estrutura do conteúdo. Não há uma técnica universal para todos os estudos — cada um serve a um contexto específico.",
+      "line": 36,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Um plano de ação realista pode ser construído com metas pequenas",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Divida o conteúdo em blocos pequenos",
+          "detail": "Divida o conteúdo em blocos pequenos e estude por sessões curtas."
+        },
+        {
+          "label": "Reviça o que não entende após cada sessão",
+          "detail": "Reviça o que não entende após cada sessão."
+        },
+        {
+          "label": "Registre dificuldades e compartilhe com colegas",
+          "detail": "Registre dificuldades em um diário e compartilhe com colegas."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Essas ações são baseadas em rotinas reais de estudantes de programação. Sessões curtas ajudam a manter foco e evitar esgotamento. A revisão pós-sessão e o registro coletivo ajudam a identificar padrões de dificuldade. O plano não garante sucesso, mas cria estrutura para evoluir com o tempo. Cada etapa é adaptável a diferentes disciplinas e ritmos individuais, evitando generalizações sobre eficácia ou duração ideal.",
+      "line": 48,
+      "column": 3
+    }
+  ]
+}

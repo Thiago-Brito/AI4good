@@ -1,0 +1,266 @@
+{
+  "title": "Seminário 2 do SlideDSL",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Demo, custo, falha e evolução",
+      "subtitle": "Uma demo ponta a ponta mostra a GLC em etapas, compara o custo do modelo local e da API paga, expõe uma falha e fecha com a evolução desde o seminário anterior.",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A capa organiza a narrativa do seminário em quatro blocos: demo, etapas da GLC, custo e falha. Também antecipa a virada final, que é a melhora de qualidade desde a apresentação anterior. Não há autoria informada, então o campo fica vazio.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "A demo começa com um pedido real",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Quem apresenta",
+          "detail": "Na demo, um estudante usa o SlideDSL para apresentar o próprio trabalho."
+        },
+        {
+          "label": "Pedido em texto",
+          "detail": "A entrada do sistema é um pedido em texto, como \"Seminário em 6 slides sobre o meu projeto\"."
+        },
+        {
+          "label": "Base da demo",
+          "detail": "Na demo, junto com o pedido vai um arquivo curto de anotações do seminário, em Markdown, com cerca de 4 mil caracteres."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F2",
+        "F3",
+        "F5"
+      ],
+      "notes": "O ponto de partida é um uso realista: um estudante com um trabalho para apresentar. A demo não começa só com prompt; ela também recebe material de apoio em Markdown. Isso prepara a comparação entre entrada simples e geração estruturada.",
+      "line": 8,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "A GLC do SlideDSL funciona em quatro etapas",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Definir a estrutura",
+          "detail": "A GLC do SlideDSL funciona em quatro etapas."
+        },
+        {
+          "label": "Escrever o valor",
+          "detail": "Na etapa 2, o modelo escreve numeros { titulo \"A demo levou 160 s\" valor \"160 s\" \"tempo total da demo\" }."
+        },
+        {
+          "label": "Validar a sintaxe",
+          "detail": "O analisador LALR confere se o texto segue a GLC."
+        },
+        {
+          "label": "Recusar sem legenda",
+          "detail": "Quando o modelo escreve só valor \"160 s\", sem a legenda, o slide é recusado com o erro P001."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F6",
+        "F8",
+        "F9",
+        "F10"
+      ],
+      "notes": "A sequência mostra o fluxo completo: estrutura, geração, validação e correção. O exemplo de 160 s deixa claro como um slide concreto atravessa a gramática. A ressalva importante é que faltar a legenda quebra a validação e aciona o erro P001.",
+      "line": 16,
+      "column": 3
+    },
+    {
+      "kind": "numeros",
+      "title": "O modelo local custa zero, mas demora mais",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [
+        {
+          "value": "160 s",
+          "label": "Tempo total da demo com Qwen3 4B no Ollama, em execução local."
+        },
+        {
+          "value": "44",
+          "label": "Chamadas feitas pelo modelo local na mesma demo."
+        },
+        {
+          "value": "US$ 0,051",
+          "label": "Custo da demo com a API paga da OpenAI."
+        }
+      ],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F16",
+        "F17",
+        "F21"
+      ],
+      "notes": "O slide contrasta tempo e custo entre execução local e API paga. O modelo local não gera custo monetário na medição, mas leva mais tempo e faz mais chamadas. A API paga, por outro lado, tem custo explícito e menor tempo total na mesma demo.",
+      "line": 25,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "A GLC de alto nível reduz saída",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Sem GLC de alto nível",
+          "items": [
+            {
+              "label": "DSL inteira",
+              "detail": "O modelo escreve a DSL de baixo nível inteira e gera 2.784 tokens de saída."
+            },
+            {
+              "label": "Custo por deck",
+              "detail": "Sem a GLC de alto nível, o processo custou em média US$ 0,0081 por deck."
+            }
+          ]
+        },
+        {
+          "name": "Com GLC de alto nível",
+          "items": [
+            {
+              "label": "Comparação medida",
+              "detail": "Em 01/11/2026, com a API paga, o mesmo pedido virou slides de dois jeitos."
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F22",
+        "F23",
+        "F24",
+        "F25"
+      ],
+      "notes": "A comparação opõe duas formas de usar a API paga: escrever a DSL inteira ou delegar a estrutura à GLC de alto nível. O lado sem GLC mostra mais saída e um custo médio por deck já medido. O lado com GLC de alto nível serve como referência da mesma comparação, sem repetir os números já mostrados no outro lado.",
+      "line": 33,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "A falha aparece quando a entrada cresce",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Entrada grande",
+          "detail": "A falha aparece com o artigo completo do TCC, que tem 138 mil caracteres."
+        },
+        {
+          "label": "Sem PowerPoint",
+          "detail": "Depois de 298 s e 52 chamadas, não saiu nenhum PowerPoint."
+        },
+        {
+          "label": "Erro no slide",
+          "detail": "O slide de números trouxe 08–12/10/2026 e Qwen3 4B no lugar de números."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F26",
+        "F27",
+        "F28",
+        "F29"
+      ],
+      "notes": "A falha foi mostrada de propósito para expor o limite da entrada grande. O caso extremo é o artigo completo do TCC, que trava a geração antes de produzir o arquivo final. O exemplo do slide de números mostra o tipo de erro que aparece quando a estrutura esperada não é respeitada.",
+      "line": 45,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Desde o sem1, a saída ficou melhor",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Fechar a conclusão",
+          "detail": "Desde o sem1, o seminário destaca o que mudou na saída."
+        },
+        {
+          "label": "Retomar a evolução",
+          "detail": "O Seminário 2 do SlideDSL aborda demo, GLC, custo, falha e o que mudou desde o sem1."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1"
+      ],
+      "notes": "A conclusão deve ficar fiel ao que os fatos sustentam: o seminário destaca o que mudou desde o sem1. Como não há fato sobre Google Slides nesta correção, o fechamento não pode prometer essa entrega. O foco fica em encerrar a história do seminário 2 com a evolução do conteúdo.",
+      "line": 53,
+      "column": 3
+    }
+  ]
+}

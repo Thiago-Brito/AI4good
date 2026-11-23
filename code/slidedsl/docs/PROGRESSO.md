@@ -1,5 +1,175 @@
 # Progresso de implementação
 
+## TCC — Fase 0: custo por chamada — 22/11/2026
+
+Ponto de partida: `RecordedModel` já gravava tokens e segundos em `uso_chamadas.jsonl`, mas não os
+tempos do servidor, e `chamadas.jsonl` não tinha uso. Implementado: durações do Ollama (ns → ms),
+`timings` do llama.cpp (com contagens de reserva sem `usage`), `reasoning_tokens` da OpenAI,
+`wall_ms` com `perf_counter`, `RecordedModel.last_usage()` copiado para `Call.usage` e `custo.json`
+(`slidedsl.custo.v1`) com totais e etapas. Valores ausentes ficam `null`; somas informam quantas
+chamadas não tinham o campo. **713 pytest passaram em 112 s** (`--basetemp` curto: o caminho longo
+estourou o limite do Windows em `test_documentos_edicao_r7.py`), Ruff limpo, testes Node do
+renderer passaram. Só servidores simulados: nada medido com modelo real ainda. `alto_generation.py`
+já estava fora do `ruff format` antes desta fase e não foi reformatado.
+
+## Rodada 4 de design — 10/11/2026
+
+T1 concluída antes de alterar layouts: corpus congelado (16 decks, 89 slides),
+15 PPTX válidos e um deck solar com A010 preexistente. Evidência:
+`outputs/design_r4/20261110-234240/antes/`. Rodada offline, US$ 0.
+T2–T6 implementadas; variantes e regressões em validação antes dos ciclos visuais.
+T7/ciclo 1: 16 folhas abertas, 15/16 PPTX. Corrigido solar B+img; novo bloqueio
+no marcador de etapas do Git identificado. Vãos tipográficos ainda exigem ajuste.
+Revisão em `outputs/design_r4/20261110-234240/ciclo_1/REVISAO.md`.
+T7/ciclo 2: 16 folhas abertas, 15/16 PPTX. Vãos diminuíram e Git passou;
+comparação de microsserviços regrediu por rótulos estreitos. Ajuste de largura e
+classificação visual da conclusão em curso antes do terceiro e último ciclo.
+
+T7/T8 encerradas em 11/11/2026, pelo limite de três ciclos. Ciclo 3: **16/16 PPTX,
+89 slides**, zero A010/A019/D010, oito A031. Foram abertas as 48 folhas dos três
+ciclos. Comparação por deck em `outputs/design_r4/20261110-234240/comparacao/`:
+nota média 0,7966 → 0,8353; ocupação 0,6079 → 0,4966 (faixas 0,1746–0,9213 →
+0,1539–0,8771); variantes por deck 4,625 → 4,875; repetições consecutivas 3 → 0.
+Antes não havia A030: variantes inferidas por cartões/tipo são aproximação;
+A031 anterior não disponível, não evidência de resolução adequada.
+
+**591 pytest passaram em 87,47 s**, um aviso preexistente Starlette/AnyIO;
+`ruff check src tests scripts` limpo e **2 testes Node** passaram. JUnit em
+`outputs/design_r4/20261110-234240/pytest_aprovacao.xml`. Corpus × seis estilos
+testado sem overflow, sem alterar a gramática/IR. Editor não foi alterado nesta
+rodada. Execução inteiramente offline, **US$ 0**, sem commit/push/stash.
+
+Limitações observadas: predominam listas, photo40 venceu as dez imagens,
+fotos pequenas/irrelevantes persistem, transições são esparsas, comparações densas
+continuam em 16 pt e topos de rótulos podem variar para alinhar descrições.
+Nota geométrica não é validação estética; aparência no Office não foi medida.
+Detalhes e achados por ciclo em `ciclo_N/REVISAO.md`; regras em `REGRAS_DESIGN.md`.
+Auditoria nativa adicional: 652 textos, 298 formas, 19 imagens nos 89 slides;
+nenhuma divergência de família/tamanho entre IR e PPTX. Originais/cópias do corpus
+conferidos por SHA-256. Python 3.12.10, Node v24.14.0. A remoção de
+`outputs/_tmp_r4` foi rejeitada pela revisão automática (`blocked by policy`);
+temporário preservado. Evidência consolidada em `auditoria_final.json` e `RELATORIO.md`.
+
+## Rodada 5: modelo, imagens por IA e visual — 02/11/2026
+Imagens geradas por IA como opção (só quando faltar foto livre ou sempre), com custo por
+imagem no consumo; capa e conclusão em paleta invertida; correções de crédito, retratos,
+maiúsculas e largura de rótulos; recomposição de slide de imagem que não cabe. gpt-5.4-mini
+virou o padrão local após teste lado a lado. 467 testes; detalhes em
+[CONTINUIDADE_API_VOZ_MOBILE.md](CONTINUIDADE_API_VOZ_MOBILE.md).
+
+## Rodada 4: B-lote e correções editoriais — 01/11/2026
+Planejador implementou: regras gerais no lugar das específicas dos temas, filtro de
+tópicos estruturais, rótulos uniformes por grupo, comparação coerente, cartões ajustados
+e modo B-lote. Lote `outputs/comparacao_alto_sld/20261101-2307_r4/` (US$ 0,3035):
+B-lote 11/12 válidos, 83.866 tokens contra 141.151 de A (−41%), US$ 0,00096 por slide
+válido contra 0,00174 (−45%). 458 testes; Ruff limpo. Detalhes e pendências em
+[CONTINUIDADE_API_VOZ_MOBILE.md](CONTINUIDADE_API_VOZ_MOBILE.md).
+
+## Rodada 3 de design e comparação com repetições — 01/11/2026
+Corpo ≥ 16 pt, fotos na capa, caixa de frase, rótulos e ocupação revisados pelo Codex; lote
+4 temas × 3 seeds × A/B/B+img em `outputs/comparacao_alto_sld/20261101-2227/` (US$ 0,3704).
+B: 12/12 válidos, US$ 0,00143/slide válido, 22% mais tokens que A; A: 11/12, 91 avisos.
+Codex parou por limite de uso antes de documentar; 452 testes e Ruff conferidos pelo planejador.
+Detalhes e pendências em [CONTINUIDADE_API_VOZ_MOBILE.md](CONTINUIDADE_API_VOZ_MOBILE.md).
+
+## Comparação — tarefa 3 — 01/11/2026
+Criados `scripts/comparar_alto_vs_sld.py`, três briefs congelados em
+`experiments/comparacao/briefs/`, registro prévio em `refs/COMPARACAO_ALTO_SLD.md`
+e testes offline de orçamento, parâmetros e métricas. Todas as rodadas de A são
+auditadas com RecordedModel; o teto global inclui tentativas anteriores e reserva
+conservadora de chamadas sem uso. TLS permanece verificado.
+
+Lote principal: `outputs/comparacao_alto_sld/20261101-2131/RELATORIO.md`, CSV/JSON,
+auditoria, fontes/cru/validações, seis PPTX, 35 PNGs Pillow/IR e sete folhas de
+contato inspecionadas. A: 19.094/8.292 tokens entrada/saída, US$ 0,0201368, 1/3
+válidos, dois P001, oito D010 e um D008. B: 24.666/5.253, US$ 0,017964, 3/3,
+zero ERRO/AVISO. B+img: 27.532/5.296, US$ 0,018872, 2/3, um A010. Zero imagens:
+Commons recusou busca real com 403; fallback preservado. Economia de custo B
+10,79%, B+img 6,28%; tokens totais aumentaram 9,25% e 19,87%. Não se demonstrou
+redução de tokens nem equivalência factual/estética de conteúdo.
+
+No experimento inteiro: 90 chamadas, 72 com uso conhecido e 18 sem uso;
+US$ 0,0703364 conhecidos e teto conservador US$ 0,2325972. Total exato desconhecido,
+nunca tratado como zero. Tentativas anteriores, diagnósticos e retomada preservados,
+sem duplicar o custo do A copiado de 2125 para 2128. Lote principal tem custo
+completamente conhecido (US$ 0,0569728). Nenhum novo gasto após a conclusão.
+
+Limitações documentadas: dois A sem IR/PNGs; B+img solar sem PPTX por rótulo longo
+após reparo; PNG não renderiza PPTX e mostra glifo subscrito ausente; repetição
+semântica ainda possível apesar de Jaccard zero. Prévia e validade não comprovam
+correção factual. Briefs têm o mesmo texto e os mesmos bytes congelados entre
+condições; transporte A/CRLF e B/LF registrado, e harness corrigido para futuras
+execuções sem conversão de newline. Sete folhas inspecionadas pelo executor,
+sem avaliação humana cega. Regressão anterior 420 testes passou; verificação final
+concluída abaixo. Próximo trabalho de produto continua sendo persistência com revisões,
+sem novas despesas autorizadas por esta etapa.
+
+## Comparação — tarefa 4 — 01/11/2026
+Verificação final: `.\.venv\Scripts\python.exe -m pytest -q -p no:cacheprovider
+--basetemp outputs\_pt --junitxml=outputs/comparacao_alto_sld/20261101-2131/pytest_final.xml`:
+**421 passaram em 91,50 s**, com um aviso preexistente de depreciação Starlette/AnyIO.
+`.\.venv\Scripts\python.exe -m ruff check src tests scripts`: **All checks passed**;
+log em `20261101-2131/ruff_final.txt`. `git diff --check` sem apontamentos.
+Auditoria independente conferiu nove execuções, hashes de briefs normalizados,
+uso por chamada, reservas e seis ZIPs PPTX com cinco slides cada. O caminho absoluto
+de `outputs/_pt` foi verificado dentro de outputs, mas as duas tentativas de remoção
+PowerShell (a segunda com caminho literal absoluto) foram rejeitadas antes da
+execução pela política do ambiente: `blocked by policy`. A pasta permanece; não
+foi solicitado relaxamento da política nem usada outra via para contornar o bloqueio.
+Branch preservada `feature/slidedsl-api-voz-mobile`, sem commit, push, stash ou
+limpeza de arquivos preexistentes. O primeiro pytest concorrente sofreu colisão
+de temporários; a regressão final foi executada sozinha. O mock antigo repetia
+os itens na conclusão, passando a disparar corretamente o detector; fixture
+ajustada para conteúdo distinto. Nenhum limite de design foi ampliado e nenhuma
+saída paga foi editada manualmente para melhorar sua pontuação.
+
+## Comparação — tarefas 1–2 — 01/11/2026
+Lidos plano, norma, código e chamadores. `https.py` centraliza SSLContext com
+CERT_REQUIRED para OpenAI, mídia e pesquisa. Busca real: TLS concluído, Commons
+HTTP 403 por política de robôs; Openverse timeout. Evidências em
+`outputs/comparacao_alto_sld/rede_20261101-211932/`. Não se declara busca funcional.
+Autoria ausente do pedido é descartada; prompts recebem roteiro e itens anteriores;
+Jaccard >=0,72 gera A017 e reparo dentro do limite existente. Imagem proposta no
+roteiro com consulta em inglês; resolução restrita a Commons, fallback preservado.
+A011 de download pendente deixa de provocar reescrita inútil. Nenhum limite visual
+foi ampliado. `pytest tests/test_comparacao_quality.py -q -p no:cacheprovider
+--basetemp outputs\_pt`: 11 passaram. Próximo: harness e experimento real.
+
+## Piloto OpenAI remoto — 01/11/2026
+Causa da falha HTTPS: o Kaspersky intercepta TLS e apresenta a raiz própria
+(`Kaspersky Anti-Virus Personal Root Certificate`), confiada pelo Windows mas ausente do
+`certifi` usado pelo HTTPX. `openai_model.py` passou a usar `ssl.create_default_context()`,
+com verificação ativa; teste de regressão confere `CERT_REQUIRED`. Piloto pela API web
+(`outputs/api_voz_mobile/piloto_5ab371e27016/`, job `5d620a2be1194525b62221b672260f70`):
+`gpt-4.1-mini-2025-04-14`, 3 slides, 5 chamadas (roteiro, 3 slides, 1 reparo), 3.514
+tokens de entrada, 877 de saída, sem cache, US$ 0,0028088 pela tarifa datada; PPTX
+exportado (HTTP 200). Conteúdo genérico e repetição entre slides 2 e 3; autor inventado
+na capa. 403 testes Python passaram; Ruff sem apontamentos.
+
+## APIs e auditoria de consumo — 01/11/2026
+Branch `feature/slidedsl-api-voz-mobile` criada antes das mudanças, base `168c29f`.
+OpenAI integrada ao fluxo Alto web, com seleção de provedor/modelo, schema estrito
+adaptado e validado localmente, recusa/interrupção explícitas e remoção do fallback por
+TypeError. Auditoria inclui pesquisa, geração, verificações e falhas; uso ausente fica
+desconhecido e chamadas em andamento são persistidas antes do HTTP. Interface exibe
+consumo, limita chamadas/saída e começa com um candidato. `.env` local autorizado,
+ignorado e não rastreado; não houve commit/push. Piloto remoto impedido por HTTPS
+(WinError 10054, inclusive fora do sandbox), antes da geração. HTTP simulado gerou
+PPTX editável real. Validação final: 402 testes Python, dois Node e 13 Playwright
+passaram; cinco testes reais optativos omitidos. Ruff, ESLint, TypeScript, formatação
+e build conferidos. Ver verificações, artefatos e próxima fase em
+[CONTINUIDADE_API_VOZ_MOBILE.md](CONTINUIDADE_API_VOZ_MOBILE.md).
+
+## Planejamento de APIs, voz e celular — 01/11/2026
+Criado [PLANO_API_VOZ_MOBILE.md](PLANO_API_VOZ_MOBILE.md), após leitura da arquitetura,
+adaptadores, fluxo Alto, API, editor e registros existentes. Fontes registradas em
+[refs/PLANO_API_VOZ_FONTES.md](../refs/PLANO_API_VOZ_FONTES.md). O plano propõe completar
+OpenAI com saída estruturada e uso por chamada, estado persistido com revisões, edição
+localizada, interface móvel, voz e avaliação de custo por slide válido. A transcrição
+fornecida pelo usuário orientou a comparação com Taiga-S1; o ZIP foi desconsiderado.
+Referência visual do Claude indisponível. Etapa exclusivamente documental: sem branch,
+alteração de código, testes de execução, chamadas pagas, commit, push ou publicação.
+
 ## Revisão e preparação do commit — 12/10/2026
 Revisadas as mudanças do projeto SlideDSL: fluxo Alto, pesquisa local, verificação de
 sustentação/cobertura, extensões da DSL 1.1, editor e planejamento conceitual/experimental.
@@ -414,6 +584,257 @@ docs/EVOLUCAO_VISUAL_CONTEXTUAL.md, outputs/contextual/ e
 outputs/tests/contextual-final.xml. Pendentes avaliação humana, Office real,
 maior amostra, GPU, conectores ancorados e sincronização completa de fontes/IR.
 
+
+## Rodada 2 de design - fase 1 (01/11/2026)
+
+Implementadas regras editoriais locais em editorial.py/alto_layout.py: capa abstrata sem barras, composicao por densidade, topicos sem numeracao, etapas conservadoras, rotulos redundantes suprimidos preservando detalhes, escala por deck e quebra medida de titulos. Fotos em meia pagina com credito visivel e recorte central no renderer/previa. Prompts com perguntas distintas e contexto brasileiro. Filtro lexical de relevancia em media.py; glifo CO2 subscrito usa Segoe UI na previa. Testes offline adicionados em test_design_r2.py; regressao parcial identificou ajustes necessarios nos exemplos densos, corrigidos sem cortar textos. Experimentos em andamento em outputs/design_r2/20261101-2154/; teto compartilhado US$ 0,40. Sem commit/push/stash. Proxima fase: inspecionar PNGs dos quatro briefs e iterar ate tres ciclos.
+
+Ciclo 1: quatro folhas efetivamente vistas, 1/4 válidos e US$ 0,0320992 conhecidos;
+quatro chamadas iniciais sem uso mantidas como desconhecidas/reservadas.
+Evidência e correções: `outputs/design_r2/20261101-2154/ciclo_1/REVISAO.md`.
+Regressão intermediária: 432 passaram, uma falhou por fixture de mídia sem título;
+fixture atualizada para fornecer título realista ao novo filtro de relevância.
+
+Ciclo 2: 4/4 PPTX válidos, 0 ERRO/AVISO, uma imagem exportada; custo do ciclo
+US$ 0,0261728. Quatro folhas inspecionadas, defeitos e próxima correção em
+`outputs/design_r2/20261101-2154/ciclo_2/REVISAO.md`. Testes focados: 86 passaram.
+Ciclo 3 em execução; repetição semântica e qualidade editorial seguem mensuradas
+por inspeção, sem alegação de solução garantida pelos diagnósticos automáticos.
+
+### Encerramento da rodada 2 — tarefas 2–4
+
+Ciclo 3: 4/4 válidos, quatro imagens no PPTX, US$ 0,0300044. Quatro folhas
+inspecionadas; gráfico estatístico indevido em Git levou a veto lexical antes
+da comparação. Parada no terceiro ciclo conforme plano; revisão em
+`outputs/design_r2/20261101-2154/ciclo_3/REVISAO.md`.
+
+Comparação final em `outputs/comparacao_alto_sld/20261101-2203/`: 12 execuções,
+11 PPTX/55 slides, 60 PNGs e 12 folhas efetivamente abertas. A 4/4, B 3/4,
+B+img 4/4; custos próprios 0,0323660/0,0284724/0,0296364 USD e ERRO/AVISO
+0/28, 1/2, 0/6. B/Internet falhou por A010; imagem de A é asset geométrico
+inadequado ao exemplo, enquanto B+img exportou três fotos Commons licenciadas.
+Git B+img não incluiu foto. Relatório contém valores individuais, médias,
+custo por slide válido, limitações e comparação pareada com três temas da
+rodada 1. Inspeção por tema/condição em `REVISAO_FINAL.md`.
+
+Rodada toda: 207 chamadas, 203 conhecidas e quatro sem uso. US$ 0,1787512
+conhecidos (ciclos 0,0882764 + lote final 0,0904748); total exato desconhecido,
+teto conservador US$ 0,20175 < US$ 0,40. Ledger e hashes conferidos; fontes
+registradas em `refs/DESIGN_RODADA2.md` antes dos relatórios. Execução remota
+por stdin/runpy; nenhuma saída editada manualmente, nem commit/push/stash.
+
+Comandos: `.venv/Scripts/python.exe -m pytest -q -p no:cacheprovider --basetemp
+outputs/_tmp_r2 --junitxml=outputs/comparacao_alto_sld/20261101-2203/pytest_final.xml`
+passou **438 testes em 86,16 s**; um aviso preexistente Starlette/AnyIO.
+`ruff check src tests scripts` limpo; `outputs/runtime/node.exe --test
+renderer/render.test.mjs`: dois passaram. Cópia/hash do código em
+`codigo_executado/` e `codigo_sha256.json`; auditoria em `auditoria_final_r2.json`.
+Remoção do temporário rejeitada pela política automática com caminho verificado;
+`outputs/_tmp_r2` permanece. Nenhuma alteração na pasta `_pt` antiga.
+
+Restam repetição semântica, títulos longos/Title Case, rótulos genéricos,
+omissões/afirmações factuais não verificadas, um caso A010 e dependência da
+relevância lexical. As prévias são IR/Pillow, sem comprovar aparência no Office;
+não houve avaliação humana cega nem demonstração de qualidade equivalente.
+
+## Rodada 3 ? implementa??o local (01/11/2026)
+
+Removida redu??o global de fontes; escala Alto 42/24/20 pt, m?nimos 32/20/16 pt (subt?tulo 18 pt). Cart?es ampliam altura; dois itens em duas colunas; ocupa??o por uni?o de caixas com aviso abaixo de 0,30. Repeti??o entre irm?os/r?tulos telegr?ficos orienta reparo existente. Capa em caixa de frase com foto/cr?dito e reutiliza??o de busca. Harness aceita seeds e relata m?dias/faixas. Valida??o offline e ciclos em andamento em `outputs/design_r3/20261101-2216`.
+
+Rodada 3: 82 testes direcionados passaram; Ruff limpo. Compatibilidade densa resolvida com perfil 20/16 pt restrito ao slide denso; os demais preservam 24/20 pt. N?o h? redu??o abaixo dos m?nimos nem redu??o global por deck. Ciclo 1 em execu??o.
+
+Rodada 3 ? ciclo 1 inspecionado: 3/4 v?lidos, USD 0,0341444 conhecidos, 3 fotos em PPTX v?lidos. Falha A010 Internet; inconsistencia foto da capa no roundtrip corrigida na gram?tica/printer e pr?-valida??o. R?tulo telegr?fico e conclus?o repetitiva motivam ciclo 2. Evid?ncia `outputs/design_r3/20261101-2216/ciclo_1/REVISAO.md`. Regress?o de fase 1: 446 pytest passaram em 77,47s.
+
+Rodada 3 ? ciclo 2 inspecionado: 3/4 v?lidos, cinco fotos em PPTX, USD 0,0303072 pr?prios / 0,0644516 acumulados. Capas/roundtrip e conclus?o solar melhoraram; Git A010 por duas unidades e ?cone no lugar de foto motivam escolha adaptativa da largura e filtro fotogr?fico no ciclo 3. Revis?o em `outputs/design_r3/20261101-2216/ciclo_2/REVISAO.md`.
+
+Rodada 3 ? ciclo 3 encerrado pelo limite: 4/4 v?lidos, tr?s fotos, USD 0,0325836 pr?prios / 0,0970352 acumulados conhecidos, zero uso desconhecido. Revis?o `outputs/design_r3/20261101-2216/ciclo_3/REVISAO.md`. Persistem repeti??o conceitual, t?tulos gen?ricos e conte?do n?o verificado. Corrigida espera do Commons antes do lote final de 36 execu??es.
+
+Rodada 3 ? quality gates finais: 452 pytest em 82,90s, Ruff limpo, 2 testes Node. Evid?ncia `outputs/design_r3/20261101-2216/pytest_final.xml`. Lote final `outputs/comparacao_alto_sld/20261101-2227/` em andamento com c?digo fixo; seed 42 registra P001 em A/Internet e A010 em B+img/solar, al?m de grafo de hyperlinks indevidamente aceito pela relev?ncia lexical. Sa?das preservadas e limita??es ser?o incorporadas ? an?lise final.
+
+# Rodada 5 de design — fase de implementação (11/11/2026)
+
+**Concluída:** ciclo 3 atingiu (a)–(e): 16/16 PPTX/89 slides, zero A010/A019/D010,
+ocupação 0,6294, rows 7/30 (23,3%), fotos grandes em photo40 0, eixos mistos 0.
+Repetição imediata 0; variantes/deck 4,9375; 14/15 conclusões em colunas numeradas.
+48 folhas abertas. Comparação tripla e relatório em `outputs/design_r5/20261111-001430/`.
+614 pytest passaram em 90,59 s; Ruff limpo; 2 testes Node passaram. ZIP/XML confirmou
+629 textos editáveis, 332 formas e 19 imagens, sem divergência de texto/família/tamanho.
+Gramática Alto e corpus inalterados; US$ 0, sem APIs/commit/push/stash.
+Calibragem e tabela óptica em `REGRAS_DESIGN.md`. Restam fotos pequenas/retrato
+irrelevante, transições esparsas e hierarquia menor nas comparações densas.
+
+Registro das fases anteriores (abaixo) preservado como histórico.
+
+Ciclo 2: ocupação 0,6352, 16/16 válidos, 14/15 conclusões em colunas. Todas as
+16 folhas abertas. Catálogo repete cards porque a alternativa rows ainda exigia
+gap mínimo de 24; terceiro ciclo corrigirá o intervalo denso e arredondamento.
+
+Ciclo 1 concluído: 16/16 PPTX, 89 slides, ocupação 0,6288, tópicos em rows 6/30,
+zero A010/A019/D010 e nenhuma foto grande paisagem/quadrada em photo40.
+16 folhas abertas; conclusões regrediram para listas em oito decks.
+Segundo ciclo recuperará colunas e compactará a comparação densa.
+
+Plano e bases r4 lidos; corpus de 16 decks copiado sem alteração para
+`outputs/design_r5/20261111-001430/corpus/`. Código de entrada e hashes preservados.
+Rodada offline/US$ 0, sem commit/push/stash. Calibragem de ocupação, escala por altura-x,
+preferência por fotos e cartões e eixo comum em implementação; testes de geometria
+exercitam os seis estilos. Fontes locais registradas em `refs/DESIGN_RODADA5.md`.
+
+
+## Rodada 6 — Parte A concluída; Parte B bloqueada por autenticação (11/11/2026)
+
+Plano: `docs/PLANO_CODEX_RODADA6_DESIGN.md`; fontes: `refs/DESIGN_RODADA6.md`.
+Código: `alto_layout.py`, `design_system.py`; testes r3/r4/r5 atualizados e
+`test_design_r6.py`, `test_reais_r6.py` adicionados. Harness pago:
+`scripts/testes_reais_r6.py`; comparação offline: `scripts/comparar_design_r6.py`.
+
+Parte A offline, US$ 0: dois ciclos, 32 folhas abertas. Critérios (a)–(e)
+preservados: 16/16 PPTX, 89 slides, ocupação 0,6294→0,6664, tópicos em rows
+7/30→4/30, zero A010/A019/D010/eixo misto/repetição imediata. Dez fotos internas
+em photo50; oito A031 mantidos. Quinze conclusões em colunas com número interno.
+Rótulos/descrições compartilham topos; cartões têm altura natural + padding32;
+centro útil −5%, limitado pelo topo. Fontes começam no maior perfil válido.
+Fotos ≥600 px têm variante única independente de estilo; <600 px usam texto,
+inclusive capa. Transições curtas: 48–54 pt, bloco de um terço e motivo da família.
+
+Evidências: `outputs/design_r6/20261111-004533/RELATORIO.md`, `comparacao/`,
+`ciclo_1/REVISAO.md`, `ciclo_2/REVISAO.md`. Corpus idêntico por SHA-256 à r5;
+gramática Alto, IR e roundtrip preservados. Refinamento de capa <600 px não
+altera o corpus inspecionado: IR finais reconstruídas e comparadas, sem diferença.
+Auditoria PPTX: 629 textos, 345 formas, 19 imagens, 89 slides; zero divergência
+de fonte/texto. **640 pytest passaram em 156,28 s**, Ruff limpo e dois Node.
+Um aviso Starlette/AnyIO preexistente; editor/renderer não alterados nesta rodada.
+Temporários preservados; nenhum commit, push ou stash.
+
+Parte B: modelo **gpt-5.4-mini**, tarifa configurada (somente presença verificada;
+nenhum valor do .env exibido), seis pedidos/estilos, seis slides/seed42,
+imagens livres habilitadas, pesquisa desligada, sem imagens por IA.
+**6/6 tentativas recusadas com HTTP 401 antes do roteiro. Nenhum deck novo foi
+gerado:** sem PPTX/SLDA/PNG de slide. Os seis contato.png e a galeria são painéis
+de falha explicitamente identificados; não são folhas de decks reais.
+Nenhuma busca de fotos foi alcançada. Credencial local carregada; sem chave
+herdada. Não se modificou .env nem se imprimiram seu conteúdo ou a chave.
+
+Pasta: `outputs/testes_reais/20261111-0050/`, com `INDICE.md`, `galeria.png`,
+`resultados.json`, `orcamento.json`, diagnóstico e uso por tentativa.
+ULTIMO.txt aponta para essa execução. Seis painéis e galeria abertos.
+Gasto conhecido **US$ 0,00000000**; seis usos/custos desconhecidos; total exato
+**desconhecido**; reserva conservadora **US$ 0,09354600**, dentro de US$ 0,50.
+Não declarar custo total zero. Não houve retries pagos após as seis falhas.
+
+Foi solicitada atualização local da credencial, sem enviá-la no chat.
+Após corrigir a credencial, retomar da raiz em nova pasta automática:
+
+```powershell
+.\.venv\Scripts\python.exe scripts/testes_reais_r6.py --carry-budget outputs/testes_reais/20261111-0050/orcamento.json
+```
+
+O ledger conserva as seis reservas no MESMO teto total de US$ 0,50; preflight
+por deck e reserva antes de cada chamada. Não iniciar outro lote com orçamento
+zerado. Retomada dentro do teto já autorizado exige credencial válida, sem nova
+autorização de gasto. **Parte B permanece pendente, não concluída.**
+
+Limitações: nota geométrica caiu 0,8023→0,7048, apesar dos critérios explícitos;
+vazios externos, recorte/nitidez das fotos e grafo irrelevante do corpus antigo
+persistem. Sem validação Office, avaliação humana cega ou pesquisa factual.
+Conteúdo gerado não foi editado à mão para esconder falhas.
+
+## Rodada 7 — fase 1: documentos e edição (11/11/2026)
+Fontes registradas em refs/DOCUMENTOS_EDICAO_R7.md. Implementados extração DOCX limitada,
+dossiê documental, prioridade documental sobre suplementos web, estilo auto, substituição
+local de bloco Alto, CLI/API e histórico de revisões com consumo acumulado. Interface em
+integração; testes ainda não executados nesta fase. Próximo: regressão, testes UI e lote real
+com teto independente autorizado de US$ 0,60, sem imagens por IA. Sem commit/push/stash.
+
+## Rodada 7 — fase 2: verificação e primeiro lote (11/11/2026)
+672 pytest passaram em 117,82 s, Ruff limpo, dois Node; build npm com --configLoader
+native passou (configuração padrão do esbuild não lê um ancestral no sandbox). Os dois
+novos testes Playwright passaram; encerramento da suíte UI ainda em análise.
+Primeiro lote falhou no transporte: cinco chamadas sem uso conhecido e reserva
+US$ 0,08191650, preservadas no ledger. Retomada via stdin/runpy alcançou a API:
+primeiro deck válido, DOCX inválido por A005. Custo conhecido até aí US$ 0,13237410,
+limite com reservas US$ 0,21429060. Folha mostrou foto de evento irrelevante e recuperação
+excessiva de exemplos CLI. Reforçados veto de eventos e prioridade a trechos narrativos
+(resumo/introdução/objetivos/resultados/limitações). Nova execução em andamento, com
+ledger acumulado; não declarar conclusão antes da inspeção dos artefatos finais.
+
+## Rodada 7 — concluída em 11/11/2026
+
+Plano: docs/PLANO_CODEX_RODADA7_DOCUMENTOS_EDICAO.md. Fontes previamente registradas em
+refs/DOCUMENTOS_EDICAO_R7.md. Alterações anteriores preservadas; sem commit, push, stash,
+imagens por IA, exposição de chave ou conteúdo do .env. TLS permaneceu verificado.
+
+- T1: TXT/MD/PDF textual e DOCX sem dependência nova, até oito arquivos, 2 MiB por arquivo
+  e 5 MiB para DOCX; macros/cifra recusadas. Dossiê local com trecho literal verificado,
+  fontes documento:nome#trecho-N, prioridade documental e internet opt-in; CLI/API/UI.
+- T2: refazer_slide troca somente o bloco selecionado; valida gramática/check_slide,
+  no máximo um reparo. Ajustes sem modelo de estilo/foto/ordem/exclusão, histórico em
+  outputs/criar/<id>/versoes e desfazer persistido; consumo inclui falhas e versões desfeitas.
+- T3: Commons com categorias/extmetadata, consulta central preservada nos fallbacks,
+  veto de retratos/eventos/diagramas e fallback de imagem sem foto em cartões/destaque.
+  Revisão conservadora rejeita PNGs da busca fotográfica e metadados sem descrição
+  suficiente. Buscas adicionais de foto sem inferência obtiveram varanda e roteador.
+- T4: estilo auto determinístico, padrão na UI/CLI; público infantil e contexto acadêmico
+  precedem tema técnico. Regra e limites em docs/REGRAS_DESIGN.md; troca sem modelo.
+- T5: 678 pytest passaram em 112,72 s (um aviso Starlette/AnyIO preexistente), Ruff limpo,
+  dois Node, npm build e lint passaram. Build usou --configLoader native por restrição
+  do esbuild no sandbox. Playwright final: 15 passaram em 17,1 s, cinco testes locais
+  opcionais pulados; inclui upload real e edição com modelo simulado. A primeira suíte
+  exigiu encerrar sua própria árvore de servidor na porta 8777; a final usou servidor
+  separado na porta 8778 e encerrou os testes normalmente. Logs em outputs/rodada7/.
+- T6: seis PPTX finais, 42 slides, duas fotos Commons. Folhas finais, galeria e comparação
+  antes/depois abertas. Original de documento/DOCX desta execução falhou em A005/A010;
+  os slides 1/6 e 5 foram refeitos em pastas novas, sem editar o texto manualmente.
+  Slide 3 refeito em uma chamada por US$ 0,00516750; outros sete blocos idênticos em bytes.
+
+Evidência principal: outputs/testes_reais/20261111-0131_r7/INDICE.md, galeria.png,
+03_refeito_revisado/antes_depois_slide3.png e preservacao.json. Antes em antes.slda e
+antes.pptx; depois em apresentacao.slda e apresentacao.pptx na mesma pasta de edição.
+ULTIMO.txt aponta para essa execução. ARQUIVOS_ALTERADOS.md e manifesto_sha256.json
+relacionam arquivos e artefatos. Auditoria do deck do projeto encontrou zero números
+visíveis ausentes dos fatos e conferiu os nomes técnicos; não prova toda paráfrase.
+
+| Caso final | Válido | Fatos documentais usados | Fotos | Chamadas | USD |
+|---|---|---:|---:|---:|---:|
+| Artigo + README | sim | 19 | 0 | 37 | 0,06522735 |
+| DOCX do artigo | sim | 19 | 0 | 34 | 0,06548055 |
+| Refazer slide 3 | sim | 20 | 0 | 1 | 0,00516750 |
+| Git | sim | 0 | 0 | 8 | 0,01478985 |
+| Horta | sim | 0 | 1 | 7 | 0,01352625 |
+| Internet | sim | 0 | 1 | 10 | 0,01797705 |
+
+A tabela soma geração e reparos por caso; refazer é apenas o custo adicional de edição.
+Casos finais US$ 0,18216855; tentativas anteriores US$ 0,13237410. Rodada inteira:
+176 tentativas, 171 com uso conhecido; US$ 0,31454265 conhecidos. Cinco falhas iniciais
+no transporte têm uso/custo desconhecidos, reserva US$ 0,08191650. Total exato desconhecido;
+limite com reservas US$ 0,39645915 <= teto US$ 0,60. Nenhuma chamada de imagem por IA.
+Ledgers anteriores preservados e acumulados, nunca reiniciados. Não houve HTTP 401 nesta
+rodada. Retomada via stdin/runpy funcionou; causa das falhas de transporte não foi comprovada.
+Lote encerrado: não fazer novas inferências para melhorar a amostra sem outra solicitação.
+
+Continuam ruins: filtros lexicais perdem fotos úteis; a foto do roteador tem recorte apertado
+com marca em destaque, e a varanda contém plantas ornamentais. Há comparações de aspectos
+não equivalentes, repetição e generalizações (por exemplo, modelos menores e conexão sempre
+ativa). O RAG inicial recuperava comandos CLI demais; priorizar trechos narrativos melhorou
+o assunto, mas oito passagens não cobrem todo o artigo. Verificação por modelo tem falsos
+positivos e custa chamadas. Validade formal não implica sustentação semântica nem beleza.
+Prévias IR/Pillow, sem validação Office ou avaliação humana cega. Git/horta/internet não
+usaram pesquisa factual. Projeto com IDs estáveis, reabertura pela UI, voz e celular
+continuam como etapas futuras do plano maior; o histórico desta rodada é específico dos jobs Alto.
+
+## Seminário 2 — 11/11/2026
+Ajustes pequenos para slides de uma ideia: comparação com 1–4 itens por lado, avisos A023/A024,
+rodapé com rótulo próprio e nome do documento. 684 testes passaram, Ruff limpo. Medição real com
+`scripts/medir_execucao.py` em `outputs/sem2/` (medicao.json: artigo, inválido, 298 s;
+medicao_demo.json: documento do sem2, válido, 160 s). Deck final em `outputs/sem2/demo_sem2_v4/`.
+Documento de entrada em `academy/ai4good/va2/sem2_slidedsl.md`.
+Depois: correção do verificador que vinha só com o veredito ("parcial") deixou de ser aplicada
+como texto; 685 testes. API paga no mesmo documento (medicao_api.json): 65,7 s, 29 chamadas, US$ 0,051;
+local: 160 s, 44 chamadas, 70.154/10.901 tokens, US$ 0. Deck de 6 slides em outputs/sem2/demo_sem2_v5/.
+Google Slides: src/slidedsl/google_slides.py, /api/google/{status,login,slides}, botão no editor e
+comando google-slides; 690 testes, Ruff, build e ESLint ok. Envio real depende da credencial do usuário
+(docs/GOOGLE_SLIDES.md); ainda não testado contra o Google de verdade.
+
 ## Seminário 3 — diagramas SVG pelo compilador — 18/11/2026
 Novo `src/slidedsl/svg_diagrams.py`: o compilador desenha em SVG os blocos `etapas` (fluxo),
 `ciclo` (novo bloco da gramática, lido como etapas com `cycle=True`) e `grafico` (barras com
@@ -436,3 +857,8 @@ Depois (18/11): chave nova da API; teste pequeno com gpt-4.1-mini: A 0/3 (US$ 0,
 (US$ 0,0007), em `outputs/sem3/teste_svg/piloto_api_20261118/`. Deck v2 gerado nos dois modos a partir
 do roteiro atualizado (local 200 s; API 172 s, US$ 0,038) e revisado; ambos omitiram o competidor.
 Registro completo, decks e diffs em `academy/ai4good/va2/sem3/REGISTRO.md`.
+Depois (18/11, à noite): deck do sem3 saiu fora do tema pela interface. Correções (não commitadas, dependem
+do trabalho de documentos ainda não commitado): `documents.document_sections` liga cada fato à seção `##`
+do documento; `generate_alto(sections=...)` torna as seções tópicos obrigatórios do roteiro, na ordem, e
+aceita a primeira seção na capa; trecho que é título de seção não vira fato. Testes em
+`tests/test_document_sections.py`; suíte completa: 707 passaram. v3 pela API seguiu as 6 seções do roteiro.

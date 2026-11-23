@@ -16,6 +16,7 @@ from .base import ModelError
 
 class LlamaCppTextModel:
     supports_grammar = True
+    supports_response_schema = True
 
     def __init__(
         self,
@@ -103,6 +104,9 @@ class LlamaCppTextModel:
                 "seed": seed,
                 "grammar_constrained": grammar is not None,
                 "usage": data.get("usage"),
+                # prompt_n, prompt_ms, predicted_n, predicted_ms, predicted_per_second.
+                "timings": data.get("timings"),
+                "model_returned": data.get("model"),
                 "finish_reason": data["choices"][0].get("finish_reason"),
             }
         )

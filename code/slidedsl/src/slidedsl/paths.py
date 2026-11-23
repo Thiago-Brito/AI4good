@@ -34,3 +34,22 @@ def node_executable(root: Path | None = None) -> str:
         return custom
     portable = (root or project_root()) / "outputs/runtime/node.exe"
     return str(portable) if portable.is_file() else shutil.which("node") or "node"
+
+
+def replace_file(temp: Path, target: Path, attempts: int = 20) -> None:
+    """Troca atômica que tolera bloqueio passageiro no Windows.
+
+    No Windows, os.replace falha com "Acesso negado" enquanto outro processo
+    (OneDrive, antivírus, um leitor) está com o destino aberto; antes isso
+    derrubava a geração inteira ao gravar um simples evento de progresso.
+    """
+    import time
+
+    for attempt in range(attempts):
+        try:
+            os.replace(temp, target)
+            return
+        except PermissionError:
+            if attempt == attempts - 1:
+                raise
+            time.sleep(min(0.05 * (attempt + 1), 0.5))

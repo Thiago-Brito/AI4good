@@ -1,0 +1,52 @@
+{
+  "assets/media/eea0d20abe68e478f21489f8786a2dc37fed0344199a5e3246326ee4dcf4f1d6.png": {
+    "width": 1280,
+    "height": 960,
+    "metadata": {
+      "id": "eea0d20abe68e478f21489f8786a2dc37fed0344199a5e3246326ee4dcf4f1d6",
+      "provider": "commons",
+      "title": "File:Medieval Herb Garden, Ypres Tower, Rye, East Sussex. - Flickr - Jim Linwood.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4a/Medieval_Herb_Garden%2C_Ypres_Tower%2C_Rye%2C_East_Sussex._-_Flickr_-_Jim_Linwood.jpg/1280px-Medieval_Herb_Garden%2C_Ypres_Tower%2C_Rye%2C_East_Sussex._-_Flickr_-_Jim_Linwood.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Medieval_Herb_Garden,_Ypres_Tower,_Rye,_East_Sussex._-_Flickr_-_Jim_Linwood.jpg",
+      "author": "Jim Linwood from London",
+      "license": "CC BY 2.0",
+      "license_url": "https://creativecommons.org/licenses/by/2.0",
+      "attribution": "File:Medieval Herb Garden, Ypres Tower, Rye, East Sussex. - Flickr - Jim Linwood.jpg — Jim Linwood from London — CC BY 2.0",
+      "width": 1280,
+      "height": 960,
+      "description": "A re-creation of a medieval herb garden in what was the former prison excercise yard and although this can only be opened on special occasions, it can be viewed from the balcony. However, it is open on the weekend of the Rye Medieval Fair.",
+      "lexical_score": 1.0,
+      "query": "balcony herb garden",
+      "asset": "assets/media/eea0d20abe68e478f21489f8786a2dc37fed0344199a5e3246326ee4dcf4f1d6.png",
+      "downloaded_utc": "2026-11-11T04:04:42.402788+00:00",
+      "source_sha256": "b94b48458101dd118ab9b7e40383fd9511bb3fd8518915f37a0cee8239692376",
+      "reviewed": false,
+      "asset_sha256": "f809ba96e26b60aadb2c0c67904400dc6bb5bfed860b6fe74bd14df050149cfb"
+    }
+  },
+  "assets/media/480fa08cf504ee4cc9d4fdcfbf3ca7ec6aefbab1a8d4cfd03d22f77393e756d8.png": {
+    "width": 1280,
+    "height": 853,
+    "metadata": {
+      "id": "480fa08cf504ee4cc9d4fdcfbf3ca7ec6aefbab1a8d4cfd03d22f77393e756d8",
+      "provider": "commons",
+      "title": "File:DFC 0189 Two motorcyclists ride down a sunlit street lined with closed market stalls and low-rise buildings in the background.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/DFC_0189_Two_motorcyclists_ride_down_a_sunlit_street_lined_with_closed_market_stalls_and_low-rise_buildings_in_the_background.jpg/1280px-DFC_0189_Two_motorcyclists_ride_down_a_sunlit_street_lined_with_closed_market_stalls_and_low-rise_buildings_in_the_background.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:DFC_0189_Two_motorcyclists_ride_down_a_sunlit_street_lined_with_closed_market_stalls_and_low-rise_buildings_in_the_background.jpg",
+      "author": "PattayaPatrol",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "attribution": "File:DFC 0189 Two motorcyclists ride down a sunlit street lined with closed market stalls and low-rise buildings in the background.jpg — PattayaPatrol — CC BY-SA 4.0",
+      "width": 1280,
+      "height": 853,
+      "description": "This photo shows a street scene in what appears to be a Southeast Asian town or city, possibly in Thailand. The street is lined with colorful multi-story buildings and small shops with awnings. Two motorcyclists are riding in opposite directions on the street - one heading away from the camera wearing red, and another coming toward the camera in a blue motorcycle with a safety vest. In the background, there are several apartment or hotel buildings with distinctive architecture, including one red and white structure. A sign for \"CREW BAR\" is visible among the businesses. The scene has market-style stalls on both sides of the street with awnings providing shade. The overall atmosphere suggests a relatively quiet moment in what might normally be a busier commercial area.",
+      "lexical_score": 1.0,
+      "query": "sunlit apartment",
+      "asset": "assets/media/480fa08cf504ee4cc9d4fdcfbf3ca7ec6aefbab1a8d4cfd03d22f77393e756d8.png",
+      "downloaded_utc": "2026-11-11T04:04:46.823009+00:00",
+      "source_sha256": "65f3892901723d54a726bb0a57b6fe5cdb9d7510bc84979cd6b40cf67d359574",
+      "reviewed": false,
+      "asset_sha256": "12785b4590c47835677d2a3f8c39537f872023c592506a97f4b753d6345c3f2a"
+    }
+  }
+}

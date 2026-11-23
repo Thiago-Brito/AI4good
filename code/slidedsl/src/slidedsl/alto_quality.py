@@ -150,11 +150,22 @@ def check_support(call: Call, slide: AltoSlide, facts: dict, slide_number: int) 
                     "path": path,
                     "veredito": item.get("veredito"),
                     "motivo": (item.get("motivo") or "").strip(),
-                    "correcao": (item.get("correcao") or "").strip(),
+                    "correcao": _useful_correction(item.get("correcao")),
                     "texto": text,
                 }
             )
     return problems
+
+
+_VERDICTS = re.compile(r"^\W*(?:n[aã]o[\s_]+)?(?:sustentad[ao]|parcial)\W*$", re.I)
+
+
+def _useful_correction(value: str | None) -> str:
+    """Descarta 'correções' que são só o veredito ("parcial") ou curtas demais para virar texto."""
+    text = (value or "").strip()
+    if _VERDICTS.match(text) or len(text.split()) < 3:
+        return ""
+    return text
 
 
 def support_diagnostics(problems: list[dict], slide_number: int, severity="ERRO"):
@@ -204,6 +215,8 @@ def apply_corrections(slide: AltoSlide, problems: list[dict]) -> AltoSlide:
 TOPICS_SYSTEM = """Liste os tópicos que o PEDIDO exige explicitamente que a apresentação trate.
 - Só o que está escrito no pedido (comparações pedidas, aspectos a discutir, exemplos e
   recomendações pedidas). Não acrescente tópicos.
+- Cada item que o pedido separa por vírgula é UM tópico. Um item que compara ("X contra Y",
+  "X versus Y", "X sem e com Y") é UM tópico só: não divida em dois.
 - "nome": 1 a 4 palavras. "termos": 1 a 4 palavras ou radicais que, aparecendo no slide,
   mostram que o tópico foi tratado (inclua sinônimos e a forma em inglês, se comum).
 - Pedido curto e genérico: devolva lista vazia.
@@ -236,6 +249,17 @@ def topics_schema() -> dict:
     }
 
 
+STRUCTURAL = {"capa", "introducao", "abertura", "agenda", "sumario", "conclusao", "encerramento",
+              "resumo", "exemplo", "exemplos", "concreto", "concretos", "pratico", "praticos",
+              "publico", "objetivo", "slide", "slides", "apresentacao", "final", "e", "de", "da", "do"}
+
+
+def structural_topic(name: str) -> bool:
+    """Instruções de forma do pedido ("conclusão", "exemplos concretos") não são assunto."""
+    words = normalize(name).split()
+    return bool(words) and all(w in STRUCTURAL for w in words)
+
+
 def extract_topics(call: Call, request: str) -> list[dict]:
     if len(request.split()) < 15:
         return []
@@ -247,7 +271,7 @@ def extract_topics(call: Call, request: str) -> list[dict]:
     for t in data.get("topicos", []):
         name = (t.get("nome") or "").strip()
         terms = [x.strip() for x in t.get("termos", []) if x.strip()] or [name]
-        if name and normalize(name) not in seen:
+        if name and normalize(name) not in seen and not structural_topic(name):
             seen.add(normalize(name))
             topics.append({"nome": name, "termos": list(dict.fromkeys([name, *terms]))[:5]})
     return topics

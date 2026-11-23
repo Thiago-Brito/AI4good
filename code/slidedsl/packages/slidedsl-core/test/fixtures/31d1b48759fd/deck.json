@@ -1,0 +1,219 @@
+{
+  "title": "Estratégias de Estudo para Universitários",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Este deck explica estratégias de estudo para universitários com",
+      "subtitle": "Uma abordagem prática e baseada em evidências para planejar o estudo universitário.",
+      "author": "Equipe de Educação Universitária",
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Apresenta a estrutura da apresentação com foco em estratégias reais. O exemplo de 'um estudante' é qualitativo e válido sem dados numéricos.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "Releitura e prática de recuperação têm efeitos diferentes na reú",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Releitura",
+          "items": [
+            {
+              "label": "Releitura passiva",
+              "detail": "Um estudante de medicina revisa o conteúdo de fisiologia sem aplicar conceitos."
+            },
+            {
+              "label": "Sem aplicação prática",
+              "detail": "O estudante não resolve casos clínicos, apenas lê o material teórico."
+            },
+            {
+              "label": "Isolamento mental",
+              "detail": "A revisão é feita em silêncio, sem interação com colegas ou professores."
+            }
+          ]
+        },
+        {
+          "name": "Prática de recuperação",
+          "items": [
+            {
+              "label": "Prática ativa",
+              "detail": "Um grupo de alunos de engenharia resolve problemas de cálculo aplicado em projetos reais."
+            },
+            {
+              "label": "Interação colaborativa",
+              "detail": "Eles discutem soluções em grupo, simulando situações de campo."
+            },
+            {
+              "label": "Ambiente de aplicação",
+              "detail": "A prática ocorre durante aulas práticas com professores e colegas."
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A releitura apenas reforça o que já foi aprendido, sem aplicar. A prática de recuperação envolve resolver problemas reais, com feedback imediato. A diferença é clara quando o grupo de engenharia resolve problemas de cálculo, enquanto o estudante de medicina apenas lê. Limitação: a prática exige tempo e coordenação, que não todos têm em universidades com carga horária alta. A eficácia depende do tipo de disciplina e do nível de maturidade do aluno, não sendo universal para todos os conteúdos ou contextos acadêmicos.",
+      "line": 9,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "A repetição espaçada melhora a retenção de conhecimento ao longo",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Revisão progressiva",
+          "detail": "Um estudante de biologia revisa o ciclo celular após uma aula, depois em uma semana e novamente em duas semanas."
+        },
+        {
+          "label": "Aplicação prática",
+          "detail": "Um aluno de engenharia repete a fórmula de Newton após uma aula, depois em uma semana e novamente em duas semanas."
+        },
+        {
+          "label": "Estrutura sequencial",
+          "detail": "Um estudante de direito revisa o tema de contratos em uma aula, depois em uma semana e novamente em duas semanas."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A repetição espaçada funciona ao distribuir revisões ao longo do tempo. Um exemplo é um estudante de biologia que revisa o ciclo celular após uma aula, depois em uma semana e novamente em duas semanas. A estratégia é mais eficaz quando os intervalos aumentam com o tempo, não quando os estudos são feitos em blocos curtos. A eficácia depende da consistência, não do número de revisões, e pode variar com o conteúdo e o estilo de aprendizagem do estudante. Não garante domínio total, especialmente em temas complexos ou com pouca prática aplicada.",
+      "line": 23,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Exercícios e feedback são essenciais para consolidar o aprendiz",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "exercício prático",
+          "detail": "um aluno de ciências sociais resolve exercícios sobre políticas públicas e recebe correção direta"
+        },
+        {
+          "label": "correção direta",
+          "detail": "um estudante de biologia identifica erros ao responder questões de genética com feedback imediato"
+        },
+        {
+          "label": "avaliação em tempo real",
+          "detail": "um aluno de direito ajusta sua compreensão ao ver exemplos de redação com avaliação em tempo real"
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O feedback imediato permite que o aluno perceba erros antes de consolidar conceitos. Por exemplo, ao responder questões, ele vê onde falha. Isso ajuda a corrigir mal-entendidos. A limitação é que o feedback só é útil se for claro e relevante. Sem avaliação, o erro permanece como hábito de aprendizagem.",
+      "line": 30,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "Um estudante pode seguir uma rotina simples para se preparar",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Revisar",
+          "detail": "Um estudante de engenharia revisa o conteúdo de biologia antes de dormir."
+        },
+        {
+          "label": "Praticar",
+          "detail": "Ele pratica um exercício com um problema de física para aplicar os conceitos."
+        },
+        {
+          "label": "Verificar",
+          "detail": "O estudante verifica a solução com um colega de curso para validar o raciocínio."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A rotina é simples e adapta-se a qualquer disciplina. Funciona quando o estudante tem acesso a colegas ou materiais. Não é eficaz se o conteúdo for muito abstrato ou sem exemplos práticos.",
+      "line": 37,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "As estratégias de estudo têm limitações e não garantem sucesso",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Avalie sua motivação",
+          "detail": "Quando um estudante sente que o conteúdo é relevante, o esforço é maior"
+        },
+        {
+          "label": "Estabeleça horários fixos",
+          "detail": "Um ambiente com horários fixos ajuda a manter a disciplina mesmo em dias de distração"
+        },
+        {
+          "label": "Adapte o ambiente ao contexto",
+          "detail": "Um estudante em casa pode ter menos foco do que um em biblioteca com menos distrações"
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "As estratégias funcionam melhor quando alinhadas ao perfil individual. O exemplo de um estudante em casa mostra como o ambiente influencia o foco. A motivação varia com o conteúdo e a percepção de utilidade. Não há garantia de sucesso, mesmo com boas práticas, por causa da variabilidade humana e de contexto.",
+      "line": 44,
+      "column": 3
+    }
+  ]
+}

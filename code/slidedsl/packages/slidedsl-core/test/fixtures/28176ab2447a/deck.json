@@ -1,0 +1,237 @@
+{
+  "title": "Monolito ou microsserviços?",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Monolito ou microsserviços: quando cada um compensa",
+      "subtitle": "O que Netflix, Amazon e Prime Video aprenderam ao dividir (e reunir) sistemas",
+      "author": "SlideDSL Alto — exemplo",
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": null,
+      "line": 5,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "A diferença está em como o sistema é implantado e escalado",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Monolito",
+          "items": [
+            {
+              "label": "Uma unidade de implantação",
+              "detail": "Toda mudança exige recompilar e publicar a aplicação inteira."
+            },
+            {
+              "label": "Escala em bloco",
+              "detail": "Para atender um módulo sobrecarregado, replica-se o sistema todo."
+            },
+            {
+              "label": "Chamadas em memória",
+              "detail": "Módulos conversam por funções, sem latência de rede."
+            }
+          ]
+        },
+        {
+          "name": "Microsserviços",
+          "items": [
+            {
+              "label": "Serviços independentes",
+              "detail": "Cada serviço tem implantação, dados e equipe próprios."
+            },
+            {
+              "label": "Escala por serviço",
+              "detail": "Só o serviço sob carga recebe mais instâncias."
+            },
+            {
+              "label": "Chamadas pela rede",
+              "detail": "Cada interação passa por HTTP ou filas e pode falhar."
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "Lewis & Fowler, Microservices (martinfowler.com, 2014)"
+      ],
+      "notes": null,
+      "line": 10,
+      "column": 3
+    },
+    {
+      "kind": "linha_do_tempo",
+      "title": "A ideia amadureceu ao longo de duas décadas",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [
+        {
+          "date": "1968",
+          "label": "Lei de Conway",
+          "detail": "Sistemas espelham a estrutura de comunicação de quem os projeta."
+        },
+        {
+          "date": "2002",
+          "label": "Mandato de APIs na Amazon",
+          "detail": "Equipes passam a se comunicar apenas por interfaces de serviço."
+        },
+        {
+          "date": "2008",
+          "label": "Netflix inicia migração",
+          "detail": "Falha grave de banco de dados motiva a ida para a nuvem."
+        },
+        {
+          "date": "2014",
+          "label": "Artigo de Lewis e Fowler",
+          "detail": "O termo microsserviços ganha definição de referência."
+        },
+        {
+          "date": "2023",
+          "label": "Prime Video volta ao monolito",
+          "detail": "Um serviço de monitoramento é reunido em um único processo."
+        }
+      ],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": null,
+      "line": 24,
+      "column": 3
+    },
+    {
+      "kind": "numeros",
+      "title": "Os resultados dependem do problema, não da moda",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [
+        {
+          "value": "7 anos",
+          "label": "duração da migração da Netflix para a nuvem, de 2008 a 2016"
+        },
+        {
+          "value": "90%",
+          "label": "redução de custo de infraestrutura no monitoramento do Prime Video ao abandonar a versão distribuída"
+        }
+      ],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "Netflix Tech Blog (2016)",
+        "Prime Video Tech Blog (2023)"
+      ],
+      "notes": null,
+      "line": 32,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "Como migrar sem parar o sistema: o padrão strangler fig",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Mapear fronteiras",
+          "detail": "Identificar domínios com dados e regras próprios."
+        },
+        {
+          "label": "Extrair uma borda",
+          "detail": "Começar por uma funcionalidade periférica e de baixo risco."
+        },
+        {
+          "label": "Rotear o tráfego",
+          "detail": "Um proxy envia as chamadas da função extraída ao novo serviço."
+        },
+        {
+          "label": "Desligar o legado",
+          "detail": "Remover o código antigo quando o novo serviço estiver estável."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": null,
+      "line": 38,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Comece simples e divida quando a dor for real",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Monolito modular primeiro",
+          "detail": "Fronteiras claras dentro de um processo custam pouco e facilitam a divisão futura."
+        },
+        {
+          "label": "Divida por escala ou equipe",
+          "detail": "Microsserviços compensam quando partes escalam ou evoluem em ritmos diferentes."
+        },
+        {
+          "label": "Meça antes e depois",
+          "detail": "Custos de rede, observabilidade e operação devem entrar na decisão."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": null,
+      "line": 45,
+      "column": 3
+    }
+  ]
+}

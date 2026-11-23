@@ -1,0 +1,180 @@
+{
+  "topic": "Apresente o ciclo da água para alunos do ensino fundamental, explicando as etapas e por que o ciclo é importante para a vida e para o abastecimento das cidades.",
+  "queries": [
+    "ciclo da agua etapas",
+    "ciclo da agua importancia vida",
+    "ciclo da agua abastecimento cidades",
+    "exemplo ciclo agua real"
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "title": "Ciclo da Água - Toda Matéria",
+      "url": "https://www.todamateria.com.br/ciclo-da-agua/",
+      "provider": "searxng",
+      "snippet": "A essa transformação e circulação da água dá-se o nome de ciclo da água ou ciclo hidrológico, que se desenvolve através dos processos de evaporação, condensação, precipitação, infiltração e transpiração.",
+      "text_chars": 203
+    },
+    {
+      "id": "S2",
+      "title": "Ciclo da água: o que é, etapas, mapa mental - Brasil Escola",
+      "url": "https://brasilescola.uol.com.br/biologia/ciclo-agua.htm",
+      "provider": "searxng",
+      "snippet": "Neste texto, falaremos um pouco a respeito do que é um ciclo biogeoquímico, as etapas e a importância do ciclo da água e apresentaremos um pequeno resumo desse processo.",
+      "text_chars": 9668
+    },
+    {
+      "id": "S3",
+      "title": "Ciclo da água: importância, etapas e resumo - Mundo Educação",
+      "url": "https://mundoeducacao.uol.com.br/biologia/ciclo-agua.htm",
+      "provider": "searxng",
+      "snippet": "O ciclo da água faz com que essa substância circule no ambiente e esteja disponível para o uso pelos organismos vivos. Sem água, a vida no planeta não seria ...",
+      "text_chars": 8257
+    },
+    {
+      "id": "S4",
+      "title": "CICLO HIDROLÓGICO EM ÁREAS URBANAS - revistaea.org",
+      "url": "https://www.revistaea.org/artigo.php?idartigo=2330",
+      "provider": "searxng",
+      "snippet": "Com o processo de urbanização, devido à redução de áreas verdes, o aumento da impermeabilização, canalização de corpos d'água, entre outras intervenções no ambiente, temos alterações no ciclo hidrológico, como o aumento do escoamento superficial e redução da infiltração da água no solo.",
+      "text_chars": 26675
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "O ciclo da água envolve processos como evaporação, condensação, precipitação, infiltração e transpiração.",
+      "kind": "definicao",
+      "quote": "A essa transformação e circulação da água dá-se o nome de ciclo da água ou ciclo hidrológico, que se desenvolve através dos processos de evaporação, condensação, precipitação, infiltração e transpiração.",
+      "source_id": "S1",
+      "url": "https://www.todamateria.com.br/ciclo-da-agua/",
+      "source_title": "Ciclo da Água - Toda Matéria",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F2",
+      "claim": "As plantas liberam água de volta ao ambiente por meio da transpiração.",
+      "kind": "definicao",
+      "quote": "As plantas liberam água de volta ao ambiente por meio da transpiração.",
+      "source_id": "S3",
+      "url": "https://mundoeducacao.uol.com.br/biologia/ciclo-agua.htm",
+      "source_title": "Ciclo da água: importância, etapas e resumo - Mundo Educação",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F3",
+      "claim": "As plantas eliminam água no estado líquido em um processo conhecido como gutação.",
+      "kind": "definicao",
+      "quote": "Além disso, eliminam água no estado líquido em um processo conhecido como gutação.",
+      "source_id": "S3",
+      "url": "https://mundoeducacao.uol.com.br/biologia/ciclo-agua.htm",
+      "source_title": "Ciclo da água: importância, etapas e resumo - Mundo Educação",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F4",
+      "claim": "Os animais devolvem a água para o meio por meio de urina, fezes, respiração e transpiração.",
+      "kind": "definicao",
+      "quote": "Os animais, por sua vez, devolvem a água para o meio por meio de urina, fezes, respiração e transpiração.",
+      "source_id": "S3",
+      "url": "https://mundoeducacao.uol.com.br/biologia/ciclo-agua.htm",
+      "source_title": "Ciclo da água: importância, etapas e resumo - Mundo Educação",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F5",
+      "claim": "O processo de decomposição dos seres vivos também garante que parte da água incorporada neles retorne ao meio.",
+      "kind": "definicao",
+      "quote": "O processo de decomposição dos seres vivos também garante que parte da água incorporada neles retorne ao meio.",
+      "source_id": "S3",
+      "url": "https://mundoeducacao.uol.com.br/biologia/ciclo-agua.htm",
+      "source_title": "Ciclo da água: importância, etapas e resumo - Mundo Educação",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F6",
+      "claim": "Os oceanos contêm 97% da água da biosfera.",
+      "kind": "numero",
+      "quote": "Nos oceanos encontram-se 97% da água da biosfera.",
+      "source_id": "S3",
+      "url": "https://mundoeducacao.uol.com.br/biologia/ciclo-agua.htm",
+      "source_title": "Ciclo da água: importância, etapas e resumo - Mundo Educação",
+      "value": "97%",
+      "author": "",
+      "relevance": "alta"
+    }
+  ],
+  "rejected": [
+    {
+      "afirmacao": "Cerca de 2% da água doce está nas geleiras e calotas polares.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "numero",
+      "trecho": "No que diz respeito à água doce, cerca de 4% estão presentes nas geleiras e calotas polares",
+      "valor": "2%",
+      "source_id": "S3",
+      "reason": "trecho não encontrado literalmente no texto"
+    },
+    {
+      "afirmacao": "1% da água doce está nos rios, lagos e águas subterrâneas.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "numero",
+      "trecho": "1% está nos rios, lagos e águas subterrâneas.",
+      "valor": "1%",
+      "source_id": "S3",
+      "reason": "limite de 5 fatos por fonte"
+    },
+    {
+      "afirmacao": "A água presente na atmosfera tem valores insignificantes.",
+      "autor": "",
+      "relevancia": "baixa",
+      "tipo": "definicao",
+      "trecho": "A água presente na atmosfera apresenta valores insignificantes.",
+      "valor": "",
+      "source_id": "S3",
+      "reason": "pouco relevante para o assunto central"
+    }
+  ],
+  "log": [
+    {
+      "query": "ciclo da agua etapas",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "ciclo da agua importancia vida",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "ciclo da agua abastecimento cidades",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "exemplo ciclo agua real",
+      "provider": "searxng",
+      "results": 2
+    }
+  ],
+  "central_terms": [
+    "ciclo",
+    "agua",
+    "etapas",
+    "importancia",
+    "abastecimento",
+    "vida"
+  ],
+  "created_at": "2026-11-23T04:30:12+00:00"
+}

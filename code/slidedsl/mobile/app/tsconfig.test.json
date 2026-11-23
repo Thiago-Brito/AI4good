@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "target": "ES2022", "module": "ESNext", "moduleResolution": "Bundler",
+    "resolveJsonModule": true, "esModuleInterop": true, "strict": true,
+    "skipLibCheck": true, "outDir": "outputs/tests", "rootDir": "src",
+    "lib": ["ES2022", "DOM"], "types": []
+  },
+  "include": ["src/pipeline/**/*.ts", "src/pipeline/*.json", "src/models.ts"]
+}

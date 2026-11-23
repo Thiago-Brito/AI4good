@@ -159,6 +159,7 @@ def test_provider_selection_falls_back_and_excludes_unreviewed_nasa(monkeypatch)
     attempted = []
     good = {
         "id": "a" * 64,
+        "title": "Moon",
         "provider": "openverse",
         "lexical_score": 1,
         "width": 900,

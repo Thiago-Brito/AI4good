@@ -1,0 +1,355 @@
+{
+  "topic": "Ciclo da água.",
+  "queries": [
+    "ciclo da agua definicao",
+    "quantidade agua ciclo mundial",
+    "exemplos ciclo agua natura",
+    "limitacoes ciclo agua atual"
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "title": "Ciclo da água: o que é, etapas, mapa mental - Brasil Escola",
+      "url": "https://brasilescola.uol.com.br/biologia/ciclo-agua.htm",
+      "provider": "searxng",
+      "snippet": "O ciclo da água, também conhecido como ciclo hidrológico, refere-se ao movimento contínuo que a água faz pelo meio físico e pelos seres vivos do ecossistema, passando através da atmosfera, hidrosfera, litosfera e biosfera.",
+      "text_chars": 9668
+    },
+    {
+      "id": "S2",
+      "title": "Ciclo da Água - Toda Matéria",
+      "url": "https://www.todamateria.com.br/ciclo-da-agua/",
+      "provider": "searxng",
+      "snippet": "O ciclo da água é o permanente processo de transformação da água na natureza, passando de um estado para outro (líquido, sólido ou gasoso).",
+      "text_chars": 139
+    },
+    {
+      "id": "S3",
+      "title": "Água no mundo - Agência Nacional de Águas e Saneamento Básico (ANA)",
+      "url": "https://www.gov.br/ana/pt-br/acesso-a-informacao/acoes-e-programas/cooperacao-internacional/agua-no-mundo",
+      "provider": "searxng",
+      "snippet": "O cenário institucional envolvido contempla parcerias bilaterais, parcerias com organismos e programas internacionais, além de discussões técnicas para o intercâmbio de experiências e conhecimentos sobre distribuição, uso e monitoramento da quantidade e qualidade da água.",
+      "text_chars": 2292
+    },
+    {
+      "id": "S4",
+      "title": "Ciclo global da água está cada vez extremo, alerta relatório da ONU",
+      "url": "https://www.cnnbrasil.com.br/internacional/ciclo-global-da-agua-esta-cada-vez-extremo-alerta-relatorio-da-onu/",
+      "provider": "searxng",
+      "snippet": "O ciclo global da água se tornou \"cada vez mais errático e extremo\", com oscilações bruscas entre secas e inundações, o que representa grandes problemas para economias e sociedades, de acordo com um relatório publicado na quinta-feira (18) pela OMM (Organização Mundial de Meteorologia), agência espe",
+      "text_chars": 4022
+    },
+    {
+      "id": "S5",
+      "title": "Mudanças no ciclo da água ameaçam reservas de água doce ...",
+      "url": "https://www.ihu.unisinos.br/categorias/671124-mudancas-no-ciclo-da-agua-ameacam-reservas-de-agua-doce-alerta-onu",
+      "provider": "searxng",
+      "snippet": "19 de set. de 2026 ... O ano de 2025 está entre os mais quentes já registrados. Agora, também figura entre os mais secos dos últimos 35 anos em termos de vazão dos ...",
+      "text_chars": 6026
+    },
+    {
+      "id": "S6",
+      "title": "Ciclo da água está imprevisível e El Niño agrava crise, diz ONU | G1",
+      "url": "https://g1.globo.com/meio-ambiente/noticia/2026/09/17/ciclo-da-agua-fica-mais-imprevisivel-e-el-nino-deve-agravar-cenario-alerta-onu.ghtml",
+      "provider": "searxng",
+      "snippet": "O ciclo da água enfrenta instabilidade extrema com queda nas reservas de água doce e recordes de seca nos rios, segundo novo relatório da ONU sobre o El Niño.",
+      "text_chars": 5793
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "O ciclo da água é um processo permanente de transformação da água na natureza.",
+      "kind": "definicao",
+      "quote": "O ciclo da água é o permanente processo de transformação da água na natureza, passando de um estado para outro (líquido, sólido ou gasoso).",
+      "source_id": "S2",
+      "url": "https://www.todamateria.com.br/ciclo-da-agua/",
+      "source_title": "Ciclo da Água - Toda Matéria",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F2",
+      "claim": "97,5% da água existente no mundo é salgada e não é adequada ao consumo direto nem à irrigação.",
+      "kind": "numero",
+      "quote": "Estima-se que 97,5% da água existente no mundo é salgada e não é adequada ao nosso consumo direto nem à irrigação da plantação.",
+      "source_id": "S3",
+      "url": "https://www.gov.br/ana/pt-br/acesso-a-informacao/acoes-e-programas/cooperacao-internacional/agua-no-mundo",
+      "source_title": "Água no mundo - Agência Nacional de Águas e Saneamento Básico (ANA)",
+      "value": "97,5%",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F3",
+      "claim": "Dos 2,5% de água doce, 69% está concentrada nas geleiras e é de difícil acesso.",
+      "kind": "numero",
+      "quote": "Dos 2,5% de água doce, a maior parte (69%) é de difícil acesso, pois está concentrada nas geleiras",
+      "source_id": "S3",
+      "url": "https://www.gov.br/ana/pt-br/acesso-a-informacao/acoes-e-programas/cooperacao-internacional/agua-no-mundo",
+      "source_title": "Água no mundo - Agência Nacional de Águas e Saneamento Básico (ANA)",
+      "value": "69%",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F4",
+      "claim": "30% das águas doce são subterrâneas, armazenadas em aquíferos.",
+      "kind": "numero",
+      "quote": "30% são águas subterrâneas (armazenadas em aquíferos)",
+      "source_id": "S3",
+      "url": "https://www.gov.br/ana/pt-br/acesso-a-informacao/acoes-e-programas/cooperacao-internacional/agua-no-mundo",
+      "source_title": "Água no mundo - Agência Nacional de Águas e Saneamento Básico (ANA)",
+      "value": "30%",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F5",
+      "claim": "1% das águas doce encontra-se nos rios.",
+      "kind": "numero",
+      "quote": "1% encontra-se nos rios.",
+      "source_id": "S3",
+      "url": "https://www.gov.br/ana/pt-br/acesso-a-informacao/acoes-e-programas/cooperacao-internacional/agua-no-mundo",
+      "source_title": "Água no mundo - Agência Nacional de Águas e Saneamento Básico (ANA)",
+      "value": "1%",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F6",
+      "claim": "O ciclo global da água se tornou cada vez mais errático e extremo",
+      "kind": "definicao",
+      "quote": "O ciclo global da água se tornou \"cada vez mais errático e extremo\"",
+      "source_id": "S4",
+      "url": "https://www.cnnbrasil.com.br/internacional/ciclo-global-da-agua-esta-cada-vez-extremo-alerta-relatorio-da-onu/",
+      "source_title": "Ciclo global da água está cada vez extremo, alerta relatório da ONU",
+      "value": "cada vez mais errático e extremo",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F7",
+      "claim": "O ciclo da água envolve evaporação do solo e formação de fluxos de vapor d'água que percorrem longas distâncias",
+      "kind": "definicao",
+      "quote": "Ela evapora do solo — inclusive de lagos e rios — e sobe para a atmosfera, formando grandes fluxos de vapor d'água capazes de percorrer longas distâncias, antes de finalmente cair de volta à Terra como chuva ou neve.",
+      "source_id": "S4",
+      "url": "https://www.cnnbrasil.com.br/internacional/ciclo-global-da-agua-esta-cada-vez-extremo-alerta-relatorio-da-onu/",
+      "source_title": "Ciclo global da água está cada vez extremo, alerta relatório da ONU",
+      "value": "longas distâncias",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F8",
+      "claim": "A OMM explica que há redução de longo prazo das reservas de água doce da Terra e recuo contínuo das geleiras.",
+      "kind": "definicao",
+      "quote": "em um contexto de redução de longo prazo das reservas de água doce da Terra e de recuo contínuo das geleiras",
+      "source_id": "S5",
+      "url": "https://www.ihu.unisinos.br/categorias/671124-mudancas-no-ciclo-da-agua-ameacam-reservas-de-agua-doce-alerta-onu",
+      "source_title": "Mudanças no ciclo da água ameaçam reservas de água doce ...",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F9",
+      "claim": "A perda de massa glacial é próxima de um terço das extrações anuais de água doce do mundo",
+      "kind": "definicao",
+      "quote": "próximo de um terço das extrações anuais de água doce do mundo",
+      "source_id": "S6",
+      "url": "https://g1.globo.com/meio-ambiente/noticia/2026/09/17/ciclo-da-agua-fica-mais-imprevisivel-e-el-nino-deve-agravar-cenario-alerta-onu.ghtml",
+      "source_title": "Ciclo da água está imprevisível e El Niño agrava crise, diz ONU | G1",
+      "value": "um terço",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F10",
+      "claim": "Muitas regiões enfrentaram a escassez de água em 2024",
+      "kind": "definicao",
+      "quote": "Muitas regiões enfrentaram a escassez de água em 2024, o ano mais quente já registrado no planeta.",
+      "source_id": "S4",
+      "url": "https://www.cnnbrasil.com.br/internacional/ciclo-global-da-agua-esta-cada-vez-extremo-alerta-relatorio-da-onu/",
+      "source_title": "Ciclo global da água está cada vez extremo, alerta relatório da ONU",
+      "value": "2024",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F11",
+      "claim": "Mudança climática está amplificando o ciclo hidrológico",
+      "kind": "definicao",
+      "quote": "Mudança climática está amplificando o ciclo hidrológico",
+      "source_id": "S5",
+      "url": "https://www.ihu.unisinos.br/categorias/671124-mudancas-no-ciclo-da-agua-ameacam-reservas-de-agua-doce-alerta-onu",
+      "source_title": "Mudanças no ciclo da água ameaçam reservas de água doce ...",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F12",
+      "claim": "Mudança climática está afetando drasticamente o ciclo da água",
+      "kind": "definicao",
+      "quote": "Mudança climática está afetando drasticamente o ciclo da água",
+      "source_id": "S5",
+      "url": "https://www.ihu.unisinos.br/categorias/671124-mudancas-no-ciclo-da-agua-ameacam-reservas-de-agua-doce-alerta-onu",
+      "source_title": "Mudanças no ciclo da água ameaçam reservas de água doce ...",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    }
+  ],
+  "rejected": [
+    {
+      "afirmacao": "O relatório foi publicado na quinta-feira (18) pela OMM",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "numero",
+      "trecho": "um relatório publicado na quinta-feira (18) pela OMM (Organização Mundial de Meteorologia)",
+      "valor": "18",
+      "source_id": "S4",
+      "reason": "fora do assunto central (não menciona ciclo, agua, ciclo da agua)"
+    },
+    {
+      "afirmacao": "O ano de 2025 está entre os mais quentes já registrados.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "O ano de 2025 está entre os mais quentes já registrados.",
+      "valor": "2025",
+      "source_id": "S5",
+      "reason": "fora do assunto central (não menciona ciclo, agua, ciclo da agua)"
+    },
+    {
+      "afirmacao": "O ano de 2025 figura entre os mais secos dos últimos 35 anos em termos de vazão dos rios.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Agora, também figura entre os mais secos dos últimos 35 anos em termos de vazão dos rios",
+      "valor": "35",
+      "source_id": "S5",
+      "reason": "fora do assunto central (não menciona ciclo, agua, ciclo da agua)"
+    },
+    {
+      "afirmacao": "É difícil afirmar com certeza se foi o segundo ou o terceiro ano mais seco, mas está entre os três primeiros.",
+      "autor": "Wayne Jenkinson",
+      "relevancia": "alta",
+      "tipo": "citacao",
+      "trecho": "É difícil afirmar com certeza se foi o segundo ou o terceiro ano mais seco, mas \"está entre os três primeiros\"",
+      "valor": "3",
+      "source_id": "S5",
+      "reason": "valor não aparece no trecho citado"
+    },
+    {
+      "afirmacao": "El Niño tem 75% de chance de ser o mais forte desde 1950",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "numero",
+      "trecho": "El Niño tem 75% de chance de ser o mais forte desde 1950, diz agência climática dos EUA",
+      "valor": "75%",
+      "source_id": "S6",
+      "reason": "fora do assunto central (não menciona ciclo, agua, ciclo da agua)"
+    },
+    {
+      "afirmacao": "As geleiras perderam uma massa glacial mundial acumulada de 1.400 gigatoneladas de água entre 2023 e 2",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "numero",
+      "trecho": "entre 2023 e 2025, as geleiras perderam uma massa glacial mundial acumulada de 1.400 gigatoneladas de água",
+      "valor": "1.400",
+      "source_id": "S6",
+      "reason": "número da afirmação não está no texto"
+    },
+    {
+      "afirmacao": "2025 será o quarto ano consecutivo em que as geleiras perdem uma quantidade importante de massa de gelo",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "numero",
+      "trecho": "2025 será o quarto ano consecutivo em que perdem uma quantidade importante de massa de gelo em todas as regiões",
+      "valor": "4",
+      "source_id": "S6",
+      "reason": "valor não aparece no trecho citado"
+    },
+    {
+      "afirmacao": "Os rios do Amazonas atingiram níveis sem precedentes",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "Os rios do Amazonas atingiram níveis sem precedentes",
+      "valor": "níveis sem precedentes",
+      "source_id": "S4",
+      "reason": "fora do assunto central (não menciona ciclo, agua, ciclo da agua)"
+    },
+    {
+      "afirmacao": "Partes do sul da África sofreram uma seca tão extrema que governos disseram que precisaram sacrificar centenas de animais, incluindo elefantes",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "partes do sul da África sofreram uma seca tão extrema que governos disseram que precisaram sacrificar centenas de animais, incluindo elefantes",
+      "valor": "centenas",
+      "source_id": "S4",
+      "reason": "fora do assunto central (não menciona ciclo, agua, ciclo da agua)"
+    },
+    {
+      "afirmacao": "As plantações murcharam em áreas dos Estados Unidos, como Texas, Oklahoma e Kansas",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "as plantações murcharam em áreas dos Estados Unidos, como Texas, Oklahoma e Kansas",
+      "valor": "Texas, Oklahoma e Kansas",
+      "source_id": "S4",
+      "reason": "fora do assunto central (não menciona ciclo, agua, ciclo da agua)"
+    },
+    {
+      "afirmacao": "Seca extrema faz rios amazônicos atingirem recordes históricos de baixa",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "Seca extrema faz rios amazônicos atingirem recordes históricos de baixa",
+      "valor": "recordes históricos",
+      "source_id": "S5",
+      "reason": "fora do assunto central (não menciona ciclo, agua, ciclo da agua)"
+    },
+    {
+      "afirmacao": "Enchentes na Espanha: 'Estamos pagando por 150 anos de urbanização brutal'",
+      "autor": "Clément Gaillard",
+      "relevancia": "alta",
+      "tipo": "citacao",
+      "trecho": "Enchentes na Espanha: \"Estamos pagando por 150 anos de urbanização brutal\"",
+      "valor": "150",
+      "source_id": "S5",
+      "reason": "fora do assunto central (não menciona ciclo, agua, ciclo da agua)"
+    }
+  ],
+  "log": [
+    {
+      "query": "ciclo da agua definicao",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "quantidade agua ciclo mundial",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "exemplos ciclo agua natura",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "limitacoes ciclo agua atual",
+      "provider": "searxng",
+      "results": 2
+    }
+  ],
+  "central_terms": [
+    "ciclo",
+    "agua",
+    "ciclo da agua"
+  ],
+  "created_at": "2026-11-23T04:29:25+00:00"
+}

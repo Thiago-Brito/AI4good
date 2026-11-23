@@ -41,6 +41,9 @@ from .alto import (
 )
 from .alto_layout import alto_to_ast
 from .diagnostics import Diagnostic, DSLException
+from .models.base import generate_text
+from .repetition import alto_blocks, repetition_pairs, sibling_repetitions, tokens
+from .editorial import capitalize_visible, normalized, proper_words, sentence_case
 
 DATA_KINDS = {"numeros", "grafico", "citacao", "linha_do_tempo"}
 PATH_WORDS = {
@@ -72,6 +75,7 @@ PATH_WORDS.update({v: v for v in list(PATH_WORDS.values())})
 # Prompts
 
 OUTLINE_SYSTEM = """Você é um roteirista de apresentações. Planeje o deck slide a slide.
+Em decks com menos de 8 slides, evite secao: prefira conteúdo que avance a mensagem.
 Para cada slide escolha o TIPO que melhor comunica a mensagem:
 {kinds}
 Regras:
@@ -82,19 +86,31 @@ Regras:
 - "fatos" lista os IDs de fatos da pesquisa que sustentam o slide; não repita o mesmo
   fato em muitos slides. Prefira slides com números, datas e exemplos reais.
 - Varie os tipos; não use o mesmo tipo em dois slides seguidos (exceto se inevitável).
-- "mensagem" com até 60 caracteres: ela vira o título do slide.
+- "mensagem" com até 45 caracteres, em caixa de frase: ela vira o título do slide.
+- Cada slide responde a uma PERGUNTA distinta; escreva essa pergunta no objetivo.
+  Não volte a explicar um mecanismo já coberto; conclusão sintetiza decisões.
+- Escolha composição pelo conteúdo: etapas só para ações realmente sequenciais,
+  linha_do_tempo só para cronologia datada. Ideias paralelas são tópicos/comparação.
+  Comparação só quando o slide contrasta duas alternativas do mesmo tipo.
+- Assuma público brasileiro, salvo indicação contrária. Afirmações sobre orientação
+  solar, clima ou legislação exigem contexto geográfico; não universalize.
 - Se houver TÓPICOS OBRIGATÓRIOS, cada um deve aparecer em "topicos" de pelo menos um
   slide do meio (nem capa, nem só na conclusão).
 - Os fatos só sustentam o que dizem: não use uma estatística de mercado para justificar
   uma decisão técnica, nem um caso de uma empresa como regra geral.
 - TODO slide responde à pergunta do pedido. Fato que não trata do assunto central fica
   de fora; nunca crie um slide só porque há um fato sobre outro tema.
+- Com documentos, use somente fatos fornecidos sobre o projeto: não invente nomes,
+  números, resultados ou funcionalidades. Documento tem prioridade sobre internet.
+  Cada afirmação do roteiro deve apontar os IDs F# que a sustentam.
 Responda só JSON, em português do Brasil."""
 
 CONTENT_SYSTEM = """Você escreve o conteúdo de UM slide de uma apresentação profissional.
 Contrato editorial:
-- O título é a mensagem do slide: uma afirmação completa, com até 60 caracteres.
-- Cada item tem "rotulo" (2 a 5 palavras, sem repetir o título) e "detalhe": UMA frase
+- O título é a mensagem do slide: uma afirmação completa, com até 45 caracteres,
+  em caixa de frase (preserve siglas e nomes próprios). Para imagem, até 32 caracteres.
+- Cada item tem "rotulo" (2 a 5 palavras em português natural, preserve artigos e preposições,
+  sem repetir o título nem o cabeçalho da coluna) e "detalhe": UMA frase
   completa, com sujeito e verbo, de 8 a 22 palavras, que explica o rótulo com algo
   concreto (número, nome, data, exemplo ou condição). Não escreva cenário solto como
   "uma casa com telhado inclinado"; escreva o que acontece nele e por quê.
@@ -108,8 +124,38 @@ Contrato editorial:
 - Nunca invente empresas, pessoas, produtos, datas ou estatísticas. Nomes próprios e
   números só podem vir dos fatos. Sem fatos, use exemplos descritos de forma genérica
   ("uma loja online", "um aplicativo de entregas") e condições ("quando a equipe cresce").
+- Dados de projeto devem vir dos fatos documentais, que têm prioridade sobre a web.
+  Cite F# em fontes para toda afirmação factual, inclusive qualitativa.
 - Não escreva IDs de fatos (F1, F2...) no texto visível; eles vão só em "fontes".
 - Escreva em português do Brasil, com acentos corretos."""
+
+CONTENT_SYSTEM += """
+- Público brasileiro salvo pedido contrário. Afirmações que dependem de lugar (clima,
+  orientação geográfica, leis, preços) devem dizer o contexto; evite regras universais.
+- Responda somente à pergunta deste slide, sem explicar novamente o já coberto.
+- Nunca use gráfico ou números como decoração. Etapas exigem sequência real.
+- Em slide imagem: no máximo 2 itens, detalhes até 70 caracteres, foto pertinente.
+  Os itens explicam o conceito do slide; não descreva a imagem ("o desenho mostra",
+  "as setas indicam"), pois ela é escolhida depois e pode não ter esses elementos.
+- Rótulos nomeiam o mecanismo, a condição ou o exemplo concreto, com inicial maiúscula.
+  Evite rótulos genéricos como "Função de...", "Importância de...", "Definição de...".
+- Os tópicos pedidos orientam o assunto; não os copie como rótulo nem como nome de lado.
+- Título e detalhes devem ser tecnicamente corretos para o público; na dúvida, simplifique
+  sem atribuir a uma parte o que é feito por outra.
+- Uma foto deve mostrar objeto/cena identificável. Na busca use o nome concreto em
+  inglês, preferencialmente 2 palavras; não peça "diagram", "workflow" ou "steps".
+"""
+
+CONTENT_SYSTEM += """
+- Capa: autor SOMENTE se explicitamente informado no pedido; senão autor vazio.
+  Não invente autoria, organização ou data na capa ou no subtítulo.
+- Não repita itens já escritos: avance a explicação com outro exemplo ou ação.
+- Cada descrição traz um fato diferente, sem repetir o rótulo nem o início das irmãs.
+- Conclusão: proponha uma decisão ou próxima atividade; não liste novamente mecanismos,
+  avaliação do imóvel, sombra ou exemplos explicados nos slides anteriores.
+- Respeite o espaço do layout: prefira 2 ou 3 itens, rótulos até 30 caracteres e
+  detalhes até 110; em comparação, até 70. Ponha explicações longas nas notas.
+"""
 
 KIND_RULES = {
     "capa": "titulo do deck (até 60 caracteres), subtitulo com a promessa da apresentação "
@@ -120,7 +166,10 @@ KIND_RULES = {
     "conclusao": "2 a 4 conclusões acionáveis; rotulo é a recomendação, detalhe é o porquê.",
     "numeros": '1 a 3 valores; valor é o número curto exatamente como no fato (ex.: "90%", '
     '"7 anos"), legenda explica o que ele mede (até 110 caracteres).',
-    "comparacao": "exatamente 2 lados, cada um com 2 a 4 itens; detalhe até 70 caracteres; "
+    "comparacao": "exatamente 2 lados, cada um com 1 ou 2 itens (1 quando o lado tem uma só "
+    "ideia; nunca repita um item para completar); detalhe até 70 caracteres; "
+    "os lados são duas alternativas do mesmo tipo, e o nome de cada lado é a própria "
+    'alternativa (ex.: "Monolito" e "Microsserviços", "Antes" e "Depois"), nunca uma letra; '
     "itens na mesma ordem comparam o mesmo aspecto.",
     "linha_do_tempo": '2 a 6 marcos em ordem cronológica; data curta ("2014"), rotulo até 30 '
     "caracteres, detalhe até 80.",
@@ -128,7 +177,7 @@ KIND_RULES = {
     "grafico": "2 a 7 barras com valores numéricos dos fatos (mesma unidade); unidade "
     "descreve a medida; rotulo da barra até 18 caracteres.",
     "imagem": "busca_imagem com 2 a 5 palavras em inglês para encontrar uma foto ilustrativa, "
-    "legenda e até 3 itens.",
+    "legenda e no máximo 2 itens, detalhes até 70 caracteres, título até 32 caracteres.",
 }
 
 EXAMPLES = {
@@ -158,7 +207,8 @@ def _str(max_length, min_length=1):
 
 
 def outline_schema(
-    n_slides: int, kinds: list[str], fact_ids: list[str], topics: list[str] | None = None
+    n_slides: int, kinds: list[str], fact_ids: list[str], topics: list[str] | None = None,
+    images: bool = False,
 ) -> dict:
     slide = {
         "type": "object",
@@ -183,6 +233,9 @@ def outline_schema(
             "items": {"type": "string", "enum": topics},
         }
         slide["required"].append("topicos")
+    if images:
+        slide["properties"]["busca_imagem"] = _str(120, 0)
+        slide["required"].append("busca_imagem")
     return {
         "type": "object",
         "properties": {
@@ -220,7 +273,7 @@ def slide_schema(kind: str, fact_ids: list[str]) -> dict:
         _, low, high = LIMITS[kind]
         props["itens"] = _items_schema(low, high)
     if kind == "imagem":
-        props.update(busca_imagem=_str(120, 3), legenda=_str(300, 0), itens=_items_schema(0, 3))
+        props.update(busca_imagem=_str(120, 3), legenda=_str(300, 0), itens=_items_schema(0, 2))
     if kind == "numeros":
         props["valores"] = {
             "type": "array",
@@ -239,7 +292,7 @@ def slide_schema(kind: str, fact_ids: list[str]) -> dict:
             "maxItems": 2,
             "items": {
                 "type": "object",
-                "properties": {"nome": _str(80), "itens": _items_schema(2, 4, 240)},
+                "properties": {"nome": _str(80), "itens": _items_schema(1, 4, 240)},
                 "required": ["nome", "itens"],
             },
         }
@@ -331,8 +384,12 @@ def translate_path(path: str | None) -> str:
 
 
 def check_slide(
-    slide: AltoSlide, facts: dict, theme="claro", topics: list[dict] | None = None,
+    slide: AltoSlide,
+    facts: dict,
+    theme="claro",
+    topics: list[dict] | None = None,
     truncated: list[str] | None = None,
+    photo_cover: bool = False,
 ) -> list[Diagnostic]:
     from .alto_quality import coverage_diagnostics
 
@@ -348,12 +405,54 @@ def check_slide(
         for path in truncated or []
     ]
     ds += validate_alto(deck, facts)
+    if facts and any(f.get("url", "").startswith("documento:") for f in facts.values()) and (
+        slide.kind not in {"capa", "secao"} and not slide.sources
+    ):
+        ds.append(Diagnostic(code="A032", severity="AVISO", message="Slide sem fato documental citado.",
+                             suggestion="Cite F# em fontes para sustentar as afirmações."))
+    for group_path, items, headings in [
+        ("items", slide.items, [slide.title]),
+        *[(f"sides.{k}.items", side.items, [slide.title, side.name]) for k, side in enumerate(slide.sides)],
+    ]:
+        for pair in sibling_repetitions(items):
+            ds.append(Diagnostic(code="A020", severity="AVISO", message=pair["reason"],
+                evidence={**pair, "path": f"slides.0.{group_path}.{pair['item']}.detail"},
+                suggestion="Escreva um fato distinto, sem repetir o rótulo nem o início dos irmãos."))
+        for k, item in enumerate(items):
+            words = normalized(item.label).split()
+            telegraphic = (len(words) >= 3 and words[0] in {
+                "problema", "cuidados", "papel", "funcao", "risco", "avaliacao", "fluxo"}
+                and not set(words[1:]) & {"a", "o", "as", "os", "de", "da", "do", "das", "dos", "e", "na", "no", "para", "com"})
+            if telegraphic or any(tokens(item.label) == tokens(h or "") and
+                   normalized(item.label) != normalized(h) and
+                   len((h or "").split()) > len(item.label.split()) for h in headings):
+                ds.append(Diagnostic(code="A022", severity="AVISO", message="Rótulo parece título sem preposições/artigos.",
+                    evidence={"path": f"slides.0.{group_path}.{k}.label"},
+                    suggestion="Use 2–5 palavras em português natural, preservando artigos e preposições."))
+    title_words = (slide.title or "").split()
+    title_limit = 32 if slide.kind == "imagem" else 45
+    title_case = len(title_words) >= 5 and sum(w[:1].isupper() for w in title_words) / len(title_words) > 0.7
+    if len(slide.title or "") > title_limit or title_case:
+        ds.append(Diagnostic(code="A018", severity="AVISO",
+                             message="Título longo ou em Title Case.",
+                             evidence={"path": "slides.0.title", "limit": title_limit},
+                             suggestion=f"Use caixa de frase e até {title_limit} caracteres; preserve siglas."))
     if topics and slide.kind not in ("capa", "secao"):
         ds += coverage_diagnostics(slide, topics, 1)
     if not any(d.severity == "ERRO" for d in ds):
         try:
-            _, _, layout = alto_to_ast(deck, facts)
-            ds += layout
+            # Valide o espaço realmente reservado à foto antes da busca/download.
+            probe = deck
+            if slide.kind == "imagem" and slide.image_query and not slide.image_file:
+                probe = deck.model_copy(update={"slides": [slide.model_copy(
+                    update={"image_file": "assets/imagem_demo.png"})]})
+            if photo_cover and slide.kind == "capa" and not slide.image_file:
+                probe = deck.model_copy(update={"slides": [slide.model_copy(
+                    update={"image_file": "assets/imagem_demo.png"})]})
+            _, _, layout = alto_to_ast(probe, facts)
+            # A resolução é tratada na mídia/compilação. Reescrever texto não
+            # corrige A031; o asset de prova também não é a imagem a baixar.
+            ds += [d for d in layout if d.code != "A031"]
         except Exception as exc:  # layout inesperado vira diagnóstico, não exceção
             ds.append(Diagnostic(code="A010", severity="ERRO", message=f"Layout falhou: {exc}"))
     return ds
@@ -365,12 +464,18 @@ def diagnostics_feedback(ds: list[Diagnostic]) -> str:
         if d.severity == "INFORMAÇÃO":
             continue
         path = translate_path((d.evidence or {}).get("path"))
-        lines.append(f"- {d.code} {d.severity} em {path}: {d.message} {d.suggestion or ''}".strip())
+        hint = d.suggestion or ""
+        needed, available = (d.evidence or {}).get("needed"), (d.evidence or {}).get("available")
+        if d.code == "A010" and needed and available and needed > available:
+            # O modelo não mede pixels: converter o excesso em proporção de palavras.
+            cut = min(60, int((1 - available / needed) * 100) + 12)
+            hint = f"Reescreva com cerca de {cut}% menos palavras (ocupa {needed}, cabem {available})."
+        lines.append(f"- {d.code} {d.severity} em {path}: {d.message} {hint}".strip())
     return "\n".join(lines)
 
 
 def score_slide(slide: AltoSlide, ds: list[Diagnostic], facts: dict) -> float:
-    weights = {"A007": 15, "A012": 8, "A008": 5, "A009": 4, "A011": 3}
+    weights = {"A023": 30, "A007": 15, "A012": 8, "A008": 5, "A009": 4, "A011": 3}
     score = 0.0
     for d in ds:
         if d.severity == "ERRO":
@@ -415,6 +520,8 @@ class Call:
     constraint: str
     raw: str | None = None
     error: str | None = None
+    # Tokens e tempos no formato único de RecordedModel.last_usage (Fase 0 do TCC).
+    usage: dict | None = None
 
 
 @dataclass
@@ -428,6 +535,7 @@ class GenerationResult:
     topics: list[dict] = field(default_factory=list)
     coverage: list[dict] = field(default_factory=list)
     support: list[dict] = field(default_factory=list)
+    image_results: list[dict] = field(default_factory=list)
 
     @property
     def source(self) -> str | None:
@@ -458,14 +566,20 @@ def _call(
     elif schema is not None:
         kwargs["response_schema"] = schema
     try:
-        call.raw = model.generate(system, user, **kwargs)
-    except TypeError:
-        kwargs.pop("grammar", None)
-        kwargs.pop("response_schema", None)
-        call.raw = model.generate(system, user, **kwargs)
+        call.raw = generate_text(
+            model,
+            system,
+            user,
+            **kwargs,
+            context={"stage": stage, "slide": slide, "candidate": candidate, "attempt": attempt},
+        )
     except Exception as exc:
         call.error = str(exc)
         raise
+    finally:
+        last_usage = getattr(model, "last_usage", None)
+        if callable(last_usage):
+            call.usage = last_usage()
     return call.raw
 
 
@@ -514,7 +628,7 @@ def _parse_slide_text(raw: str, kind: str, theme: str) -> AltoSlide:
     return deck.slides[0]
 
 
-def fix_outline(outline: dict, kinds: list[str]) -> dict:
+def fix_outline(outline: dict, kinds: list[str], images=False) -> dict:
     slides = outline.get("slides", [])
     if slides and slides[0].get("tipo") != "capa" and "capa" in kinds:
         slides[0]["tipo"] = "capa"
@@ -523,6 +637,8 @@ def fix_outline(outline: dict, kinds: list[str]) -> dict:
     for s in slides[1:-1]:
         if s.get("tipo") == "capa":
             s["tipo"] = "topicos"
+    if images and len(slides) >= 4 and not any(s.get("tipo") == "imagem" for s in slides):
+        slides[1]["tipo"] = "imagem"
     return outline
 
 
@@ -582,11 +698,84 @@ def clean_visible(slide: AltoSlide, ids) -> AltoSlide:
 def facts_block(ids: list[str], facts: dict, all_facts: bool = False) -> str:
     chosen = list(facts) if all_facts else [i for i in ids if i in facts]
     lines = []
-    for fid in chosen[:8]:
+    for fid in chosen[:32 if all_facts else 8]:
         f = facts[fid]
         value = f" [valor: {f['value']}]" if f.get("value") else ""
-        lines.append(f"{fid} ({f['kind']}){value}: {f['claim']}\n   trecho: \"{f['quote'][:300]}\"")
+        lines.append(f'{fid} ({f["kind"]}){value}: {f["claim"]}\n   fonte: '
+                     f'{f.get("source_title", "")}\n   trecho: "{f["quote"][:500]}"')
     return "\n".join(lines) or "(nenhum fato: não use números; use exemplos qualitativos)"
+
+
+def title_budget(message: str, kind: str) -> str:
+    """Contagem explícita evita o reparo A018 quando a mensagem do roteiro é longa."""
+    limit = 32 if kind == "imagem" else 45
+    if kind == "capa" or len(message) <= limit:
+        return ""
+    return (f"\nA mensagem tem {len(message)} caracteres; o título deve ter no máximo "
+            f"{limit}: encurte mantendo a ideia.")
+
+
+BATCH_SYSTEM = CONTENT_SYSTEM.replace(
+    "Você escreve o conteúdo de UM slide", "Você escreve o conteúdo de TODOS os slides"
+) + """
+- Escreva cada slide conforme seu tipo, mensagem e objetivo no roteiro.
+- Os slides formam uma sequência: nenhum item repete outro slide; a conclusão sintetiza."""
+
+
+def batch_content(call, request, outline, summary, kinds, fact_ids, facts, topics, images,
+                  temperature, say=lambda m: None) -> dict[int, str]:
+    """Uma chamada para o conteúdo do deck; devolve o JSON de cada slide por índice.
+
+    Falha da chamada ou resposta incompleta não interrompe: os slides ausentes seguem
+    para a geração individual, já existente."""
+    planned = {
+        k: (plan["tipo"] if plan["tipo"] in kinds else "topicos")
+        for k, plan in enumerate(outline["slides"])
+    }
+    planned = {k: kind for k, kind in planned.items() if kind != "citacao"}
+    if not planned:
+        return {}
+    schema = {
+        "type": "object",
+        "properties": {f"slide_{k + 1}": slide_schema(kind, fact_ids) for k, kind in planned.items()},
+        "required": [f"slide_{k + 1}" for k in planned],
+    }
+    parts = []
+    for k, kind in planned.items():
+        plan = outline["slides"][k]
+        part = (f"slide_{k + 1} (tipo {kind})\nMensagem: {plan['mensagem']}\n"
+                f"Objetivo: {plan['objetivo']}\nRegras do tipo: {KIND_RULES[kind]}"
+                + title_budget(plan["mensagem"], kind))
+        ids = [i for i in plan.get("fatos", []) if i in facts]
+        if ids:
+            part += "\nFatos: " + ", ".join(ids)
+        names = [t for t in topics if t["nome"] in plan.get("topicos", [])]
+        if names:
+            part += "\nDeve tratar, no texto visível, de: " + "; ".join(
+                f"{t['nome']} (palavras: {', '.join(t['termos'][:3])})" for t in names)
+        if images and kind == "imagem":
+            part += f"\nBusca sugerida pelo roteiro: {plan.get('busca_imagem', '')}"
+        parts.append(part)
+    user = (
+        f"Pedido original: {request}\nApresentação: {outline['titulo']}\n"
+        f"Roteiro:\n{summary}\n\nFatos da pesquisa:\n"
+        f"{facts_block(fact_ids, facts, all_facts=True)}\n\n" + "\n\n".join(parts)
+    )
+    say("Escrevendo todos os slides em lote")
+    from .models.base import GenerationLimitError, ModelError
+
+    try:
+        data = _load_json(call("lote", None, BATCH_SYSTEM, user, schema, temp=temperature))
+    except GenerationLimitError:
+        raise  # limite de chamadas/gasto nunca é contornado
+    except (ValueError, KeyError, TypeError, DSLException, ModelError) as exc:
+        say(f"Lote indisponível ({exc}); gerando slide a slide")
+        return {}
+    return {
+        k: json.dumps(data[f"slide_{k + 1}"], ensure_ascii=False)
+        for k in planned
+        if isinstance(data.get(f"slide_{k + 1}"), dict)
+    }
 
 
 def generate_alto(
@@ -606,6 +795,10 @@ def generate_alto(
     result: GenerationResult | None = None,
     verify_support: bool = True,
     coverage: bool = True,
+    batch: bool = False,
+    image_source: str = "livres",
+    ai_profile: str = "economica",
+    sections: list[tuple[str, list[str]]] | None = None,
 ) -> GenerationResult:
     from .alto_quality import (
         apply_corrections,
@@ -636,9 +829,19 @@ def generate_alto(
     fact_ids = list(facts)
 
     def call(stage, slide, system, user, schema, attempt=0, candidate=None, temp=0.0, s=None):
-        return _call(model, result, stage=stage, slide=slide, candidate=candidate,
-                     attempt=attempt, system=system, user=user, schema=schema,
-                     temperature=temp, seed=seed if s is None else s)
+        return _call(
+            model,
+            result,
+            stage=stage,
+            slide=slide,
+            candidate=candidate,
+            attempt=attempt,
+            system=system,
+            user=user,
+            schema=schema,
+            temperature=temp,
+            seed=seed if s is None else s,
+        )
 
     # 0. Tópicos obrigatórios do pedido (só para pedidos detalhados)
     topics = []
@@ -649,6 +852,17 @@ def generate_alto(
             say(f"Não foi possível extrair os tópicos do pedido: {exc}")
         if topics:
             say("Tópicos pedidos: " + ", ".join(t["nome"] for t in topics))
+    # Seções do documento enviado viram tópicos obrigatórios, na ordem do documento: o pedido
+    # resumido pelo modelo perdia seções inteiras (ex.: o competidor no seminário 3).
+    sections = [(h, ids) for h, ids in (sections or []) if h]
+    if len(sections) >= 2:
+        known = {t["nome"].casefold() for t in topics}
+        topics = topics + [
+            {"nome": h, "termos": [w for w in re.findall(r"\w+", h.casefold()) if len(w) > 3][:4]
+             or [h.casefold()]}
+            for h, _ in sections if h.casefold() not in known
+        ]
+        say("Seções do documento: " + "; ".join(h for h, _ in sections))
     result.topics = topics
     topic_names = [t["nome"] for t in topics]
 
@@ -662,13 +876,36 @@ def generate_alto(
         user += "\n\nTÓPICOS OBRIGATÓRIOS (cada um em algum slide):\n" + "\n".join(
             f"- {t}" for t in topic_names
         )
-    schema = outline_schema(n_slides, kinds, fact_ids, topic_names)
+    if len(sections) >= 2:
+        user += (
+            "\n\nSEÇÕES DO DOCUMENTO DO USUÁRIO, na ordem (siga esta ordem; cada seção vira um "
+            "slide, ou divide um slide com a seção vizinha se faltar espaço; use os fatos dela):\n"
+            + "\n".join(f"- {h}: {', '.join(ids)}" for h, ids in sections)
+        )
+    if images and n_slides >= 4:
+        user += (
+            "\n\nInclua ao menos um slide imagem no meio do deck, com busca_imagem "
+            "concreta de 2 a 5 palavras em inglês (objeto/cena que explica a mensagem). "
+            "Proponha também uma busca para a capa e os outros slides do meio, caso seja necessário "
+            "ilustrá-los. Não use imagem decorativa genérica."
+        )
+    schema = outline_schema(n_slides, kinds, fact_ids, topic_names, images=images)
     outline = None
     for attempt in range(2):
-        raw = call("roteiro", None, OUTLINE_SYSTEM.format(kinds=kinds_text(kinds)), user, schema,
-                   attempt=attempt, temp=temperature)
-        outline = fix_outline(_load_json(raw), kinds)
+        raw = call(
+            "roteiro",
+            None,
+            OUTLINE_SYSTEM.format(kinds=kinds_text(kinds)),
+            user,
+            schema,
+            attempt=attempt,
+            temp=temperature,
+        )
+        outline = fix_outline(_load_json(raw), kinds, images=images)
         assigned = {t for sl in outline["slides"][1:] for t in sl.get("topicos", [])}
+        # A primeira seção do documento (a introdução) pode abrir o deck na capa.
+        if len(sections) >= 2 and outline["slides"]:
+            assigned |= {t for t in outline["slides"][0].get("topicos", []) if t == sections[0][0]}
         missing = [t for t in topic_names if t not in assigned]
         if not missing:
             break
@@ -679,10 +916,18 @@ def generate_alto(
         )
     result.outline = outline
     summary = "\n".join(
-        f"{k + 1}. {sl['tipo']}: {sl['mensagem']}" for k, sl in enumerate(outline["slides"])
+        f"{k + 1}. {sl['tipo']}: {sl['mensagem']} — {sl['objetivo']}"
+        for k, sl in enumerate(outline["slides"])
     )
 
-    def produce(kind, base_user, k, c, slide_topics, extra=None):
+    # 1b. Lote: o conteúdo de todos os slides numa só chamada estruturada. Instruções,
+    # pedido, roteiro e fatos são enviados uma vez, em vez de uma vez por slide.
+    batch_raw: dict[int, str] = {}
+    if batch and mode == "json":
+        batch_raw = batch_content(call, request, outline, summary, kinds, fact_ids, facts,
+                                  topics, images, temperature, say)
+
+    def produce(kind, base_user, k, c, slide_topics, extra=None, initial=None):
         """Gera (com reparos) um candidato. Retorna (slide, diagnósticos, tentativas)."""
         user, attempt, slide, ds, raw = base_user + (extra or ""), 0, None, [], ""
         while True:
@@ -692,8 +937,12 @@ def generate_alto(
             try:
                 if mode == "json":
                     schema = slide_schema(kind, fact_ids)
-                    raw = call("slide", k + 1, CONTENT_SYSTEM, user, schema, attempt, c, temp,
-                               s_seed)
+                    if initial is not None and attempt == 0:
+                        raw = initial  # já produzido pela chamada em lote
+                    else:
+                        raw = call(
+                            "slide", k + 1, CONTENT_SYSTEM, user, schema, attempt, c, temp, s_seed
+                        )
                     data = _load_json(raw)
                     truncated = truncated_paths(data, schema)
                     slide = json_to_slide(kind, data)
@@ -703,24 +952,71 @@ def generate_alto(
                         from .gbnf import alto_gbnf
 
                         grammar = alto_gbnf(kind)
-                    raw = _call(model, result, stage="slide", slide=k + 1, candidate=c,
-                                attempt=attempt, system=CONTENT_SYSTEM, user=user,
-                                grammar=grammar, temperature=temp, seed=s_seed)
+                    raw = _call(
+                        model,
+                        result,
+                        stage="slide",
+                        slide=k + 1,
+                        candidate=c,
+                        attempt=attempt,
+                        system=CONTENT_SYSTEM,
+                        user=user,
+                        grammar=grammar,
+                        temperature=temp,
+                        seed=s_seed,
+                    )
                     slide = _parse_slide_text(raw, kind, theme)
                 clean_visible(slide, facts)  # "conforme F2" não aparece para a plateia
+                capitalize_visible(slide)
+                if slide.title:
+                    slide.title = sentence_case(slide.title, proper_words(request))
+                for side in slide.sides:
+                    side.name = sentence_case(side.name, proper_words(request))
+                if slide.kind == "capa" and slide.author:
+                    # Exige a sequência literal de palavras, não apenas nomes parecidos.
+                    author_words = re.findall(r"\w+", slide.author.casefold())
+                    request_words = " " + " ".join(re.findall(r"\w+", request.casefold())) + " "
+                    if not author_words or " " + " ".join(author_words) + " " not in request_words:
+                        slide.author = None
                 # IDs de fatos inexistentes são descartados (o modelo não cria fontes).
                 slide.sources = [
                     r for r in slide.sources if r in facts or not re.fullmatch(r"F\d+", r)
                 ]
-                ds = check_slide(slide, facts, theme, slide_topics, truncated)
+                ds = check_slide(slide, facts, theme, slide_topics, truncated, photo_cover=images)
+                repeated = [p for p in repetition_pairs(
+                    [alto_blocks(s) for s in slides] + [alto_blocks(slide)]
+                ) if p["slide"] == len(slides) + 1]
+                for pair in repeated:
+                    ds.append(Diagnostic(
+                        code="A017", severity="AVISO",
+                        message=f"Item repete o slide {pair['previous_slide']}: {pair['text']}",
+                        evidence=pair,
+                        suggestion="Substitua esse item por conteúdo novo previsto no roteiro.",
+                    ))
+                if slide.kind == "conclusao":
+                    previous_labels = {normalized(i.label) for old in slides
+                        for i in old.items + [i for side in old.sides for i in side.items]
+                        if len(tokens(i.label)) >= 2}
+                    for j, item in enumerate(slide.items):
+                        if normalized(item.label) in previous_labels:
+                            ds.append(Diagnostic(code="A017", severity="AVISO",
+                                message="Conclusão repete um rótulo já explicado.",
+                                evidence={"path": f"slides.0.items.{j}.label"},
+                                suggestion="Proponha uma nova ação ou síntese; não repita a avaliação anterior."))
             except DSLException as exc:
                 slide, ds = None, exc.diagnostics
             except (ValueError, KeyError, TypeError) as exc:
                 slide = None
-                ds = [Diagnostic(code="P002", severity="ERRO",
-                                 message=f"Resposta fora do formato: {exc}")]
+                ds = [
+                    Diagnostic(
+                        code="P002", severity="ERRO", message=f"Resposta fora do formato: {exc}"
+                    )
+                ]
             errors = [d for d in ds if d.severity == "ERRO"]
             warnings = [d for d in ds if d.severity == "AVISO"]
+            # O download ocorre depois da escrita: reescrever não resolve A011.
+            if images and slide is not None and slide.kind == "imagem" and slide.image_query:
+                warnings = [d for d in warnings if d.code != "A011"]
             if (not errors and not warnings) or attempt >= repair_max:
                 return slide, ds, attempt + 1, raw
             if not errors and slide is not None and all(d.code == "A009" for d in warnings):
@@ -748,18 +1044,42 @@ def generate_alto(
             quoted = quote_slide(facts, ids, notes=plan.get("objetivo"))
             if quoted is not None:  # citação literal montada do fato, sem o modelo reescrever
                 slides.append(quoted)
-                result.candidates.append({"slide": k + 1, "candidate": 0, "attempts": 0,
-                                          "score": 0, "diagnostics": [],
-                                          "alto": print_slide(quoted), "deterministic": True})
+                result.candidates.append(
+                    {
+                        "slide": k + 1,
+                        "candidate": 0,
+                        "attempts": 0,
+                        "score": 0,
+                        "diagnostics": [],
+                        "alto": print_slide(quoted),
+                        "deterministic": True,
+                    }
+                )
                 continue
             kind = "topicos"
         base_user = (
             f"Pedido original: {request}\nApresentação: {outline['titulo']}\n"
             f"Roteiro:\n{summary}\n\n"
             f"Escreva o slide {k + 1} (tipo {kind}).\nMensagem: {plan['mensagem']}\n"
-            f"Objetivo: {plan['objetivo']}\nRegras do tipo: {KIND_RULES[kind]}\n\n"
+            f"Objetivo: {plan['objetivo']}\nRegras do tipo: {KIND_RULES[kind]}"
+            f"{title_budget(plan['mensagem'], kind)}\n\n"
             f"Fatos para este slide:\n{facts_block(ids, facts)}"
         )
+        if slides:
+            previous = [
+                {"titulo": s.title or s.text, "itens": [t[:110] for t in alto_blocks(s)[:6]]}
+                for s in slides
+            ]
+            base_user += (
+                "\n\nSlides já escritos (não repetir seus itens):\n"
+                + json.dumps(previous, ensure_ascii=False)
+            )
+            if kind == "conclusao":
+                base_user += ("\nEsta conclusão deve propor uma atividade/decisão nova, com duas ações. "
+                              "Não copie rótulos anteriores nem volte a explicar o mecanismo ou a avaliação. "
+                              "Use verbos de ação e critérios para o próximo passo.")
+        if kind == "imagem":
+            base_user += f"\nBusca sugerida pelo roteiro: {plan.get('busca_imagem', '')}"
         if slide_topics:
             base_user += "\n\nEste slide DEVE tratar, no texto visível, de: " + "; ".join(
                 f"{t['nome']} (palavras: {', '.join(t['termos'][:3])})" for t in slide_topics
@@ -783,19 +1103,44 @@ def generate_alto(
             )
         best = None
         for c in range(max(1, candidates)):
-            slide, ds, attempts, raw = produce(kind, base_user, k, c, slide_topics)
+            initial = batch_raw.get(k) if c == 0 else None
+            slide, ds, attempts, raw = produce(kind, base_user, k, c, slide_topics,
+                                               initial=initial)
             score = score_slide(slide, ds, facts) if slide else -1000
-            result.candidates.append({
-                "slide": k + 1, "candidate": c, "attempts": attempts, "score": score,
-                "diagnostics": [d.model_dump() for d in ds],
-                "alto": print_slide(slide) if slide else None,
-            })
+            result.candidates.append(
+                {
+                    "slide": k + 1,
+                    "candidate": c,
+                    "attempts": attempts,
+                    "score": score,
+                    "diagnostics": [d.model_dump() for d in ds],
+                    "alto": print_slide(slide) if slide else None,
+                }
+            )
             if slide is not None and (best is None or score > best[0]):
                 best = (score, slide, ds, raw)
         if best is None:
-            raise DSLException(ds or [Diagnostic(code="P001", severity="ERRO",
-                                                 message=f"Slide {k + 1} sem candidato válido.")])
+            raise DSLException(
+                ds
+                or [
+                    Diagnostic(
+                        code="P001", severity="ERRO", message=f"Slide {k + 1} sem candidato válido."
+                    )
+                ]
+            )
         _, slide, ds, raw = best
+        errors = [d for d in ds if d.severity == "ERRO"]
+        if slide.kind == "imagem" and errors and all(d.code == "A010" for d in errors):
+            # Recompor sem chamada nova: a coluna ao lado da foto é estreita; em tópicos o
+            # mesmo texto ganha a largura toda. Conteúdo do modelo não é cortado.
+            wide = slide.model_copy(update={"kind": "topicos", "image_query": None,
+                                            "image_file": None, "caption": None})
+            wide_ds = check_slide(wide, facts, theme, slide_topics)
+            if not any(d.severity == "ERRO" for d in wide_ds):
+                say(f"Slide {k + 1}: texto não coube ao lado da foto; recomposto em tópicos")
+                slide, ds, kind = wide, wide_ds, "topicos"
+        if kind == "imagem":
+            plan["busca_imagem"] = slide.image_query
 
         # Sustentação: o melhor candidato é conferido contra os fatos que cita.
         if verify_support and facts:
@@ -806,14 +1151,23 @@ def generate_alto(
                     rounds += 1
                     say(f"Slide {k + 1}: {len(problems)} frase(s) sem sustentação; corrigindo")
                     feedback = diagnostics_feedback(support_diagnostics(problems, k + 1))
-                    previous = (json.dumps(_load_json(raw), ensure_ascii=False)
-                                if mode == "json" else (raw or "")[:3000])
+                    previous = (
+                        json.dumps(_load_json(raw), ensure_ascii=False)
+                        if mode == "json"
+                        else (raw or "")[:3000]
+                    )
                     fixed, fixed_ds, _, fixed_raw = produce(
-                        kind, base_user, k, 0, slide_topics,
-                        extra=(f"\n\nSua resposta anterior:\n{previous}\n\n"
-                               f"Frases que os fatos NÃO sustentam:\n{feedback}\n"
-                               "Reescreva SOMENTE essas frases usando apenas o que os fatos "
-                               "dizem e mantenha o restante."),
+                        kind,
+                        base_user,
+                        k,
+                        0,
+                        slide_topics,
+                        extra=(
+                            f"\n\nSua resposta anterior:\n{previous}\n\n"
+                            f"Frases que os fatos NÃO sustentam:\n{feedback}\n"
+                            "Reescreva SOMENTE essas frases usando apenas o que os fatos "
+                            "dizem e mantenha o restante."
+                        ),
                     )
                     if fixed is None or any(d.severity == "ERRO" for d in fixed_ds):
                         break
@@ -839,7 +1193,13 @@ def generate_alto(
 
     deck = AltoDeck(title=outline["titulo"], theme=theme, slides=slides)
     if images:
-        resolve_images(deck, say)
+        cover = next((s for s in slides if s.kind == "capa"), None)
+        if cover:
+            cover.image_query = outline["slides"][0].get("busca_imagem") or next(
+                (s.image_query for s in slides if s.kind == "imagem" and s.image_query), None)
+        result.image_results = resolve_images(
+            deck, say, source=image_source, ai_profile=ai_profile,
+            on_image_record=getattr(model, "record_image", None))
     result.coverage = coverage_report(slides, topics)
     missing = [c["topico"] for c in result.coverage if not c["coberto"]]
     if missing:
@@ -848,24 +1208,84 @@ def generate_alto(
     return result
 
 
-def resolve_images(deck: AltoDeck, say=lambda m: None):
-    """Troca `buscar` por arquivo local licenciado; sem imagem, vira tópicos."""
-    from .media import automatic_candidate, automatic_search, cache_image
+IMAGE_SOURCES = ("livres", "livres_ia", "ia")
+MAX_AI_IMAGES = 3
+STOP_QUERY = {"diagram", "illustration", "concept", "workflow", "steps", "decision", "vs",
+              "and", "of", "the", "for", "with", "a", "an"}
 
-    for s in deck.slides:
-        if s.kind != "imagem" or s.image_file or not s.image_query:
+
+def fallback_queries(query: str) -> list[str]:
+    """Consultas mais simples para o Commons, que só indexa coisas concretas."""
+    words = [w for w in re.findall(r"[A-Za-z-]+", query or "") if w.casefold() not in STOP_QUERY]
+    options = [query, " ".join(words), " ".join(words[:2]), " ".join(words[-2:])]
+    options += [w for w in words if len(w) > 4][:2]
+    return [q for q in dict.fromkeys(o.strip() for o in options) if q]
+
+
+def resolve_images(deck: AltoDeck, say=lambda m: None, *, source="livres", ai_profile="economica",
+                   on_image_record=None, max_ai=MAX_AI_IMAGES):
+    """Troca `buscar` por arquivo: foto livre, imagem por IA ou ambos; sem imagem, vira tópicos."""
+    from .media import photographic_candidate, automatic_search, cache_image
+
+    if source not in IMAGE_SOURCES:
+        raise ValueError(f"Fonte de imagem deve ser uma de {IMAGE_SOURCES}.")
+    audit, searches, downloads = [], {}, {}
+    generated = 0
+    for n, s in enumerate(deck.slides, 1):
+        if s.kind not in {"capa", "imagem"} or s.image_file or not s.image_query:
             continue
-        try:
-            found = automatic_search(s.image_query)
-            item = next((i for i in found["results"] if automatic_candidate(i)), None)
-            if item:
-                s.image_file = cache_image(item["id"])["asset"]
-                say(f"Imagem: {item['title'][:60]}")
-                continue
-        except Exception as exc:
-            say(f"Imagem indisponível ({exc}); usando tópicos.")
-        if len(s.items) >= 2:
-            s.kind = "topicos"
+        entry = {"slide": n, "query": s.image_query, "tried": []}
+        audit.append(entry)
+        if source in ("livres", "livres_ia"):
+            try:
+                queries = fallback_queries(s.image_query)
+                if source == "livres_ia":
+                    # Com IA de reserva, não aceitar foto de busca ampla demais (palavra solta
+                    # como "technology" trouxe retrato sem relação com o slide).
+                    queries = queries[:2]
+                for query in queries:
+                    if query not in searches:
+                        searches[query] = automatic_search(query, providers=("commons",),
+                                                           wait_for_provider=True)
+                    found = searches[query]
+                    # Keep the original slide subject even when a broader fallback is searched.
+                    found = {**found, "results": [{**i, "central_query": s.image_query,
+                              "people_request": s.title or ""} for i in found["results"]]}
+                    entry["tried"].append({
+                        "query": query, "providers": found.get("providers", []),
+                        "candidates": [{"id": i["id"], "title": i["title"],
+                                        "eligible": bool(photographic_candidate(i))}
+                                       for i in found["results"]]})
+                    item = next((i for i in found["results"] if photographic_candidate(i)), None)
+                    if item:
+                        if item["id"] not in downloads:
+                            downloads[item["id"]] = cache_image(item["id"])
+                        entry["selected"] = downloads[item["id"]]
+                        # Fonte/licença ficam no catálogo; o compilador as traz ao slide/notas.
+                        say(f"Imagem: {item['title'][:60]}")
+                        break
+            except Exception as exc:
+                entry["error"] = str(exc)
+                say(f"Foto livre indisponível ({exc}).")
+        if "selected" not in entry and source in ("livres_ia", "ia") and generated < max_ai:
+            from .ai_images import generate_image
+
+            try:
+                say(f"Gerando imagem por IA para o slide {n}")
+                generated += 1
+                asset, _ = generate_image(s.title or deck.title, s.image_query,
+                                          profile=ai_profile, on_record=on_image_record)
+                entry["selected"] = asset
+                entry["ai"] = True
+            except Exception as exc:
+                entry["ai_error"] = str(exc)
+                say(f"Imagem por IA indisponível ({exc}).")
+        if "selected" in entry:
+            s.image_file = entry["selected"]["asset"]
+            continue
+        if s.kind == "imagem":
+            say(f"Slide {n} sem imagem aprovada; usando cartões tipográficos.")
+    return audit
 
 
 # ---------------------------------------------------------------------------
@@ -876,7 +1296,29 @@ class NoFactsError(ValueError):
     """A pesquisa terminou sem nenhuma ficha verificada."""
 
 
-def create_presentation(
+def create_presentation(request, out_dir: Path, model, *, max_calls=60, on_usage=None, **options):
+    """Contabilizar também pesquisa/falhas, inclusive antes de existir roteiro."""
+    from .model_usage import RecordedModel
+
+    tracked = RecordedModel(model, out_dir, max_calls=max_calls, on_usage=on_usage)
+    report = None
+    try:
+        report = _create_presentation(request, out_dir, tracked, **options)
+        report["content_calls"] = report["calls"]
+        return report
+    finally:
+        if report is None:
+            path = out_dir / "relatorio.json"
+            report = json.loads(path.read_text("utf-8")) if path.exists() else {"valid": False}
+        report["usage"] = tracked.summary()
+        report["calls"] = len(tracked.records)
+        (out_dir / "relatorio.json").write_text(
+            json.dumps(report, ensure_ascii=False, indent=2, default=str),
+            "utf-8",
+        )
+
+
+def _create_presentation(
     request: str,
     out_dir: Path,
     model,
@@ -884,6 +1326,8 @@ def create_presentation(
     research_provider: str | None = "searxng",
     langs=("pt", "en"),
     dossier=None,
+    document_ids: list[str] | None = None,
+    sources_mode: str | None = None,
     n_slides: int = 6,
     theme: str = "claro",
     mode: str = "json",
@@ -901,8 +1345,12 @@ def create_presentation(
     verify_support: bool = True,
     coverage: bool = True,
     fallback_wikipedia: bool = False,
+    batch: bool = False,
+    image_source: str = "livres",
+    ai_profile: str = "economica",
 ) -> dict:
     """Pesquisa → roteiro → slides → PPTX. Grava todos os passos em `out_dir`."""
+    sections = None
     from dataclasses import asdict
     import time
 
@@ -917,9 +1365,41 @@ def create_presentation(
         "request": request,
         "mode": mode,
         "candidates": candidates,
+        "batch": batch,
+        "image_source": image_source if images else None,
         "model": getattr(model, "metadata", {}),
         "research": research_provider,
     }
+    if sources_mode not in (None, "documentos", "documentos+internet"):
+        raise ValueError("Fontes deve ser documentos ou documentos+internet.")
+    if sources_mode and not document_ids:
+        raise ValueError("O modo de fontes exige ao menos um documento.")
+    if document_ids:
+        if dossier is not None:
+            raise ValueError("Use documentos ou dossiê existente, não ambos.")
+        from .documents import dossier_from_documents, merge_document_dossier
+
+        say("Extraindo fatos dos arquivos de base")
+        dossier = dossier_from_documents(document_ids, request, model)
+        from .documents import document_sections
+
+        sections = document_sections(document_ids, dossier.facts)
+        dossier.save(out_dir / "dossie.json")
+        if sources_mode == "documentos+internet":
+            from .research import research
+
+            web = research(request, model=model, provider=research_provider or "searxng",
+                           langs=langs, progress=say, contact=contact)
+            dossier = merge_document_dossier(dossier, web)
+        else:
+            research_provider = None
+        report.update(research=research_provider, sources_mode=sources_mode or "documentos")
+    if theme == "auto":
+        from .auto_theme import choose_theme
+
+        theme = choose_theme(request)
+    report["theme"] = theme
+    say(f"Estilo escolhido: {theme}")
     if dossier is None and research_provider:
         from .research import default_fetcher, research
 
@@ -984,6 +1464,10 @@ def create_presentation(
             result=generation,
             verify_support=verify_support,
             coverage=coverage,
+            batch=batch,
+            image_source=image_source,
+            ai_profile=ai_profile,
+            sections=sections,
         )
     finally:
         with (out_dir / "chamadas.jsonl").open("w", encoding="utf-8") as f:
@@ -994,6 +1478,9 @@ def create_presentation(
         )
     (out_dir / "roteiro.json").write_text(
         json.dumps(generation.outline, ensure_ascii=False, indent=2), "utf-8"
+    )
+    (out_dir / "imagens.json").write_text(
+        json.dumps(generation.image_results, ensure_ascii=False, indent=2), "utf-8"
     )
     (out_dir / "apresentacao.slda").write_text(generation.source, "utf-8")
     quality = {

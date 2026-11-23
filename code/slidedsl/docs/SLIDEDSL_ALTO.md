@@ -100,6 +100,11 @@ e regras de design originais e abre no editor.
 | A009 | AVISO | detalhe curto ou genérico ("facilita…", "melhora…" sem dado) |
 | A010 | ERRO | texto não cabe no layout nem na fonte mínima (com caminho do campo) |
 | A011 | AVISO | imagem não resolvida |
+| A023 | AVISO | item repetido no mesmo slide (o modelo copiou um item para completar a vaga); aciona reparo e pesa −30 na escolha |
+| A024 | AVISO | nome do lado da comparação genérico ("X", "A", vazio); aciona reparo |
+
+Comparação aceita de 1 a 4 itens por lado (validação e schema); o prompt pede 1 ou 2.
+Fontes com rótulo próprio (`"Execução: commit abc"`) aparecem no rodapé sem o prefixo "Fonte:".
 
 Os diagnósticos carregam o caminho do campo (`itens[1].detalhe`), que volta ao modelo no reparo.
 

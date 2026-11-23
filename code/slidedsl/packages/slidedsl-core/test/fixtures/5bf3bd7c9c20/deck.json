@@ -1,0 +1,271 @@
+{
+  "title": "Seminário 2 do SlideDSL",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Do pedido ao slide pronto",
+      "subtitle": "Uma demo ponta a ponta transforma um pedido em texto e um arquivo curto de anotações em slide pronto para apresentar.",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A promessa central é reduzir o trabalho do estudante a uma entrada em texto e um arquivo curto de anotações. Na demo, isso acontece sem pesquisa na web e com foco em gerar o material de apresentação. O arquivo de anotações tem cerca de quatro mil caracteres, então a cena mostra um fluxo end-to-end enxuto.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "A demo vai do pedido ao slide",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Pedido em texto",
+          "detail": "O estudante envia um pedido em texto, como um seminário em poucos slides, para iniciar a geração."
+        },
+        {
+          "label": "Anotações em Markdown",
+          "detail": "O mesmo envio inclui um arquivo curto de anotações do seminário, em Markdown, com cerca de 4 mil caracteres."
+        },
+        {
+          "label": "Slide sem web",
+          "detail": "A demo gera o slide sem pesquisa na web, usando apenas o pedido e os arquivos de base enviados."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F2",
+        "F4",
+        "F5",
+        "F6"
+      ],
+      "notes": "Os três passos visíveis são entrada, base documental e geração final. A sequência importa porque a demo mostra o caminho completo sem depender de busca externa. Isso reforça que o sistema trabalha com o material do próprio estudante.",
+      "line": 8,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "A GLC funciona em quatro etapas",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Definir a estrutura",
+          "detail": "A GLC funciona em quatro etapas e cada valor tem o número e a legenda."
+        },
+        {
+          "label": "Escrever o exemplo",
+          "detail": "Na etapa 2, o modelo escreve um exemplo com 160 s e a legenda “tempo total da demo”."
+        },
+        {
+          "label": "Recusar formato incompleto",
+          "detail": "Se o modelo escreve só o valor, o analisador LALR recusa o slide com erro P001 e volta ao modelo para correção."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F7",
+        "F8",
+        "F9",
+        "F10"
+      ],
+      "notes": "A ideia é mostrar que a GLC não só gera texto, mas também valida a forma antes de aceitar o slide. O exemplo de 160 s deixa claro o papel da legenda no formato. A recusa com P001 evita que um valor isolado passe como saída válida.",
+      "line": 16,
+      "column": 3
+    },
+    {
+      "kind": "numeros",
+      "title": "O custo medido do modelo local",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [
+        {
+          "value": "160 s",
+          "label": "tempo total da demo no modelo local"
+        },
+        {
+          "value": "44",
+          "label": "chamadas feitas pelo modelo local"
+        },
+        {
+          "value": "70.154 tokens",
+          "label": "tokens de entrada processados no modelo local"
+        }
+      ],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F19",
+        "F20",
+        "F21",
+        "F22"
+      ],
+      "notes": "O slide destaca tempo, chamadas e volume de tokens para mostrar custo medido de forma concreta. No modelo local, a execução levou 160 s e fez 44 chamadas na mesma máquina da comparação. Como não houve cobrança por token, o custo aparece como uso de processamento e duração, não como preço pago.",
+      "line": 24,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "A demo comparou os dois jeitos",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Modelo local",
+          "items": [
+            {
+              "label": "Tempo de execução",
+              "detail": "O modelo local levou 160 s na mesma máquina usada na comparação."
+            },
+            {
+              "label": "Chamadas e tokens",
+              "detail": "Ele fez 44 chamadas e processou 70.154 tokens de entrada e 10.901 de saída."
+            }
+          ]
+        },
+        {
+          "name": "API paga",
+          "items": [
+            {
+              "label": "Mesma comparação",
+              "detail": "A comparação usou a mesma demo na mesma máquina, com Windows 10 e RTX 3060."
+            },
+            {
+              "label": "Cobrança por token",
+              "detail": "Os fatos não informam o custo por token da API paga nesta medição."
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F19",
+        "F20",
+        "F21",
+        "F22"
+      ],
+      "notes": "A comparação usa a mesma demo e a mesma máquina para isolar o efeito do modelo. O lado local tem tempo, chamadas e volume de tokens medidos; o lado pago não tem esses números nos fatos fornecidos. Como não há dado de custo por token da API paga, o slide deve evitar concluir vantagem financeira.",
+      "line": 32,
+      "column": 3
+    },
+    {
+      "kind": "grafico",
+      "title": "Sem a GLC de alto nível, o modelo escreveu a DSL de baixo nível inteira",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": "US$ por deck",
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [
+        {
+          "label": "Sem GLC",
+          "value": 0.0081
+        },
+        {
+          "label": "US$ 0,0081 por deck",
+          "value": 0.0081
+        }
+      ],
+      "cycle": false,
+      "sources": [
+        "F25",
+        "F26",
+        "F27",
+        "F28"
+      ],
+      "notes": "Os fatos fornecidos só medem a condição sem a GLC de alto nível. Nessa condição, o modelo escreveu a DSL de baixo nível inteira e o custo médio foi US$ 0,0081 por deck. A segunda barra serve apenas como referência visual, porque não há valor medido com GLC nos fatos deste slide.",
+      "line": 45,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "A falha aparece com entrada grande",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Limitar a entrada",
+          "detail": "O artigo completo do TCC tem 138 mil caracteres, e a falha aparece quando a entrada é grande."
+        },
+        {
+          "label": "Recusar a saída errada",
+          "detail": "Quando falta a legenda, o analisador LALR recusa a saída errada com erro P001 e volta ao modelo para correção."
+        },
+        {
+          "label": "Proteger o usuário",
+          "detail": "O usuário sofre impacto quando a entrada cresce demais, porque a correção interrompe a geração antes do slide final."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F10",
+        "F13",
+        "F31",
+        "F32"
+      ],
+      "notes": "A conclusão liga a falha ao tamanho da entrada e ao ponto em que o formato quebra. O erro P001 mostra que a validação interrompe a saída errada antes de seguir adiante. A checagem final existe para confirmar que o texto do modelo segue a GLC.",
+      "line": 53,
+      "column": 3
+    }
+  ]
+}

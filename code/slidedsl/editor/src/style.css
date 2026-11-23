@@ -35,6 +35,30 @@
 .generation-panel .strict-option {
   flex-direction: row;
   align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+/* A regra global `input { width: 100% }` esticava a caixa e afastava o texto. */
+.generation-panel input[type="checkbox"] {
+  width: auto;
+  flex: 0 0 auto;
+  margin: 0;
+}
+.generation-panel .image-source-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: -4px 0 12px 26px;
+}
+.generation-panel .image-source-options label {
+  flex: 1 1 260px;
+  margin-bottom: 0;
+}
+.generation-panel .hint {
+  flex-basis: 100%;
+  margin: 0;
+  color: #486383;
+  font-size: 12px;
 }
 .generation-error {
   color: #a12121;
@@ -445,4 +469,28 @@ textarea {
   cursor: pointer;
   margin: 0.5rem 0;
   font-weight: 600;
+}
+
+.base-documents {
+  margin: 0.75rem 0;
+  border: 1px dashed #64748b;
+}
+.base-documents p {
+  font-size: 0.85rem;
+}
+.alto-slide-edits {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+.alto-slide-edits article {
+  min-width: 0;
+  padding: 0.5rem;
+  border: 1px solid #64748b;
+}
+.alto-slide-edits .preview-shell {
+  height: auto;
+  aspect-ratio: 16 / 9;
+  min-height: 0;
+  overflow: hidden;
 }

@@ -1,0 +1,32 @@
+{
+  "F1": {
+    "id": "F1",
+    "claim": "Inversor deve ter capacidade para suportar potência dos painéis solares.",
+    "kind": "ressalva",
+    "quote": "O inversor deve ter capacidade para suportar a potência gerada pelos painéis solares.",
+    "source_id": "S8",
+    "url": "https://canalsolar.com.br/inversor-solar-o-que-e-e-pra-que-serve/",
+    "source_title": "Inversor solar: O que é, como funciona e para que serve?",
+    "value": ""
+  },
+  "F2": {
+    "id": "F2",
+    "claim": "É comum utilizar relação de até 1,3 entre potência do gerador e do inversor.",
+    "kind": "exemplo",
+    "quote": "É comum utilizar uma relação de até 1,3 entre a potência do gerador e a do inversor (por exemplo, um sistema de 6,5 kWp com um inversor de 5 kW)",
+    "source_id": "S8",
+    "url": "https://canalsolar.com.br/inversor-solar-o-que-e-e-pra-que-serve/",
+    "source_title": "Inversor solar: O que é, como funciona e para que serve?",
+    "value": "1,3"
+  },
+  "F3": {
+    "id": "F3",
+    "claim": "Relação de 1,3 entre potência do gerador e do inversor é comum em sistemas de 6,5 kWp com inversor de 5 kW.",
+    "kind": "exemplo",
+    "quote": "por exemplo, um sistema de 6,5 kWp com um inversor de 5 kW)",
+    "source_id": "S8",
+    "url": "https://canalsolar.com.br/inversor-solar-o-que-e-e-pra-que-serve/",
+    "source_title": "Inversor solar: O que é, como funciona e para que serve?",
+    "value": "6,5"
+  }
+}

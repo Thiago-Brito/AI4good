@@ -1,0 +1,38 @@
+{
+  "F1": {
+    "id": "F1",
+    "claim": "O desenvolvimento de software deve se concentrar em aprimorar segurança, escalabilidade e eficiência",
+    "kind": "citacao",
+    "quote": "De acordo com Alexandre Lessa, gerente de Produtos da keeggo, consultoria de tecnologia, espera-se que o desenvolvimento de software se concentre em aprimorar a segurança, escalabilidade e eficiência, além de integrar tecnologias de inteligência artificial e aprendizado de máquina para criar soluções mais inovadoras.",
+    "source_id": "S3",
+    "url": "https://inforchannel.com.br/2024/02/27/microsservicos-serverless-seguranca-e-ia-na-vanguarda-em-2024/",
+    "source_title": "Microsserviços, serverless, segurança e IA na vanguarda em 2024",
+    "value": "",
+    "author": "Alexandre Lessa",
+    "relevance": "alta"
+  },
+  "F2": {
+    "id": "F2",
+    "claim": "O desenvolvimento de software terá maior ênfase em práticas seguras, revisões de código, testes e integração de medidas de proteção",
+    "kind": "citacao",
+    "quote": "O desenvolvimento de software terá maior ênfase em práticas seguras, revisões de código, testes e integração de medidas de proteção.",
+    "source_id": "S3",
+    "url": "https://inforchannel.com.br/2024/02/27/microsservicos-serverless-seguranca-e-ia-na-vanguarda-em-2024/",
+    "source_title": "Microsserviços, serverless, segurança e IA na vanguarda em 2024",
+    "value": "",
+    "author": "Lessa",
+    "relevance": "alta"
+  },
+  "F3": {
+    "id": "F3",
+    "claim": "O processo de segurança ocorre desde as fases iniciais do ciclo de desenvolvimento",
+    "kind": "citacao",
+    "quote": "Esse processo acontecerá desde as fases iniciais do ciclo de desenvolvimento, enquanto o time de negócio irá analisar indicadores antes de lançar futuras versões aos clientes",
+    "source_id": "S3",
+    "url": "https://inforchannel.com.br/2024/02/27/microsservicos-serverless-seguranca-e-ia-na-vanguarda-em-2024/",
+    "source_title": "Microsserviços, serverless, segurança e IA na vanguarda em 2024",
+    "value": "",
+    "author": "Lessa",
+    "relevance": "alta"
+  }
+}

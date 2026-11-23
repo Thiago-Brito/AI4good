@@ -1,0 +1,90 @@
+{
+  "solar_tema": {
+    "created": "2026-11-23T04:25:32+00:00",
+    "provider": "searxng",
+    "facts": 14,
+    "sources": 8,
+    "model": "qwen3:4b-instruct",
+    "usage_dir": "outputs\\dossies_uso\\solar_tema"
+  },
+  "solar_detalhado": {
+    "created": "2026-11-23T04:26:28+00:00",
+    "provider": "searxng",
+    "facts": 10,
+    "sources": 8,
+    "model": "qwen3:4b-instruct",
+    "usage_dir": "outputs\\dossies_uso\\solar_detalhado"
+  },
+  "solar_obrigatorio": {
+    "created": "2026-11-23T04:27:07+00:00",
+    "provider": "searxng",
+    "facts": 1,
+    "sources": 8,
+    "model": "qwen3:4b-instruct",
+    "usage_dir": "outputs\\dossies_uso\\solar_obrigatorio"
+  },
+  "git_tema": {
+    "created": "2026-11-23T04:28:02+00:00",
+    "provider": "searxng",
+    "facts": 16,
+    "sources": 8,
+    "model": "qwen3:4b-instruct",
+    "usage_dir": "outputs\\dossies_uso\\git_tema"
+  },
+  "git_detalhado": {
+    "created": "2026-11-23T04:28:58+00:00",
+    "provider": "searxng",
+    "facts": 15,
+    "sources": 8,
+    "model": "qwen3:4b-instruct",
+    "usage_dir": "outputs\\dossies_uso\\git_detalhado"
+  },
+  "git_obrigatorio": {
+    "created": "2026-11-23T04:29:25+00:00",
+    "provider": "searxng",
+    "facts": 5,
+    "sources": 8,
+    "model": "qwen3:4b-instruct",
+    "usage_dir": "outputs\\dossies_uso\\git_obrigatorio"
+  },
+  "agua_tema": {
+    "created": "2026-11-23T04:30:12+00:00",
+    "provider": "searxng",
+    "facts": 12,
+    "sources": 6,
+    "model": "qwen3:4b-instruct",
+    "usage_dir": "outputs\\dossies_uso\\agua_tema"
+  },
+  "agua_detalhado": {
+    "created": "2026-11-23T04:30:44+00:00",
+    "provider": "searxng",
+    "facts": 6,
+    "sources": 4,
+    "model": "qwen3:4b-instruct",
+    "usage_dir": "outputs\\dossies_uso\\agua_detalhado"
+  },
+  "agua_obrigatorio": {
+    "created": "2026-11-23T04:31:06+00:00",
+    "provider": "searxng",
+    "facts": 2,
+    "sources": 5,
+    "model": "qwen3:4b-instruct",
+    "usage_dir": "outputs\\dossies_uso\\agua_obrigatorio"
+  },
+  "sono_tema": {
+    "created": "2026-11-23T04:32:11+00:00",
+    "provider": "searxng",
+    "facts": 20,
+    "sources": 7,
+    "model": "qwen3:4b-instruct",
+    "usage_dir": "outputs\\dossies_uso\\sono_tema"
+  },
+  "sono_detalhado": {
+    "created": "2026-11-23T04:33:15+00:00",
+    "provider": "searxng",
+    "facts": 22,
+    "sources": 7,
+    "model": "qwen3:4b-instruct",
+    "usage_dir": "outputs\\dossies_uso\\sono_detalhado"
+  }
+}

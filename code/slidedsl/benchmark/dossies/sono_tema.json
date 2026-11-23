@@ -1,0 +1,430 @@
+{
+  "topic": "Sono e desempenho nos estudos.",
+  "queries": [
+    "sono e aprendizado em universidades",
+    "duração do sono e notas escolares",
+    "estudo sono e memória de trabalho",
+    "exemplo de aluno com boa performance e sono"
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "title": "Influência Da Privação Do Sono No Desempenho Cognitivo E Na Saúde ...",
+      "url": "https://revistatopicos.com.br/artigos/influencia-da-privacao-do-sono-no-desempenho-cognitivo-e-na-saude-mental-de-estudantes-universitarios",
+      "provider": "searxng",
+      "snippet": "Conclui-se que a promoção do sono saudável é pertinente no contexto universitário, mas intervenções e seus efeitos sobre aprendizagem, saúde mental e desempenho devem ser avaliados em estudos prospectivos e experimentais.",
+      "text_chars": 66420
+    },
+    {
+      "id": "S2",
+      "title": "Como o sono ajuda a memória e o aprendizado? - Santo André - FSA",
+      "url": "https://www.fsa.br/sono-memoria-aprendizado/",
+      "provider": "searxng",
+      "snippet": "15 de ago. de 2026 ... Sim. O sono participa tanto da capacidade de aprender novas informações quanto da consolidação das memórias formadas depois do estudo. Dormir ...",
+      "text_chars": 10388
+    },
+    {
+      "id": "S3",
+      "title": "Flexibilidade no horário escolar pode melhorar notas e sono de ...",
+      "url": "https://www.cnnbrasil.com.br/saude/flexibilidade-no-horario-escolar-pode-melhorar-notas-e-sono-de-adolescentes/",
+      "provider": "searxng",
+      "snippet": "Um estudo mostra que adolescentes podem dormir até 45 minutos a mais por noite quando têm mais flexibilidade no horário de entrada na escola. Além de analisar os impactos dessa rotina na saúde e no desempenho acadêmico em escolas na Suíça.",
+      "text_chars": 3178
+    },
+    {
+      "id": "S4",
+      "title": "PDF A influência do sono no desempenho escolar - Mostra Out",
+      "url": "https://out.jpsul.com.br/wp-content/uploads/2023/10/LAURA-CAMPEZATTO.pdf",
+      "provider": "searxng",
+      "snippet": "Objetivo geral: O objetivo deste trabalho é analisar a relação entre o sono e o desempenho escolar, bem como identificar os fatores que afetam a qualidade do sono em estudantes.",
+      "text_chars": 177
+    },
+    {
+      "id": "S5",
+      "title": "Análise das funções cognitivas e sono na equipe de enfermagem ...",
+      "url": "https://www.scielo.br/j/rgenf/a/ChrPJJv44HrTgnH6Gg75Svr/?lang=pt",
+      "provider": "searxng",
+      "snippet": "Este estudo teve como objetivo analisar a memória de curto prazo, a atenção e o padrão do sono na equipe de enfermagem nos turnos diurno e noturno.",
+      "text_chars": 147
+    },
+    {
+      "id": "S6",
+      "title": "O sono e seu impacto no aprendizado do aluno - Colégio Decisivo",
+      "url": "https://decisivo.com.br/blog/o-sono-e-seu-impacto-no-aprendizado-do-aluno/",
+      "provider": "searxng",
+      "snippet": "12 de nov. de 2026 ... Conquistar um bom desempenho escolar vai muito além de estudar para as provas. A rotina de descanso é essencial para o aluno aproveitar os ...",
+      "text_chars": 6720
+    },
+    {
+      "id": "S7",
+      "title": "A qualidade do sono e o processo de ensino-aprendizagem",
+      "url": "https://www.nucleodoconhecimento.com.br/educacao/estudantes-baianos",
+      "provider": "searxng",
+      "snippet": "10 de mar. de 2023 ... Com base nessa relação apresentada, o ensino ganha grandes influências. Durante a prática do Estágio Curricular Supervisionado II, por exemplo, ...",
+      "text_chars": 33996
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "A deprivação de sono impacta direta e indiretamente as notas, podendo levar a retenção e pior inserção futura no mercado de trabalho.",
+      "kind": "definicao",
+      "quote": "Dessa forma, a deprivação de sono impacta direta e indiretamente as notas, podendo levar a retenção e pior inserção futura no mercado de trabalho.",
+      "source_id": "S1",
+      "url": "https://revistatopicos.com.br/artigos/influencia-da-privacao-do-sono-no-desempenho-cognitivo-e-na-saude-mental-de-estudantes-universitarios",
+      "source_title": "Influência Da Privação Do Sono No Desempenho Cognitivo E Na Saúde ...",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F2",
+      "claim": "O resultado de Creswell et al. (2023), de associação entre uma hora adicional de sono médio e 0,07 ponto no GPA, descreve uma estimativa estatística no contexto estudado.",
+      "kind": "exemplo",
+      "quote": "O resultado de Creswell et al. (2023), de associação entre uma hora adicional de sono médio e 0,07 ponto no GPA, descreve uma estimativa estatística no contexto estudado.",
+      "source_id": "S1",
+      "url": "https://revistatopicos.com.br/artigos/influencia-da-privacao-do-sono-no-desempenho-cognitivo-e-na-saude-mental-de-estudantes-universitarios",
+      "source_title": "Influência Da Privação Do Sono No Desempenho Cognitivo E Na Saúde ...",
+      "value": "0,07",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F3",
+      "claim": "O horário de início das aulas foi atrasado em 38 minutos no modelo flexível.",
+      "kind": "numero",
+      "quote": "A média do horário de início das aulas foi atrasada em 38 minutos, o atraso no horário de início das aulas foi associado ao aumento da duração do sono nos dias letivos.",
+      "source_id": "S3",
+      "url": "https://www.cnnbrasil.com.br/saude/flexibilidade-no-horario-escolar-pode-melhorar-notas-e-sono-de-adolescentes/",
+      "source_title": "Flexibilidade no horário escolar pode melhorar notas e sono de ...",
+      "value": "38",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F4",
+      "claim": "A duração do sono aumentou em 45 minutos nos dias de aula no modelo flexível.",
+      "kind": "numero",
+      "quote": "A pesquisa apontou que a duração do sono foi maior tanto nos dias de aula, um aumento de 45 minutos, quanto nos dias de folga, 30 minutos.",
+      "source_id": "S3",
+      "url": "https://www.cnnbrasil.com.br/saude/flexibilidade-no-horario-escolar-pode-melhorar-notas-e-sono-de-adolescentes/",
+      "source_title": "Flexibilidade no horário escolar pode melhorar notas e sono de ...",
+      "value": "45",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F5",
+      "claim": "A duração do sono aumentou em 30 minutos nos dias de folga no modelo flexível.",
+      "kind": "numero",
+      "quote": "A pesquisa apontou que a duração do sono foi maior tanto nos dias de aula, um aumento de 45 minutos, quanto nos dias de folga, 30 minutos.",
+      "source_id": "S3",
+      "url": "https://www.cnnbrasil.com.br/saude/flexibilidade-no-horario-escolar-pode-melhorar-notas-e-sono-de-adolescentes/",
+      "source_title": "Flexibilidade no horário escolar pode melhorar notas e sono de ...",
+      "value": "30",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F6",
+      "claim": "O objetivo do trabalho é analisar a relação entre o sono e o desempenho escolar",
+      "kind": "definicao",
+      "quote": "Objetivo geral: O objetivo deste trabalho é analisar a relação entre o sono e o desempenho escolar, bem como identificar os fatores que afetam a qualidade do sono em estudantes.",
+      "source_id": "S4",
+      "url": "https://out.jpsul.com.br/wp-content/uploads/2023/10/LAURA-CAMPEZATTO.pdf",
+      "source_title": "PDF A influência do sono no desempenho escolar - Mostra Out",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F7",
+      "claim": "O trabalho identifica os fatores que afetam a qualidade do sono em estudantes",
+      "kind": "definicao",
+      "quote": "Objetivo geral: O objetivo deste trabalho é analisar a relação entre o sono e o desempenho escolar, bem como identificar os fatores que afetam a qualidade do sono em estudantes.",
+      "source_id": "S4",
+      "url": "https://out.jpsul.com.br/wp-content/uploads/2023/10/LAURA-CAMPEZATTO.pdf",
+      "source_title": "PDF A influência do sono no desempenho escolar - Mostra Out",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F8",
+      "claim": "O estudo analisou a memória de curto prazo na equipe de enfermagem.",
+      "kind": "definicao",
+      "quote": "Este estudo teve como objetivo analisar a memória de curto prazo, a atenção e o padrão do sono na equipe de enfermagem nos turnos diurno e noturno.",
+      "source_id": "S5",
+      "url": "https://www.scielo.br/j/rgenf/a/ChrPJJv44HrTgnH6Gg75Svr/?lang=pt",
+      "source_title": "Análise das funções cognitivas e sono na equipe de enfermagem ...",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F9",
+      "claim": "O estudo analisou a atenção na equipe de enfermagem.",
+      "kind": "definicao",
+      "quote": "Este estudo teve como objetivo analisar a memória de curto prazo, a atenção e o padrão do sono na equipe de enfermagem nos turnos diurno e noto",
+      "source_id": "S5",
+      "url": "https://www.scielo.br/j/rgenf/a/ChrPJJv44HrTgnH6Gg75Svr/?lang=pt",
+      "source_title": "Análise das funções cognitivas e sono na equipe de enfermagem ...",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F10",
+      "claim": "O estudo analisou o padrão do sono na equipe de enfermagem.",
+      "kind": "definicao",
+      "quote": "Este estudo teve como objetivo analisar a memória de curto prazo, a atenção e o padrão do sono na equipe de enfermagem nos turnos diurno e noturno.",
+      "source_id": "S5",
+      "url": "https://www.scielo.br/j/rgenf/a/ChrPJJv44HrTgnH6Gg75Svr/?lang=pt",
+      "source_title": "Análise das funções cognitivas e sono na equipe de enfermagem ...",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F11",
+      "claim": "O sono consolida a memória segundo a ciência cognitiva.",
+      "kind": "definicao",
+      "quote": "A ciência cognitiva é clara: consolidamos a nossa memória durante o sono.",
+      "source_id": "S6",
+      "url": "https://decisivo.com.br/blog/o-sono-e-seu-impacto-no-aprendizado-do-aluno/",
+      "source_title": "O sono e seu impacto no aprendizado do aluno - Colégio Decisivo",
+      "value": "a memória",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F12",
+      "claim": "A insuficiência de sono em adolescentes está diretamente associada ao pior desempenho escolar.",
+      "kind": "numero",
+      "quote": "Um estudo da UFPR reforça que a insuficiência de sono em adolescentes está diretamente associada ao pior desempenho escolar.",
+      "source_id": "S6",
+      "url": "https://decisivo.com.br/blog/o-sono-e-seu-impacto-no-aprendizado-do-aluno/",
+      "source_title": "O sono e seu impacto no aprendizado do aluno - Colégio Decisivo",
+      "value": "diretamente associada",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F13",
+      "claim": "O sono está intimamente ligado à aprendizagem, pois processos como atenção e memória são imprescindíveis para o aluno.",
+      "kind": "definicao",
+      "quote": "A psicóloga Samara, do Curso Anglo, defende uma ideia similar em seu artigo sobre performance acadêmica. Segundo ela, o sono está intimamente ligado à aprendizagem, pois processos como atenção e memória são imprescindíveis para o aluno.",
+      "source_id": "S6",
+      "url": "https://decisivo.com.br/blog/o-sono-e-seu-impacto-no-aprendizado-do-aluno/",
+      "source_title": "O sono e seu impacto no aprendizado do aluno - Colégio Decisivo",
+      "value": "atenção e memória",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F14",
+      "claim": "Os alunos sugerem organizar sua rotina de estudos para ficar despreocupada com atividades escolares.",
+      "kind": "exemplo",
+      "quote": "3 – organizando a minha rotina de estudos, de forma que eu possa ficar despreocupada em relação às atividades escolares",
+      "source_id": "S7",
+      "url": "https://www.nucleodoconhecimento.com.br/educacao/estudantes-baianos",
+      "source_title": "A qualidade do sono e o processo de ensino-aprendizagem",
+      "value": "3",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F15",
+      "claim": "Estudos observacionais estimam associações em contextos particulares, e não o resultado garantido de modificar uma única variável.",
+      "kind": "definicao",
+      "quote": "Estudos observacionais estimam associações em contextos particulares, e não o resultado garantido de modificar uma única variável.",
+      "source_id": "S1",
+      "url": "https://revistatopicos.com.br/artigos/influencia-da-privacao-do-sono-no-desempenho-cognitivo-e-na-saude-mental-de-estudantes-universitarios",
+      "source_title": "Influência Da Privação Do Sono No Desempenho Cognitivo E Na Saúde ...",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F16",
+      "claim": "Uma diferença média associada à duração do sono não equivale a uma previsão individual de nota.",
+      "kind": "definicao",
+      "quote": "No caso do desempenho acadêmico, uma diferença média associada à duração do sono não equivale a uma previsão individual de nota.",
+      "source_id": "S1",
+      "url": "https://revistatopicos.com.br/artigos/influencia-da-privacao-do-sono-no-desempenho-cognitivo-e-na-saude-mental-de-estudantes-universitarios",
+      "source_title": "Influência Da Privação Do Sono No Desempenho Cognitivo E Na Saúde ...",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F17",
+      "claim": "Sintomas podem preceder ou acompanhar alterações do sono.",
+      "kind": "definicao",
+      "quote": "No campo da saúde mental, sintomas podem preceder ou acompanhar alterações do sono.",
+      "source_id": "S1",
+      "url": "https://revistatopicos.com.br/artigos/influencia-da-privacao-do-sono-no-desempenho-cognitivo-e-na-saude-mental-de-estudantes-universitarios",
+      "source_title": "Influência Da Privação Do Sono No Desempenho Cognitivo E Na Saúde ...",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F18",
+      "claim": "Adolescentes entre 13 e 18 anos precisam dormir entre 8 e 10 horas por dia.",
+      "kind": "definicao",
+      "quote": "Para adolescentes entre 13 e 18 anos, a referência mais utilizada fica entre aproximadamente 8 e 10 horas de sono a cada 24 horas.",
+      "source_id": "S2",
+      "url": "https://www.fsa.br/sono-memoria-aprendizado/",
+      "source_title": "Como o sono ajuda a memória e o aprendizado? - Santo André - FSA",
+      "value": "8 a 10",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F19",
+      "claim": "Adolescentes podem dormir até 45 minutos a mais por noite com mais flexibilidade no horário de entrada na escola.",
+      "kind": "definicao",
+      "quote": "Um estudo mostra que adolescentes podem dormir até 45 minutos a mais por noite quando têm mais flexibilidade no horário de entrada na escola.",
+      "source_id": "S3",
+      "url": "https://www.cnnbrasil.com.br/saude/flexibilidade-no-horario-escolar-pode-melhorar-notas-e-sono-de-adolescentes/",
+      "source_title": "Flexibilidade no horário escolar pode melhorar notas e sono de ...",
+      "value": "45",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F20",
+      "claim": "A pesquisa foi feita em duas unidades de ensino com mediana de idade de 14 anos.",
+      "kind": "exemplo",
+      "quote": "O estudo foi feito em duas unidades de ensino, onde a mediana da idade foi de 14 anos",
+      "source_id": "S3",
+      "url": "https://www.cnnbrasil.com.br/saude/flexibilidade-no-horario-escolar-pode-melhorar-notas-e-sono-de-adolescentes/",
+      "source_title": "Flexibilidade no horário escolar pode melhorar notas e sono de ...",
+      "value": "14",
+      "author": "",
+      "relevance": "alta"
+    }
+  ],
+  "rejected": [
+    {
+      "afirmacao": "Perda progressiva de sono resultou em pior desempenho em testes cognitivos críticos para o estudo (tempo de reação, memória) e em escore de avaliação reduzido.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Um exemplo quantitativo é Saroha et al.: perda progressiva de sono resultou em pior desempenho em testes cognitivos críticos para o estudo (tempo de reação, memória) e em escore de avaliação reduzido.",
+      "valor": "0,07",
+      "source_id": "S1",
+      "reason": "valor não aparece no trecho citado"
+    },
+    {
+      "afirmacao": "O GPA utilizado em estudos norte-americanos resume o desempenho segundo regras próprias de avaliação e ponderação de disciplinas.",
+      "autor": "",
+      "relevancia": "baixa",
+      "tipo": "definicao",
+      "trecho": "O GPA utilizado em estudos norte-americanos resume o desempenho segundo regras próprias de avaliação e ponderação de disciplinas.",
+      "valor": "",
+      "source_id": "S1",
+      "reason": "pouco relevante para o assunto central"
+    },
+    {
+      "afirmacao": "95% dos alunos utilizaram a opção de início mais tardio no modelo flexível.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "numero",
+      "trecho": "No modelo flexível, 95% dos alunos utilizaram a opção de início mais tardio.",
+      "valor": "95%",
+      "source_id": "S3",
+      "reason": "fora do assunto central (não menciona sono, desempenho, estudos)"
+    },
+    {
+      "afirmacao": "Os alunos sugerem ter um lugar para dormir no alojamento.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "1 – seria bom se tivesse algum lugar para dormir. No alojamento, por exemplo, só temos uma cama e um colchão. Não tem outro lugar pra descansar",
+      "valor": "1",
+      "source_id": "S7",
+      "reason": "fora do assunto central (não menciona sono, desempenho, estudos)"
+    },
+    {
+      "afirmacao": "Os alunos sugerem conversar com a coordenação para melhorar as condições.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "2 – falando com a coordenação",
+      "valor": "2",
+      "source_id": "S7",
+      "reason": "fora do assunto central (não menciona sono, desempenho, estudos)"
+    },
+    {
+      "afirmacao": "Os alunos sugerem um transporte exclusivo para o IF com maior velocidade.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "4 – colocando um transporte somente para o IF, algo que fosse mais rápido",
+      "valor": "4",
+      "source_id": "S7",
+      "reason": "fora do assunto central (não menciona sono, desempenho, estudos)"
+    },
+    {
+      "afirmacao": "Adultos precisam dormir cerca de 7 horas por noite.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Para adultos, a recomendação costuma partir de cerca de 7 horas por noite.",
+      "valor": "7",
+      "source_id": "S2",
+      "reason": "fora do assunto central (não menciona sono, desempenho, estudos)"
+    },
+    {
+      "afirmacao": "A pesquisa foi publicada em junho de 2026 na revista 'Journal of Adolescent Health'.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "A pesquisa foi publicada em junho de 2026, na revista ‘Journal of Adolescent Health’",
+      "valor": "2026",
+      "source_id": "S3",
+      "reason": "fora do assunto central (não menciona sono, desempenho, estudos)"
+    },
+    {
+      "afirmacao": "Cerca de dois terços dos alunos eram meninos.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "onde a mediana da idade foi de 14 anos e cerca de dois terços eram meninos.",
+      "valor": "2/3",
+      "source_id": "S3",
+      "reason": "valor não aparece no trecho citado"
+    }
+  ],
+  "log": [
+    {
+      "query": "sono e aprendizado em universidades",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "duração do sono e notas escolares",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "estudo sono e memória de trabalho",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "exemplo de aluno com boa performance e sono",
+      "provider": "searxng",
+      "results": 2
+    }
+  ],
+  "central_terms": [
+    "sono",
+    "desempenho",
+    "estudos",
+    "estudantes"
+  ],
+  "created_at": "2026-11-23T04:31:06+00:00"
+}

@@ -1,0 +1,415 @@
+{
+  "topic": "Energia solar residencial.",
+  "queries": [
+    "solar residential efficiency",
+    "home solar panel cost 2024",
+    "solar energy adoption rate",
+    "typical solar installation examples"
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "title": "Understanding Residential Solar Panel Efficiency",
+      "url": "https://solarsunlabs.com/solar-panel-efficiency-residential/",
+      "provider": "searxng",
+      "snippet": "Residential solar panel efficiency determines how much power you generate per square foot of roof — a key factor when roof space, not budget, is the limiting constraint. Panel efficiency is the percentage of sunlight hitting the panel that gets converted into usable electricity.",
+      "text_chars": 2445
+    },
+    {
+      "id": "S2",
+      "title": "What is the Efficiency Of Residential Solar Systems?",
+      "url": "https://renewgenius.com/efficiency/efficiency-of-residential-solar-systems/",
+      "provider": "searxng",
+      "snippet": "This article provides an overview of different types of solar panels, explores the factors that affect efficiency, such as installation location and environmental conditions, and offers tips for installing solar panels to achieve maximum efficiency in limited space.",
+      "text_chars": 27482
+    },
+    {
+      "id": "S3",
+      "title": "Solar Panel Cost In 2026: It May Be Lower Than You Think",
+      "url": "https://www.energysage.com/local-data/solar-panel-cost/",
+      "provider": "searxng",
+      "snippet": "It costs about $30500 to install solar panels. That's a big number, but it can save you $37000 to $154000 over 25 years.",
+      "text_chars": 16091
+    },
+    {
+      "id": "S4",
+      "title": "Solar Panel Costs Hit Record Lows in 2024 | EnergySage",
+      "url": "https://www.energysage.com/news/solar-prices-hit-all-time-lows-in-2024/",
+      "provider": "searxng",
+      "snippet": "Solar prices hit all-time lows in 2024—is that about to change? Tariffs could increase panel prices, but a lot is still unknown. Share to LinkedIn ...",
+      "text_chars": 7831
+    },
+    {
+      "id": "S5",
+      "title": "​​A Solar Powered Future: Residential Adoption on a Global Scale",
+      "url": "https://www.tigoenergy.com/post/a-solar-powered-future-residential-adoption-on-a-global-scale",
+      "provider": "searxng",
+      "snippet": "Many countries have continued investing in solar energy infrastructure and implementing renewable energy targets to further accelerate the adoption of solar power. This paper will analyze the residential solar adoption rates by countries and states and explore the factors that contribute to them.",
+      "text_chars": 2395
+    },
+    {
+      "id": "S6",
+      "title": "Um futuro movido a energia solar: Adoção residencial em escala global",
+      "url": "https://br.tigoenergy.com/post/a-solar-powered-future-residential-adoption-on-a-global-scale",
+      "provider": "searxng",
+      "snippet": "Para calcular as taxas de adoção de energia solar residencial, os dados sobre o número de instalações solares residenciais em uma jurisdição são divididos pelo número de residências isoladas.",
+      "text_chars": 2951
+    },
+    {
+      "id": "S7",
+      "title": "Rooftop solar panel installation: step-by-step guide",
+      "url": "https://energysavingtrust.org.uk/solar-panel-installation/",
+      "provider": "searxng",
+      "snippet": "1 de out. de 2026 ... For example, a south-facing roof that's shaded during the day may ... It takes one to two days to install a typical solar panel system.",
+      "text_chars": 157
+    },
+    {
+      "id": "S8",
+      "title": "How Are Solar Panels Installed? A Step-by-Step Guide",
+      "url": "https://switchtogether.co.uk/resource-hub/blog/how-are-solar-panels-installed",
+      "provider": "searxng",
+      "snippet": "26 de jan. de 2026 ... In most cases, no. Solar panels are ... How long does solar panel installation take? The typical timeframe for a solar panel installation ...",
+      "text_chars": 10099
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "Um painel de 21% de eficiência converte 21% da luz solar em eletricidade.",
+      "kind": "exemplo",
+      "quote": "A 21% efficient panel converts 21% of available sunlight into power — the remaining energy is lost as heat and reflection.",
+      "source_id": "S1",
+      "url": "https://solarsunlabs.com/solar-panel-efficiency-residential/",
+      "source_title": "Understanding Residential Solar Panel Efficiency",
+      "value": "21%",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F2",
+      "claim": "Painéis residenciais padrão hoje têm eficiência entre 18% e 22%.",
+      "kind": "numero",
+      "quote": "Standard residential panels today typically range from 18-22% efficiency",
+      "source_id": "S1",
+      "url": "https://solarsunlabs.com/solar-panel-efficiency-residential/",
+      "source_title": "Understanding Residential Solar Panel Efficiency",
+      "value": "18-22%",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F3",
+      "claim": "Panéis finos têm eficiência entre 15% e 22%.",
+      "kind": "definicao",
+      "quote": "Thin-film solar panels are the least efficient type of solar panel, with an efficiency rate ranging from 15-22%.",
+      "source_id": "S2",
+      "url": "https://renewgenius.com/efficiency/efficiency-of-residential-solar-systems/",
+      "source_title": "What is the Efficiency Of Residential Solar Systems?",
+      "value": "15-22%",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F4",
+      "claim": "Panéis policristalinos são menos eficientes que os monocristalinos.",
+      "kind": "comparacao",
+      "quote": "Polycrystalline solar panels, on the other hand, are less expensive but less efficient than monocrystalline panels.",
+      "source_id": "S2",
+      "url": "https://renewgenius.com/efficiency/efficiency-of-residential-solar-systems/",
+      "source_title": "What is the Efficiency Of Residential Solar Systems?",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F5",
+      "claim": "O custo de instalação de painéis solares em casa era de $3.16/W há dez anos.",
+      "kind": "definicao",
+      "quote": "Ten years ago, a home solar installation cost $3.16/W according to the National Laboratory of the Rockies (formerly National Renewable Energy Laboratory).",
+      "source_id": "S3",
+      "url": "https://www.energysage.com/local-data/solar-panel-cost/",
+      "source_title": "Solar Panel Cost In 2026: It May Be Lower Than You Think",
+      "value": "3.16",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F6",
+      "claim": "O custo atual de painéis solares é 22% menor que o de há dez anos.",
+      "kind": "definicao",
+      "quote": "That's 22% more than what we see on EnergySage right now.",
+      "source_id": "S3",
+      "url": "https://www.energysage.com/local-data/solar-panel-cost/",
+      "source_title": "Solar Panel Cost In 2026: It May Be Lower Than You Think",
+      "value": "22%",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F7",
+      "claim": "O custo dos painéis solares está em níveis históricos baixos em 2026.",
+      "kind": "definicao",
+      "quote": "as of 2026, solar prices are about the lowest they've been",
+      "source_id": "S3",
+      "url": "https://www.energysage.com/local-data/solar-panel-cost/",
+      "source_title": "Solar Panel Cost In 2026: It May Be Lower Than You Think",
+      "value": "2026",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F8",
+      "claim": "A produção doméstica de painéis solares aumentou em quase 400% entre 2022 e 2024.",
+      "kind": "numero",
+      "quote": "Domestic production of solar panels increased by nearly 400% between 2022 and 2024",
+      "source_id": "S4",
+      "url": "https://www.energysage.com/news/solar-prices-hit-all-time-lows-in-2024/",
+      "source_title": "Solar Panel Costs Hit Record Lows in 2024 | EnergySage",
+      "value": "400%",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F9",
+      "claim": "O crédito fiscal residencial para energia solar está em risco de ser reduzido no final de 2025.",
+      "kind": "definicao",
+      "quote": "the 30% residential solar tax credit is at risk of being cut at the end of 2",
+      "source_id": "S4",
+      "url": "https://www.energysage.com/news/solar-prices-hit-all-time-lows-in-2024/",
+      "source_title": "Solar Panel Costs Hit Record Lows in 2024 | EnergySage",
+      "value": "30%",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F10",
+      "claim": "Tigo foi fundado em Silicon Valley em 2007 para acelerar a adoção de energia solar.",
+      "kind": "definicao",
+      "quote": "Tigo was founded in Silicon Valley in 2007 to accelerate the adoption of solar energy",
+      "source_id": "S5",
+      "url": "https://www.tigoenergy.com/post/a-solar-powered-future-residential-adoption-on-a-global-scale",
+      "source_title": "​​A Solar Powered Future: Residential Adoption on a Global Scale",
+      "value": "2007",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F11",
+      "claim": "A equipe global de Tigo apoia clientes cujos sistemas produzem gigawatt hours de energia solar segura em sete continentes.",
+      "kind": "definicao",
+      "quote": "its global team supports customers whose systems reliably produce gigawatt hours of safe solar energy on seven continents",
+      "source_id": "S5",
+      "url": "https://www.tigoenergy.com/post/a-solar-powered-future-residential-adoption-on-a-global-scale",
+      "source_title": "​​A Solar Powered Future: Residential Adoption on a Global Scale",
+      "value": "seven continents",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F12",
+      "claim": "A instalação de painéis solares no Reino Unido leva de 4 a 8 semanas.",
+      "kind": "definicao",
+      "quote": "The typical timeframe for a solar panel installation in the UK—from initial enquiry to a fully operational system—is 4 to 8 weeks.",
+      "source_id": "S8",
+      "url": "https://switchtogether.co.uk/resource-hub/blog/how-are-solar-panels-installed",
+      "source_title": "How Are Solar Panels Installed? A Step-by-Step Guide",
+      "value": "4 to 8 weeks",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F13",
+      "claim": "A tecnologia TOPCon e HJT é a mais eficiente disponível para residências, com eficiência em torno de 21-23%.",
+      "kind": "definicao",
+      "quote": "Premium TOPCon and HJT cell technology currently leads residential efficiency, around 21-23%.",
+      "source_id": "S1",
+      "url": "https://solarsunlabs.com/solar-panel-efficiency-residential/",
+      "source_title": "Understanding Residential Solar Panel Efficiency",
+      "value": "21-23%",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F14",
+      "claim": "Panéis de filme fino têm eficiência entre 15% e 22%.",
+      "kind": "definicao",
+      "quote": "Thin-film solar panels are lightweight and easy to move but are the least efficient type of solar panel, with an efficiency rate also ranging between 15-22%.",
+      "source_id": "S2",
+      "url": "https://renewgenius.com/efficiency/efficiency-of-residential-solar-systems/",
+      "source_title": "What is the Efficiency Of Residential Solar Systems?",
+      "value": "15-22%",
+      "author": "",
+      "relevance": "alta"
+    }
+  ],
+  "rejected": [
+    {
+      "afirmacao": "A eficiência de painéis solares residenciais determina quantos watts são gerados por pé quadrado de telhado.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Residential solar panel efficiency determines how much power you generate per square foot of roof — a key factor when roof space, not budget, is the limiting constraint.",
+      "valor": "1",
+      "source_id": "S1",
+      "reason": "valor não aparece no trecho citado"
+    },
+    {
+      "afirmacao": "A eficiência de um painel é a porcentagem de luz solar que é convertida em eletricidade útil.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Panel efficiency is the percentage of sunlight hitting the panel that gets converted into usable electricity.",
+      "valor": "100%",
+      "source_id": "S1",
+      "reason": "valor não aparece no trecho citado"
+    },
+    {
+      "afirmacao": "Panéis monocristalinos têm eficiência entre 22% e 27%.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "monocrystalline solar panels are the most efficient type of solar panel available on the market today. They are often installed in larger energy systems with an efficiency rate ranging from 6-27%.",
+      "valor": "22-27%",
+      "source_id": "S2",
+      "reason": "valor não aparece no trecho citado"
+    },
+    {
+      "afirmacao": "Panéis finos são leves, flexíveis e fáceis de mover.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "However, they are lightweight, flexible, and easy to move.",
+      "valor": "",
+      "source_id": "S2",
+      "reason": "fora do assunto central (não menciona energia solar, residencial, solar)"
+    },
+    {
+      "afirmacao": "O aumento de preços nos últimos três anos foi devido a falta de equipamentos por pandemia.",
+      "autor": "",
+      "relevancia": "baixa",
+      "tipo": "definicao",
+      "trecho": "Solar prices did increase slightly in the last three years, primarily due to the pandemic-related equipment shortages felt in many industries.",
+      "valor": "",
+      "source_id": "S3",
+      "reason": "pouco relevante para o assunto central"
+    },
+    {
+      "afirmacao": "O projeto 'Big, Beautiful Bill' foi aprovado pelo Senado.",
+      "autor": "",
+      "relevancia": "baixa",
+      "tipo": "definicao",
+      "trecho": "The bill has passed the House, but could still be changed by the Senate",
+      "valor": "",
+      "source_id": "S4",
+      "reason": "pouco relevante para o assunto central"
+    },
+    {
+      "afirmacao": "Um telhado orientado para o sul pode estar sombreado durante o dia.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "For example, a south-facing roof that's shaded during the day may ...",
+      "valor": "",
+      "source_id": "S7",
+      "reason": "trecho incompleto ou com caracteres inválidos"
+    },
+    {
+      "afirmacao": "A instalação de um sistema típico de painéis solares leva de um a dois dias.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "It takes one to two days to install a typical solar panel system.",
+      "valor": "1 a 2",
+      "source_id": "S7",
+      "reason": "valor não aparece no trecho citado"
+    },
+    {
+      "afirmacao": "O tempo pode variar devido à disponibilidade do instalador, aos levantamentos de site, ao projeto do sistema e às aprovações do DNO.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "This duration can vary based on factors such as installer availability, site surveys, system design, and necessary approvals, particularly from your Distribution Network Operator (DNO).",
+      "valor": "",
+      "source_id": "S8",
+      "reason": "fora do assunto central (não menciona energia solar, residencial, solar)"
+    },
+    {
+      "afirmacao": "Eficiência e taxa de degradação são especificações separadas, ambas devem ser verificadas independentemente.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "efficiency and degradation rate are separate specs, both worth checking independently.",
+      "valor": "",
+      "source_id": "S1",
+      "reason": "fora do assunto central (não menciona energia solar, residencial, solar)"
+    },
+    {
+      "afirmacao": "Se o espaço do telhado for amplo, priorizar custo por watt; se for limitado, priorizar eficiência.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "Should I prioritize efficiency or cost per watt? Depends on your roof space — ample space favors cost-per-watt, limited space favors efficiency.",
+      "valor": "",
+      "source_id": "S1",
+      "reason": "trecho não encontrado literalmente no texto"
+    },
+    {
+      "afirmacao": "Panéis monocrystallinos têm eficiência entre 22% e 27%.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Monocrystalline panels are the most efficient and have an efficiency rate ranging from 22-27%.",
+      "valor": "22-27%",
+      "source_id": "S2",
+      "reason": "fora do assunto central (não menciona energia solar, residencial, solar)"
+    },
+    {
+      "afirmacao": "Panéis polycrystallinos têm eficiência entre 15% e 22%.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Polycrystinile panels are less expensive but slightly less efficient than monocrystalline panels, with an efficiency rate ranging from 15-22%.",
+      "valor": "15-22%",
+      "source_id": "S2",
+      "reason": "fora do assunto central (não menciona energia solar, residencial, solar)"
+    },
+    {
+      "afirmacao": "O eficiência do inversor afeta a quantidade de energia convertida para uso doméstico.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "The higher the inverter’s efficiency level, the more energy it can convert for use in your home.",
+      "valor": "",
+      "source_id": "S2",
+      "reason": "fora do assunto central (não menciona energia solar, residencial, solar)"
+    }
+  ],
+  "log": [
+    {
+      "query": "solar residential efficiency",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "home solar panel cost 2024",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "solar energy adoption rate",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "typical solar installation examples",
+      "provider": "searxng",
+      "results": 2
+    }
+  ],
+  "central_terms": [
+    "energia solar",
+    "residencial",
+    "solar"
+  ],
+  "created_at": "2026-11-23T04:24:05+00:00"
+}

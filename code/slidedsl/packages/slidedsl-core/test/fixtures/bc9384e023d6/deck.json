@@ -1,0 +1,180 @@
+{
+  "title": "Reciclagem no dia a dia para alunos do ensino médio",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Separar lixo vira hábito útil",
+      "subtitle": "A apresentação mostra por que separar lixo ajuda em casa e na escola, com passos simples para começar hoje.",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": "assets/media/82d9836a576b73fb34a6a293730e2fa28b3956356be3454cde0fc83cbef9d48b.png",
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Abra com a ideia de utilidade prática, não com teoria ambiental. Mostre que o hábito vale tanto no lixo doméstico quanto na coleta seletiva escolar. Evite prometer solução total; o foco é começar com organização simples.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Separar lixo evita contaminação",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Resíduos orgânicos",
+          "detail": "Restos de comida sujam papel e plástico quando ficam misturados na mesma sacola."
+        },
+        {
+          "label": "Materiais recicláveis",
+          "detail": "Papel, metal e plástico chegam mais limpos quando vão separados desde a origem."
+        },
+        {
+          "label": "Coleta mais segura",
+          "detail": "A separação reduz contato com líquidos e odores antes da retirada do lixo."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Explique que a separação importa antes da coleta, porque a mistura contamina o que poderia ser reciclado. Use exemplos concretos de resíduos comuns do dia a dia. Não transforme isso em regra universal de reciclagem; o ponto é a qualidade do material separado.",
+      "line": 9,
+      "column": 3
+    },
+    {
+      "kind": "imagem",
+      "title": "Em casa, a separação começa",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": "Uma rotina doméstica simples começa onde o lixo aparece primeiro.",
+      "unit": null,
+      "image_file": "assets/media/d81090540378163e0783ed508694c690c8dd8e997451809498b7066f32817c92.png",
+      "image_query": null,
+      "items": [
+        {
+          "label": "Lixeira na cozinha",
+          "detail": "A família separa os resíduos logo após o preparo das refeições."
+        },
+        {
+          "label": "Sacolas identificadas",
+          "detail": "Cada saco recebe um destino claro para evitar mistura na saída de casa."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A cozinha é o melhor ponto de partida porque concentra embalagens, restos de comida e descartes rápidos. Mostre uma rotina curta, sem exigir reforma da casa. A imagem deve sugerir uso real, com recipientes visíveis e contexto doméstico.",
+      "line": 16,
+      "column": 3
+    },
+    {
+      "kind": "secao",
+      "title": "Na escola, o sinal precisa ficar claro",
+      "subtitle": "A turma separa melhor quando encontra orientação visível no ponto de descarte.",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A mudança principal é reduzir dúvida no momento do descarte. Pense em sinalização simples, linguagem direta e localização fácil. O objetivo é fazer a escolha certa sem depender da memória de cada aluno.",
+      "line": 24,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "O ponto de descarte guia a turma",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Placas por tipo",
+          "detail": "A escola indica o destino de cada resíduo com nomes curtos e visíveis."
+        },
+        {
+          "label": "Lixeiras lado a lado",
+          "detail": "A turma compara as opções no mesmo lugar e erra menos na hora de jogar fora."
+        },
+        {
+          "label": "Rotina do corredor",
+          "detail": "Os alunos usam o mesmo ponto de descarte depois do recreio e da aula."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Mostre que a organização do espaço vale mais do que apelos genéricos. Quando as lixeiras ficam juntas e identificadas, a decisão acontece no ato do descarte. Evite falar em disciplina abstrata; foque em fluxo e visibilidade.",
+      "line": 29,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Separar lixo funciona quando fica simples",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Comece pela cozinha",
+          "detail": "Em casa, a separação fica mais fácil quando começa onde o lixo nasce."
+        },
+        {
+          "label": "Use sinais visíveis",
+          "detail": "Na escola, placas curtas ajudam a turma a escolher sem hesitar."
+        },
+        {
+          "label": "Repita o mesmo ponto",
+          "detail": "A rotina se mantém quando o descarte acontece sempre no mesmo lugar."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Feche com decisões práticas que o aluno pode adotar imediatamente. A mensagem é consistência: menos dúvida, mais repetição, menos mistura. Não retome os exemplos anteriores em detalhe; sintetize a ação que sustenta o hábito.",
+      "line": 36,
+      "column": 3
+    }
+  ]
+}

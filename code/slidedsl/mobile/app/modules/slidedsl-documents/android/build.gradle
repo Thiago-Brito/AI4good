@@ -1,0 +1,17 @@
+plugins {
+  id 'com.android.library'
+  id 'expo-module-gradle-plugin'
+}
+group = 'br.slidedsl.documents'
+version = '0.3.0'
+android {
+  namespace 'br.slidedsl.documents'
+  defaultConfig {
+    versionCode 1
+    versionName '0.3.0'
+    consumerProguardFiles 'consumer-rules.pro'
+  }
+}
+dependencies {
+  implementation 'com.tom-roush:pdfbox-android:2.0.27.0'
+}

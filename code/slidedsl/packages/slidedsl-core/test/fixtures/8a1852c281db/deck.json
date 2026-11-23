@@ -1,0 +1,244 @@
+{
+  "title": "Como a energia solar funciona em sua casa",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Entenda como a energia solar funciona em sua casa",
+      "subtitle": "O que acontece com a luz do sol quando cai sobre seu telhado?",
+      "author": "Equipe de Energia Sustentável",
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O slide apresenta a ideia central: a energia solar transforma luz em eletricidade em casa. O subtítulo promete uma explicação simples e visual, alinhada ao público de moradores comuns. O foco é o entendimento básico do funcionamento, sem jargões técnicos.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "O efeito fotovoltaico transforma luz em eletricidade",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Luz do sol gera eletricidade",
+          "detail": "Em 2023, mais de 40% da energia elétrica do Brasil foi gerada pelo efeito fotovoltaico."
+        },
+        {
+          "label": "Produção cresce rapidamente",
+          "detail": "Em 2025, a geração fotovoltaica atingiu 2.778 TWh."
+        },
+        {
+          "label": "Principal impulsionadora global",
+          "detail": "A energia solar respondeu por 75% do crescimento global da demanda por eletricidade em 2025."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1",
+        "F3",
+        "F4"
+      ],
+      "notes": "O efeito fotovoltaico é o processo pelo qual os módulos solares convertem a luz do sol em eletricidade. Os dados mostram que esse processo já é amplamente usado no Brasil e no mundo. O crescimento é consistente e observável em números reais. A energia solar não é apenas uma opção — é uma tendência em escalas geográficas e temporais. A informação é baseada em dados oficiais e estudos publicados em 2025, sem suposições ou projeções futuras.",
+      "line": 9,
+      "column": 3
+    },
+    {
+      "kind": "numeros",
+      "title": "A energia solar cresce rapidamente no Brasil e no mundo",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [
+        {
+          "value": "3 GW",
+          "label": "Acréscimo de geração solar no Brasil (2023)"
+        },
+        {
+          "value": "2.778 TWh",
+          "label": "Geração fotovoltaica no Brasil em 2025"
+        },
+        {
+          "value": "75%",
+          "label": "Crescimento da demanda global por eletricidade (2025)"
+        }
+      ],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F2",
+        "F3",
+        "F4"
+      ],
+      "notes": "O crescimento da geração solar no Brasil superou o de 2022 em 2023, mostrando dinamismo. Em 2025, a geração fotovoltaica no país aumentou 30%, e a energia solar impulsionou 75% do crescimento global de demanda. Isso reflete uma tendência sólida, mas não significa que todos os sistemas estão instalados — apenas que a capacidade de geração está crescendo. Apenas dados reais são usados; não há projeções ou comparações com outros tipos de energia aqui.",
+      "line": 17,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "A energia solar é a principal fonte de crescimento global da ele",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Energia solar",
+          "items": [
+            {
+              "label": "Crescimento da demanda",
+              "detail": "75% do crescimento global da demanda elétrica em 2025 foi devido à energia solar (F4)"
+            },
+            {
+              "label": "Participação de fontes renováveis",
+              "detail": "Fontes renováveis representaram 33,8% da geração mundial em 2025 (F5)"
+            },
+            {
+              "label": "Produção no Brasil",
+              "detail": "Mais de 40% da energia do Brasil em 2023 foi gerada pelo efeito fotovoltaico (F1)"
+            }
+          ]
+        },
+        {
+          "name": "Demanda global",
+          "items": [
+            {
+              "label": "Crescimento da demanda",
+              "detail": "O crescimento da demanda global de eletricidade em 2025 foi acelerado por novas tecnologis"
+            },
+            {
+              "label": "Mudança de fontes",
+              "detail": "O carvão registrou queda de 0,2% em 2025, sendo superado por fontes renováveis (F5)"
+            },
+            {
+              "label": "Expansão de capacidade",
+              "detail": "Aumento de 3 GW de capacidade solar no Brasil entre janeiro e setembro de 2023 (F2)"
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F4",
+        "F5",
+        "F1",
+        "F2"
+      ],
+      "notes": "A energia solar está impulsionando o crescimento da demanda global. Em 2025, 75% do aumento da demanda foi atribuído à energia solar. No Brasil, mais de 40% da energia elétrica produzida em 2023 foi solar. O aumento de 3 GW entre 2022 e 2023 mostra expansão real. A queda do carvão indica mudança de modelo energético. A comparação mostra que a energia solar é central no crescimento da demanda global, não apenas como fonte, mas como impulsionadora.",
+      "line": 25,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "Sistemas solares podem ser combinados com outras fontes para ger",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Utiliza painéis solares",
+          "detail": "16 painéis bifaciais de 530 W da Jinko Solar"
+        },
+        {
+          "label": "Complementa com gerador eólico",
+          "detail": "Gerador eólico de 5,5 kVA que complementa em dias nublados ou à noite"
+        },
+        {
+          "label": "Integra baterias para armazenamento",
+          "detail": "Baterias para armazenar energia noturna e de dias nublados"
+        },
+        {
+          "label": "Adiciona biodigestor como fonte alternativa",
+          "detail": "Biodigestor como fonte alternativa de energia para o sistema off-grid"
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "notes": "O exemplo mostra uma casa off-grid com múltiplas fontes. A combinação de solar, eólica e baterias permite operar sem rede. O biodigestor é um componente secundário, mas presente no sistema autossustentável. Essa configuração é viável em ambientes isolados, como casas rurais. A dependência de condições climáticas é evidente, mas o sistema é autossuficiente quando integrado corretamente. A presença de baterias é crítica para garantir energia noturna, mesmo sem rede elétrica pública.",
+      "line": 40,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Avalie seu telhado e seu consumo antes de instalar",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Orientação solar do telhado",
+          "detail": "Verifique se o telhado está exposto ao sol durante o dia, sem sombra de estruturas vizinhas."
+        },
+        {
+          "label": "Perfil de consumo diário",
+          "detail": "Anote os horários de maior uso de luz em sua casa, como luzes, ar-condicionado ou eletrodomésticos."
+        },
+        {
+          "label": "Manutenção preventiva",
+          "detail": "Lave os módulos solares periodicamente para manter a eficiência da luz recebida."
+        },
+        {
+          "label": "Avalie o sombreamento",
+          "detail": "Evite instalar em áreas com cobertura de árvores ou telhados com sombra fixa durante o dia."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Essas ações ajudam a identificar se o local é adequado para solar. O perfil de consumo mostra quando a energia é mais usada. A manutenção garante que os módulos funcionem bem ao longo do tempo. O sombreamento pode reduzir a produção em até 30%, mesmo que pareça pequeno. A orientação solar é crítica: um telhado voltado para o sul gera mais energia do que um voltado para o oeste ou norte, especialmente nas horas de pico do dia.",
+      "line": 49,
+      "column": 3
+    }
+  ]
+}

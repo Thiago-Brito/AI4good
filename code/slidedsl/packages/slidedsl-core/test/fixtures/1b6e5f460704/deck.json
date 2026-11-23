@@ -1,0 +1,193 @@
+{
+  "title": "Cuidados básicos com hortas caseiras em apartamento",
+  "theme": "natural",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Horta em apartamento dá certo",
+      "subtitle": "Cuidados básicos para manter uma horta saudável em espaços pequenos",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": "assets/media/eea0d20abe68e478f21489f8786a2dc37fed0344199a5e3246326ee4dcf4f1d6.png",
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A capa deve prometer um guia prático e acessível para quem mora em apartamento. Como não há fatos numéricos, o texto fica qualitativo e direto, sem citar espécies, medidas ou técnicas específicas. O foco é preparar o público para decisões simples de luz, água e recipiente nos próximos slides.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Luz, água e vaso mandam",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Luz direta por horas",
+          "detail": "A maioria das hortaliças cresce melhor quando recebe sol direto perto da janela por boa parte do dia."
+        },
+        {
+          "label": "Rega sem encharcar",
+          "detail": "A planta sofre quando o substrato fica sempre molhado, então a rega deve esperar a superfície secar."
+        },
+        {
+          "label": "Vaso com drenagem",
+          "detail": "O recipiente precisa ter furos no fundo para a água sair e evitar apodrecimento das raízes."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O slide resume os três fatores que mais pesam no cultivo em apartamento: luz, água e recipiente. A ideia é orientar a escolha inicial antes de falar de espécies ou adubação. Como não há fatos numéricos fornecidos, os exemplos ficam qualitativos e práticos.",
+      "line": 9,
+      "column": 3
+    },
+    {
+      "kind": "imagem",
+      "title": "Escolha o lugar mais claro",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": "A luz define o ponto mais prático para a horta.",
+      "unit": null,
+      "image_file": "assets/media/480fa08cf504ee4cc9d4fdcfbf3ca7ec6aefbab1a8d4cfd03d22f77393e756d8.png",
+      "image_query": null,
+      "items": [
+        {
+          "label": "Janela com sol",
+          "detail": "A planta cresce melhor perto da janela que recebe sol direto por boa parte do dia."
+        },
+        {
+          "label": "Rodízio de vasos",
+          "detail": "Quando a luz é desigual, girar os vasos ajuda a planta a crescer mais uniforme."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Priorize o ponto mais claro da casa antes de pensar em decoração ou proximidade da cozinha. Se a janela recebe sol forte, vale testar espécies que toleram mais luz; se a luz é indireta, escolha ervas mais resistentes. O rodízio dos vasos compensa a diferença de iluminação entre lados da planta.",
+      "line": 16,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Substrato leve evita problemas",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Vaso com furos",
+          "detail": "O vaso precisa ter furos no fundo para a água sair e proteger as raízes."
+        },
+        {
+          "label": "Camada de drenagem",
+          "detail": "A camada de drenagem ajuda a água a escorrer mais rápido após a rega."
+        },
+        {
+          "label": "Terra solta e leve",
+          "detail": "A terra solta permite que a raiz respire melhor e reduz o risco de encharcamento."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O foco aqui é evitar excesso de água, que costuma ser o principal problema em apartamento. Vale combinar vaso com furos, drenagem e um substrato mais leve para não compactar demais. Se a planta ainda assim ficar úmida por muito tempo, o ajuste deve começar pela rega e pelo recipiente.",
+      "line": 24,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "Rotina simples mantém a horta",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Observar as folhas",
+          "detail": "Acompanhe a cor e a firmeza das folhas para notar sede, excesso de água ou pragas cedo."
+        },
+        {
+          "label": "Regar com critério",
+          "detail": "Molhe apenas quando a superfície do substrato secar, para evitar encharcamento e fungos."
+        },
+        {
+          "label": "Retirar partes secas",
+          "detail": "Corte folhas amareladas ou secas para concentrar energia nos brotos novos."
+        },
+        {
+          "label": "Revisar o vaso",
+          "detail": "Verifique se a água escoa bem após a rega e troque o recipiente se houver acúmulo."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A rotina funciona melhor quando vira um hábito curto, feito no mesmo dia da semana. O foco é observar sinais simples da planta e agir antes que o problema avance. Se a horta estiver em crescimento rápido, a frequência de rega e revisão pode mudar conforme o ambiente.",
+      "line": 31,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Comece pequeno e observe",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Escolha duas espécies",
+          "detail": "Comece com duas plantas de uso frequente, porque isso simplifica a rotina e reduz perdas no início."
+        },
+        {
+          "label": "Ajuste um cuidado",
+          "detail": "Mude apenas a rega ou a posição da planta por vez, para identificar o efeito de cada ajuste."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A conclusão precisa transformar o cuidado básico em uma decisão prática de início. O foco é reduzir a complexidade para que a pessoa consiga aprender com a própria horta. A ressalva é não mudar tudo ao mesmo tempo, porque isso dificulta entender o que funcionou.",
+      "line": 39,
+      "column": 3
+    }
+  ]
+}

@@ -1,0 +1,694 @@
+<title>Por dentro do SlideDSL</title>
+<meta charset="utf-8">
+<style>
+/* Layout: uma linha de montagem vertical. Cada etapa e uma estacao numerada,
+   marcada por quem trabalha nela (IA ou codigo). Moldura 16:9 como motivo. */
+:root {
+  --ink: #14233d;          /* a cor de texto dos proprios exemplos .sld */
+  --paper: #f5f7fa;
+  --surface: #ffffff;
+  --line: #d6dce6;
+  --muted: #56627a;
+  --ai: #b8660b;           /* tudo o que a IA (SLM) faz */
+  --ai-soft: #fbefe0;
+  --code: #2456c7;         /* tudo o que o codigo faz */
+  --code-soft: #e5edfc;
+  --ok: #1d7a4c;
+  --bad: #b3261e;
+  --code-bg: #0f1a2e;
+  --code-ink: #dbe4f3;
+  /* So fontes do sistema: nenhum pedido externo que possa travar o carregamento */
+  --font-display: "Segoe UI Variable Display", "Segoe UI", -apple-system, system-ui, sans-serif;
+  --font-body: "Segoe UI Variable Text", "Segoe UI", -apple-system, system-ui, sans-serif;
+  --font-mono: "Cascadia Mono", Consolas, ui-monospace, "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ink: #e7ecf5; --paper: #0e1524; --surface: #161f33; --line: #2a3650; --muted: #9aa7bf;
+    --ai: #f0a14a; --ai-soft: #2e2214; --code: #7fa6ff; --code-soft: #18254a;
+    --ok: #5cc98f; --bad: #ff8a80; --code-bg: #0a101c; --code-ink: #dbe4f3;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #e7ecf5; --paper: #0e1524; --surface: #161f33; --line: #2a3650; --muted: #9aa7bf;
+  --ai: #f0a14a; --ai-soft: #2e2214; --code: #7fa6ff; --code-soft: #18254a;
+  --ok: #5cc98f; --bad: #ff8a80; --code-bg: #0a101c; --code-ink: #dbe4f3;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--paper); color: var(--ink);
+  font-family: var(--font-body); font-size: 1.0625rem; line-height: 1.6;
+  padding-inline: 20px;
+}
+.wrap { max-width: 960px; margin: 0 auto; padding-block: 48px 80px; display: grid; gap: 72px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; line-height: 1.12; margin: 0; }
+h1 { font-size: clamp(2.3rem, 6vw, 3.6rem); font-weight: 800; letter-spacing: -0.02em; }
+h2 { font-size: clamp(1.6rem, 3.6vw, 2.1rem); font-weight: 700; letter-spacing: -0.01em; }
+h3 { font-size: 1.25rem; font-weight: 700; }
+p { margin: 0; max-width: 65ch; }
+.eyebrow { font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.lead { font-size: 1.2rem; color: var(--muted); }
+section { display: grid; gap: 20px; }
+code, .mono { font-family: var(--font-mono); font-size: 0.9em; }
+a { color: var(--code); }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--code); outline-offset: 2px; }
+
+/* Etiquetas de quem faz */
+.who { display: inline-flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 0.74rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; white-space: nowrap; }
+.who::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.who.ai { color: var(--ai); background: var(--ai-soft); }
+.who.code { color: var(--code); background: var(--code-soft); }
+.who.you { color: var(--ink); background: var(--line); }
+
+/* Hero */
+.hero { display: grid; gap: 28px; }
+.hero-flow { display: grid; grid-template-columns: 1fr auto 1.25fr; gap: 20px; align-items: center; }
+.prompt-box { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 18px 20px; display: grid; gap: 8px; }
+.prompt-box .typed { font-size: 1.1rem; }
+.prompt-box .who { justify-self: start; }
+.arrow { font-family: var(--font-mono); color: var(--muted); font-size: 1.6rem; text-align: center; }
+
+/* Slide 16:9 de exemplo */
+.slide { aspect-ratio: 16 / 9; max-width: 100%; background: #ffffff; color: #14233d; border-radius: 6px; box-shadow: 0 1px 0 rgba(20,35,61,.08), 0 12px 32px -12px rgba(20,35,61,.35); padding: 5.5% 6%; display: grid; grid-template-rows: auto 1fr auto; border: 1px solid #d6dce6; }
+.slide-frame { container-type: inline-size; min-width: 0; }
+.slide .s-title { font-family: var(--font-display); font-weight: 700; font-size: 5.2cqi; line-height: 1.1; }
+.slide .s-big { font-family: var(--font-display); font-weight: 800; font-size: 19cqi; line-height: 1; color: #2456c7; align-self: center; }
+.slide .s-cap { font-size: 3.1cqi; color: #56627a; display: flex; justify-content: space-between; gap: 12px; }
+.slide .s-src { font-family: var(--font-mono); font-size: 2.4cqi; }
+
+/* Ideia central */
+.split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 22px; display: grid; gap: 12px; align-content: start; }
+.panel ul { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; }
+.panel.ai { border-top: 4px solid var(--ai); }
+.panel.code { border-top: 4px solid var(--code); }
+
+/* Linha de montagem */
+.line { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; counter-reset: st; }
+.station { display: grid; grid-template-columns: 64px 1fr; gap: 20px; position: relative; padding-bottom: 36px; }
+.station:last-child { padding-bottom: 0; }
+.station::after { content: ""; position: absolute; left: 31px; top: 56px; bottom: 4px; width: 2px; background: var(--line); }
+.station:last-child::after { display: none; }
+.num { width: 64px; height: 56px; border-radius: 8px; display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; font-size: 1.6rem; background: var(--surface); border: 2px solid var(--line); font-variant-numeric: tabular-nums; }
+.station[data-who="ai"] .num { border-color: var(--ai); color: var(--ai); }
+.station[data-who="code"] .num { border-color: var(--code); color: var(--code); }
+.station[data-who="both"] .num { border-color: var(--code); color: var(--ai); border-style: dashed; }
+.st-body { display: grid; gap: 10px; padding-top: 6px; min-width: 0; }
+.st-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.example { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; font-size: 0.95rem; display: grid; gap: 6px; }
+.example .label { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.checks li { display: grid; grid-template-columns: 22px 1fr; }
+.checks .y { color: var(--ok); font-weight: 700; }
+.checks .n { color: var(--bad); font-weight: 700; }
+.fact { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; align-items: baseline; }
+.fact .id { font-family: var(--font-mono); font-weight: 600; color: var(--code); }
+.struck { text-decoration: line-through; color: var(--muted); }
+
+/* Etapa 4 detalhada */
+h4 { font-family: var(--font-display); font-size: 1.05rem; font-weight: 700; margin: 0; }
+.sub { display: grid; gap: 22px; border-left: 2px dashed var(--line); padding-left: 18px; }
+.sub-step { display: grid; gap: 8px; min-width: 0; }
+.sub-step ul { margin: 0; padding-left: 1.1em; display: grid; gap: 4px; }
+.sub-tag { justify-self: start; font-family: var(--font-mono); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--code); }
+.sub-tag.ai { color: var(--ai); }
+.ficha { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; font-size: 0.93rem; }
+.ficha > div { display: grid; grid-template-columns: 110px 1fr; gap: 12px; padding: 8px 14px; border-bottom: 1px solid var(--line); }
+.ficha > div:last-child { border-bottom: 0; }
+.ficha > div > span:first-child { font-family: var(--font-mono); font-size: 0.78rem; color: var(--ai); padding-top: 2px; }
+.ficha small, .v small { color: var(--muted); }
+.gate { margin: 0; padding: 0; list-style: none; counter-reset: g; display: grid; gap: 10px; }
+.gate li { counter-increment: g; display: grid; grid-template-columns: 30px 1fr; gap: 2px 10px; }
+.gate li::before { content: counter(g); grid-row: span 2; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-family: var(--font-mono); font-size: 0.8rem; font-weight: 600; color: var(--code); background: var(--code-soft); }
+.gate b { font-weight: 700; }
+.gate span { color: var(--muted); font-size: 0.95rem; }
+.passage { font-style: italic; border-left: 3px solid var(--line); padding-left: 12px; }
+.verdicts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.v { display: grid; gap: 6px; align-content: start; padding: 10px 12px; border-radius: 6px; border: 1px solid var(--line); background: var(--paper); font-size: 0.92rem; }
+.v-head { font-weight: 700; font-size: 0.85rem; }
+.v.ok .v-head { color: var(--ok); }
+.v.no .v-head { color: var(--bad); }
+.note { background: var(--code-soft); border-radius: 8px; padding: 12px 14px; font-size: 0.95rem; max-width: none; }
+
+.hint { color: var(--muted); font-size: 0.88rem; }
+.verdicts.two { grid-template-columns: 1fr 1fr; }
+td.q { font-family: var(--font-mono); font-size: 0.85rem; color: var(--ai); white-space: nowrap; }
+.src-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.src-list .mono { color: var(--code); font-weight: 600; margin-right: 6px; }
+.src-list small { color: var(--muted); }
+table.mini { font-size: 0.9rem; }
+table.mini th, table.mini td { padding: 6px 8px; }
+table.mini td.mono { color: var(--code); white-space: nowrap; }
+.fix { display: grid; gap: 8px; }
+.fix > div { display: grid; grid-template-columns: 140px 1fr; gap: 10px; align-items: baseline; }
+.fix .mono { font-size: 0.85rem; }
+.fix .small { font-size: 0.82rem; color: var(--code); }
+.v-head.bad { color: var(--bad); }
+.v-head.good { color: var(--ok); }
+.slide.cmp .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 5cqi; align-self: center; }
+.slide.cmp .cols > div { display: grid; gap: 1.6cqi; align-content: start; }
+.slide.cmp .cols b { font-family: var(--font-display); font-size: 3.2cqi; color: #ffffff; background: #2563eb; border-radius: 1cqi; padding: 1cqi; text-align: center; }
+.slide.cmp .cols b.h-amber { background: #b45309; }
+pre.err { background: var(--surface); color: var(--bad); border: 1px solid var(--bad); white-space: pre-wrap; }
+table.parse td:first-child { font-family: var(--font-mono); font-size: 0.82rem; color: var(--code); }
+table.parse td:nth-child(2) { font-family: var(--font-mono); font-size: 0.82rem; white-space: nowrap; }
+.slide.cmp .cols p { margin: 0; font-size: 2.3cqi; line-height: 1.35; }
+.slide.cmp .cols p strong { display: block; }
+.slide.cmp .s-title { font-size: 4.4cqi; }
+@media (max-width: 760px) { .fix > div { grid-template-columns: 1fr; gap: 2px; } }
+
+/* Codigo */
+pre { margin: 0; background: var(--code-bg); color: var(--code-ink); border-radius: 8px; padding: 16px 18px; overflow-x: auto; font-family: var(--font-mono); font-size: 0.84rem; line-height: 1.55; }
+pre .k { color: #ffb86b; }
+pre .s { color: #9fe3b5; }
+pre .c { color: #7d8aa6; }
+.code-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.code-pair > div { display: grid; gap: 10px; align-content: start; min-width: 0; }
+
+/* Analogia */
+.roles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.role { border-top: 2px solid var(--ink); padding-top: 12px; display: grid; gap: 6px; align-content: start; }
+.role .who { justify-self: start; }
+
+/* Tabela */
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 0.97rem; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+
+/* Glossario */
+dl { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 10px 24px; }
+dt { font-family: var(--font-mono); font-weight: 600; }
+dd { margin: 0; max-width: 65ch; }
+
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.stat { display: grid; gap: 2px; }
+.stat b { font-family: var(--font-display); font-size: 2rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.stat span { color: var(--muted); font-size: 0.92rem; }
+
+footer { color: var(--muted); font-size: 0.9rem; border-top: 1px solid var(--line); padding-top: 20px; }
+
+@media (max-width: 760px) {
+  .hero-flow, .split, .code-pair, .roles { grid-template-columns: 1fr; }
+  .arrow { transform: rotate(90deg); }
+  .stats { grid-template-columns: repeat(2, 1fr); }
+  .station { grid-template-columns: 48px 1fr; gap: 14px; }
+  .num { width: 48px; height: 44px; font-size: 1.25rem; }
+  .station::after { left: 23px; top: 44px; }
+  .verdicts, .verdicts.two { grid-template-columns: 1fr; }
+  .ficha > div { grid-template-columns: 1fr; gap: 2px; }
+  .sub { padding-left: 12px; }
+  dl { grid-template-columns: 1fr; gap: 2px; }
+  dd { margin-bottom: 10px; }
+}
+</style>
+
+<div class="wrap">
+
+  <header class="hero">
+    <span class="eyebrow">SlideDSL · projeto de TCC · explicação para quem não é da área</span>
+    <h1>Você descreve a apresentação. O SlideDSL pesquisa, escreve e monta o PowerPoint.</h1>
+    <p class="lead">Tudo roda no seu computador, com uma IA pequena e gratuita. O truque é que a IA nunca trabalha sozinha: cada coisa que ela produz passa por regras e conferências antes de virar slide.</p>
+    <div class="hero-flow" aria-label="Exemplo: um pedido em texto vira um slide">
+      <div class="prompt-box">
+        <span class="who you">Você escreve</span>
+        <span class="typed">“Monolito ou microsserviços para uma startup”</span>
+      </div>
+      <div class="arrow" aria-hidden="true">→</div>
+      <div class="slide-frame"><div class="slide" role="img" aria-label="Slide gerado: Voltar ao monolito cortou 90% do custo">
+        <div class="s-title">Voltar ao monolito cortou 90% do custo</div>
+        <div class="s-big">90%</div>
+        <div class="s-cap"><span>redução de custo de infraestrutura no monitoramento do Prime Video</span><span class="s-src">F3</span></div>
+      </div></div>
+    </div>
+  </header>
+
+  <section>
+    <span class="eyebrow">A ideia em uma frase</span>
+    <h2>A IA faz tarefas pequenas. O programa faz o resto.</h2>
+    <p>Uma IA pequena (o projeto usa o Qwen3 com 4 bilhões de parâmetros, que roda num computador comum) erra quando recebe uma tarefa grande, como “faça uma apresentação inteira”. Ela inventa dados e se perde no meio. Num teste do projeto, quando ela teve de escrever tudo de uma vez no formato técnico, <strong>0 de 5</strong> resultados saíram válidos.</p>
+    <p>Por isso o SlideDSL divide o trabalho em dezenas de pedidos curtos e coloca um programa conferindo cada resposta.</p>
+    <div class="split">
+      <div class="panel ai">
+        <span class="who ai">IA (o modelo de linguagem)</span>
+        <ul>
+          <li>decide o que pesquisar</li>
+          <li>anota fatos de um trecho de texto</li>
+          <li>planeja a ordem dos slides</li>
+          <li>escreve um slide por vez</li>
+          <li>avalia se uma frase está apoiada nos fatos</li>
+        </ul>
+      </div>
+      <div class="panel code">
+        <span class="who code">Código (regras fixas)</span>
+        <ul>
+          <li>busca na web e lê as páginas</li>
+          <li>confere se cada fato existe mesmo na fonte</li>
+          <li>valida o formato de cada slide</li>
+          <li>escolhe a melhor versão</li>
+          <li>calcula posição, tamanho de letra e cores</li>
+          <li>gera o arquivo do PowerPoint</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Uma comparação</span>
+    <h2>Funciona como uma pequena redação de jornal</h2>
+    <div class="roles">
+      <div class="role">
+        <span class="who ai">IA</span>
+        <h3>O estagiário</h3>
+        <p>Escreve rápido e bem, mas precisa de instruções curtas e às vezes confunde informações.</p>
+      </div>
+      <div class="role">
+        <span class="who code">Código</span>
+        <h3>O checador</h3>
+        <p>Não escreve nada. Só confere: o dado existe na fonte? A frase está completa? Faltou algum assunto?</p>
+      </div>
+      <div class="role">
+        <span class="who code">Código</span>
+        <h3>O diagramador</h3>
+        <p>Recebe o texto aprovado e decide onde cada coisa fica no slide, sempre seguindo as mesmas regras.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Passo a passo</span>
+    <h2>O caminho de um pedido até o PowerPoint</h2>
+    <p>Os exemplos abaixo seguem o mesmo pedido do início: <em>“Monolito ou microsserviços para uma startup”</em>.</p>
+
+    <ol class="line">
+      <li class="station" data-who="you">
+        <div class="num">1</div>
+        <div class="st-body">
+          <div class="st-head"><h3>Você faz o pedido</h3><span class="who you">Você</span></div>
+          <p>No editor, você escreve o tema no painel <strong>Criar com pesquisa</strong>. Pode ser uma frase curta ou uma lista detalhada do que não pode faltar.</p>
+          <div class="example">
+            <span class="label">Exemplo</span>
+            <span><strong>Curto:</strong> “Monolito ou microsserviços para uma startup”</span>
+            <span><strong>Detalhado:</strong> “Monolito ou microsserviços para uma startup de 5 desenvolvedores. Fale de custo, <u>latência de rede</u> e <u>transações distribuídas</u>, e termine com uma recomendação.”</span>
+            <small class="hint">Num pedido detalhado (15 palavras ou mais), a IA separa os assuntos obrigatórios, aqui sublinhados. Depois o sistema confere se cada um apareceu em algum slide.</small>
+          </div>
+        </div>
+      </li>
+
+      <li class="station" data-who="ai">
+        <div class="num">2</div>
+        <div class="st-body">
+          <div class="st-head"><h3>A IA planeja a pesquisa</h3><span class="who ai">IA</span></div>
+          <p>Antes de pesquisar, a IA lê o seu pedido e prepara duas coisas.</p>
+
+          <h4>1. As buscas: o que seria digitado no Google</h4>
+          <p>Uma <strong>busca</strong> é só uma frase curta, como a que você digitaria num site de busca. Seu pedido inteiro seria uma busca ruim, porque é longo e mistura assunto com contexto. Por isso a IA escreve de 3 a 5 buscas curtas, cada uma atrás de um tipo diferente de informação.</p>
+          <div class="example">
+            <span class="label">Exemplo: pedido “Monolito ou microsserviços para uma startup”</span>
+            <div class="tbl">
+              <table class="mini">
+                <thead><tr><th>Busca que a IA escreve</th><th>O que ela quer achar</th></tr></thead>
+                <tbody>
+                  <tr><td class="q">monolito vs microsserviços</td><td>a definição de cada um e a diferença entre eles</td></tr>
+                  <tr><td class="q">microservices cost overhead</td><td>números sobre custo</td></tr>
+                  <tr><td class="q">Prime Video monolith</td><td>um caso real de empresa</td></tr>
+                  <tr><td class="q">microservices disadvantages</td><td>problemas e limitações</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <small class="hint">Algumas buscas saem em inglês de propósito: sobre tecnologia, a maior parte do material está em inglês. A IA lê em inglês e escreve os slides em português. A palavra “startup” não entra nas buscas porque é contexto, não o assunto. Buscar “startup” traria páginas sobre abrir empresa, não sobre software.</small>
+          </div>
+
+          <h4>2. As palavras centrais: o filtro de assunto</h4>
+          <p>São as palavras que todo fato útil precisa mencionar. Elas servem de filtro na etapa 4: um fato que não fala de nenhuma delas é descartado por estar fora do assunto. Variações e a forma em inglês também contam.</p>
+          <div class="example">
+            <span class="label">Exemplo</span>
+            <span>Palavras centrais: <strong>monolito</strong>, <strong>monolítica</strong>, <strong>microsserviços</strong>, <strong>microservices</strong></span>
+            <div class="verdicts two">
+              <div class="v ok"><span class="v-head">✓ Fica</span><span>“Microsserviços permitem escalar cada serviço separadamente.”</span></div>
+              <div class="v no"><span class="v-head">✗ Sai</span><span>“O Prime Video tem mais de 200 milhões de assinantes.”</span><small>É verdade e veio da mesma página, mas não ajuda a explicar o tema.</small></div>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="station" data-who="code">
+        <div class="num">3</div>
+        <div class="st-body">
+          <div class="st-head"><h3>Um buscador local procura na web</h3><span class="who code">Código</span></div>
+          <p>O <strong>SearXNG</strong> é um buscador que roda no próprio computador e consulta vários sites de busca ao mesmo tempo, sem cadastro e sem custo. O programa baixa as páginas e separa os trechos mais úteis, de preferência os que têm números e datas.</p>
+          <div class="example">
+            <span class="label">Exemplo: páginas encontradas</span>
+            <ul class="src-list">
+              <li><span class="mono">S1</span> Microservices, de Martin Fowler <small>(martinfowler.com)</small></li>
+              <li><span class="mono">S2</span> Relato do Prime Video sobre a volta ao monólito <small>(blog técnico)</small></li>
+              <li><span class="mono">S3</span> Migração da Netflix para a nuvem <small>(blog técnico)</small></li>
+              <li><span class="mono">S4</span> Microsserviços <small>(Wikipédia)</small></li>
+            </ul>
+            <small class="hint">Cada página recebe um código (S1, S2…) e o texto dela é guardado para a próxima etapa.</small>
+          </div>
+        </div>
+      </li>
+
+      <li class="station" data-who="both">
+        <div class="num">4</div>
+        <div class="st-body">
+          <div class="st-head"><h3>A IA anota fatos e o código confere cada um</h3><span class="who ai">IA</span><span class="who code">Código</span></div>
+          <p>Esta é a etapa que protege a apresentação contra dados inventados. A ideia é simples: a IA pode <em>ler</em> e <em>resumir</em>, mas tudo o que ela disser precisa ser provado com uma cópia do texto original. Quem confere essa prova é o código, que não tem opinião e não se deixa convencer.</p>
+
+          <div class="sub">
+            <div class="sub-step">
+              <span class="sub-tag">4a · Código</span>
+              <h4>Cortar as páginas em trechos</h4>
+              <p>Cada página baixada vira trechos de cerca de <strong>900 caracteres</strong> (mais ou menos um parágrafo grande), sem cortar frases no meio. De cada página o programa escolhe os <strong>2 trechos</strong> com mais palavras das buscas e mais números. Ele alterna entre as páginas (o 1º de cada uma, depois o 2º) e para em <strong>10 trechos</strong>, para que nenhum site domine o resultado.</p>
+            </div>
+
+            <div class="sub-step">
+              <span class="sub-tag ai">4b · IA</span>
+              <h4>Ler um trecho e preencher fichas</h4>
+              <p>A IA recebe o tema, o nome da página e <strong>só aquele trecho</strong>. As instruções dizem: use somente o que está escrito, copie a frase original sem mudar palavras, mantenha o mesmo sujeito (se o texto fala de “a plataforma”, não escreva “o mercado”) e devolva lista vazia se nada servir. Ela responde preenchendo até 4 fichas num formulário fechado:</p>
+              <div class="ficha" aria-label="Exemplo de ficha de fato">
+                <div><span>afirmação</span><span>O Prime Video reduziu em mais de 90% o custo de infraestrutura do monitoramento ao trocar microsserviços por um monólito.</span></div>
+                <div><span>tipo</span><span>número <small>(ou data, exemplo, definição, comparação, ressalva, citação)</small></span></div>
+                <div><span>valor</span><span>90%</span></div>
+                <div><span>trecho</span><span>“…reduziu nosso custo de infraestrutura em mais de 90%.”</span></div>
+                <div><span>autor</span><span><small>(vazio: só preenchido em citações)</small></span></div>
+                <div><span>relevância</span><span>alta</span></div>
+              </div>
+              <p>A <strong>afirmação</strong> é o que a IA entendeu. O <strong>trecho</strong> é a prova. É essa prova que o código vai conferir.</p>
+            </div>
+
+            <div class="sub-step">
+              <span class="sub-tag">4c · Código</span>
+              <h4>Conferir a ficha, item por item</h4>
+              <p>O código aplica as perguntas abaixo, nesta ordem. Na primeira resposta “não”, a ficha é descartada e o motivo fica anotado.</p>
+              <ol class="gate">
+                <li><b>A prova existe na página?</b><span>O programa compara o trecho com o texto original, ignorando maiúsculas, acentos, aspas e espaços. A ficha passa se pelo menos <strong>85%</strong> da frase aparecer seguida, sem pedaços inventados no meio.</span></li>
+                <li><b>A prova está inteira?</b><span>Não pode terminar em “…” nem ter caracteres corrompidos.</span></li>
+                <li><b>A afirmação é uma frase de verdade?</b><span>Precisa ter pelo menos 6 palavras. Um nome solto, como “Prime Video”, não é um fato.</span></li>
+                <li><b>Serve para o tema?</b><span>Se a própria IA marcou a relevância como baixa, o fato é descartado.</span></li>
+                <li><b>O valor está na prova?</b><span>O número do campo “valor” tem de aparecer no trecho copiado. O programa entende que 1.300 e 1,300 são o mesmo número, e que “20 mil” é 20000.</span></li>
+                <li><b>Os números da afirmação estão no texto?</b><span>Todo número que a IA escreveu na afirmação precisa existir no trecho original. É aqui que um “90%” trocado por “95%” é pego.</span></li>
+                <li><b>Fala do assunto pedido?</b><span>A ficha precisa mencionar ao menos uma das palavras centrais da etapa 2. Variações contam: “microsserviço” vale para “microsserviços”. Estas palavras centrais precisam vir do seu próprio pedido, para a IA não criar um filtro com termos que você não usou.</span></li>
+                <li><b>Se é citação, o autor aparece?</b><span>O nome da pessoa tem de estar escrito no texto. Se não estiver, a ficha <em>não</em> é descartada: ela continua como fato comum, mas sem autor, para que nenhuma frase seja atribuída a quem não a disse.</span></li>
+              </ol>
+            </div>
+
+            <div class="sub-step">
+              <span class="sub-tag">4d · Código</span>
+              <h4>Organizar o dossiê</h4>
+              <p>As fichas aprovadas recebem um código em ordem (<span class="mono">F1</span>, <span class="mono">F2</span>, <span class="mono">F3</span>…) e guardam o link da página de onde vieram. Mais três regras:</p>
+              <ul>
+                <li>uma afirmação repetida é descartada como duplicada;</li>
+                <li>cada página fornece no máximo <strong>5 fatos</strong>, para a apresentação não depender de uma só fonte;</li>
+                <li>a coleta para em <strong>24 fatos</strong>. Se sobrarem menos de 4, ou todos vierem de uma única página, o painel avisa que os slides sem fato serão mais genéricos.</li>
+              </ul>
+              <p>As fichas descartadas não somem: ficam registradas com o motivo no arquivo <span class="mono">dossie.json</span>, para quem quiser auditar.</p>
+            </div>
+          </div>
+
+          <div class="example">
+            <span class="label">Exemplo ilustrativo: um trecho, três fichas</span>
+            <p class="passage">“A mudança de uma arquitetura distribuída de microsserviços para uma aplicação monolítica nos ajudou a alcançar mais escala e resiliência, e reduziu nosso custo de infraestrutura em mais de 90%.”</p>
+            <div class="verdicts">
+              <div class="v ok">
+                <span class="v-head">✓ Aprovada → vira <span class="mono">F3</span></span>
+                <span>“O Prime Video reduziu em mais de 90% o custo de infraestrutura ao trocar microsserviços por um monólito.”</span>
+                <small>Prova encontrada, 90% está no texto, menciona as palavras centrais.</small>
+              </div>
+              <div class="v no">
+                <span class="v-head">✗ Descartada</span>
+                <span>“A troca para monólito reduziu os custos em 95%.”</span>
+                <small>Motivo: número da afirmação não está no texto.</small>
+              </div>
+              <div class="v no">
+                <span class="v-head">✗ Descartada</span>
+                <span>“O Prime Video é um serviço de streaming.”</span>
+                <small>Motivo: fora do assunto central (não menciona monolito, microsserviços).</small>
+              </div>
+            </div>
+          </div>
+
+          <p class="note"><strong>O que esta etapa garante e o que não garante.</strong> Ela garante que cada fato do dossiê está escrito numa página real e que os números batem. Ela não garante que a página esteja certa, nem que a IA tenha usado o fato com o sentido correto nos slides. Esse segundo problema é tratado pela conferência de sustentação, na etapa 7.</p>
+        </div>
+      </li>
+
+      <li class="station" data-who="ai">
+        <div class="num">5</div>
+        <div class="st-body">
+          <div class="st-head"><h3>A IA monta o roteiro</h3><span class="who ai">IA</span></div>
+          <p>Antes de escrever, ela decide a lista de slides: o tipo de cada um (capa, comparação, números, linha do tempo…), a mensagem principal e quais fatos o sustentam. Ela preenche um formulário fechado, então não consegue citar um fato que não existe nem pedir um slide de números sem ter números.</p>
+          <div class="example">
+            <span class="label">Exemplo de roteiro</span>
+            <div class="tbl">
+              <table class="mini">
+                <thead><tr><th>#</th><th>Tipo</th><th>Mensagem (vira o título)</th><th>Fatos</th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td>capa</td><td>Monolito ou microsserviços: quando cada um compensa</td><td>–</td></tr>
+                  <tr><td>2</td><td>comparação</td><td>A diferença está em como o sistema é implantado</td><td class="mono">F1, F2</td></tr>
+                  <tr><td>3</td><td>linha do tempo</td><td>A ideia amadureceu ao longo de duas décadas</td><td class="mono">F5, F7</td></tr>
+                  <tr><td>4</td><td>números</td><td>Voltar ao monolito cortou 90% do custo</td><td class="mono">F3</td></tr>
+                  <tr><td>5</td><td>etapas</td><td>Como migrar sem parar o sistema</td><td class="mono">F8</td></tr>
+                  <tr><td>6</td><td>conclusão</td><td>Comece simples e divida quando a dor for real</td><td class="mono">F1, F3</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <small class="hint">Se a IA tentasse citar um <span class="mono">F30</span> que não existe, o formulário não aceitaria. Se o pedido exigia “latência de rede” e nenhum slide cobre esse assunto, o roteiro volta para ela corrigir.</small>
+          </div>
+        </div>
+      </li>
+
+      <li class="station" data-who="ai">
+        <div class="num">6</div>
+        <div class="st-body">
+          <div class="st-head"><h3>A IA escreve cada slide separadamente</h3><span class="who ai">IA</span></div>
+          <p>Uma chamada por slide, com regras de redação: o título é uma afirmação curta, cada item tem um rótulo e uma frase concreta, e números e nomes só podem vir dos fatos.</p>
+          <p>A resposta é presa a uma <strong>gramática</strong>, o conjunto de regras que define o que é um texto válido no formato SlideDSL. No modo mais rígido a IA nem consegue produzir algo fora do formato.</p>
+          <div class="example">
+            <span class="label">Exemplo: o slide 2 escrito pela IA</span>
+<pre><span class="k">comparacao</span> {
+  <span class="k">titulo</span> <span class="s">"A diferença está em como o sistema é implantado"</span>
+  <span class="k">lado</span> <span class="s">"Monolito"</span> {
+    <span class="k">item</span> <span class="s">"Uma unidade de implantação"</span> <span class="s">"Toda mudança exige publicar a aplicação inteira."</span>
+    <span class="k">item</span> <span class="s">"Escala em bloco"</span> <span class="s">"Para aliviar um módulo, replica-se o sistema todo."</span>
+  }
+  <span class="k">lado</span> <span class="s">"Microsserviços"</span> {
+    <span class="k">item</span> <span class="s">"Serviços independentes"</span> <span class="s">"Cada serviço tem implantação, dados e equipe próprios."</span>
+    <span class="k">item</span> <span class="s">"Escala por serviço"</span> <span class="s">"Só o serviço sob carga recebe mais instâncias."</span>
+  }
+  <span class="k">fontes</span> F1, F2
+  <span class="k">notas</span> <span class="s">"Destacar que microsserviços trocam chamadas em memória por chamadas pela rede."</span>
+}</pre>
+            <small class="hint">Repare no padrão: cada item tem um rótulo curto e uma frase completa. As <strong>notas</strong> vão para o apresentador, não aparecem no slide.</small>
+          </div>
+        </div>
+      </li>
+
+      <li class="station" data-who="both">
+        <div class="num">7</div>
+        <div class="st-body">
+          <div class="st-head"><h3>Conferência e escolha da melhor versão</h3><span class="who code">Código</span><span class="who ai">IA</span></div>
+          <p>Cada slide passa por três filtros:</p>
+          <div class="example">
+            <ul class="checks">
+              <li><span class="y">1</span><span><strong>Formato:</strong> frase cortada, título longo, fonte inexistente ou assunto faltando volta para correção, com o campo exato apontado (até 2 tentativas).</span></li>
+              <li><span class="y">2</span><span><strong>Melhor de N:</strong> o sistema gera algumas versões e fica com a que tem mais dados concretos.</span></li>
+              <li><span class="y">3</span><span><strong>Sustentação:</strong> a IA compara cada frase com o fato citado. Isso pega distorções como <span class="struck">“o ecossistema cresceu 30%”</span> quando a fonte dizia “a plataforma cresceu 30%”.</span></li>
+            </ul>
+          </div>
+          <div class="example">
+            <span class="label">Exemplo: uma correção</span>
+            <div class="fix">
+              <div><span class="v-head bad">Primeira versão</span><span>item <span class="mono">"Custo menor"</span> <span class="mono">"O Prime Video economizou 90% ao"</span></span></div>
+              <div><span class="v-head">O código responde</span><span class="mono small">itens[1].detalhe: frase incompleta</span></div>
+              <div><span class="v-head good">Versão corrigida</span><span>item <span class="mono">"Custo menor"</span> <span class="mono">"O Prime Video cortou 90% do custo do monitoramento."</span></span></div>
+            </div>
+            <small class="hint">A IA recebe o erro com o lugar exato e reescreve só aquele ponto.</small>
+          </div>
+          <p>O que continuar duvidoso aparece no painel como <strong>Frases a revisar</strong>.</p>
+        </div>
+      </li>
+
+      <li class="station" data-who="code">
+        <div class="num">8</div>
+        <div class="st-body">
+          <div class="st-head"><h3>Montagem visual e PowerPoint</h3><span class="who code">Código</span></div>
+          <p>Agora a IA sai de cena. Daqui em diante tudo é feito por regras fixas: a mesma entrada sempre gera o mesmo slide. Os exemplos abaixo são a saída <strong>real</strong> do compilador para o slide de comparação de <span class="mono">examples/alto/microsservicos.slda</span>.</p>
+
+          <div class="sub">
+            <div class="sub-step">
+              <span class="sub-tag">8a · Código</span>
+              <h4>Escolher o layout e calcular as medidas</h4>
+              <p>Cada tipo de slide tem um layout fixo. “Comparação” sempre vira duas colunas, cada uma com um cabeçalho colorido e uma caixa de itens. O programa testa tamanhos de letra e fica com o maior que cabe em <em>todos</em> os textos do mesmo tipo. Assim os rótulos ficam iguais entre si e nenhum texto é cortado.</p>
+            </div>
+
+            <div class="sub-step">
+              <span class="sub-tag">8b · Código</span>
+              <h4>Escrever o slide na linguagem de baixo nível</h4>
+              <p>O resultado do layout é escrito na <strong>SlideDSL 1.1</strong>, em que cada linha é um comando que desenha uma peça na tela de 1280 × 720 pontos. O slide de comparação vira 28 comandos. Os primeiros:</p>
+<pre><span class="k">slide</span> 2 {
+  <span class="k">adicionar retangulo</span> id s2_marca_1 <span class="k">em</span> (64, 52) <span class="k">tamanho</span> (56, 6) <span class="k">cor</span> #2563EB <span class="k">papel</span> decoracao
+  <span class="k">adicionar texto</span> id s2_titulo_2 <span class="s">"A diferença está em como o sistema é implantado e escalado"</span> <span class="k">em</span> (64, 66) <span class="k">tamanho</span> (1152, 153) <span class="k">fonte</span> 42 <span class="k">cor</span> #14233D <span class="k">papel</span> titulo <span class="k">familia</span> <span class="s">"Arial"</span> <span class="k">negrito</span>
+  <span class="k">adicionar retangulo</span> id s2_cabecalho_3 <span class="k">em</span> (64, 235) <span class="k">tamanho</span> (556, 68) <span class="k">cor</span> #2563EB <span class="k">papel</span> decoracao <span class="k">arredondado</span>
+  <span class="k">adicionar texto</span> id s2_lado_4 <span class="s">"Monolito"</span> <span class="k">em</span> (80, 239) <span class="k">tamanho</span> (524, 60) <span class="k">fonte</span> 26 <span class="k">cor</span> #FFFFFF <span class="k">papel</span> nenhum <span class="k">familia</span> <span class="s">"Arial"</span> <span class="k">negrito</span> <span class="k">alinhado centro</span>
+  <span class="k">adicionar texto</span> id s2_rotulo_7 <span class="s">"Uma unidade de implantação"</span> <span class="k">em</span> (108, 315) <span class="k">tamanho</span> (492, 50) <span class="k">fonte</span> 20 <span class="k">cor</span> #14233D <span class="k">papel</span> nenhum <span class="k">familia</span> <span class="s">"Arial"</span> <span class="k">negrito</span>
+  <span class="c">// … mais 23 comandos para os outros itens, a coluna da direita e o rodapé</span>
+  <span class="k">notas</span> <span class="s">"Fontes:\nLewis &amp; Fowler, Microservices (martinfowler.com, 2014)"</span>
+}</pre>
+            </div>
+
+            <div class="sub-step">
+              <span class="sub-tag">8c · Código</span>
+              <h4>A gramática (GLC) confere cada comando</h4>
+              <p>A <strong>gramática livre de contexto</strong> é o “molde” de cada comando: ela diz quais palavras vêm, em que ordem, e o que é obrigatório ou opcional. Esta é a regra real para desenhar um texto, do arquivo <span class="mono">grammar/slidedsl.lark</span>:</p>
+<pre>adicionar_texto: <span class="s">"adicionar"</span> <span class="s">"texto"</span> <span class="s">"id"</span> ID STRING
+                 <span class="s">"em"</span> posicao <span class="s">"tamanho"</span> dimensao
+                 <span class="s">"fonte"</span> fonte <span class="s">"cor"</span> cor
+                 papel? familia? negrito? alinhamento?
+
+dimensao: <span class="s">"("</span> NUMERO <span class="s">","</span> NUMERO <span class="s">")"</span>
+COR:      /#[0-9A-Fa-f]{6}/</pre>
+              <p>Em palavras simples: entre aspas estão as palavras que precisam aparecer exatamente assim. Em maiúsculas estão as lacunas (um nome, um texto, um número, uma cor). O <span class="mono">?</span> quer dizer “opcional”. Veja como a linha do cabeçalho “Monolito” se encaixa no molde:</p>
+              <div class="tbl">
+                <table class="mini parse">
+                  <thead><tr><th>Pedaço da linha</th><th>Parte do molde</th><th>Significado</th></tr></thead>
+                  <tbody>
+                    <tr><td>adicionar texto id</td><td>palavras fixas</td><td>“vou criar uma caixa de texto”</td></tr>
+                    <tr><td>s2_lado_4</td><td>ID</td><td>o nome da peça, para poder mexer nela depois</td></tr>
+                    <tr><td>"Monolito"</td><td>STRING</td><td>o texto que aparece no slide</td></tr>
+                    <tr><td>em (80, 239)</td><td>posicao</td><td>80 pontos da esquerda, 239 do topo</td></tr>
+                    <tr><td>tamanho (524, 60)</td><td>dimensao</td><td>largura 524, altura 60</td></tr>
+                    <tr><td>fonte 26</td><td>fonte</td><td>letra tamanho 26</td></tr>
+                    <tr><td>cor #FFFFFF</td><td>COR</td><td>texto branco</td></tr>
+                    <tr><td>papel nenhum · familia "Arial" · negrito · alinhado centro</td><td>opcionais <span class="mono">?</span></td><td>função da peça, tipo de letra, negrito e alinhamento</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <p>Se uma linha não se encaixar no molde, o compilador para e aponta o lugar exato. Exemplo real: escrevendo <span class="mono">tamanho (1152)</span>, só com a largura, a regra <span class="mono">dimensao</span> exige dois números e o resultado é:</p>
+              <pre class="err">ERRO P001 linha 4:67: Sintaxe inválida no português controlado.</pre>
+            </div>
+
+            <div class="sub-step">
+              <span class="sub-tag">8d · Código</span>
+              <h4>As regras de design conferem o desenho</h4>
+              <p>A gramática só vê se a frase está bem formada. Uma linha pode estar certa e ainda assim desenhar algo errado. Por isso vêm depois as regras de design D001 a D010: limites da tela, contraste de cor, sobreposição, alinhamento, texto que não cabe e excesso de conteúdo. Exemplo real: um texto válido colocado em <span class="mono">em (1200, 66)</span> com 400 de largura passaria da borda direita.</p>
+              <pre class="err">ERRO D001 slide 1 / titulo: Elemento sai do canvas 1280×720.</pre>
+            </div>
+
+            <div class="sub-step">
+              <span class="sub-tag">8e · Código</span>
+              <h4>Gerar o PowerPoint</h4>
+              <p>Só o que passou pelas duas conferências chega ao gerador de PowerPoint. Cada comando vira um objeto editável: caixas de texto continuam sendo texto e retângulos continuam sendo formas. As fontes dos fatos vão para as notas do apresentador.</p>
+              <div class="example">
+                <span class="label">Resultado: o slide 2</span>
+                <div class="slide-frame"><div class="slide cmp" role="img" aria-label="Slide de comparação em duas colunas: Monolito e Microsserviços">
+                  <div class="s-title">A diferença está em como o sistema é implantado e escalado</div>
+                  <div class="cols">
+                    <div><b class="h-blue">Monolito</b><p><strong>Uma unidade de implantação</strong> Toda mudança exige recompilar e publicar a aplicação inteira.</p><p><strong>Escala em bloco</strong> Para atender um módulo sobrecarregado, replica-se o sistema todo.</p></div>
+                    <div><b class="h-amber">Microsserviços</b><p><strong>Serviços independentes</strong> Cada serviço tem implantação, dados e equipe próprios.</p><p><strong>Escala por serviço</strong> Só o serviço sob carga recebe mais instâncias.</p></div>
+                  </div>
+                  <div class="s-cap"><span class="s-src">Fonte: Lewis &amp; Fowler, Microservices (2014)</span><span class="s-src">2/6</span></div>
+                </div></div>
+                <small class="hint">Desenho simplificado da página. O slide real tem 3 itens por coluna, e as cores dos cabeçalhos e as posições seguem os comandos acima.</small>
+              </div>
+            </div>
+          </div>
+          <p>Você abre no editor visual, ajusta o que quiser e exporta.</p>
+        </div>
+      </li>
+    </ol>
+  </section>
+
+  <section>
+    <span class="eyebrow">O “DSL” do nome</span>
+    <h2>Duas linguagens: uma diz o que mostrar, a outra diz onde</h2>
+    <p>DSL quer dizer <em>linguagem específica de domínio</em>: uma linguagem pequena, feita só para descrever slides. O SlideDSL usa duas, em camadas.</p>
+    <div class="code-pair">
+      <div>
+        <h3>SlideDSL Alto</h3>
+        <p>O que a IA escreve. Só conteúdo e intenção, sem medidas.</p>
+<pre><span class="k">numeros</span> {
+  <span class="k">titulo</span> <span class="s">"Voltar ao monolito cortou 90% do custo"</span>
+  <span class="k">valor</span> <span class="s">"90%"</span> <span class="s">"redução de custo de
+    infraestrutura no Prime Video"</span>
+  <span class="k">fontes</span> F3
+  <span class="k">notas</span> <span class="s">"Distribuir tem custo de rede."</span>
+}</pre>
+      </div>
+      <div>
+        <h3>SlideDSL 1.1</h3>
+        <p>O que o programa gera. Cada caixa com posição e tamanho numa tela de 1280 × 720.</p>
+<pre><span class="k">slide</span> 4 {
+  <span class="k">adicionar texto</span> id titulo
+    <span class="s">"Voltar ao monolito cortou…"</span>
+    <span class="k">em</span> (80, 64) <span class="k">tamanho</span> (1120, 100)
+  <span class="k">adicionar texto</span> id valor <span class="s">"90%"</span>
+    <span class="k">abaixo de</span> titulo <span class="k">com margem</span> 24
+  <span class="c">// … e o restante do layout</span>
+}</pre>
+      </div>
+    </div>
+    <p>Separar as duas coisas é o centro da ideia. A IA só precisa decidir <em>o que comunicar</em>. A gramática garante que o texto está no formato certo, e o compilador garante que o visual fica correto. Se algo estiver errado, o sistema mostra um erro com código e linha, em vez de gerar um slide quebrado.</p>
+  </section>
+
+  <section>
+    <span class="eyebrow">Por que fazer assim</span>
+    <h2>Cada fraqueza da IA pequena tem uma compensação</h2>
+    <div class="tbl">
+      <table>
+        <thead><tr><th>A IA pequena…</th><th>O SlideDSL compensa com…</th></tr></thead>
+        <tbody>
+          <tr><td>inventa formatos e estrutura</td><td>uma linguagem própria com gramática que restringe a resposta</td></tr>
+          <tr><td>não conhece o assunto e inventa dados</td><td>pesquisa na web e fatos conferidos palavra por palavra na fonte</td></tr>
+          <tr><td>se perde em tarefas longas</td><td>tarefas curtas: um trecho, um slide, uma frase por vez</td></tr>
+          <tr><td>não tem noção de design</td><td>um programa que decide posição, letra e cor por regras fixas</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Em números</span>
+    <div class="stats">
+      <div class="stat"><b>4 bi</b><span>parâmetros do modelo usado (Qwen3 4B, local)</span></div>
+      <div class="stat"><b>25–50</b><span>chamadas curtas à IA por apresentação</span></div>
+      <div class="stat"><b>11</b><span>tipos de slide na linguagem de alto nível</span></div>
+      <div class="stat"><b>388</b><span>testes automatizados passando</span></div>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Limites</span>
+    <h2>O que o sistema ainda não garante</h2>
+    <div class="panel">
+      <ul>
+        <li>Um fato conferido prova que o texto existe na fonte, não que a fonte está certa.</li>
+        <li>A checagem de sentido é feita pela própria IA pequena. Ela pega erros óbvios, mas não substitui a revisão de uma pessoa.</li>
+        <li>A pesquisa depende de buscadores externos, que podem limitar consultas automáticas.</li>
+        <li>Gerar uma apresentação leva alguns minutos, conforme o computador.</li>
+        <li>A avaliação com pessoas e a repetição dos testes com a versão final ainda estão pendentes.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <span class="eyebrow">Glossário</span>
+    <h2>Termos que aparecem no projeto</h2>
+    <dl>
+      <dt>SLM</dt><dd>Modelo de linguagem pequeno. Uma IA de texto leve o bastante para rodar num computador pessoal, sem internet nem pagamento.</dd>
+      <dt>DSL</dt><dd>Linguagem específica de domínio. Uma linguagem pequena criada para um único assunto, aqui slides.</dd>
+      <dt>Gramática (GLC)</dt><dd>Gramática livre de contexto: as regras formais que dizem quais textos são válidos na linguagem.</dd>
+      <dt>Compilador</dt><dd>O programa que lê o texto na linguagem, confere as regras e o transforma em outra coisa, aqui um PowerPoint.</dd>
+      <dt>SearXNG</dt><dd>Buscador de código aberto que roda localmente e repassa a busca a vários sites de busca.</dd>
+      <dt>Dossiê</dt><dd>A lista de fatos aprovados (F1, F2, F3…), cada um com o link da página de origem.</dd>
+      <dt>Ollama</dt><dd>Programa que roda modelos de IA no próprio computador.</dd>
+    </dl>
+  </section>
+
+  <footer>
+    Baseado no README e no código de <span class="mono">code/slidedsl</span>. O exemplo de microsserviços vem de <span class="mono">examples/alto/microsservicos.slda</span>.
+  </footer>
+</div>

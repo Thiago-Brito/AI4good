@@ -1,0 +1,112 @@
+{
+  "F1": {
+    "id": "F1",
+    "claim": "Mais de 40% da energia elétrica produzida no Brasil em 2023 foi gerada pelo efeito fotovoltaico.",
+    "kind": "data",
+    "quote": "Entre janeiro e agosto de 2023, mais de 40% do total de energia elétrica produzida no país foi decorrente do efeito fotovoltaico.",
+    "source_id": "S1",
+    "url": "https://www.bv.com.br/bv-inspira/financiamento-para-energia-solar/efeito-fotovoltaico",
+    "source_title": "Efeito fotovoltaico: o que é e como funciona? Aprenda! - BV Inspira",
+    "value": "40%"
+  },
+  "F2": {
+    "id": "F2",
+    "claim": "O acréscimo de capacidade de geração solar centralizada no Brasil foi maior entre janeiro e setembro de 2023 do que em 2022.",
+    "kind": "comparacao",
+    "quote": "Em 2022, por exemplo, o acréscimo no ano todo foi de 2,5 Gigawatts, inferior aos 3 GW já instalados entre janeiro e setembro de 2023.",
+    "source_id": "S1",
+    "url": "https://www.bv.com.br/bv-inspira/financiamento-para-energia-solar/efeito-fotovoltaico",
+    "source_title": "Efeito fotovoltaico: o que é e como funciona? Aprenda! - BV Inspira",
+    "value": "3 GW"
+  },
+  "F3": {
+    "id": "F3",
+    "claim": "A geração fotovoltaica atingiu 2.778 TWh em 2025, um aumento de 30% em relação ao ano anterior.",
+    "kind": "data",
+    "quote": "Geração fotovoltaica alcançou 2.778 TWh em 2025, um crescimento de",
+    "source_id": "S2",
+    "url": "https://canalsolar.com.br/solar-registra-melhor-desempenho-em-oito-anos/",
+    "source_title": "Solar registra melhor desempenho em oito anos, com 75% da ...",
+    "value": "2.778"
+  },
+  "F4": {
+    "id": "F4",
+    "claim": "A energia solar respondeu por 75% do crescimento da demanda global por eletricidade em 2025.",
+    "kind": "data",
+    "quote": "um estudo publicado pela Ember no início desta semana mostrou que a energia solar respondeu por 75% do crescimento da demanda global por eletricidade em 2025.",
+    "source_id": "S2",
+    "url": "https://canalsolar.com.br/solar-registra-melhor-desempenho-em-oito-anos/",
+    "source_title": "Solar registra melhor desempenho em oito anos, com 75% da ...",
+    "value": "75%"
+  },
+  "F5": {
+    "id": "F5",
+    "claim": "Fontes renováveis representaram 33,8% da geração mundial em 2025, superando o carvão pela primeira vez na história.",
+    "kind": "data",
+    "quote": "escolas renováveis, que passaram a representar 33,8% da geração mundial, superando o carvão (que registrou queda de 0,2%) pela primeira vez na história.",
+    "source_id": "S2",
+    "url": "https://canalsolar.com.br/solar-registra-melhor-desempenho-em-oito-anos/",
+    "source_title": "Solar registra melhor desempenho em oito anos, com 75% da ...",
+    "value": "33,8%"
+  },
+  "F6": {
+    "id": "F6",
+    "claim": "A casa utiliza 16 painéis bifaciais de 530 W da Jinko Solar.",
+    "kind": "exemplo",
+    "quote": "O sistema de energia é completamente off-grid, ou seja, não depende da rede elétrica pública para funcionar. Para atingir essa independência energética, a casa utiliza duas fontes principais de energia: solar e eólica. Atualmente, a infraestrutura conta com 16 painéis bifaciais de 5 30 W da Jinko Solar;",
+    "source_id": "S3",
+    "url": "https://canalsolar.com.br/casa-autossustentavel-solar-eolica-biodigestor-baterias/",
+    "source_title": "Casa autossustentável off-grid integra solar, eólica, biodigestor e ...",
+    "value": "16"
+  },
+  "F7": {
+    "id": "F7",
+    "claim": "A casa tem um gerador eólico de 5,5 kVA que complementa a produção em dias nublados ou à noite.",
+    "kind": "exemplo",
+    "quote": "um gerador eólico de 5,5 kVA, que complementa a produção de energia em dias nublados ou durante a noite, quando a produção solar é insuficiente;",
+    "source_id": "S3",
+    "url": "https://canalsolar.com.br/casa-autossustentavel-solar-eolica-biodigestor-baterias/",
+    "source_title": "Casa autossustentável off-grid integra solar, eólica, biodigestor e ...",
+    "value": "5,5 kVA"
+  },
+  "F8": {
+    "id": "F8",
+    "claim": "Casa autossustentável off-grid integra solar, eólica, biodigestor e baterias.",
+    "kind": "data",
+    "quote": "Casa autossustentável off-grid integra solar, eólica, biodigestor e baterias",
+    "source_id": "S3",
+    "url": "https://canalsolar.com.br/casa-autossustentavel-solar-eolica-biodigestor-baterias/",
+    "source_title": "Casa autossustentável off-grid integra solar, eólica, biodigestor e ...",
+    "value": ""
+  },
+  "F9": {
+    "id": "F9",
+    "claim": "Baterias garantiram o fornecimento de energia durante a noite.",
+    "kind": "exemplo",
+    "quote": "Baterias garantiram o fornecimento de energia durante a noite.",
+    "source_id": "S3",
+    "url": "https://canalsolar.com.br/casa-autossustentavel-solar-eolica-biodigestor-baterias/",
+    "source_title": "Casa autossustentável off-grid integra solar, eólica, biodigestor e ...",
+    "value": "noite"
+  },
+  "F10": {
+    "id": "F10",
+    "claim": "O projeto utiliza o excedente de energia para a mineração de criptomoedas.",
+    "kind": "exemplo",
+    "quote": "Projeto também utiliza o excedente de energia para a mineração de criptomoedas",
+    "source_id": "S3",
+    "url": "https://canalsolar.com.br/casa-autossustentavel-solar-eolica-biodigestor-baterias/",
+    "source_title": "Casa autossustentável off-grid integra solar, eólica, biodigestor e ...",
+    "value": "excedente de energia"
+  },
+  "F11": {
+    "id": "F11",
+    "claim": "A busca por soluções sustentáveis tem se tornado cada vez mais urgente.",
+    "kind": "data",
+    "quote": "Nos dias de hoje, a busca por soluções sustentáveis tem se tornado cada vez mais urgente",
+    "source_id": "S3",
+    "url": "https://canalsolar.com.br/casa-autossustentavel-solar-eolica-biodigestor-baterias/",
+    "source_title": "Casa autossustentável off-grid integra solar, eólica, biodigestor e ...",
+    "value": ""
+  }
+}

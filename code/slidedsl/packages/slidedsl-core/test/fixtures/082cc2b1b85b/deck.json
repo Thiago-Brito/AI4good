@@ -1,0 +1,203 @@
+{
+  "title": "Arquitetura de Software: O Fundamento para Escalar IA",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "40% das aplicações empresariais terão IA até 2026 (F1)",
+      "subtitle": "Entenda como a arquitetura de software permite escalar IA em empresas",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O número '40%' foi mantido apenas porque está diretamente associado ao fato F1. A citação (F1) foi incluída no título para sustentar o valor. A premissa é que a projeção vem de uma fonte oficial (Gartner), o que torna o dado verificável e relevante.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "A arquitetura de software é a estrutura fundamental que define a",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Componentes do Sistema",
+          "detail": "Define os componentes que compõem o sistema, como módulos de login e processamento em uma loja online."
+        },
+        {
+          "label": "Relações entre Módulos",
+          "detail": "Especifica como os componentes se conectam, como em uma aplicação que integra vendas e estoque."
+        },
+        {
+          "label": "Princípios de Projeto",
+          "detail": "Estabelece princípios de projeto para evolução, como manter flexibilidade quando a equipe cresce."
+        },
+        {
+          "label": "Padrões para Ambientes",
+          "detail": "Assim como arquitetura de edificações, define padrões para sistemas em ambientes variados."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F4",
+        "F5",
+        "F6"
+      ],
+      "notes": "A arquitetura de software é como a estrutura de uma casa: define como os blocos se conectam e o que pode mudar com o tempo. O exemplo de uma loja online mostra como os módulos de login e vendas se relacionam. Quando a equipe cresce, a arquitetura deve permitir adaptações sem quebrar o sistema. A analogia com edificações ajuda a visualizar a importância de padrões fixos em ambientes diferentes, como frio ou calor. A limitação é que não há dados concretos sobre empresas ou sistemas, então os exemplos são genéricos e baseados apenas nos fatos fornecidos.",
+      "line": 8,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "A arquitetura de software se assemelha à arquitetura de edificaç",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Software",
+          "items": [
+            {
+              "label": "Componentes",
+              "detail": "componentes do sistema"
+            },
+            {
+              "label": "Relações",
+              "detail": "relações entre eles"
+            }
+          ]
+        },
+        {
+          "name": "Edificações",
+          "items": [
+            {
+              "label": "Pilares",
+              "detail": "pilares que sustentam"
+            },
+            {
+              "label": "Estruturas",
+              "detail": "estruturas que conectam"
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F6"
+      ],
+      "notes": "A analogia é clara: como casas têm pilares e estruturas, softwares precisam de componentes e conexões definidas. Exemplo: uma loja online em clima frio precisa de ar-condicionado, como uma aplicação com carga pesada precisa de processamento eficiente. A metáfora é simplificada, mas capta a ideia de padrões estruturais. O fato F6 mostra que a analogia é parcialmente aceita.",
+      "line": 17,
+      "column": 3
+    },
+    {
+      "kind": "numeros",
+      "title": "82% das lideranças de TI veem integração como principal desafío",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [
+        {
+          "value": "82%",
+          "label": "porcentagem de lideranças de TI que veem integração como principal desafio com IA"
+        }
+      ],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F2"
+      ],
+      "notes": "O dado mostra que 82% das lideranças de TI identificam a integração como principal obstáculo com IA. Isso reflete uma barreira prática, não teórica. Exemplo: uma empresa com múltiplas aplicações isoladas não consegue conectar dados para treinar modelos. A falta de arquitetura estruturada impede a escala, conforme o F3.",
+      "line": 30,
+      "column": 3
+    },
+    {
+      "kind": "citacao",
+      "title": null,
+      "subtitle": null,
+      "author": "Não especificado",
+      "text": "Organizações sem investimento em arquitetura não conseguem escalar IA.",
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F3"
+      ],
+      "notes": "A citação é literal do fato F3. Ela mostra que organizações sem investimento em arquitetura não conseguem escalar IA, apenas fazem pilotos. Isso prova que a arquitetura é essencial para a escalabilidade, não apenas para experimentos. A afirmação é baseada em relatos de empresas que enfrentam essa barreira. Ainda assim, é uma observação qualitativa, não quantificada, e não há dados de volume ou número de organizações que a validam diretamente.",
+      "line": 36,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "O Brasil tem 1,65% dos investimentos globais em tecnologia e 36%",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Fortalecer a arquitetura local",
+          "detail": "O Brasil tem 1,65% dos investimentos globais em tecnologia e 36% na América Latina"
+        },
+        {
+          "label": "Aumentar investimentos em arquitetura escalável",
+          "detail": "O Brasil tem 1,65% dos investimentos globais em tecnologia e 36% na América Latina"
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F7",
+        "F8"
+      ],
+      "notes": "O Brasil tem um papel estratégico regional, mas investimentos globais são limitados. A arquitetura local é essencial para escalar soluções. Ainda assim, o cenário regional é sólido. A arquitetura deve alinhar-se ao potencial regional para maximizar impacto.",
+      "line": 42,
+      "column": 3
+    }
+  ]
+}

@@ -46,3 +46,57 @@ export async function compileDeck(ir: Deck) {
   }
   download(await response.blob(), "apresentacao.pptx");
 }
+
+type GoogleStatus = {
+  configured: boolean;
+  authorized: boolean;
+  login: "idle" | "pending" | "authorized" | "error";
+  error: string;
+};
+const googleStatus = async () =>
+  (await (await fetch("/api/google/status")).json()) as GoogleStatus;
+
+/**
+ * Envia o deck atual ao Google Slides. A aba é aberta já no clique (antes de
+ * qualquer await) para o navegador não bloquear: ela mostra o login, se preciso,
+ * e depois a apresentação convertida.
+ */
+export async function sendToGoogleSlides(
+  ir: Deck,
+  onStatus: (message: string) => void,
+): Promise<string> {
+  const tab = window.open("about:blank", "_blank");
+  try {
+    let status = await googleStatus();
+    if (!status.configured)
+      throw new Error(
+        "Google não configurado: salve config/google_client_secret.json (veja docs/GOOGLE_SLIDES.md).",
+      );
+    if (!status.authorized) {
+      const { auth_url } = await request<{ auth_url: string }>(
+        "google/login",
+        {},
+      );
+      if (tab) tab.location.href = auth_url;
+      else window.open(auth_url, "_blank");
+      onStatus("Confirme o acesso na aba do Google…");
+      const limit = Date.now() + 5 * 60_000;
+      while (!status.authorized) {
+        if (Date.now() > limit) throw new Error("Login do Google expirou.");
+        await new Promise((r) => setTimeout(r, 1000));
+        status = await googleStatus();
+        if (status.login === "error") throw new Error(status.error);
+      }
+    }
+    onStatus("Enviando ao Google Slides…");
+    const result = await request<{ url: string; name: string }>(
+      "google/slides",
+      { ir, title: ir.title },
+    );
+    if (tab) tab.location.href = result.url;
+    return result.url;
+  } catch (error) {
+    tab?.close();
+    throw error;
+  }
+}

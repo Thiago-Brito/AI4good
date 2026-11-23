@@ -9,7 +9,7 @@ from uuid import uuid4
 from .evolution import generate_strategy
 from .incremental import save_json
 from .models.ollama_model import OllamaTextModel
-from .paths import project_root
+from .paths import project_root, replace_file
 from .pipeline import validate_source
 
 executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="slidedsl-slm")
@@ -22,7 +22,7 @@ def _persist(job):
     folder.mkdir(parents=True, exist_ok=True)
     temp = folder / "job.tmp.json"
     save_json(temp, job)
-    temp.replace(folder / "job.json")
+    replace_file(temp, folder / "job.json")
 
 
 def read_job(id):

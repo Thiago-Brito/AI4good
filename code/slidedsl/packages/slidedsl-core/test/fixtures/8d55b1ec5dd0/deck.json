@@ -1,0 +1,225 @@
+{
+  "title": "Monolito ou Microsserviços? Quando uma Startup Deve Escolher",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Quando escolher monolito ou microsserviços?",
+      "subtitle": "Decida com base na equipe, na complexidade e no crescimento de um projeto como uma loja virtual.",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O título é direto e dentro do limite. O subtítulo promete os três eixos de decisão: operacional, implantação e equipe. O exemplo qualitativo ('uma loja virtual') é genérico e válido sem fonte. Não há dados numéricos ou reais aqui, conforme exigido.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "Monolito é mais fácil de depurar; microsserviços exigem mais esf",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Monolito",
+          "items": [
+            {
+              "label": "Rastreamento integrado",
+              "detail": "Dados e código são rastreáveis no mesmo ambiente de desenvolvimento."
+            },
+            {
+              "label": "Depuração direta",
+              "detail": "Um desenvolvedor pode examinar comportamento de código e dados sem coordenação."
+            }
+          ]
+        },
+        {
+          "name": "Microsserviços",
+          "items": [
+            {
+              "label": "Coordenação múltipla",
+              "detail": "Depuração exige coordenação entre múltiplos desenvolvedores e equipes."
+            },
+            {
+              "label": "Processos complexos",
+              "detail": "Testes coordenados, discussões e feedback entre engenheiros aumentam o tempo necessário."
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1",
+        "F2"
+      ],
+      "notes": "A depuração monolítica é mais simples porque todos os elementos estão juntos. Em microsserviços, a falta de centralização obriga coordenação entre equipes, como em projetos da Atlassian. A complexidade aumenta com o número de serviços, mesmo que a equipe cresça. Isso é mais evidente em equipes com mais de 15 microsserviços, como a Atlassian em 2016. A depuração exige mais tempo e recursos quando múltiplos desenvolvedores têm responsabilidade por partes distintas do sistema. Nesse caso, a escala do sistema não é linear com a capacidade de depuração da equipe. O exemplo da Atlassian mostra que, mesmo com 1.300 microsserviços, a depuração se torna mais complexa com o crescimento do sistema e da",
+      "line": 8,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "A Atlassian evoluiu de 15 a mais de 1.300 microsserviços com esc",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Começou com 15 microsserviços",
+          "detail": "Em janeiro de 2016, a Atlassian tinha 15 microsserviços, usando Jira e Trello para atribuir 500 clientes difíceis a engenheiros."
+        },
+        {
+          "label": "Expandiu para mais de 1.300 microsserviços",
+          "detail": "Com o crescimento da equipe, a Atlassian expandiu a arquitetura para gerenciar mais de 1.300 microsserviços hoje."
+        },
+        {
+          "label": "Atribuiu 500 clientes a engenheiros",
+          "detail": "A evolução permitiu atribuir cada cliente difícil a um engenheiro específico, melhorando a responsabilidade e o controle."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F3",
+        "F4",
+        "F5"
+      ],
+      "notes": "A Atlassian começou com poucos microsserviços e evoluiu com o crescimento da equipe. O uso de Jira e Trello ajudou a atribuir clientes difíceis a engenheiros específicos. A evolução mostra como a arquitetura pode crescer com o negócio. A chave foi manter a escalabilidade com o aumento do número de equipes e clientes.",
+      "line": 21,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "Microsserviços permitem escalar recursos independentemente e su",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Microsserviços",
+          "items": [
+            {
+              "label": "Escalabilidade independente",
+              "detail": "Escala de recursos baseada em demanda real, como localização geo para 100 mil clientes."
+            },
+            {
+              "label": "Adaptação dinâmica",
+              "detail": "A Atlassian escalou serviços de forma independente, de 15 a mais de 1.300 microsserviços."
+            }
+          ]
+        },
+        {
+          "name": "Monolito",
+          "items": [
+            {
+              "label": "Escalabilidade unificada",
+              "detail": "Escala global depende do desempenho de todo o sistema unificado."
+            },
+            {
+              "label": "Dependência integrada",
+              "detail": "Aumento de carga afeta todos os componentes simultaneamente."
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F8",
+        "F4",
+        "F6"
+      ],
+      "notes": "O exemplo de Atlassian mostra escalabilidade prática com 100 mil clientes. A evolução de 15 para mais de 1.300 microsserviços em 2016 demonstra adaptação contínua. A escala independente permite ajustar recursos por serviço, como localização geo, sem impactar outros. Limitação: o monolito não permite escalabilidade por componente.",
+      "line": 29,
+      "column": 3
+    },
+    {
+      "kind": "citacao",
+      "title": null,
+      "subtitle": null,
+      "author": "F7",
+      "text": "A arquitetura modular monolito combina simplicidade de monolito com modularidade de microsserviços.",
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F7"
+      ],
+      "notes": "A arquitetura modular monolito combina simplicidade de monolito com modularidade de microsserviços. Essa abordagem permite começar com estrutura clara, sem perder flexibilidade para evolução futura. É uma escolha prática para startups que querem evitar complexidade inicial, mas ainda assim escalarem com o tempo. Ideal para equipes que não têm experiência com microsserviços ainda.",
+      "line": 42,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Recomendação prática: comece com arquitetura modular monolito e",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Comece com um monolito modular",
+          "detail": "para uma loja virtual com poucos produtos e equipe pequena"
+        },
+        {
+          "label": "Escale gradualmente com autonomia de equipe",
+          "detail": "quando a equipe cresce, adicione serviços separados com autonomia"
+        },
+        {
+          "label": "Defina módulos funcionais e testáveis",
+          "detail": "use uma estrutura clara de módulos para facilitar mudanças futuras"
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A recomendação parte do cenário real de startups pequenas. O monolito modular oferece simplicidade e controle inicial. A evolução gradual evita riscos de complexidade. A definição de módulos permite mudanças sem interromper o sistema.",
+      "line": 48,
+      "column": 3
+    }
+  ]
+}

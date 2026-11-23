@@ -1,0 +1,230 @@
+{
+  "title": "Como a energia solar funciona em sua casa",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Entenda como a energia solar funciona em sua casa",
+      "subtitle": "O efeito fotovoltaico transforma luz do sol em eletricidade que sua casa pode usar",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O slide de capa apresenta o tema central da apresentação de forma direta e acessível. O título é claro e o subtítulo promete uma explicação visual e simples do funcionamento da energia solar em casa. O conteúdo é neutro, sem dados concretos, e se mantém focado na educação do público.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "O efeito fotovoltaico transforma luz em eletricidade",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Luz do sol atinge módulos",
+          "detail": "Luz do sol atinge os módulos solares em sua casa"
+        },
+        {
+          "label": "Efeito fotovoltaico atua",
+          "detail": "Os módulos transformam a luz em eletricidade em 2023"
+        },
+        {
+          "label": "40% da energia do Brasil",
+          "detail": "Mais de 40% da energia elétrica do Brasil em 2023 foi gerada assim"
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1"
+      ],
+      "notes": "O efeito fotovoltaico é o processo que transforma luz em eletricidade. O exemplo do Brasil em 2023 mostra que isso já é escalar. A frase 'mais de 40%' é concreta e com data, o que torna o ponto real. A explicação é simples, sem jargões, e conecta o fenômeno ao que os moradores vivem no dia a dia. A limitação é que isso não fala sobre o uso final da energia, apenas sobre a geração inicial. O foco é o início do processo, não o consumo ou a instalação completa. O dado é específico e verificável, com fonte clara, o que aumenta a credibilidade sem precisar de cálculos ou comparações extras.",
+      "line": 8,
+      "column": 3
+    },
+    {
+      "kind": "numeros",
+      "title": "A energia solar cresce rapidamente no Brasil e no mundo",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [
+        {
+          "value": "3 GW",
+          "label": "Capacidade instalada no Brasil (janeiro-setembro 2023)"
+        },
+        {
+          "value": "75%",
+          "label": "Crescimento da demanda global por eletricidade em 2025"
+        },
+        {
+          "value": "33,8%",
+          "label": "Participação de fontes renováveis na geração mundial em 2025"
+        }
+      ],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F2",
+        "F4",
+        "F5"
+      ],
+      "notes": "Os dados mostram expansão real da energia solar: no Brasil, o acréscimo de capacidade em 2023 foi maior que em 2022. Globalmente, a energia solar impulsionou 75% do crescimento da demanda elétrica em 2025. A participação de fontes renováveis na geração mundial atingiu 33,8% em 2025, superando o carvão. Esses números indicam que a energia solar é uma força crescente, tanto local quanto global.",
+      "line": 16,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "A energia solar é a principal força por trás do crescimento da g",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Energia solar",
+          "items": [
+            {
+              "label": "Crescimento global",
+              "detail": "75% do crescimento da demanda global em 2025 foi devido à energia solar (F4)"
+            },
+            {
+              "label": "Mudança de liderança",
+              "detail": "Fontes renováveis superaram o carvão em 2025 (F5)"
+            }
+          ]
+        },
+        {
+          "name": "Energia solar no Brasil",
+          "items": [
+            {
+              "label": "Produção no Brasil",
+              "detail": "Mais de 40% da energia elétrica no Brasil em 2023 foi gerada pelo efeito fotovoltaico (F1)"
+            },
+            {
+              "label": "Capacidade instalada",
+              "detail": "Aumento de 3 GW entre janeiro e setembro de 2023 (F2)"
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F4",
+        "F5",
+        "F1",
+        "F2"
+      ],
+      "notes": "A energia solar impulsiona o crescimento global e local. No Brasil, ela já representa mais de 40% da produção e cresce acima de 3 GW em um ano. Esses dados mostram seu papel crescente, mas não indicam que a energia solar é a única fonte de energia elétrica. A comparação destaca seu impacto real, sem exageros ou generalizações. Ainda assim, a geração varia com a hora do dia e as condições climáticas, o que limita sua consistência como fonte única para consumo noturno ou em tempos de chuva. O aumento é real, mas depende de condições locais e de instalação adequada. A energia solar é forte, mas não substitui a rede elétrica em todos os momentos de uso. Em casos de tempestade ou queda de luz, aí",
+      "line": 24,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "Sistemas solares podem ser combinados com outras fontes para ger",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Usa painéis solares",
+          "detail": "16 painéis bifaciais da Jinko Solar geram energia diurna"
+        },
+        {
+          "label": "Complementa com energia eólica",
+          "detail": "Gerador eólico de 5,5 kVA atua em dias nublados e à noite"
+        },
+        {
+          "label": "Integra fonte de energia biológica",
+          "detail": "Biodigestor fornece energia alternativa em períodos de baixa produção"
+        },
+        {
+          "label": "Armazena energia para uso futuro",
+          "detail": "Baterias armazenam energia para uso noturno e emergências"
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F6",
+        "F7",
+        "F8"
+      ],
+      "notes": "Exemplos reais de casas off-grid combinam solar, eólica e biodigestores. A energia eólica atua quando os painéis não geram, especialmente à noite. O biodigestor é uma fonte alternativa sustentável. As baterias armazenam energia para uso contínuo, mesmo sem luz solar.",
+      "line": 37,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Avalie seu telhado e seu consumo antes de instalar",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Verifique a orientação e sombra",
+          "detail": "Verifique se o telhado é inclinado e se há sombra durante o dia."
+        },
+        {
+          "label": "Registre seu perfil de consumo",
+          "detail": "Anote horários de uso intenso de energia."
+        },
+        {
+          "label": "Confira a estrutura do telhado",
+          "detail": "Confira se o telhado suporta o peso dos módulos."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O morador deve observar o telhado para evitar perda de produção. O perfil de consumo ajuda a escolher o tamanho do sistema. A estrutura é crítica para segurança. A conexão à rede não garante energia em falta de luz — é importante confirmar com o instalador.",
+      "line": 46,
+      "column": 3
+    }
+  ]
+}

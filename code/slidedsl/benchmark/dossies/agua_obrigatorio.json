@@ -1,0 +1,135 @@
+{
+  "topic": "Apresente o ciclo da água para alunos do ensino fundamental. Inclua obrigatoriamente: evaporação, condensação, precipitação, infiltração no solo e um exemplo de como a ação humana altera o ciclo.",
+  "queries": [
+    "evaporação ciclo água",
+    "condensação precipitação água",
+    "infiltração solo água exemplo",
+    "ação humana ciclo água exemplo"
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "title": "Ciclo da Água - Toda Matéria",
+      "url": "https://www.todamateria.com.br/ciclo-da-agua/",
+      "provider": "searxng",
+      "snippet": "O calor irradiado pelo sol aquece a água dos rios, lagos, mares e oceanos ocorrendo o fenômeno da Evaporação. Nesse momento, ocorre a transformação do estado líquido da água para o seu estado gasoso, à medida que se desloca da superfície da Terra para a atmosfera.",
+      "text_chars": 264
+    },
+    {
+      "id": "S2",
+      "title": "Ciclo da água: o que é, etapas, mapa mental - Brasil Escola",
+      "url": "https://brasilescola.uol.com.br/biologia/ciclo-agua.htm",
+      "provider": "searxng",
+      "snippet": "O ciclo da água é um ciclo biogeoquímico que garante que a água circule pelo meio físico e pelos seres vivos. Esse processo depende da luz solar, que garante que a água evapore, dando ...",
+      "text_chars": 9668
+    },
+    {
+      "id": "S3",
+      "title": "O processo de infiltração da água em diferentes solos - Brasil Escola",
+      "url": "https://educador.brasilescola.uol.com.br/estrategias-ensino/o-processo-infiltracao-agua-diferentes-solos.htm",
+      "provider": "searxng",
+      "snippet": "Encaixe o \"funil\" no fundo da garrafa, adicione cada tipo de solo em diferentes garrafas e numere cada amostra com as canetas coloridas. Em seguida, coloque 200 ml de água em cada experimento e acompanhe o processo de infiltração da água em diferentes solos.",
+      "text_chars": 2288
+    },
+    {
+      "id": "S4",
+      "title": "Solo na Escola | Infiltração da água no solo (11/05/16) - YouTube",
+      "url": "https://www.youtube.com/watch?v=WCdRZBJMzAA",
+      "provider": "searxng",
+      "snippet": "11 de mai. de 2016 ... Como ocorre a infiltração da água no solo? A gente te mostra em um experimento com o Professor da UFPR e Coordenador do Solo na Escola, ...",
+      "text_chars": 194
+    },
+    {
+      "id": "S5",
+      "title": "O impacto da ação humana no ciclo da água - Adasa",
+      "url": "https://www.adasa.df.gov.br/images/sala_de_leitura/MaterialPedagogico/Versao_Aprendizes/Em_Aprendizes/EM_4a_PUB_TEXTO3.pdf",
+      "provider": "searxng",
+      "snippet": "Por NBJ Systems, S/D. A água do planeta Terra segue um ciclo natural que “recicla” a água, afinal ela não é produzida pelo planeta.",
+      "text_chars": 131
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "A evaporação é a mudança da água do estado líquido para o gasoso.",
+      "kind": "definicao",
+      "quote": "evaporação (mudança da água do estado líquido para o gasoso);",
+      "source_id": "S2",
+      "url": "https://brasilescola.uol.com.br/biologia/ciclo-agua.htm",
+      "source_title": "Ciclo da água: o que é, etapas, mapa mental - Brasil Escola",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F2",
+      "claim": "A condensação é a passagem da água do estado de vapor para o líquido.",
+      "kind": "definicao",
+      "quote": "condensação (passagem da água do estado de vapor para o líquido);",
+      "source_id": "S2",
+      "url": "https://brasilescola.uol.com.br/biologia/ciclo-agua.htm",
+      "source_title": "Ciclo da água: o que é, etapas, mapa mental - Brasil Escola",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    }
+  ],
+  "rejected": [
+    {
+      "afirmacao": "A precipitação não é mencionada no trecho.",
+      "autor": "",
+      "relevancia": "baixa",
+      "tipo": "definicao",
+      "trecho": "evaporação (mudança da água do estado líquido para o gasoso); evapotranspiração (perda de água pelo solo e pelas plantas); sublimação (passagem do gelo e da neve para o estado de vapor sem antes passarem pelo estado líquido); condensação (passagem da água do estado de vapor para o líquido); armazenamento da água nas formas de gelo e neve;",
+      "valor": "",
+      "source_id": "S2",
+      "reason": "pouco relevante para o assunto central"
+    },
+    {
+      "afirmacao": "A infiltração no solo não é mencionada no trecho.",
+      "autor": "",
+      "relevancia": "baixa",
+      "tipo": "definicao",
+      "trecho": "evaporação (mudança da água do estado líquido para o gasoso); evapotranspiração (perda de água pelo solo e pelas plantas); sublimação (passagem do gelo e da neve para o estado de vapor sem antes passarem pelo estado líquido); condensação (passagem da água do estado de vapor para o líquido); armazenamento da água nas formas de gelo e neve;",
+      "valor": "",
+      "source_id": "S2",
+      "reason": "pouco relevante para o assunto central"
+    }
+  ],
+  "log": [
+    {
+      "query": "evaporação ciclo água",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "condensação precipitação água",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "infiltração solo água exemplo",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "ação humana ciclo água exemplo",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "warning": "poucos fatos ou fonte única",
+      "facts": 2,
+      "sources": 1
+    }
+  ],
+  "central_terms": [
+    "ciclo",
+    "água",
+    "evaporação",
+    "condensação",
+    "precipitação",
+    "infiltração"
+  ],
+  "created_at": "2026-11-23T04:30:44+00:00"
+}

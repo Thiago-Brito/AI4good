@@ -1,0 +1,292 @@
+{
+  "title": "Apresentação do TCC SlideDSL para a banca",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Conheça a SlideDSL",
+      "subtitle": "Código controlado vira slides editáveis.",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": "assets/media/086498f3f45ebf3ff19060ecf80800f1650132c453736fe5742dd040e2b5952f.png",
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A abertura já entrega a promessa central do trabalho em uma frase curta e direta. O slide segue o tema claro definido no documento, mantendo a apresentação consistente com o exemplo inicial. Como capa, ele não antecipa detalhes técnicos; apenas posiciona a banca para a proposta do projeto.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "A SlideDSL simplifica a autoria",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Palavras em português",
+          "detail": "A SlideDSL 1.1 usa comandos como adicionar e retangulo em português sem acentos."
+        },
+        {
+          "label": "Ordem fixa dos comandos",
+          "detail": "A sintaxe mantém a mesma sequência de campos para reduzir ambiguidade na leitura do comando."
+        },
+        {
+          "label": "Sem pontuação final",
+          "detail": "O comando termina sem ponto final, o que o aproxima de uma instrução verbal curta."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F8",
+        "F9"
+      ],
+      "notes": "A escolha de linguagem foi pensada para reduzir a distância entre o que a pessoa escreve e o que o sistema executa. Isso ajuda usuários não programadores a reconhecerem a intenção do comando sem precisar interpretar sintaxe tradicional. Quando houver texto literal entre aspas, a DSL ainda aceita acentos e escapes JSON, mas isso não muda a regra geral do comando.",
+      "line": 9,
+      "column": 3
+    },
+    {
+      "kind": "numeros",
+      "title": "O pipeline vai do pedido ao PPTX",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [
+        {
+          "value": "pedido → PPTX",
+          "label": "O sistema converte o pedido em um PPTX editável ao passar por DSL Alto e DSL 1.1."
+        },
+        {
+          "value": "0,6B–4B",
+          "label": "O projeto executa SLMs locais nessa faixa de tamanho, sem ajuste fino."
+        }
+      ],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F12",
+        "F13"
+      ],
+      "notes": "A mensagem central é a cadeia completa de geração, porque ela mostra que o pedido vira um arquivo editável no final. O segundo ponto reforça que o sistema roda com modelos locais pequenos e médios, sem treinamento adicional. Isso ajuda a situar a viabilidade técnica do pipeline sem entrar nos detalhes de validação.",
+      "line": 17,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "A gramática separa alto e baixo nível",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "SlideDSL alto",
+          "items": [
+            {
+              "label": "Símbolo inicial",
+              "detail": "O SlideDSL Alto começa com deck."
+            },
+            {
+              "label": "Unidade de composição",
+              "detail": "A unidade do SlideDSL Alto é slide com intenção."
+            }
+          ]
+        },
+        {
+          "name": "SlideDSL 1.1",
+          "items": [
+            {
+              "label": "Arquivo de gramática",
+              "detail": "O SlideDSL 1.1 usa o arquivo grammar/slidedsl.lark."
+            },
+            {
+              "label": "Unidade de composição",
+              "detail": "A unidade do SlideDSL 1.1 é instrução gráfica."
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F16",
+        "F17",
+        "F18"
+      ],
+      "notes": "A comparação separa intenção e estrutura para mostrar por que o projeto precisa de duas camadas. No alto nível, deck e slide com intenção descrevem o que a apresentação quer dizer. No baixo nível, a gramática em grammar/slidedsl.lark define como isso vira comandos válidos.",
+      "line": 24,
+      "column": 3
+    },
+    {
+      "kind": "imagem",
+      "title": "A validação protege a geração",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": "A geração precisa rejeitar retomadas inconsistentes e reconstruções inválidas.",
+      "unit": null,
+      "image_file": "assets/media/2ac25e0bb3ba3183e41781684f1aa5f9c381088ffa10a591768ec36c9221a3a4.png",
+      "image_query": null,
+      "items": [
+        {
+          "label": "Retomada recusada",
+          "detail": "A retomada --resume é recusada quando os hashes divergem."
+        },
+        {
+          "label": "Reconstrução inválida",
+          "detail": "Comandos como trazer ID para frente podem virar formas plausíveis e inválidas."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F3",
+        "F10"
+      ],
+      "notes": "O ponto aqui é mostrar que a validação não serve só para checar formato; ela bloqueia estados inconsistentes antes da geração continuar. O exemplo de hashes divergentes cobre a proteção da retomada, enquanto o comando de várias palavras mostra a fragilidade da reconstrução automática. Como o slide é de imagem, a foto deve sugerir alerta ou risco, sem depender de elementos textuais específicos.",
+      "line": 37,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Os comandos têm regras rígidas",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Setup no Windows",
+          "detail": "O setup inicial roda com powershell -NoProfile -ExecutionPolicy Bypass -File scripts/setup_windows.ps1."
+        },
+        {
+          "label": "Pull do modelo",
+          "detail": "O ambiente baixa o modelo com ollama pull qwen3:4b-instruct."
+        },
+        {
+          "label": "Modo GBNF na porta 8080",
+          "detail": "No modo GBNF, o servidor sobe com llama-server -m <modelo>.gguf --port 8080."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1",
+        "F2",
+        "F4"
+      ],
+      "notes": "Os três exemplos mostram que a DSL depende de comandos operacionais bem definidos, não de instruções livres. O setup prepara o ambiente no Windows, o pull carrega o modelo e o modo GBNF fixa a execução local na porta 8080. A ressalva é que o slide ilustra configuração e execução, não a avaliação do modo GBNF neste trabalho.",
+      "line": 46,
+      "column": 3
+    },
+    {
+      "kind": "numeros",
+      "title": "A avaliação é automática, sem humanos",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [
+        {
+          "value": "Estrutura",
+          "label": "O trabalho verifica se a saída respeita a gramática e a composição esperada."
+        },
+        {
+          "value": "Métricas automáticas",
+          "label": "O sistema mede o resultado com métricas automáticas, sem julgamento manual."
+        }
+      ],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F14",
+        "F15"
+      ],
+      "notes": "A banca deve entender que a validação não depende de leitura subjetiva de exemplos. O foco está em checar se a estrutura gerada segue as regras e em medir o resultado por indicadores automáticos. Como ressalva, o trabalho não inclui avaliação humana, então a evidência cobre conformidade e métricas, não preferência editorial.",
+      "line": 54,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "A SlideDSL torna slides editáveis",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Adotar linguagem legível",
+          "detail": "A SlideDSL 1.1 usa português sem acentos e ordem fixa, aproximando o código de uma descrição verbal."
+        },
+        {
+          "label": "Fechar o fluxo completo",
+          "detail": "O projeto leva o pedido até o PPTX por uma cadeia única: pedido → DSL Alto → DSL 1.1 → PPTX."
+        },
+        {
+          "label": "Validar sem humanos",
+          "detail": "A próxima etapa deve manter a geração com validade estrutural e indicadores automáticos, sem avaliação humana."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F8",
+        "F9",
+        "F12",
+        "F14"
+      ],
+      "notes": "A síntese deve mostrar decisão de linguagem, execução ponta a ponta e critério de validação. Como próximo passo, a banca pode avaliar se a edição do slide continua possível após a geração e se o fluxo permanece reproduzível. A ressalva é que a conclusão não repete o mecanismo; ela aponta o que o projeto entrega na prática.",
+      "line": 61,
+      "column": 3
+    }
+  ]
+}

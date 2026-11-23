@@ -1,0 +1,465 @@
+{
+  "entries": [
+    {
+      "id": "885a3c311bac",
+      "source": "outputs/testes_reais/20261111-012756_r7/01_documentos/apresentacao.slda",
+      "status": "exported",
+      "has_ir": true,
+      "features": [
+        "font:Calibri",
+        "image",
+        "kind:capa",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:etapas",
+        "kind:imagem",
+        "kind:numeros",
+        "kind:topicos",
+        "layout:capa",
+        "layout:comparacao",
+        "layout:conclusao",
+        "layout:etapas",
+        "layout:imagem",
+        "layout:numeros",
+        "layout:topicos",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "1815a01b6a5b",
+      "source": "outputs/criar/0e74a8899bb44a268d8c54c6b672f871/apresentacao.slda",
+      "status": "exported",
+      "has_ir": true,
+      "features": [
+        "font:Calibri",
+        "kind:capa",
+        "kind:citacao",
+        "kind:conclusao",
+        "kind:linha_do_tempo",
+        "kind:topicos",
+        "layout:capa",
+        "layout:citacao",
+        "layout:conclusao",
+        "layout:linha_do_tempo",
+        "layout:topicos",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "40e6937d16b5",
+      "source": "examples/alto/catalogo.slda",
+      "status": "exported",
+      "has_ir": false,
+      "features": [
+        "image",
+        "kind:capa",
+        "kind:citacao",
+        "kind:grafico",
+        "kind:imagem",
+        "kind:secao",
+        "kind:topicos",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "c7267dfa5cb0",
+      "source": "outputs/testes_reais/20261111-0103/02_editorial_reciclagem/apresentacao.slda",
+      "status": "exported",
+      "has_ir": true,
+      "features": [
+        "font:Calibri",
+        "font:Georgia",
+        "image",
+        "kind:capa",
+        "kind:conclusao",
+        "kind:imagem",
+        "kind:topicos",
+        "layout:capa",
+        "layout:conclusao",
+        "layout:imagem",
+        "layout:topicos",
+        "style:editorial"
+      ]
+    },
+    {
+      "id": "d2c9648448d5",
+      "source": "outputs/testes_reais/20261111-0103/03_vibrante_fotossintese/apresentacao.slda",
+      "status": "exported",
+      "has_ir": true,
+      "features": [
+        "font:Calibri",
+        "font:Trebuchet MS",
+        "image",
+        "kind:capa",
+        "kind:conclusao",
+        "kind:etapas",
+        "kind:imagem",
+        "kind:topicos",
+        "layout:capa",
+        "layout:conclusao",
+        "layout:etapas",
+        "layout:imagem",
+        "layout:topicos",
+        "style:vibrante"
+      ]
+    },
+    {
+      "id": "1b6e5f460704",
+      "source": "outputs/testes_reais/20261111-0103/04_natural_horta/apresentacao.slda",
+      "status": "exported",
+      "has_ir": true,
+      "features": [
+        "font:Calibri",
+        "font:Cambria",
+        "image",
+        "kind:capa",
+        "kind:conclusao",
+        "kind:etapas",
+        "kind:imagem",
+        "kind:topicos",
+        "layout:capa",
+        "layout:conclusao",
+        "layout:etapas",
+        "layout:imagem",
+        "layout:topicos",
+        "style:natural"
+      ]
+    },
+    {
+      "id": "bc9384e023d6",
+      "source": "outputs/api_voz_mobile/visual3_reciclagem_0003/apresentacao.slda",
+      "status": "exported",
+      "has_ir": true,
+      "features": [
+        "font:Calibri",
+        "image",
+        "kind:capa",
+        "kind:conclusao",
+        "kind:imagem",
+        "kind:secao",
+        "kind:topicos",
+        "layout:capa",
+        "layout:conclusao",
+        "layout:imagem",
+        "layout:secao",
+        "layout:topicos",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "5bf3bd7c9c20",
+      "source": "outputs/criar/41acf4f921054061883ab830828def01/apresentacao.slda",
+      "status": "exported",
+      "has_ir": true,
+      "features": [
+        "font:Calibri",
+        "kind:capa",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:etapas",
+        "kind:grafico",
+        "kind:numeros",
+        "kind:topicos",
+        "layout:capa",
+        "layout:comparacao",
+        "layout:conclusao",
+        "layout:etapas",
+        "layout:grafico",
+        "layout:numeros",
+        "layout:topicos",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "9e80fec78b6c",
+      "source": "outputs/testes_reais/20261111-0103/05_escuro_git/apresentacao.slda",
+      "status": "exported",
+      "has_ir": true,
+      "features": [
+        "font:Calibri",
+        "image",
+        "kind:capa",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:etapas",
+        "kind:imagem",
+        "kind:topicos",
+        "layout:capa",
+        "layout:comparacao",
+        "layout:conclusao",
+        "layout:etapas",
+        "layout:imagem",
+        "layout:topicos",
+        "style:escuro"
+      ]
+    },
+    {
+      "id": "4cc710d07278",
+      "source": "outputs/testes_reais/20261111-0103/06_noturno_internet/apresentacao.slda",
+      "status": "exported",
+      "has_ir": true,
+      "features": [
+        "font:Calibri",
+        "image",
+        "kind:capa",
+        "kind:conclusao",
+        "kind:imagem",
+        "kind:topicos",
+        "layout:capa",
+        "layout:conclusao",
+        "layout:imagem",
+        "layout:topicos",
+        "style:noturno"
+      ]
+    },
+    {
+      "id": "28176ab2447a",
+      "source": "examples/alto/microsservicos.slda",
+      "status": "exported",
+      "has_ir": true,
+      "features": [
+        "font:Calibri",
+        "kind:capa",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:etapas",
+        "kind:linha_do_tempo",
+        "kind:numeros",
+        "layout:capa",
+        "layout:comparacao",
+        "layout:conclusao",
+        "layout:etapas",
+        "layout:linha_do_tempo",
+        "layout:numeros",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "ed76236ecd75",
+      "source": "outputs/criar/34b8eaf24fd54474ad9b6c01776d611f/apresentacao.slda",
+      "status": "exported",
+      "has_ir": false,
+      "features": [
+        "kind:capa",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:etapas",
+        "kind:numeros",
+        "kind:topicos",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "3d8f6ac894c4",
+      "source": "outputs/criar/5b18a40c3b94471ea84a8b5fa6650ff9/apresentacao.slda",
+      "status": "exported",
+      "has_ir": false,
+      "features": [
+        "kind:capa",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:etapas",
+        "kind:topicos",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "84d8b25bc85e",
+      "source": "outputs/criar/6d2fc6e74a4c4b6f8167481437fe8a32/apresentacao.slda",
+      "status": "exported",
+      "has_ir": false,
+      "features": [
+        "kind:capa",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:etapas",
+        "kind:topicos",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "f40823a711cc",
+      "source": "outputs/criar/83128ff9e3694a24b8a3bd0a11f60dca/apresentacao.slda",
+      "status": "exported",
+      "has_ir": false,
+      "features": [
+        "kind:capa",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:etapas",
+        "kind:numeros",
+        "kind:topicos",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "082cc2b1b85b",
+      "source": "outputs/criar/e4a9112bfefe4b54a70729dbd7f8cd9b/apresentacao.slda",
+      "status": "exported",
+      "has_ir": false,
+      "features": [
+        "kind:capa",
+        "kind:citacao",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:numeros",
+        "kind:topicos",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "8d55b1ec5dd0",
+      "source": "outputs/testes_multitemas_20261012/02_micro_medio/apresentacao.slda",
+      "status": "exported",
+      "has_ir": false,
+      "features": [
+        "kind:capa",
+        "kind:citacao",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:etapas",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "5167e10bed9a",
+      "source": "outputs/testes_multitemas_20261012/05_solar_medio/apresentacao.slda",
+      "status": "exported",
+      "has_ir": false,
+      "features": [
+        "kind:capa",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:topicos",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "9130fa6a1a14",
+      "source": "outputs/testes_multitemas_20261012/06_solar_detalhado_execucao_corrigida/apresentacao.slda",
+      "status": "exported",
+      "has_ir": false,
+      "features": [
+        "kind:capa",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:etapas",
+        "kind:numeros",
+        "kind:topicos",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "8a1852c281db",
+      "source": "outputs/testes_multitemas_20261012/06_solar_detalhado_repeticao/apresentacao.slda",
+      "status": "exported",
+      "has_ir": false,
+      "features": [
+        "kind:capa",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:etapas",
+        "kind:numeros",
+        "kind:topicos",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "31d1b48759fd",
+      "source": "outputs/testes_multitemas_20261012/11_estudo_medio_sem_fatos/apresentacao.slda",
+      "status": "exported",
+      "has_ir": false,
+      "features": [
+        "kind:capa",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:etapas",
+        "kind:topicos",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "b816ac92bdc7",
+      "source": "outputs/testes_multitemas_20261012/12_estudo_detalhado_sem_fatos/apresentacao.slda",
+      "status": "exported",
+      "has_ir": false,
+      "features": [
+        "kind:capa",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:etapas",
+        "kind:topicos",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "cbf8c7d8c2b3",
+      "source": "outputs/testes_reais/20261111-012756_r7/02_docx/apresentacao.slda",
+      "status": "exported",
+      "has_ir": false,
+      "features": [
+        "image",
+        "kind:capa",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:imagem",
+        "kind:numeros",
+        "kind:topicos",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "bb1130aa61ff",
+      "source": "outputs/testes_reais/20261111-0131_r7/01_documentos/apresentacao.slda",
+      "status": "exported",
+      "has_ir": false,
+      "features": [
+        "image",
+        "kind:capa",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:etapas",
+        "kind:imagem",
+        "kind:linha_do_tempo",
+        "kind:numeros",
+        "kind:topicos",
+        "style:claro"
+      ]
+    }
+  ],
+  "coverage": [
+    "font:Calibri",
+    "font:Cambria",
+    "font:Georgia",
+    "font:Trebuchet MS",
+    "image",
+    "kind:capa",
+    "kind:citacao",
+    "kind:comparacao",
+    "kind:conclusao",
+    "kind:etapas",
+    "kind:grafico",
+    "kind:imagem",
+    "kind:linha_do_tempo",
+    "kind:numeros",
+    "kind:secao",
+    "kind:topicos",
+    "layout:capa",
+    "layout:citacao",
+    "layout:comparacao",
+    "layout:conclusao",
+    "layout:etapas",
+    "layout:grafico",
+    "layout:imagem",
+    "layout:linha_do_tempo",
+    "layout:numeros",
+    "layout:secao",
+    "layout:topicos",
+    "style:claro",
+    "style:editorial",
+    "style:escuro",
+    "style:natural",
+    "style:noturno",
+    "style:vibrante"
+  ]
+}

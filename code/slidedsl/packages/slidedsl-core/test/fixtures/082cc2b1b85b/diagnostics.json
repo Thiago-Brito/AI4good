@@ -1,0 +1,30 @@
+[
+  {
+    "code": "A012",
+    "severity": "AVISO"
+  },
+  {
+    "code": "A012",
+    "severity": "AVISO"
+  },
+  {
+    "code": "A009",
+    "severity": "AVISO"
+  },
+  {
+    "code": "A009",
+    "severity": "AVISO"
+  },
+  {
+    "code": "A009",
+    "severity": "AVISO"
+  },
+  {
+    "code": "A009",
+    "severity": "AVISO"
+  },
+  {
+    "code": "A015",
+    "severity": "ERRO"
+  }
+]

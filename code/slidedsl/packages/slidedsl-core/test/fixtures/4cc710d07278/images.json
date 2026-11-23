@@ -1,0 +1,52 @@
+{
+  "assets/media/c85f0ebc73aaf9a32d87af19ba139d328870ba7d161db806348e1875550154d1.png": {
+    "width": 1280,
+    "height": 960,
+    "metadata": {
+      "id": "c85f0ebc73aaf9a32d87af19ba139d328870ba7d161db806348e1875550154d1",
+      "provider": "commons",
+      "title": "File:Institute of Watch Internet Network booth 20191207a.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/0/03/Institute_of_Watch_Internet_Network_booth_20191207a.jpg/1280px-Institute_of_Watch_Internet_Network_booth_20191207a.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Institute_of_Watch_Internet_Network_booth_20191207a.jpg",
+      "author": "Solomon203",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "attribution": "File:Institute of Watch Internet Network booth 20191207a.jpg — Solomon203 — CC BY-SA 4.0",
+      "width": 1280,
+      "height": 960,
+      "description": "​2019年台北資訊月，網路內容防護機構攤位。",
+      "lexical_score": 1.0,
+      "query": "internet network",
+      "asset": "assets/media/c85f0ebc73aaf9a32d87af19ba139d328870ba7d161db806348e1875550154d1.png",
+      "downloaded_utc": "2026-11-11T04:05:53.318376+00:00",
+      "source_sha256": "73df0cfde59b16e8f07c088df6d0c54b676df171482964bc85b7b38b3de924c3",
+      "reviewed": false,
+      "asset_sha256": "51c68d15e01456c5899ea1e8e6f47624076cfbc0ac5e28b1b84aa4825f06d85d"
+    }
+  },
+  "assets/media/cc15f985aecb588ef34435d688f38f159db7626d71a8535e9f4801c799714027.png": {
+    "width": 800,
+    "height": 600,
+    "metadata": {
+      "id": "cc15f985aecb588ef34435d688f38f159db7626d71a8535e9f4801c799714027",
+      "provider": "commons",
+      "title": "File:Navigateur web nintendo 3ds.png",
+      "url": "https://upload.wikimedia.org/wikipedia/commons/8/83/Navigateur_web_nintendo_3ds.png?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail_unscaled",
+      "page": "https://commons.wikimedia.org/wiki/File:Navigateur_web_nintendo_3ds.png",
+      "author": "Daft33Punk",
+      "license": "CC BY-SA 3.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/3.0",
+      "attribution": "File:Navigateur web nintendo 3ds.png — Daft33Punk — CC BY-SA 3.0",
+      "width": 800,
+      "height": 600,
+      "description": "Photo of the Nintendo 3DS web browser on the Wikipedia home page.",
+      "lexical_score": 1.0,
+      "query": "web browser",
+      "asset": "assets/media/cc15f985aecb588ef34435d688f38f159db7626d71a8535e9f4801c799714027.png",
+      "downloaded_utc": "2026-11-11T04:05:58.395500+00:00",
+      "source_sha256": "b4cdedb33d603a3a8d22c187253e8dd1291508fbb6bf5e21e948e9b7b357f406",
+      "reviewed": false,
+      "asset_sha256": "152e0e920bcd9dcaac075c43e549320f58f3855ec29bf8d891ba75f5f26944c7"
+    }
+  }
+}

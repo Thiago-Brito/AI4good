@@ -7,7 +7,7 @@ import json
 from threading import RLock
 from uuid import uuid4
 
-from .paths import project_root
+from .paths import project_root, replace_file
 
 executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="slidedsl-alto")
 lock = RLock()
@@ -23,7 +23,7 @@ def _persist(job):
     path.mkdir(parents=True, exist_ok=True)
     temp = path / "job.tmp.json"
     temp.write_text(json.dumps(job, ensure_ascii=False, default=str), "utf-8")
-    temp.replace(path / "job.json")
+    replace_file(temp, path / "job.json")
 
 
 def read_job(id: str) -> dict:
@@ -47,10 +47,17 @@ def _model(payload):
         model.context_length = 8192
         model.output_tokens = 2048
         model.metadata.update(num_ctx=8192, num_predict=2048)
+    elif payload["provider"] == "openai":
+        model.output_tokens = payload.get("max_output_tokens", 2048)
     return model
 
 
 def _work(id: str, payload: dict):
+    def usage(summary):
+        with lock:
+            jobs[id]["usage"] = summary
+            _persist(jobs[id])
+
     def say(message: str):
         with lock:
             jobs[id]["events"].append(
@@ -77,15 +84,22 @@ def _work(id: str, payload: dict):
             model,
             research_provider=None if payload["buscador"] == "nenhum" else payload["buscador"],
             langs=tuple(payload["idiomas"]),
+            document_ids=payload.get("documentos"),
+            sources_mode=payload.get("fontes"),
             n_slides=payload["slides"],
             theme=payload["tema"],
             mode=mode,
             candidates=payload["candidatos"],
             repair_max=payload["reparos"],
             images=payload["imagens"],
+            batch=payload.get("lote", False),
+            image_source=payload.get("imagens_fonte", "livres"),
+            ai_profile=payload.get("imagens_ia_qualidade", "economica"),
             contact=payload.get("contato") or None,
             allow_without_facts=payload["permitir_sem_fatos"],
             progress=say,
+            max_calls=payload.get("max_calls", 60),
+            on_usage=usage,
         )
         result = {"report": report, "folder": str(out.relative_to(project_root()))}
         dossier = out / "dossie.json"
@@ -128,7 +142,84 @@ def submit(payload: dict) -> dict:
             "result": None,
             "error": None,
             "payload": payload,
+            "usage": None,
         }
         _persist(jobs[id])
     executor.submit(_work, id, payload)
+    return read_job(id)
+
+
+def _total_usage(out):
+    """All attempts remain charged, including undone and failed revisions."""
+    paths = [out / "uso.json", *(out / "versoes").glob("*/uso.json")]
+    summaries = [json.loads(p.read_text("utf-8")) for p in paths if p.is_file()]
+    if not summaries:
+        return None
+    result = dict(summaries[0])
+    for key in ("calls", "max_calls", "failed_calls", "known_usage_calls", "unknown_usage_calls",
+                "known_input_tokens", "known_output_tokens", "known_cached_input_tokens",
+                "known_cost_usd", "text_cost_usd", "image_cost_usd", "image_calls", "unknown_image_cost"):
+        result[key] = sum(s.get(key, 0) or 0 for s in summaries)
+    result["cost_usd"] = (sum(s["cost_usd"] for s in summaries)
+                          if all(s.get("cost_usd") is not None for s in summaries) else None)
+    return result
+
+
+def edit_job(id, payload):
+    from .alto_edit import ajustar_alto, export_edit, refazer_slide
+    from .model_usage import RecordedModel
+    from .research import Dossier
+
+    with lock:
+        job = read_job(id)
+        if job["state"] != "completed" or not job.get("result", {}).get("alto"):
+            raise ValueError("Criação ainda não está pronta para edição.")
+        if jobs.get(id, {}).get("editing"):
+            raise RuntimeError("Já existe uma edição em andamento.")
+        jobs[id] = job
+        job["editing"] = True
+        _persist(job)
+    out = folder(id)
+    revision = out / "versoes" / uuid4().hex
+    action = payload["acao"]
+    try:
+        if action == "desfazer":
+            history = job.get("history", [])
+            if not history:
+                raise ValueError("Não há versão anterior.")
+            previous = json.loads((out / history[-1]).read_text("utf-8"))
+            history.pop()
+            job["result"] = previous
+        else:
+            facts = Dossier.load(out / "dossie.json").fact_map() if (out / "dossie.json").exists() else {}
+            source = job["result"]["alto"]
+            if action == "refazer":
+                tracked = RecordedModel(_model(job["payload"]), revision, max_calls=2)
+                outline = json.loads((out / "roteiro.json").read_text("utf-8")) if (out / "roteiro.json").exists() else None
+                source = refazer_slide(source, payload["slide"], payload.get("instrucao") or "",
+                                       facts, tracked, roteiro=outline)
+            else:
+                source = ajustar_alto(source, numero=payload["slide"],
+                    tema=payload.get("tema"), foto_buscar=payload.get("foto_buscar"),
+                    foto_arquivo=payload.get("foto_arquivo"), sem_foto=action == "sem_foto",
+                    mover_para=payload.get("mover_para"), excluir=action == "excluir")
+            built = export_edit(source, revision, facts)
+            previous_path = revision / "anterior.json"
+            previous_path.write_text(json.dumps(job["result"], ensure_ascii=False), "utf-8")
+            job.setdefault("history", []).append(str(previous_path.relative_to(out)))
+            if facts:
+                Dossier.load(out / "dossie.json").save(revision / "dossie.json")
+            result = deepcopy(job["result"])
+            result.update(alto=source, source=built.dsl, ir=built.validation.ir.model_dump(mode="json"),
+                folder=str(revision.relative_to(project_root())),
+                diagnostics=[d.model_dump() for d in built.all_diagnostics], validation=built.report())
+            result["report"].update(valid=True, pptx=str(revision / "apresentacao.pptx"), theme=built.deck.theme)
+            job["result"] = result
+    finally:
+        with lock:
+            job["usage"] = _total_usage(out) or job.get("usage")
+            if job.get("result") and job.get("usage"):
+                job["result"]["report"].update(usage=job["usage"], calls=job["usage"]["calls"])
+            job["editing"] = False
+            _persist(job)
     return read_job(id)

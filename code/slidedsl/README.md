@@ -1,5 +1,11 @@
 # SlideDSL
 
+> Evolução de APIs, voz e celular: a branch `feature/slidedsl-api-voz-mobile` já permite
+> selecionar OpenAI no fluxo Alto e acompanhar consumo por chamada. Configure o `.env`
+> local a partir de [.env.example](.env.example) e execute `slidedsl serve`; a chave fica
+> no servidor. A validação remota ainda depende da conexão com a API.
+> Estado, testes e próxima tarefa: [registro de continuidade](docs/CONTINUIDADE_API_VOZ_MOBILE.md).
+
 **IA local (SLMs) + linguagem específica de domínio (DSL) para gerar apresentações de slides
 automaticamente.**
 
@@ -450,3 +456,37 @@ Lista comentada e com links em [docs/REFERENCIAS.md](docs/REFERENCIAS.md). Princ
 * YANG, A. et al. Qwen3 Technical Report. arXiv:2505.09388, 2025.
 * ZHENG, H. et al. PPTAgent: Generating and Evaluating Presentations Beyond Text-to-Slides. arXiv:2501.03936, 2025.
 * SEARXNG. Search API. https://docs.searxng.org/dev/search_api.html.
+
+## Usar seus documentos
+
+No painel Criar com pesquisa, arraste ou selecione arquivos em **Arquivos de base**.
+TXT, MD e PDF textual: até 2 MiB; DOCX sem macros/cifra: até 5 MiB; até oito arquivos.
+A internet desliga ao anexar; pode ser ativada nas opções avançadas. Extração e
+recuperação são locais; somente trechos usados seguem ao provedor escolhido. Sem OCR.
+
+```powershell
+slidedsl criar "Apresentação do meu TCC para a banca" --documento artigo.md --documento projeto.docx --fontes documentos --tema auto --out outputs/meu_tcc
+```
+
+Use `--fontes documentos+internet` para suplementos web, com prioridade documental.
+Dossiê e notas relacionam F# ao nome do documento e trecho. Revise a sustentação das
+frases: citação literal não comprova toda paráfrase do modelo.
+
+## Refazer um slide
+
+No resultado do CriarPanel, preencha a instrução junto à miniatura e clique em
+**Refazer este slide**. Trocar/remover foto, trocar estilo, mover e excluir são ajustes
+sem inferência. **Desfazer a última edição** recupera a versão anterior; o consumo de
+todas as tentativas permanece somado. Revisões: `outputs/criar/<id>/versoes/`.
+
+```powershell
+slidedsl alto-refazer outputs/meu_tcc/apresentacao.slda --slide 3 --instrucao "Transforme em comparação" --provider openai --model gpt-5.4-mini --out outputs/meu_tcc_refeito
+slidedsl alto-ajustar outputs/meu_tcc/apresentacao.slda --tema editorial --out outputs/meu_tcc_editorial
+slidedsl alto-ajustar outputs/meu_tcc/apresentacao.slda --slide 3 --foto-buscar "balcony vegetable garden" --out outputs/nova_foto
+```
+
+O dossiê vizinho é carregado automaticamente; use `--dossie` para outro caminho.
+`alto-ajustar` aceita também `--foto-arquivo foto.jpg`, `--sem-foto`, `--mover-para N`
+e `--excluir`, uma operação por execução. Cada saída deve ser nova. A edição de um
+slide conserva os demais blocos do `.slda` em bytes. `--out output/...` e `reports/...`
+continuam aceitos pela CLI.

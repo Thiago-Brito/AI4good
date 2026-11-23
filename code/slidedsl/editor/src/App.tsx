@@ -13,6 +13,7 @@ import {
   exportDeck,
   importAlto,
   importSource,
+  sendToGoogleSlides,
   updateRelation,
   validateDeck,
 } from "./api";
@@ -311,6 +312,18 @@ export default function App() {
           }
         >
           Gerar PPTX
+        </button>
+        <button
+          disabled={busy || !deck}
+          title="Converte o deck atual em Google Slides no seu Drive"
+          onClick={() =>
+            run(async () => {
+              const url = await sendToGoogleSlides(deck!, setStatus);
+              setStatus(`Enviado ao Google Slides: ${url}`);
+            })
+          }
+        >
+          Google Slides
         </button>
       </section>
       <p className="status" role="status">

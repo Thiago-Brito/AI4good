@@ -1,0 +1,189 @@
+{
+  "title": "Monolito ou microsserviços para uma startup: quando cada um compensa",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Monolito ou microsserviços para uma startup",
+      "subtitle": "Decidir qual arquitetura compensa em cada fase do crescimento",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O slide apresenta a questão central da apresentação: como escolher entre monolito e microsserviços ao longo do crescimento de uma startup. O foco é a decisão estratégica, não a técnica. A mensagem é clara e direta, sem dados fictícios.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "citacao",
+      "title": null,
+      "subtitle": null,
+      "author": "Lessa",
+      "text": "O desenvolvimento de software terá maior ênfase em práticas seguras, revisões de código, testes e integração de medidas de proteção.",
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F2"
+      ],
+      "notes": "Mostrar que a segurança é uma prioridade desde o início, não um adicional",
+      "line": 8,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Práticas seguras são essenciais para startups",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Revisões de código",
+          "detail": "O time de desenvolvimento revisa cada mudança no código antes de integrar ao sistema principal, conforme destacado em F2."
+        },
+        {
+          "label": "Integração de proteção",
+          "detail": "Medidas de proteção são integradas desde as primeiras fases do desenvolvimento, como previsto em F3."
+        },
+        {
+          "label": "Análise de riscos iniciais",
+          "detail": "O time de negócio analisa indicadores iniciais antes de lançar versões futuras, conforme F3."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F2",
+        "F3"
+      ],
+      "notes": "Práticas seguras começam desde o início. A revisão de código e análise de riscos evitam falhas no lançamento. A segurança é parte do desenvolvimento desde o início, conforme F3.",
+      "line": 14,
+      "column": 3
+    },
+    {
+      "kind": "linha_do_tempo",
+      "title": "Segurança no ciclo de desenvolvimento é crítica",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [
+        {
+          "date": "2014",
+          "label": "Análise de indicadores inicial",
+          "detail": "O time de negócio analisa indicadores antes de lançar versões futuras"
+        },
+        {
+          "date": "2014",
+          "label": "Segurança desde o início",
+          "detail": "O processo de segurança começa nas fases iniciais do desenvolvimento"
+        }
+      ],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F3"
+      ],
+      "notes": "A segurança começa nas fases iniciais, conforme F3. Em 2014, o time analisa indicadores antes de lançar versões futuras. A iniciativa de segurança é parte do ciclo de desenvolvimento desde o início. A informação é baseada apenas em F3, que menciona fases iniciais e análise de indicadores.",
+      "line": 22,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Monolito compensa em fase inicial",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Lançamento rápido",
+          "detail": "Uma loja online lançou produto com um monolito"
+        },
+        {
+          "label": "Desenvolvimento ágil",
+          "detail": "Um app de reservas foi desenvolvido em um único sistema"
+        },
+        {
+          "label": "Entrega rápida",
+          "detail": "Uma startup de delivery entregou produto com monolito"
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A simplicidade do monolito permite lançar produtos em poucos dias. Exemplos reais mostram que startups pequenas conseguem entregar rapidamente. Isso é válido quando a equipe é pequena e o foco é lançar primeiro.",
+      "line": 29,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Microsserviços compensam com crescimento",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Escalabilidade por módulo",
+          "detail": "Quando a equipe cresce, um novo módulo pode ser desenvolvido sem interromper o funcionamento do sistema."
+        },
+        {
+          "label": "Independência funcional",
+          "detail": "Um aplicativo de entregas pode lançar novas funcionalidades, como pedidos por voz, sem alterar o sistema de pagamento."
+        },
+        {
+          "label": "Crescimento seguro e rápido",
+          "detail": "Quando novos produtos são lançados, cada um pode ser testado e otimizado sem riscos ao núcleo do sistema."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Ao crescer, startups precisam lançar novas funcionalidades rapidamente. A independência de módulos permite testar e lançar novos produtos sem riscos. Isso é especialmente útil quando a equipe aumenta. A escolha de microsserviços não é inicial, mas evolutiva — ideal para startups que crescem com foco em inovação.",
+      "line": 36,
+      "column": 3
+    }
+  ]
+}

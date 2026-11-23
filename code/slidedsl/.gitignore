@@ -14,3 +14,6 @@ assets/media/
 *.log
 editor/test-results/
 editor/playwright-report/
+config/google_client_secret.json
+config/google_token.json
+client_secret*.json

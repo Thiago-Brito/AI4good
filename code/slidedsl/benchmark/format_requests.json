@@ -1,0 +1,120 @@
+{
+  "protocol": "tcc-formatos-v1",
+  "created": "2026-11-22",
+  "description": "Base comum dos testes T1-T7 do TCC (docs/PLANO_TCC.md): 4 temas x 3 niveis de detalhe. Cada pedido usa o dossie fixo benchmark/dossies/<id>.json, gerado uma vez.",
+  "n_slides": 6,
+  "seeds": [11, 22, 33, 44, 55],
+  "order_seed": 20261122,
+  "levels": {
+    "tema": "so o tema",
+    "detalhado": "publico, objetivo e foco",
+    "obrigatorio": "detalhado + itens que devem aparecer (conferidos por cobertura)"
+  },
+  "requests": [
+    {
+      "id": "solar_tema",
+      "theme": "energia_solar",
+      "level": "tema",
+      "prompt": "Energia solar residencial.",
+      "obligations": []
+    },
+    {
+      "id": "solar_detalhado",
+      "theme": "energia_solar",
+      "level": "detalhado",
+      "prompt": "Apresente energia solar residencial para moradores que pensam em instalar painéis em casa: como funciona, quanto custa e em quanto tempo o investimento se paga.",
+      "obligations": []
+    },
+    {
+      "id": "solar_obrigatorio",
+      "theme": "energia_solar",
+      "level": "obrigatorio",
+      "prompt": "Apresente energia solar residencial para moradores que pensam em instalar painéis em casa. Inclua obrigatoriamente: o papel do inversor, a compensação de energia com a distribuidora, o tempo de retorno do investimento e um cuidado de manutenção.",
+      "obligations": [
+        "Função do inversor",
+        "Compensação de energia com a distribuidora",
+        "Tempo de retorno do investimento",
+        "Um cuidado de manutenção"
+      ]
+    },
+    {
+      "id": "git_tema",
+      "theme": "git",
+      "level": "tema",
+      "prompt": "Git para iniciantes.",
+      "obligations": []
+    },
+    {
+      "id": "git_detalhado",
+      "theme": "git",
+      "level": "detalhado",
+      "prompt": "Apresente Git para estudantes que nunca usaram controle de versão: por que usar, o ciclo básico de trabalho e como colaborar com outras pessoas.",
+      "obligations": []
+    },
+    {
+      "id": "git_obrigatorio",
+      "theme": "git",
+      "level": "obrigatorio",
+      "prompt": "Apresente Git para estudantes que nunca usaram controle de versão. Inclua obrigatoriamente: a diferença entre commit e push, o uso de branches, o que é um conflito de merge e uma boa prática de mensagem de commit.",
+      "obligations": [
+        "Diferença entre commit e push",
+        "Uso de branches",
+        "O que é conflito de merge",
+        "Boa prática de mensagem de commit"
+      ]
+    },
+    {
+      "id": "agua_tema",
+      "theme": "ciclo_agua",
+      "level": "tema",
+      "prompt": "Ciclo da água.",
+      "obligations": []
+    },
+    {
+      "id": "agua_detalhado",
+      "theme": "ciclo_agua",
+      "level": "detalhado",
+      "prompt": "Apresente o ciclo da água para alunos do ensino fundamental, explicando as etapas e por que o ciclo é importante para a vida e para o abastecimento das cidades.",
+      "obligations": []
+    },
+    {
+      "id": "agua_obrigatorio",
+      "theme": "ciclo_agua",
+      "level": "obrigatorio",
+      "prompt": "Apresente o ciclo da água para alunos do ensino fundamental. Inclua obrigatoriamente: evaporação, condensação, precipitação, infiltração no solo e um exemplo de como a ação humana altera o ciclo.",
+      "obligations": [
+        "Evaporação",
+        "Condensação",
+        "Precipitação",
+        "Infiltração no solo",
+        "Exemplo de alteração humana do ciclo"
+      ]
+    },
+    {
+      "id": "sono_tema",
+      "theme": "sono",
+      "level": "tema",
+      "prompt": "Sono e desempenho nos estudos.",
+      "obligations": []
+    },
+    {
+      "id": "sono_detalhado",
+      "theme": "sono",
+      "level": "detalhado",
+      "prompt": "Apresente para universitários a relação entre sono e desempenho nos estudos: quanto dormir, o que acontece com a memória durante o sono e hábitos que ajudam.",
+      "obligations": []
+    },
+    {
+      "id": "sono_obrigatorio",
+      "theme": "sono",
+      "level": "obrigatorio",
+      "prompt": "Apresente para universitários a relação entre sono e desempenho nos estudos. Inclua obrigatoriamente: a quantidade de sono recomendada para adultos, o papel do sono na consolidação da memória, o efeito da luz de telas à noite e um hábito prático de higiene do sono.",
+      "obligations": [
+        "Quantidade de sono recomendada para adultos",
+        "Sono e consolidação da memória",
+        "Efeito da luz de telas à noite",
+        "Hábito prático de higiene do sono"
+      ]
+    }
+  ]
+}

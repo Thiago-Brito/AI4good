@@ -83,6 +83,32 @@ def test_openai_request_and_secret_not_logged(monkeypatch):
         assert "fake-secret-for-test" not in json.dumps(m.metadata)
 
 
+def test_openai_corta_campo_acima_do_maxlength_em_vez_de_falhar(monkeypatch):
+    from slidedsl.models.base import ModelError
+    from slidedsl.research import extract_schema
+
+    monkeypatch.setenv("OPENAI_API_KEY", "fake")
+    fact = {"afirmacao": "A demo levou 160 s no total.", "tipo": "numero",
+            "valor": "160 s de tempo total da demo, medido no Windows 10",
+            "trecho": "x" * 1200, "autor": "", "relevancia": "alta"}
+    answers = [{"fatos": [fact] * 6}, {"fatos": [dict(fact, afirmacao="curta")]}]
+
+    def handler(request):
+        content = json.dumps(answers.pop(0))
+        return httpx.Response(200, json={"choices": [
+            {"message": {"content": content}, "finish_reason": "stop"}]})
+
+    with httpx.Client(transport=httpx.MockTransport(handler)) as c:
+        m = OpenAITextModel("gpt-5.4-mini", client=c)
+        data = json.loads(m.generate("s", "u", response_schema=extract_schema()))
+        assert len(data["fatos"]) == 4
+        assert len(data["fatos"][0]["valor"]) == 40 and len(data["fatos"][0]["trecho"]) == 900
+        assert m.metadata["schema_truncated"] is True
+        # Abaixo do mínimo não há como consertar: continua sendo erro.
+        with pytest.raises(ModelError, match="schema do domínio"):
+            m.generate("s", "u", response_schema=extract_schema())
+
+
 def test_missing_openai_key(monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     assert OpenAITextModel("gpt-4.1").available()[0] is False

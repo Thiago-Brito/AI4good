@@ -1,0 +1,219 @@
+{
+  "title": "Energia Solar Fotovoltaica Residencial: O que você precisa知道",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "A energia solar converte luz do sol em eletricidade",
+      "subtitle": "Como os painéis solares e o inversor geram eletricidade em um sistema doméstico",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O título apresenta o funcionamento básico do sistema. O subtítulo promete uma explicação prática sobre os componentes e como eles trabalham juntos. O exemplo qualitativo de 'um sistema doméstico' é genérico e seguro, sem dados reais.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Os painéis solares geram eletricidade e o inversor a transforma",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Painéis geram eletricidade",
+          "detail": "Os painéis solares geram eletricidade direta (DC) a partir da luz do sol."
+        },
+        {
+          "label": "Inversor transforma energia",
+          "detail": "O inversor transforma essa eletricidade em alternada (AC) usável na casa."
+        },
+        {
+          "label": "Relação de potência 1,3",
+          "detail": "Relação comum de 1,3 entre potência do gerador (6,5 kWp) e do inversor (5 kW)."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1",
+        "F2",
+        "F3"
+      ],
+      "notes": "O sistema funciona com dois componentes: painéis que geram energia DC e o inversor que a transforma em AC. A relação de 1,3 é comum em sistemas de 6,5 kWp com inversor de 5 kW. Isso garante que o inversor suporte a potência dos painéis. A configuração é baseada em exemplos reais de instalação, não em previsões ou promessas de economia. O inversor deve ser dimensionado para não sobrecarregar os painéis, conforme a F1. A relação 1,3 é um valor comum, não um limite máximo, e pode variar conforme o projeto (F2 e F3).",
+      "line": 8,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "Conexão à rede e autonomia",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Conectado à rede",
+          "items": [
+            {
+              "label": "Conexão à rede",
+              "detail": "Uma casa com varanda em bairro residencial pode usar energia gerada durante o dia."
+            },
+            {
+              "label": "Energia enviada",
+              "detail": "A energia é enviada à rede quando há produção acima do consumo diário."
+            },
+            {
+              "label": "Uso contínuo",
+              "detail": "O morador pode usar energia gerada durante o dia para alimentar a casa."
+            }
+          ]
+        },
+        {
+          "name": "Com bateria",
+          "items": [
+            {
+              "label": "Autonomia total",
+              "detail": "Um sistema com bateria armazena energia para uso noturno."
+            },
+            {
+              "label": "Funcionamento contínuo",
+              "detail": "O sistema funciona mesmo sem conexão com a rede elétrica."
+            },
+            {
+              "label": "Uso noturno",
+              "detail": "É possível usar energia durante a noite sem depender da rede."
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O sistema conectado à rede depende da rede elétrica para usar o excesso. O com bateria permite usar energia mesmo sem conexão. A escolha depende do uso diário e da localização. Não há dados reais — os exemplos são genéricos.",
+      "line": 16,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Sombra sobre os painéis reduz a produção de energia",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Árvores próximas",
+          "detail": "Uma árvore próxima ao telhado pode projetar sombra durante o dia."
+        },
+        {
+          "label": "Edifícios vizinhos",
+          "detail": "Um edifício vizinho pode bloquear a luz solar em parte do painel."
+        },
+        {
+          "label": "Estruturas no telhado",
+          "detail": "Estruturas metálicas no telhado podem criar sombra em áreas específicas."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A sombra, mesmo parcial, reduz a produção. Exemplos comuns incluem árvores ou estruturas. O impacto varia com a posição e a hora do dia. É importante verificar o local antes da instalação.",
+      "line": 30,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "A manutenção é simples: limpeza e inspeção periódica",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Limpeza regular",
+          "detail": "uma casa com telhado inclinado em região com chuva frequente"
+        },
+        {
+          "label": "Evitar sombra permanente",
+          "detail": "um ambiente com vegetação densa ao redor dos painéis"
+        },
+        {
+          "label": "Inspeção periódica",
+          "detail": "um morador que realiza inspeção semanal com um pano seco"
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A limpeza ajuda a manter a eficiência. Em áreas com chuva, a umidade pode acumular-se. A inspeção semanal é prática comum em casas com painéis expostos. Evitar vegetação densa evita redução de produção por sombra contínua. A manutenção é prática e acessível para qualquer morador com tempo livre e acesso a ferramentas básicas.",
+      "line": 37,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Antes de instalar, o morador deve perguntar sobre a orientação,",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Horário de maior luz solar",
+          "detail": "Quais horários têm mais luz solar no local?"
+        },
+        {
+          "label": "Efeito da sombra",
+          "detail": "A sombra é fixa ou variável?"
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O morador deve saber os horários de maior luz para otimizar a instalação. Sombra variável afeta mais a produção. Essas perguntas ajudam a identificar riscos reais de desempenho.",
+      "line": 44,
+      "column": 3
+    }
+  ]
+}

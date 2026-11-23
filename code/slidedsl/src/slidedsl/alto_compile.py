@@ -55,6 +55,17 @@ def build_alto(
     result.dsl, result.mapping, layout = alto_to_dsl(result.deck, facts, root)
     result.diagnostics += layout
     result.validation = validate_source(result.dsl, root)
+    if result.validation.ir:
+        from .layout_metrics import OCCUPANCY_MINIMUM, content_occupancy
+        for slide, source_slide in zip(result.validation.ir.slides, result.deck.slides):
+            if source_slide.kind in {"capa", "secao", "citacao"}:
+                continue
+            fraction = content_occupancy(slide)
+            if fraction < OCCUPANCY_MINIMUM:
+                result.diagnostics.append(Diagnostic(code="A021", severity="AVISO", slide=slide.number,
+                    message="Baixa ocupação da área útil por caixas de conteúdo.",
+                    evidence={"fraction": fraction, "minimum": OCCUPANCY_MINIMUM},
+                    suggestion="Distribua melhor a altura ou escolha outra composição."))
     return result
 
 

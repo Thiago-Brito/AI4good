@@ -1,0 +1,193 @@
+{
+  "title": "Reciclagem no dia a dia para alunos do ensino médio",
+  "theme": "editorial",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Reciclar é hábito diário",
+      "subtitle": "Na escola e em casa, escolhas simples viram rotina de reciclagem quando a separação acontece todos os dias.",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": "assets/media/cda65a6c6b55cdfc1305e22048b4039f79f9ffc788d315513558c149db7879a7.png",
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A abertura deve ligar intenção e prática, sem prometer mudança instantânea. Use exemplos do cotidiano escolar e doméstico para mostrar que a rotina nasce de decisões repetidas. Evite falar de coleta, contaminação ou infraestrutura neste slide; isso entra nos próximos.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Separar certo evita contaminação",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Papel limpo",
+          "detail": "Folhas, cadernos e caixas secas entram juntos quando não têm restos de comida ou umidade."
+        },
+        {
+          "label": "Plástico vazio",
+          "detail": "Garrafas, potes e embalagens seguem para a coleta quando estão sem líquido e sem sujeira visível."
+        },
+        {
+          "label": "Metal sem resíduos",
+          "detail": "Latas e tampas podem ser separadas quando estão vazias, porque restos de alimento contaminam o lote."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Mostre que a separação começa pela condição do material, não pelo tipo de objeto. O aluno precisa observar se o resíduo está limpo, seco e vazio antes de descartar. Se houver sujeira de comida ou umidade, o ideal é descartar no lixo comum ou limpar antes, quando isso for possível.",
+      "line": 9,
+      "column": 3
+    },
+    {
+      "kind": "imagem",
+      "title": "Lixeira certa facilita a coleta",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": "A sinalização visual reduz erros na hora de descartar.",
+      "unit": null,
+      "image_file": "assets/media/397951feaa4a739eaaf4b851b8f7a4b43a5fa2764606d433cd18deab21c36375.png",
+      "image_query": null,
+      "items": [
+        {
+          "label": "Cores por material",
+          "detail": "Cada cor orienta o descarte e ajuda o aluno a separar papel, plástico e metal sem dúvida."
+        },
+        {
+          "label": "Placas com exemplos",
+          "detail": "As placas mostram embalagens comuns e evitam que restos de lanche vão para a lixeira errada."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A organização visual funciona melhor quando a escola padroniza cores e nomes em todos os pontos de descarte. O aluno decide mais rápido quando vê exemplos concretos ao lado da lixeira. A ressalva é manter a sinalização limpa e legível, porque etiquetas apagadas aumentam a confusão.",
+      "line": 16,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Pequenas atitudes reduzem lixo",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Levar garrafa reutilizável",
+          "detail": "O aluno reduz copos descartáveis quando leva uma garrafa para a escola todos os dias."
+        },
+        {
+          "label": "Usar lancheira própria",
+          "detail": "A lancheira própria evita embalagens extras quando a família prepara o lanche em casa."
+        },
+        {
+          "label": "Imprimir só o necessário",
+          "detail": "A turma economiza papel quando imprime apenas atividades que realmente precisam de cópia."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O foco aqui é prevenir resíduos antes da separação, porque isso reduz o volume que chega à lixeira. Vale mostrar exemplos que o aluno reconhece na rotina escolar, como água, lanche e impressão. A ressalva é que a mudança funciona melhor quando a escola também oferece apoio, como pontos de reabastecimento e orientação clara.",
+      "line": 24,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "A escola vira exemplo",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Sala organizada",
+          "detail": "A turma separa papel, plástico e metal em pontos definidos e reduz erros no descarte diário."
+        },
+        {
+          "label": "Pátio com rotina",
+          "detail": "No intervalo, os alunos levam embalagens vazias à lixeira correta e evitam misturar restos de lanche."
+        },
+        {
+          "label": "Cantina alinhada",
+          "detail": "A cantina orienta o descarte com recipientes visíveis e reforça o hábito certo na hora da compra."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O foco aqui é mostrar que a escola ensina pelo exemplo, não só por cartazes. Sala, pátio e cantina funcionam como três momentos de repetição do mesmo comportamento. Como não há fatos numéricos, o slide usa situações concretas e genéricas, sem atribuir dados específicos.",
+      "line": 31,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Comece hoje com um gesto simples",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Monte seu kit diário",
+          "detail": "Leve uma garrafa reutilizável e uma lancheira própria para reduzir descartáveis na escola."
+        },
+        {
+          "label": "Separe antes de sair",
+          "detail": "Revise embalagens vazias e secas na mochila para evitar que restos contaminem a coleta."
+        },
+        {
+          "label": "Convide um colega",
+          "detail": "Combine com um amigo um ponto de descarte correto para repetir a rotina no intervalo."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A conclusão precisa transformar intenção em compromisso imediato, sem repetir os mecanismos já explicados. As duas primeiras ações funcionam como decisão individual para esta semana, e a terceira amplia o efeito pela influência entre colegas. Como não há fatos numéricos, o slide usa exemplos práticos e cotidianos, sem atribuir dados ou estatísticas.",
+      "line": 38,
+      "column": 3
+    }
+  ]
+}

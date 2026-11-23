@@ -1,6 +1,22 @@
 import { useEffect, useRef, useState } from "react";
 import { request } from "./api";
-import type { Deck, Diagnostic } from "./types";
+import type { Deck, Diagnostic, Usage } from "./types";
+import { UsageSummary } from "./UsageSummary";
+import { BaseDocuments } from "./BaseDocuments";
+import type { BaseDocument } from "./BaseDocuments";
+import { AltoSlideEdits } from "./AltoSlideEdits";
+
+type Provider = "ollama" | "llamacpp" | "openai";
+const LEGACY_OPENAI_DEFAULT = "gpt-4.1-mini";
+type Estilo =
+  | "auto"
+  | "claro"
+  | "escuro"
+  | "editorial"
+  | "vibrante"
+  | "natural"
+  | "noturno";
+type Providers = { openai: { configured: boolean; default_model: string } };
 
 type Fact = {
   id: string;
@@ -14,11 +30,13 @@ type CriarResult = {
   folder: string;
   report: {
     valid: boolean;
+    theme?: string;
     pptx?: string;
     facts?: number;
     sources?: number;
     calls: number;
     seconds: number;
+    usage?: Usage;
     errors?: { code: string; message: string }[];
     coverage?: {
       topico: string;
@@ -39,6 +57,8 @@ type CriarJob = {
   events: { message: string; at: string }[];
   result: CriarResult | null;
   error: string | null;
+  usage?: Usage | null;
+  history?: string[];
 };
 
 function stored(key: string, fallback: string) {
@@ -68,21 +88,45 @@ export function CriarPanel({
   onLoad: (source: string, ir: Deck, diagnostics: Diagnostic[]) => void;
 }) {
   const [models, setModels] = useState<string[]>([]);
+  const [provider, setProvider] = useState<Provider>(() => {
+    const value = stored("criar.provider", "ollama");
+    return value === "openai" || value === "llamacpp" ? value : "ollama";
+  });
+  const [providers, setProviders] = useState<Providers | null>(null);
   const [model, setModel] = useState(
-    stored("criar.model", "qwen3:4b-instruct"),
+    stored(
+      `criar.${provider}.model`,
+      provider === "openai"
+        ? "gpt-4.1-mini"
+        : provider === "llamacpp"
+          ? "local"
+          : stored("criar.model", "qwen3:4b-instruct"),
+    ),
   );
-  const [provider, setProvider] = useState<"ollama" | "llamacpp">("ollama");
   const [pedido, setPedido] = useState(
     "Monolito ou microsserviços para uma startup: quando cada um compensa",
   );
   const [slides, setSlides] = useState(6);
-  const [candidatos, setCandidatos] = useState(2);
-  const [tema, setTema] = useState<"claro" | "escuro">("claro");
-  const [pesquisar, setPesquisar] = useState(true);
+  const [candidatos, setCandidatos] = useState(1);
+  const [maxCalls, setMaxCalls] = useState(60);
+  const [maxOutput, setMaxOutput] = useState(2048);
+  const [tema, setTema] = useState<Estilo>("auto");
+  const [documents, setDocuments] = useState<BaseDocument[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [editing, setEditing] = useState(false);
+  // Com API paga, o perfil econômico é sem pesquisa; ela continua disponível como opção.
+  const [pesquisar, setPesquisar] = useState(provider !== "openai");
   const [searx, setSearx] = useState<{ ok: boolean; message: string } | null>(
     null,
   );
   const [imagens, setImagens] = useState(false);
+  const [lote, setLote] = useState(true);
+  const [imagensFonte, setImagensFonte] = useState<
+    "livres" | "livres_ia" | "ia"
+  >("livres");
+  const [imagensQualidade, setImagensQualidade] = useState<
+    "economica" | "media"
+  >("economica");
   const [semFatos, setSemFatos] = useState(false);
   const [job, setJob] = useState<CriarJob | null>(null);
   const [error, setError] = useState("");
@@ -98,9 +142,6 @@ export function CriarPanel({
           (m: { name: string }) => m.name,
         );
         setModels(names);
-        setModel((old) =>
-          names.includes(old) || !names.length ? old : names[0],
-        );
       } catch {
         /* sem Ollama: o usuário ainda pode digitar o modelo ou usar llama.cpp */
       }
@@ -109,6 +150,39 @@ export function CriarPanel({
       active.current = false;
     };
   }, []);
+  useEffect(() => {
+    void fetch("/api/providers")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data: Providers | null) => {
+        if (!active.current) return;
+        setProviders(data);
+        // O antigo padrão salvo no navegador não deve esconder o padrão atual do servidor.
+        const current = data?.openai.default_model;
+        if (provider === "openai" && current) {
+          setModel((m) => (m === LEGACY_OPENAI_DEFAULT ? current : m));
+        }
+      })
+      .catch(() => {
+        /* configuração desconhecida; servidor valida no envio */
+      });
+  }, []);
+
+  const chooseProvider = (value: Provider) => {
+    store(`criar.${provider}.model`, model);
+    store("criar.provider", value);
+    setProvider(value);
+    setPesquisar(documents.length === 0 && value !== "openai");
+    setModel(
+      stored(
+        `criar.${value}.model`,
+        value === "openai"
+          ? (providers?.openai.default_model ?? "gpt-4.1-mini")
+          : value === "llamacpp"
+            ? "local"
+            : (models[0] ?? "qwen3:4b-instruct"),
+      ),
+    );
+  };
 
   const checkSearx = async () => {
     setSearx({ ok: false, message: "Verificando o SearXNG…" });
@@ -132,11 +206,21 @@ export function CriarPanel({
     onBusy(true);
     setError("");
     setJob(null);
-    store("criar.model", model);
-    onStatus("Criando apresentação com pesquisa…");
+    store(`criar.${provider}.model`, model);
+    onStatus(
+      pesquisar
+        ? "Criando apresentação com pesquisa…"
+        : "Criando apresentação…",
+    );
     try {
       let current = await request<CriarJob>("criar", {
         pedido,
+        documentos: documents.map((d) => d.id),
+        fontes: documents.length
+          ? pesquisar
+            ? "documentos+internet"
+            : "documentos"
+          : null,
         model: provider === "llamacpp" ? model || "local" : model,
         provider,
         slides,
@@ -144,7 +228,12 @@ export function CriarPanel({
         buscador: pesquisar ? "searxng" : "nenhum",
         tema,
         imagens,
-        permitir_sem_fatos: semFatos || !pesquisar,
+        imagens_fonte: imagensFonte,
+        imagens_ia_qualidade: imagensQualidade,
+        lote,
+        permitir_sem_fatos: semFatos || (!pesquisar && !documents.length),
+        max_calls: maxCalls,
+        max_output_tokens: maxOutput,
       });
       while (active.current) {
         setJob(current);
@@ -180,6 +269,34 @@ export function CriarPanel({
   };
 
   const result = job?.result;
+  const edit = async (payload: Record<string, unknown>) => {
+    if (!job || editing) return;
+    setEditing(true);
+    setError("");
+    onBusy(true);
+    try {
+      const updated = await request<CriarJob>(
+        `criar/${job.id}/editar`,
+        payload,
+      );
+      setJob(updated);
+      if (updated.result?.source && updated.result.ir)
+        onLoad(
+          updated.result.source,
+          updated.result.ir,
+          updated.result.diagnostics ?? [],
+        );
+      onStatus("Edição salva. O consumo inclui todas as versões.");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+      // Failed model attempts are persisted and still count toward total consumption.
+      const response = await fetch(`/api/criar/${job.id}`).catch(() => null);
+      if (response?.ok) setJob(await response.json());
+    } finally {
+      setEditing(false);
+      onBusy(false);
+    }
+  };
   return (
     <section
       className="generation-panel criar-panel"
@@ -203,10 +320,32 @@ export function CriarPanel({
           onChange={(e) => setPedido(e.target.value)}
         />
       </label>
+      <BaseDocuments
+        documents={documents}
+        disabled={disabled}
+        onWorking={setUploading}
+        onChange={(value) => {
+          setDocuments(value);
+          if (value.length) setPesquisar(false);
+        }}
+      />
       <div className="generation-options">
         <label>
+          Provedor
+          <select
+            aria-label="Provedor"
+            value={provider}
+            disabled={disabled}
+            onChange={(e) => chooseProvider(e.target.value as Provider)}
+          >
+            <option value="ollama">Ollama · local</option>
+            <option value="llamacpp">llama.cpp · local</option>
+            <option value="openai">OpenAI · API paga</option>
+          </select>
+        </label>
+        <label>
           Modelo
-          {provider === "ollama" && models.length ? (
+          {provider === "ollama" && models.includes(model) ? (
             <select
               aria-label="Modelo para criar"
               value={model}
@@ -260,13 +399,27 @@ export function CriarPanel({
             aria-label="Tema"
             value={tema}
             disabled={disabled}
-            onChange={(e) => setTema(e.target.value as "claro" | "escuro")}
+            onChange={(e) => setTema(e.target.value as Estilo)}
           >
-            <option value="claro">Claro</option>
-            <option value="escuro">Escuro</option>
+            <option value="auto">Automático (sugerido)</option>
+            <option value="claro">Clássico (azul)</option>
+            <option value="editorial">Editorial (creme e terracota)</option>
+            <option value="vibrante">Vibrante (roxo e amarelo)</option>
+            <option value="natural">Natural (verde)</option>
+            <option value="noturno">Noturno (escuro e ciano)</option>
+            <option value="escuro">Escuro (azul-marinho)</option>
           </select>
         </label>
       </div>
+      {provider === "openai" && (
+        <p className="criar-help" role="status">
+          {providers?.openai.configured
+            ? "OpenAI configurada no servidor. Cada geração pode consumir créditos da API."
+            : providers
+              ? "Configure OPENAI_API_KEY no ambiente do servidor e reinicie a aplicação."
+              : "Configuração OpenAI ainda não verificada."}
+        </p>
+      )}
       <details className="generation-advanced">
         <summary>Pesquisa e opções avançadas</summary>
         <label className="strict-option">
@@ -279,19 +432,41 @@ export function CriarPanel({
           Pesquisar na internet com o SearXNG local
         </label>
         <label>
-          Provedor
-          <select
-            aria-label="Provedor"
-            value={provider}
+          Limite de chamadas
+          <input
+            aria-label="Limite de chamadas"
+            type="number"
+            min={1}
+            max={200}
+            value={maxCalls}
             disabled={disabled}
             onChange={(e) =>
-              setProvider(e.target.value as "ollama" | "llamacpp")
+              setMaxCalls(Math.max(1, Math.min(200, Number(e.target.value))))
             }
-          >
-            <option value="ollama">Ollama · JSON Schema</option>
-            <option value="llamacpp">llama.cpp · GLC restrita (GBNF)</option>
-          </select>
+          />
         </label>
+        {provider === "openai" && (
+          <label>
+            Máximo de tokens de saída por chamada
+            <input
+              aria-label="Máximo de tokens de saída"
+              type="number"
+              min={256}
+              max={8192}
+              value={maxOutput}
+              disabled={disabled}
+              onChange={(e) =>
+                setMaxOutput(
+                  Math.max(256, Math.min(8192, Number(e.target.value))),
+                )
+              }
+            />
+          </label>
+        )}
+        <p className="criar-help">
+          Pesquisa, verificações e reparos também contam. O limite de chamadas
+          não é um teto exato de gasto em dólares.
+        </p>
         <label className="strict-option">
           <input
             type="checkbox"
@@ -300,6 +475,67 @@ export function CriarPanel({
             onChange={(e) => setImagens(e.target.checked)}
           />
           Buscar imagens licenciadas
+        </label>
+        {imagens && (
+          <div className="image-source-options">
+            <label>
+              Fonte das imagens{" "}
+              <select
+                aria-label="Fonte das imagens"
+                value={imagensFonte}
+                disabled={disabled}
+                onChange={(e) =>
+                  setImagensFonte(
+                    e.target.value as "livres" | "livres_ia" | "ia",
+                  )
+                }
+              >
+                <option value="livres">
+                  Só fotos livres (Wikimedia) · grátis
+                </option>
+                <option value="livres_ia">
+                  Fotos livres; IA quando faltar · pago só se faltar
+                </option>
+                <option value="ia">Só imagens geradas por IA · pago</option>
+              </select>
+            </label>
+            {imagensFonte !== "livres" && (
+              <label>
+                Qualidade da imagem por IA{" "}
+                <select
+                  aria-label="Qualidade da imagem por IA"
+                  value={imagensQualidade}
+                  disabled={disabled}
+                  onChange={(e) =>
+                    setImagensQualidade(e.target.value as "economica" | "media")
+                  }
+                >
+                  <option value="economica">
+                    Econômica · gpt-image-2 baixa · ~US$ 0,005 por imagem
+                  </option>
+                  <option value="media">
+                    Média · gpt-image-1-mini média · ~US$ 0,015 por imagem
+                  </option>
+                </select>
+              </label>
+            )}
+            {imagensFonte !== "livres" && (
+              <p className="hint">
+                Até 3 imagens por IA por apresentação (máx. ~US${" "}
+                {imagensQualidade === "media" ? "0,045" : "0,015"}). Preços
+                oficiais de 01/11/2026; o valor real aparece no consumo.
+              </p>
+            )}
+          </div>
+        )}
+        <label className="strict-option">
+          <input
+            type="checkbox"
+            checked={lote}
+            disabled={disabled}
+            onChange={(e) => setLote(e.target.checked)}
+          />
+          Gerar em lote (todos os slides numa chamada; menos tokens)
         </label>
         <label className="strict-option">
           <input
@@ -311,22 +547,30 @@ export function CriarPanel({
           Continuar mesmo se a pesquisa não achar fatos
         </label>
       </details>
-      <p
-        className={searx?.ok ? "criar-help" : "generation-error"}
-        role="status"
-      >
-        {searx?.message ?? "Estado do SearXNG desconhecido."}{" "}
-        <button
-          type="button"
-          disabled={disabled}
-          onClick={() => void checkSearx()}
+      {pesquisar && (
+        <p
+          className={searx?.ok ? "criar-help" : "generation-error"}
+          role="status"
         >
-          Verificar de novo
-        </button>
-      </p>
+          {searx?.message ?? "Estado do SearXNG desconhecido."}{" "}
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={() => void checkSearx()}
+          >
+            Verificar de novo
+          </button>
+        </p>
+      )}
       <button
         className="primary"
-        disabled={disabled || !model.trim() || pedido.trim().length < 3}
+        disabled={
+          disabled ||
+          uploading ||
+          !model.trim() ||
+          pedido.trim().length < 3 ||
+          (provider === "openai" && providers?.openai.configured === false)
+        }
         onClick={() => void criar()}
       >
         Criar apresentação
@@ -335,6 +579,16 @@ export function CriarPanel({
         <p className="generation-error" role="alert">
           {error}
         </p>
+      )}
+      <UsageSummary usage={job?.usage ?? result?.report.usage} />
+      {result?.report.theme && <p>Estilo escolhido: {result.report.theme}</p>}
+      {result?.alto && result.ir && (
+        <AltoSlideEdits
+          deck={result.ir}
+          disabled={disabled || editing}
+          canUndo={Boolean(job?.history?.length)}
+          edit={edit}
+        />
       )}
       {job && (
         <div className="generation-progress" aria-live="polite">
@@ -405,9 +659,15 @@ export function CriarPanel({
             {result.facts.map((f) => (
               <li key={f.id}>
                 <strong>{f.id}</strong> {f.claim}{" "}
-                <a href={f.url} target="_blank" rel="noreferrer">
-                  {f.source_title}
-                </a>
+                {f.url.startsWith("documento:") ? (
+                  <span>
+                    {f.source_title} · {f.url.split("#")[1]}
+                  </span>
+                ) : (
+                  <a href={f.url} target="_blank" rel="noreferrer">
+                    {f.source_title}
+                  </a>
+                )}
               </li>
             ))}
           </ol>

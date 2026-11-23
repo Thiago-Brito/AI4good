@@ -51,11 +51,12 @@ export async function render(deck, output, root) {
         const asset=await fs.realpath(path.resolve(realRoot,e.file));
         const relative=path.relative(realRoot,asset);
         if (relative.startsWith('..') || path.isAbsolute(relative) || !/\.(png|jpe?g)$/i.test(asset)) throw new Error('Asset fora da raiz ou formato inválido.');
-        slide.addImage({...rect,sizing:{type:'contain',w:rect.w,h:rect.h},path:asset,altText:e.id,objectName:e.id});
+        const bleed = /^s\d+_imagem_\d+$/.test(e.id) && e.x===664 && e.y===0;
+        slide.addImage({...rect,sizing:{type:bleed?'crop':'contain',w:rect.w,h:rect.h},path:asset,altText:e.id,objectName:e.id});
         const mediaId = /^assets\/media\/([a-f0-9]{64})\.png$/.exec(e.file)?.[1];
         if (mediaId) {
           const metadata = JSON.parse(await fs.readFile(path.join(realRoot,'outputs/media/assets',mediaId+'.json'),'utf8'));
-          credits.push(`${metadata.attribution}\nOrigem: ${metadata.page}\nLicença: ${metadata.license_url}\nArquivo convertido para PNG; exibição sem corte.`);
+          credits.push(`${metadata.attribution}\nOrigem: ${metadata.page}\nLicença: ${metadata.license_url}\nArquivo convertido para PNG; ${bleed?'recorte central para preencher meia página':'exibição sem corte'}.`);
         }
       } else {
         const shape=e.type==='arrow'?pres.ShapeType.downArrow:e.type==='rectangle'

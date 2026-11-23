@@ -1,0 +1,445 @@
+{
+  "topic": "Apresente para universitários a relação entre sono e desempenho nos estudos: quanto dormir, o que acontece com a memória durante o sono e hábitos que ajudam.",
+  "queries": [
+    "efeito do sono na memória",
+    "quantas horas dormir estudantes",
+    "exemplo de sono e aprendizado",
+    "hábitos para melhor sono universitário"
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "title": "Qual é a relação entre sono e memória? - Portal Drauzio Varella",
+      "url": "https://drauziovarella.uol.com.br/neurologia/qual-e-a-relacao-entre-sono-e-memoria/",
+      "provider": "searxng",
+      "snippet": "14 de set. de 2023 ... A quantidade e a qualidade do sono têm grande influência na nossa memória e capacidade de aprendizado. Entenda como isso acontece.",
+      "text_chars": 7622
+    },
+    {
+      "id": "S2",
+      "title": "Importância do sono para a memória - Qualicorp",
+      "url": "https://www.qualicorp.com.br/quali-explica/importancia-do-sono-para-a-memoria/",
+      "provider": "searxng",
+      "snippet": "30 de jan. de 2024 ... No sono REM, ocorre uma atividade cerebral intensa, que se assemelha ao estado de vigília em termos de padrões de ondas cerebrais. Durante esse ...",
+      "text_chars": 8510
+    },
+    {
+      "id": "S3",
+      "title": "Sono e rendimento: quantas horas dormir para absorver conteúdo",
+      "url": "https://plataformaassaad.com.br/sono-e-rendimento-nos-estudos/",
+      "provider": "searxng",
+      "snippet": "Sacrificar sono para estudar mais é uma das crenças mais prejudiciais ao vestibulando. Entenda o que acontece no seu cérebro durante o descanso e quantas horas você precisa para reter o que estudou de verdade.",
+      "text_chars": 12701
+    },
+    {
+      "id": "S4",
+      "title": "Sono e aprendizagem: qual a relação? - Ceduca",
+      "url": "https://ceduca.com.br/sono-e-aprendizagem-qual-a-relacao/",
+      "provider": "searxng",
+      "snippet": "Por exemplo, um aluno que aprende um novo conceito de matemática terá uma melhor retenção se descansar adequadamente, permitindo que o cérebro processe esse aprendizado enquanto dorme.",
+      "text_chars": 3694
+    },
+    {
+      "id": "S5",
+      "title": "Sono e o aprendizado - Mundo Educação",
+      "url": "https://mundoeducacao.uol.com.br/biologia/sono-aprendizado.htm",
+      "provider": "searxng",
+      "snippet": "Dormir bem é sinônimo de qualidade de vida e de prevenção de doenças cardiovasculares, Alzheimer ou de doenças que envolvem o sistema hormonal. O sono, além de beneficiar o corpo e prevenir doenças, é fator relevante quando se trata de concentração e aprendizado.",
+      "text_chars": 3742
+    },
+    {
+      "id": "S6",
+      "title": "Guia de Psicoeducação do sono para estudantes - Unila",
+      "url": "https://portal.unila.edu.br/prae/assistencia-estudantil/Guiadepsicoeducaodosono.pdf",
+      "provider": "searxng",
+      "snippet": "Sempre que possível, organize sua rotina para que as tarefas mais estressantes e as maiores preocupações ocorram no período diurno. O mesmo vale para ler ...",
+      "text_chars": 157
+    },
+    {
+      "id": "S7",
+      "title": "Como acalmar a mente e dormir melhor em meio à rotina universitária ...",
+      "url": "https://www.foconacional.com.br/2025/02/como-acalmar-mente-e-dormir-melhor-em.html",
+      "provider": "searxng",
+      "snippet": "Seguindo as dicas acima, é possível melhorar a qualidade do sono e, consequentemente, o desempenho acadêmico e a saúde mental. Lembre-se de que priorizar o descanso não é um luxo, mas uma necessidade para enfrentar os desafios da rotina universitária com mais disposição e clareza mental.",
+      "text_chars": 3735
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "A quantidade e a qualidade do sono têm grande influência na nossa memória e capacidade de aprendizado.",
+      "kind": "definicao",
+      "quote": "A quantidade e a qualidade do sono têm grande influência na nossa memória e capacidade de aprendizado. Entenda como isso acontece.",
+      "source_id": "S1",
+      "url": "https://drauziovarella.uol.com.br/neurologia/qual-e-a-relacao-entre-sono-e-memoria/",
+      "source_title": "Qual é a relação entre sono e memória? - Portal Drauzio Varella",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F2",
+      "claim": "Um sono de má qualidade pode causar dificuldade de concentração e maior propensão a erros.",
+      "kind": "exemplo",
+      "quote": "Um sono de má qualidade pode causar mau humor, cansaço, dificuldade de concentração, maior propensão a erros e, a longo prazo, até aumentar o risco de uma série de doenças.",
+      "source_id": "S1",
+      "url": "https://drauziovarella.uol.com.br/neurologia/qual-e-a-relacao-entre-sono-e-memoria/",
+      "source_title": "Qual é a relação entre sono e memória? - Portal Drauzio Varella",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F3",
+      "claim": "Dormir mal pode causar impactos negativos à memória.",
+      "kind": "exemplo",
+      "quote": "Mas além disso, dormir mal também pode causar impactos negativos à memória.",
+      "source_id": "S1",
+      "url": "https://drauziovarella.uol.com.br/neurologia/qual-e-a-relacao-entre-sono-e-memoria/",
+      "source_title": "Qual é a relação entre sono e memória? - Portal Drauzio Varella",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F4",
+      "claim": "Sono e memória estão intrinsecamente correlacionados.",
+      "kind": "definicao",
+      "quote": "Segundo Leticia Azevedo Soster, neurologista e médica do sono do Hospital Israelita Albert Einstein, em São Paulo, sono e memória estão intrinsecamente correlacionados.",
+      "source_id": "S1",
+      "url": "https://drauziovarella.uol.com.br/neurologia/qual-e-a-relacao-entre-sono-e-memoria/",
+      "source_title": "Qual é a relação entre sono e memória? - Portal Drauzio Varella",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F5",
+      "claim": "O sono é uma parte valiosa da nossa vida, e cuidar dele é essencial para uma mente saudável e uma memória afiada.",
+      "kind": "definicao",
+      "quote": "O sono é uma parte valiosa da nossa vida, e cuidar dele é essencial para uma mente saudável e uma memória afiada.",
+      "source_id": "S2",
+      "url": "https://www.qualicorp.com.br/quali-explica/importancia-do-sono-para-a-memoria/",
+      "source_title": "Importância do sono para a memória - Qualicorp",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F6",
+      "claim": "Reconhecer a importância do sono para a memória e adotar estratégias para melhorar a qualidade do sono é fundamental.",
+      "kind": "definicao",
+      "quote": "Portanto, é fundamental reconhecer a importância do sono para a memória e adotar estratégias para melhorar a qualidade do sono.",
+      "source_id": "S2",
+      "url": "https://www.qualicorp.com.br/quali-explica/importancia-do-sono-para-a-memoria/",
+      "source_title": "Importância do sono para a memória - Qualicorp",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F7",
+      "claim": "O sono tem relação com a consolidação da memória e aprendizado.",
+      "kind": "definicao",
+      "quote": "a importância do sono para consolidação da memória e aprendizado",
+      "source_id": "S2",
+      "url": "https://www.qualicorp.com.br/quali-explica/importancia-do-sono-para-a-memoria/",
+      "source_title": "Importância do sono para a memória - Qualicorp",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F8",
+      "claim": "Pessoas com privação crônica de sono apresentam desempenho cognitivo comparável ao de alguém sob efeito significativo de álcool.",
+      "kind": "definicao",
+      "quote": "Pesquisas em neurociência cognitiva, incluindo estudos amplamente replicados da Universidade da Pensilvânia, mostram que pessoas com privação crônica de sono apresentam desempenho cognitivo comparável ao de alguém sob efeito significativo de álcool.",
+      "source_id": "S3",
+      "url": "https://plataformaassaad.com.br/sono-e-rendimento-nos-estudos/",
+      "source_title": "Sono e rendimento: quantas horas dormir para absorver conteúdo",
+      "value": "comparável ao de alguém sob efeito de ál",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F9",
+      "claim": "Os efeitos de uma noite mal dormida se acumulam por vários dias, mesmo com compensação de sono.",
+      "kind": "definicao",
+      "quote": "E uma noite mal dormida não prejudica só o dia seguinte. Os efeitos se acumulam por vários dias, mesmo que você compense dormindo mais depois.",
+      "source_id": "S3",
+      "url": "https://plataformaassaad.com.br/sono-e-rendimento-nos-estudos/",
+      "source_title": "Sono e rendimento: quantas horas dormir para absorver conteúdo",
+      "value": "vários dias",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F10",
+      "claim": "Estudar 7 horas e dormir 7 horas produz mais retenção do que estudar 10 horas e dormir 4 horas.",
+      "kind": "exemplo",
+      "quote": "Faça a conta que a maioria dos vestibulandos nunca fez: estudar 7 horas e dormir 7 horas produz mais retenção do que estudar 10 horas e dormir 4.",
+      "source_id": "S3",
+      "url": "https://plataformaassaad.com.br/sono-e-rendimento-nos-estudos/",
+      "source_title": "Sono e rendimento: quantas horas dormir para absorver conteúdo",
+      "value": "7 horas",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F11",
+      "claim": "O cérebro organiza e consolida informações durante o sono, especialmente no estágio REM.",
+      "kind": "definicao",
+      "quote": "Durante o sono, especialmente no estágio REM (Rapid Eye Movement ou Movimento Rápido dos Olhos), o cérebro organiza e consolida tudo o que foi aprendido, transferindo informações da memória de curto prazo para a memória de longo prazo.",
+      "source_id": "S4",
+      "url": "https://ceduca.com.br/sono-e-aprendizagem-qual-a-relacao/",
+      "source_title": "Sono e aprendizagem: qual a relação? - Ceduca",
+      "value": "estágio REM",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F12",
+      "claim": "Durante o sono, as memórias do dia serão consolidadas, as antigas são reafirmadas e tanto o corpo quanto a mente se preparam para um novo dia.",
+      "kind": "definicao",
+      "quote": "Durante o sono, as memórias do dia serão consolidadas, as antigas são reafirmadas e tanto o corpo quanto a mente se preparam para um novo dia.",
+      "source_id": "S5",
+      "url": "https://mundoeducacao.uol.com.br/biologia/sono-aprendizado.htm",
+      "source_title": "Sono e o aprendizado - Mundo Educação",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F13",
+      "claim": "Em cada uma delas uma parte da memória é processada.",
+      "kind": "definicao",
+      "quote": "Em cada uma delas uma parte da memória é processada.",
+      "source_id": "S5",
+      "url": "https://mundoeducacao.uol.com.br/biologia/sono-aprendizado.htm",
+      "source_title": "Sono e o aprendizado - Mundo Educação",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F14",
+      "claim": "Na fase mais leve do sono, as informações relativas à música e ao esporte são armazenadas.",
+      "kind": "exemplo",
+      "quote": "nas fases mais leves do sono, as informações relativas à música e ao esporte são armazenadas.",
+      "source_id": "S5",
+      "url": "https://mundoeducacao.uol.com.br/biologia/sono-aprendizado.htm",
+      "source_title": "Sono e o aprendizado - Mundo Educação",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F15",
+      "claim": "A memória espacial é armazenada para posteriormente as novas informações serem fixadas.",
+      "kind": "definicao",
+      "quote": "a memória espacial é armazenada para posteriormente as novas informações serem fixadas.",
+      "source_id": "S5",
+      "url": "https://mundoeducacao.uol.com.br/biologia/sono-aprendizado.htm",
+      "source_title": "Sono e o aprendizado - Mundo Educação",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F16",
+      "claim": "A gente precisa dar ao nosso corpo a quantidade de sono adequada.",
+      "kind": "definicao",
+      "quote": "A gente precisa dar ao nosso corpo a quantidade de sono adequada.",
+      "source_id": "S1",
+      "url": "https://drauziovarella.uol.com.br/neurologia/qual-e-a-relacao-entre-sono-e-memoria/",
+      "source_title": "Qual é a relação entre sono e memória? - Portal Drauzio Varella",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F17",
+      "claim": "A privação de sono prejudica o processo de consolidação da memória.",
+      "kind": "definicao",
+      "quote": "A falta de sono pode ter um impacto negativo na nossa capacidade de aprender, reter e recordar informações.",
+      "source_id": "S2",
+      "url": "https://www.qualicorp.com.br/quali-explica/importancia-do-sono-para-a-memoria/",
+      "source_title": "Importância do sono para a memória - Qualicorp",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F18",
+      "claim": "O sono é o momento em que o cérebro revisita e reforça as informações adquiridas durante o dia.",
+      "kind": "definicao",
+      "quote": "Quando estamos privados de sono, o processo de consolidação da memória fica prejudicado, e isso acontece porque o sono é o momento em que o cérebro revisita e reforça as informações adquiridas durante o dia.",
+      "source_id": "S2",
+      "url": "https://www.qualicorp.com.br/quali-explica/importancia-do-sono-para-a-memoria/",
+      "source_title": "Importância do sono para a memória - Qualicorp",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F19",
+      "claim": "Dormir menos resulta em reter menos do que já estudado.",
+      "kind": "definicao",
+      "quote": "A equação não é \"dormir menos = estudar mais\". É \"dormir menos = reter menos do que já estudou\".",
+      "source_id": "S3",
+      "url": "https://plataformaassaad.com.br/sono-e-rendimento-nos-estudos/",
+      "source_title": "Sono e rendimento: quantas horas dormir para absorver conteúdo",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F20",
+      "claim": "Abaixo de 7 horas, os impactos na atenção, memória e raciocínio são mensuráveis.",
+      "kind": "numero",
+      "quote": "Abaixo de 7 horas, os impactos na atenção, memória e raciocínio são mensuráveis.",
+      "source_id": "S3",
+      "url": "https://plataformaassaad.com.br/sono-e-rendimento-nos-estudos/",
+      "source_title": "Sono e rendimento: quantas horas dormir para absorver conteúdo",
+      "value": "7",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F21",
+      "claim": "O sono é o momento em que o cérebro realiza funções essenciais como o armazenamento de memórias e a consolidação de informações aprendidas durante o dia.",
+      "kind": "definicao",
+      "quote": "O sono é o momento em que o cérebro realiza funções essenciais, como o armazenamento de memórias e a consolidação de informações aprendidas durante o dia.",
+      "source_id": "S4",
+      "url": "https://ceduca.com.br/sono-e-aprendizagem-qual-a-relacao/",
+      "source_title": "Sono e aprendizagem: qual a relação? - Ceduca",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F22",
+      "claim": "A interrupção ou privação de sono pode afetar severamente a concentração, a memória e até mesmo o humor, prejudicando diretamente o aprendizado de crianças, adolescentes e adultos.",
+      "kind": "exemplo",
+      "quote": "A interrupção ou privação de sono pode afetar severamente a concentração, a memória e até mesmo o humor, prejudicando diretamente o aprendizado de crianças, adolescentes e adultos.",
+      "source_id": "S4",
+      "url": "https://ceduca.com.br/sono-e-aprendizagem-qual-a-relacao/",
+      "source_title": "Sono e aprendizagem: qual a relação? - Ceduca",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    }
+  ],
+  "rejected": [
+    {
+      "afirmacao": "O cérebro que ficou apenas 4 horas em recuperação não consolidou o aprendizado das 10 horas.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Parte do conteúdo simplesmente não entrou na memória de longo prazo. Você estudou, sim.",
+      "valor": "4 horas",
+      "source_id": "S3",
+      "reason": "valor não aparece no trecho citado"
+    },
+    {
+      "afirmacao": "Um aluno que aprende um novo conceito de matemática terá melhor retenção com descanso adequado.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "Por exemplo, um aluno que aprende um novo conceito de matemática terá uma melhor retenção se descansar adequadamente, permitindo que o cérebro processe esse aprendizado enquanto dorme.",
+      "valor": "melhor retenção",
+      "source_id": "S4",
+      "reason": "fora do assunto central (não menciona sono, desempenho, memória)"
+    },
+    {
+      "afirmacao": "Respeitar seu horário de dormir, sua necessidade de dormir, saber ouvir a necessidade do seu corpo",
+      "autor": "dra. Letic",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Respeitar seu horário de dormir, sua necessidade de dormir, saber ouvir a necessidade do seu corpo – da mesma forma que a gente sabe sentir quando a gente está com fome e comer quando tem fome, a gente precisa dormir quando tem sono",
+      "valor": "",
+      "source_id": "S1",
+      "reason": "limite de 5 fatos por fonte"
+    },
+    {
+      "afirmacao": "a gente precisa dormir quando tem sono",
+      "autor": "dra. Leticia",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "a gente precisa dormir quando tem sono",
+      "valor": "",
+      "source_id": "S1",
+      "reason": "limite de 5 fatos por fonte"
+    },
+    {
+      "afirmacao": "Adultos precisam dormir entre 7 e 9 horas por noite para atender às suas necessidades individuais de sono.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "numero",
+      "trecho": "a privação de sono ocorre quando não dormimos o suficiente em relação às nossas necessidades individuais de sono, que geralmente variam de 7 a 9 horas por noite para adultos.",
+      "valor": "7 a 9",
+      "source_id": "S2",
+      "reason": "limite de 5 fatos por fonte"
+    },
+    {
+      "afirmacao": "A falta de sono compromete a capacidade de aprender, reter e recordar informações.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "A falta de sono pode ter um impacto negativo na nossa capacidade de aprender, reter e recordar informações.",
+      "valor": "",
+      "source_id": "S2",
+      "reason": "limite de 5 fatos por fonte"
+    },
+    {
+      "afirmacao": "Para vestibulandos de 17 a 20 anos, o recomendado é de 7 a 9 horas por noite, com alvo central em 8 horas.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "numero",
+      "trecho": "Para vestibulandos de 17 a 20 anos, o recomendado é de 7 a 9 horas por noite, com alvo central em 8 horas.",
+      "valor": "8",
+      "source_id": "S3",
+      "reason": "fora do assunto central (não menciona sono, desempenho, memória)"
+    },
+    {
+      "afirmacao": "Abaixo de 6 horas, o comprometimento cognitivo é severo.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "numero",
+      "trecho": "Abaixo de 6 horas, o comprometimento cognitivo é severo.",
+      "valor": "6",
+      "source_id": "S3",
+      "reason": "fora do assunto central (não menciona sono, desempenho, memória)"
+    }
+  ],
+  "log": [
+    {
+      "query": "efeito do sono na memória",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "quantas horas dormir estudantes",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "exemplo de sono e aprendizado",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "hábitos para melhor sono universitário",
+      "provider": "searxng",
+      "results": 2
+    }
+  ],
+  "central_terms": [
+    "sono",
+    "desempenho",
+    "memória",
+    "estudos",
+    "hábitos"
+  ],
+  "created_at": "2026-11-23T04:32:11+00:00"
+}

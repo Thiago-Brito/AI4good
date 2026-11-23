@@ -25,6 +25,7 @@ from typing import Callable
 from urllib.parse import quote, urlencode, urlsplit
 
 from .paths import project_root
+from .https import system_tls_context
 
 FACT_KINDS = ["numero", "data", "exemplo", "definicao", "comparacao", "ressalva", "citacao"]
 STOPWORDS = set(
@@ -281,7 +282,7 @@ def searxng_url() -> str | None:
     import httpx
 
     try:
-        with httpx.Client(timeout=0.8, trust_env=False) as client:
+        with httpx.Client(timeout=0.8, trust_env=False, verify=system_tls_context()) as client:
             if client.get(SEARXNG_DEFAULT + "/healthz").status_code == 200:
                 return SEARXNG_DEFAULT
     except httpx.HTTPError:
@@ -300,24 +301,38 @@ def provider_auto() -> str:
 def searxng_status() -> dict:
     url = searxng_url()
     if not url:
-        return {"ok": False, "url": SEARXNG_DEFAULT,
-                "message": "SearXNG não encontrado. Rode scripts\\iniciar_searxng.cmd."}
+        return {
+            "ok": False,
+            "url": SEARXNG_DEFAULT,
+            "message": "SearXNG não encontrado. Rode scripts\\iniciar_searxng.cmd.",
+        }
     import httpx
 
     try:
-        with httpx.Client(timeout=20, trust_env=False) as client:
+        with httpx.Client(timeout=20, trust_env=False, verify=system_tls_context()) as client:
             response = client.get(url + "/search", params={"q": "teste", "format": "json"})
         if response.status_code == 403:
-            return {"ok": False, "url": url,
-                    "message": "SearXNG recusou JSON (403): ative 'json' em search.formats."}
+            return {
+                "ok": False,
+                "url": url,
+                "message": "SearXNG recusou JSON (403): ative 'json' em search.formats.",
+            }
         response.raise_for_status()
         count = len(response.json().get("results", []))
-        return {"ok": count > 0, "url": url, "results": count,
-                "message": f"SearXNG respondeu com {count} resultados de teste."
-                if count else "SearXNG respondeu sem resultados (buscadores bloqueando?)."}
+        return {
+            "ok": count > 0,
+            "url": url,
+            "results": count,
+            "message": f"SearXNG respondeu com {count} resultados de teste."
+            if count
+            else "SearXNG respondeu sem resultados (buscadores bloqueando?).",
+        }
     except httpx.TimeoutException:
-        return {"ok": False, "url": url,
-                "message": "SearXNG demorou mais de 20 s (buscadores lentos ou bloqueando)."}
+        return {
+            "ok": False,
+            "url": url,
+            "message": "SearXNG demorou mais de 20 s (buscadores lentos ou bloqueando).",
+        }
     except (httpx.HTTPError, ValueError) as exc:
         return {"ok": False, "url": url, "message": f"SearXNG com erro: {exc}"}
 
@@ -431,7 +446,7 @@ def search_searxng(query, *, limit=4, fetcher=None, offline=False):
         data = json.loads(body)
     else:
         try:
-            with httpx.Client(timeout=30, trust_env=False) as client:
+            with httpx.Client(timeout=30, trust_env=False, verify=system_tls_context()) as client:
                 response = client.get(f"{base}/search", params={"q": query, "format": "json"})
                 response.raise_for_status()
                 data = response.json()
@@ -540,13 +555,13 @@ def query_schema():
     }
 
 
-def extract_schema():
+def extract_schema(max_facts=4):
     return {
         "type": "object",
         "properties": {
             "fatos": {
                 "type": "array",
-                "maxItems": 4,
+                "maxItems": max_facts,
                 "items": {
                     "type": "object",
                     "properties": {
@@ -566,11 +581,18 @@ def extract_schema():
     }
 
 
-def _generate_json(model, system, user, schema, seed=None):
-    try:
-        raw = model.generate(system, user, temperature=0, seed=seed, response_schema=schema)
-    except TypeError:  # modelos sem suporte a schema
-        raw = model.generate(system, user, temperature=0, seed=seed)
+def _generate_json(model, system, user, schema, seed=None, stage="research_plan"):
+    from .models.base import generate_text
+
+    raw = generate_text(
+        model,
+        system,
+        user,
+        temperature=0,
+        seed=seed,
+        response_schema=schema,
+        context={"stage": stage},
+    )
     match = re.search(r"\{.*\}", raw, re.S)
     return json.loads(match.group(0) if match else raw)
 
@@ -601,8 +623,11 @@ def plan_research(topic: str, model=None, max_queries: int = 4) -> tuple[list[st
     # filtrar com palavras que o modelo inventou.
     from .alto_quality import covers
 
-    terms = [t for t in terms if covers(base, [t]) or any(covers(t, [w]) for w in base.split()
-                                                           if len(w) > 4)]
+    terms = [
+        t
+        for t in terms
+        if covers(base, [t]) or any(covers(t, [w]) for w in base.split() if len(w) > 4)
+    ]
     return list(dict.fromkeys(queries))[:max_queries] or [base], list(dict.fromkeys(terms))
 
 
@@ -723,7 +748,9 @@ def research(
         say(f"Termos centrais: {dossier.central_terms}")
     say(f"Consultas: {dossier.queries}")
     seen_urls = set()
-    providers = [provider] + (["wikipedia"] if fallback_wikipedia and provider != "wikipedia" else [])
+    providers = [provider] + (
+        ["wikipedia"] if fallback_wikipedia and provider != "wikipedia" else []
+    )
     for current in providers:
         failures = 0
         for query in dossier.queries:
@@ -780,6 +807,7 @@ def research(
                     EXTRACT_SYSTEM,
                     f"Tema: {topic}\nFonte: {source.title}\n\nTRECHO:\n{passage}",
                     extract_schema(),
+                    stage="research_extract",
                 ).get("fatos", [])
             except Exception as exc:
                 dossier.log.append({"source": source.id, "error": f"extração: {exc}"})
@@ -805,7 +833,9 @@ def research(
                     source_id=source.id,
                     url=source.url,
                     source_title=source.title,
-                    author=(item.get("autor") or "").strip() if item.get("tipo") == "citacao" else "",
+                    author=(item.get("autor") or "").strip()
+                    if item.get("tipo") == "citacao"
+                    else "",
                     relevance=item.get("relevancia", ""),
                 )
             )
@@ -821,6 +851,11 @@ def research(
     )
     if dossier.facts and (len(dossier.facts) < 4 or distinct < 2):
         say("Atenção: poucos fatos ou uma única fonte; slides sem fato serão qualitativos.")
-        dossier.log.append({"warning": "poucos fatos ou fonte única", "facts": len(dossier.facts),
-                            "sources": distinct})
+        dossier.log.append(
+            {
+                "warning": "poucos fatos ou fonte única",
+                "facts": len(dossier.facts),
+                "sources": distinct,
+            }
+        )
     return dossier

@@ -1,4 +1,5 @@
 from pathlib import Path
+from contextlib import asynccontextmanager
 import hashlib
 import json
 import tempfile
@@ -21,7 +22,16 @@ from .semantic import validate_ir
 from .serializer import to_dsl
 from .contextual import GenerationContext
 
-app = FastAPI(title="SlideDSL — API local", version="1.1.0")
+
+@asynccontextmanager
+async def lifespan(app):
+    from .local_settings import load_local_settings
+
+    load_local_settings()
+    yield
+
+
+app = FastAPI(title="SlideDSL — API local", version="1.1.0", lifespan=lifespan)
 
 
 class SourcePayload(BaseModel):
@@ -132,21 +142,46 @@ def generation_progress(id: str):
         raise HTTPException(404, detail="Geração não encontrada.") from exc
 
 
+@app.get("/api/providers")
+def provider_configuration():
+    """Configuração local, sem revelar chave nem consultar serviço remoto."""
+    import os
+
+    from .model_usage import pricing_for
+
+    remote = os.environ.get("SLIDEDSL_OPENAI_MODEL", "gpt-4.1-mini")
+    return {
+        "openai": {
+            "configured": bool(os.environ.get("OPENAI_API_KEY")),
+            "default_model": remote,
+            "pricing": pricing_for(remote),
+            "supports_schema": True,
+        },
+    }
+
+
 class CriarPayload(BaseModel):
     model_config = ConfigDict(extra="forbid")
     pedido: str = Field(min_length=3, max_length=4000)
     model: str = Field(min_length=1, max_length=200)
-    provider: Literal["ollama", "llamacpp"] = "ollama"
+    provider: Literal["ollama", "llamacpp", "openai"] = "ollama"
     slides: int = Field(default=6, ge=3, le=12)
-    candidatos: int = Field(default=2, ge=1, le=4)
+    candidatos: int = Field(default=1, ge=1, le=4)
     reparos: int = Field(default=2, ge=0, le=3)
     buscador: Literal["searxng", "nenhum"] = "searxng"
     idiomas: list[Literal["pt", "en", "es"]] = Field(default_factory=lambda: ["pt", "en"])
-    tema: Literal["claro", "escuro"] = "claro"
+    tema: Literal["auto", "claro", "escuro", "editorial", "vibrante", "natural", "noturno"] = "auto"
+    documentos: list[str] = Field(default_factory=list, max_length=8)
+    fontes: Literal["documentos", "documentos+internet"] | None = None
     imagens: bool = False
+    lote: bool = False
+    imagens_fonte: Literal["livres", "livres_ia", "ia"] = "livres"
+    imagens_ia_qualidade: Literal["economica", "media"] = "economica"
     contato: str | None = Field(default=None, max_length=120)
     permitir_sem_fatos: bool = False
     modo: Literal["json", "gramatica", "direto"] | None = None
+    max_calls: int = Field(default=60, ge=1, le=200)
+    max_output_tokens: int = Field(default=2048, ge=256, le=8192)
 
 
 @app.post("/api/criar", status_code=202)
@@ -158,8 +193,24 @@ def start_creation(payload: CriarPayload):
         raise HTTPException(422, detail="Escreva o pedido da apresentação.")
     if payload.modo == "gramatica" and payload.provider != "llamacpp":
         raise HTTPException(422, detail="O modo gramática (GBNF) exige o provedor llama.cpp.")
+    if payload.provider == "openai":
+        import os
+
+        if not os.environ.get("OPENAI_API_KEY"):
+            raise HTTPException(422, detail="Configure OPENAI_API_KEY no ambiente do servidor.")
     try:
+        from .documents import document_path
+
+        if len(payload.documentos) != len(set(payload.documentos)):
+            raise ValueError("Documentos repetidos.")
+        for document_id in payload.documentos:
+            if not (document_path(document_id) / "index.json").is_file():
+                raise ValueError("Documento não encontrado.")
+        if payload.fontes and not payload.documentos:
+            raise ValueError("Selecione arquivos de base para esse modo de fontes.")
         return submit(payload.model_dump())
+    except ValueError as exc:
+        raise HTTPException(422, detail=str(exc)) from exc
     except RuntimeError as exc:
         raise HTTPException(409, detail=str(exc)) from exc
 
@@ -183,6 +234,38 @@ def creation_progress(id: str):
         return read_job(id)
     except KeyError as exc:
         raise HTTPException(404, detail="Criação não encontrada.") from exc
+
+
+class AltoEditPayload(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    acao: Literal["refazer", "ajustar", "sem_foto", "excluir", "desfazer"]
+    slide: int = Field(default=1, ge=1)
+    instrucao: str | None = Field(default=None, max_length=2000)
+    tema: Literal["auto", "claro", "escuro", "editorial", "vibrante", "natural", "noturno"] | None = None
+    foto_buscar: str | None = Field(default=None, min_length=1, max_length=200)
+    foto_arquivo: str | None = Field(default=None, max_length=250)
+    mover_para: int | None = Field(default=None, ge=1)
+
+
+@app.post("/api/criar/{id}/editar")
+def edit_creation(id: str, payload: AltoEditPayload):
+    import re
+    from .alto_jobs import edit_job
+
+    if not re.fullmatch(r"[a-f0-9]{32}", id):
+        raise HTTPException(404, detail="Criação não encontrada.")
+    try:
+        if payload.foto_arquivo:
+            from .media import resolve_asset
+
+            resolve_asset(payload.foto_arquivo)
+        return edit_job(id, payload.model_dump())
+    except KeyError as exc:
+        raise HTTPException(404, detail="Criação não encontrada.") from exc
+    except (ValueError, OSError, DSLException) as exc:
+        raise HTTPException(422, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(409, detail=str(exc)) from exc
 
 
 @app.post("/api/alto/parse")
@@ -298,9 +381,8 @@ def export_document(payload: IRPayload):
     return {"source": source}
 
 
-@app.post("/api/compile")
-def compile_document(payload: IRPayload):
-    deck = normalize_ir(payload.ir)
+def _compile_to_temp(ir: Presentation) -> Path:
+    deck = normalize_ir(ir)
     report = report_ir(deck)
     if not report["valid"]:
         raise HTTPException(422, detail=report)
@@ -316,6 +398,59 @@ def compile_document(payload: IRPayload):
     except (OSError, RuntimeError) as exc:
         target.unlink(missing_ok=True)
         raise HTTPException(503, detail=str(exc)) from exc
+    return target
+
+
+class GoogleSlidesPayload(IRPayload):
+    title: str = Field(default="Apresentação SlideDSL", max_length=200)
+
+
+_google_flow = None
+
+
+def _google():
+    global _google_flow
+    from . import google_slides
+
+    if _google_flow is None:
+        _google_flow = google_slides.LoginFlow()
+    return google_slides, _google_flow
+
+
+@app.get("/api/google/status")
+def google_status():
+    module, flow = _google()
+    return module.status(flow)
+
+
+@app.post("/api/google/login")
+def google_login():
+    module, flow = _google()
+    try:
+        return {"auth_url": flow.start()}
+    except module.GoogleError as exc:
+        raise HTTPException(409, detail=str(exc)) from exc
+
+
+@app.post("/api/google/slides")
+def google_slides_export(payload: GoogleSlidesPayload):
+    module, _ = _google()
+    if not module.load_token():
+        raise HTTPException(401, detail="Faça login no Google primeiro.")
+    target = _compile_to_temp(payload.ir)
+    try:
+        return module.upload_pptx(target, payload.title)
+    except module.GoogleError as exc:
+        raise HTTPException(502, detail=str(exc)) from exc
+    except OSError as exc:
+        raise HTTPException(503, detail=f"Sem conexão com o Google: {exc}") from exc
+    finally:
+        target.unlink(missing_ok=True)
+
+
+@app.post("/api/compile")
+def compile_document(payload: IRPayload):
+    target = _compile_to_temp(payload.ir)
     return FileResponse(
         target,
         media_type="application/vnd.openxmlformats-officedocument.presentationml.presentation",
@@ -428,7 +563,7 @@ def image_cache():
 
 class DocumentPayload(BaseModel):
     name: str = Field(min_length=1, max_length=180)
-    data_base64: str = Field(max_length=2_800_000)
+    data_base64: str = Field(max_length=7_000_000)
 
 
 class LocalImagePayload(DocumentPayload):

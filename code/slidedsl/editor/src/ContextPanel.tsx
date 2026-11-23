@@ -129,8 +129,8 @@ export function ContextPanel({
         throw new Error("Até oito documentos por apresentação.");
       const added = [];
       for (const file of files) {
-        if (file.size > 2 * 1024 * 1024)
-          throw new Error("Cada documento deve ter até 2 MiB.");
+        if (file.size > (/\.docx$/i.test(file.name) ? 5 : 2) * 1024 * 1024)
+          throw new Error("Cada documento deve ter até 2 MiB (DOCX: 5 MiB).");
         const base64 = await new Promise<string>((resolve, reject) => {
           const reader = new FileReader();
           reader.onerror = reject;
@@ -579,7 +579,7 @@ export function ContextPanel({
           aria-label="Materiais de referência"
           type="file"
           multiple
-          accept=".txt,.md,.pdf"
+          accept=".txt,.md,.pdf,.docx"
           disabled={disabled || working}
           onChange={(e) => void upload(e.target.files)}
         />

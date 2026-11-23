@@ -1,0 +1,52 @@
+{
+  "assets/media/cda65a6c6b55cdfc1305e22048b4039f79f9ffc788d315513558c149db7879a7.png": {
+    "width": 1280,
+    "height": 964,
+    "metadata": {
+      "id": "cda65a6c6b55cdfc1305e22048b4039f79f9ffc788d315513558c149db7879a7",
+      "provider": "commons",
+      "title": "File:Sorted waste containers at Student campus in Freiburg.jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/9/9f/Sorted_waste_containers_at_Student_campus_in_Freiburg.jpg/1280px-Sorted_waste_containers_at_Student_campus_in_Freiburg.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Sorted_waste_containers_at_Student_campus_in_Freiburg.jpg",
+      "author": "Андрей Романенко",
+      "license": "CC BY-SA 4.0",
+      "license_url": "https://creativecommons.org/licenses/by-sa/4.0",
+      "attribution": "File:Sorted waste containers at Student campus in Freiburg.jpg — Андрей Романенко — CC BY-SA 4.0",
+      "width": 1280,
+      "height": 964,
+      "description": "Sorted waste containers at Student campus in Freiburg",
+      "lexical_score": 0.5,
+      "query": "student sorting",
+      "asset": "assets/media/cda65a6c6b55cdfc1305e22048b4039f79f9ffc788d315513558c149db7879a7.png",
+      "downloaded_utc": "2026-11-11T04:03:57.462821+00:00",
+      "source_sha256": "8687edece48d4b303790fe317efd7479546203ff9c39783bf4b1786d5de23efc",
+      "reviewed": false,
+      "asset_sha256": "ea282f9a689052721f91dc999c7893fa7ea685cb9ad573e70fbcd301262bdd7b"
+    }
+  },
+  "assets/media/397951feaa4a739eaaf4b851b8f7a4b43a5fa2764606d433cd18deab21c36375.png": {
+    "width": 1280,
+    "height": 960,
+    "metadata": {
+      "id": "397951feaa4a739eaaf4b851b8f7a4b43a5fa2764606d433cd18deab21c36375",
+      "provider": "commons",
+      "title": "File:Color-coded recycling bins (17820971264).jpg",
+      "url": "https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/Color-coded_recycling_bins_%2817820971264%29.jpg/1280px-Color-coded_recycling_bins_%2817820971264%29.jpg?utm_source=commons.wikimedia.org&utm_campaign=imageinfo&utm_content=thumbnail",
+      "page": "https://commons.wikimedia.org/wiki/File:Color-coded_recycling_bins_(17820971264).jpg",
+      "author": "Eric Fischer",
+      "license": "CC BY 2.0",
+      "license_url": "https://creativecommons.org/licenses/by/2.0",
+      "attribution": "File:Color-coded recycling bins (17820971264).jpg — Eric Fischer — CC BY 2.0",
+      "width": 1280,
+      "height": 960,
+      "description": "Barcelona in 2015",
+      "lexical_score": 1.0,
+      "query": "color coded recycling bins",
+      "asset": "assets/media/397951feaa4a739eaaf4b851b8f7a4b43a5fa2764606d433cd18deab21c36375.png",
+      "downloaded_utc": "2026-11-11T04:03:59.510188+00:00",
+      "source_sha256": "3c82ec504b902183b2bbf58c0421405b12ae3cf2604abd1b6499cf8c97a267e0",
+      "reviewed": false,
+      "asset_sha256": "a535f25c142d5de2aa6a622fb037052caa0eb0a082ac16300c5452d4219132ed"
+    }
+  }
+}

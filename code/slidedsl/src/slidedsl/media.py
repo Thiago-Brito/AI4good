@@ -15,6 +15,7 @@ import httpx
 from PIL import Image
 
 from .paths import project_root
+from .https import system_tls_context
 
 MAX_BYTES = 8 * 1024 * 1024
 MAX_PIXELS = 20_000_000
@@ -67,7 +68,9 @@ def fetch_public(
         parsed, address = public_target(url)
         host = parsed.hostname
         pinned = httpx.URL(url).copy_with(host=address)
-        with httpx.Client(timeout=10, trust_env=False, follow_redirects=False) as client:
+        with httpx.Client(
+            timeout=10, trust_env=False, follow_redirects=False, verify=system_tls_context()
+        ) as client:
             with client.stream(
                 method,
                 pinned,
@@ -181,7 +184,8 @@ def search_provider(provider, query):
                     "gsrsearch": query,
                     "gsrnamespace": 6,
                     "gsrlimit": 8,
-                    "prop": "imageinfo",
+                    "prop": "imageinfo|categories",
+                    "cllimit": "max",
                     "iiprop": "url|size|mime|extmetadata",
                     "iiurlwidth": 1200,
                 }
@@ -205,6 +209,9 @@ def search_provider(provider, query):
                     license_url,
                     width=i.get("thumbwidth", i.get("width")),
                     height=i.get("thumbheight", i.get("height")),
+                    description=meta.get("ImageDescription", ""),
+                    categories=[c["title"] for c in page.get("categories", [])] +
+                               meta.get("Categories", "").split("|"),
                 )
             )
         return result
@@ -265,7 +272,7 @@ def safe_id(value):
 def search_images(provider, query, *, offline=False):
     folder = store_root() / "searches"
     folder.mkdir(parents=True, exist_ok=True)
-    key = hashlib.sha256((provider + query).encode()).hexdigest()
+    key = hashlib.sha256(("r7:" + provider + query).encode()).hexdigest()
     cache = folder / f"{key}.json"
     if offline:
         return {
@@ -282,8 +289,10 @@ def search_images(provider, query, *, offline=False):
     results = search_provider(provider, query)
     words = set(re.findall(r"\w+", query.casefold()))
     for result in results:
-        terms = set(re.findall(r"\w+", result["title"].casefold()))
+        terms = image_terms(image_metadata(result))
+        words = image_terms(query)
         result["lexical_score"] = len(words & terms) / max(1, len(words))
+        result["query"] = query
         candidates = store_root() / "candidates"
         candidates.mkdir(exist_ok=True)
         (candidates / f"{result['id']}.json").write_text(
@@ -311,7 +320,7 @@ def cache_image(id, *, reviewed=False):
     return _store_image(candidate, data, mime, reviewed=reviewed)
 
 
-def automatic_search(query, *, offline=False):
+def automatic_search(query, *, offline=False, providers=None, wait_for_provider=False):
     """Choose providers by topic/availability; retain failures and license constraints."""
     original_query = query
     # Remove generic photographic qualifiers, never a standalone proper-name "Real".
@@ -322,11 +331,19 @@ def automatic_search(query, *, offline=False):
             r"\b(nasa|space|moon|lunar|apollo|solar|planet\w*|astronom\w*)\b", query.casefold()
         )
     )
-    providers = ["nasa", "openverse", "commons"] if space else ["openverse", "commons"]
+    if providers is None:
+        providers = ["nasa", "openverse", "commons"] if space else ["openverse", "commons"]
     results, attempts = [], []
     for provider in providers:
         try:
+            if wait_for_provider and not offline:
+                stamp = store_root() / f"{provider}.stamp"
+                delay = max(0, 2.05 - (time.time() - stamp.stat().st_mtime)) if stamp.exists() else 0
+                if delay:
+                    time.sleep(delay)
             response = search_images(provider, query, offline=offline)
+            for item in response["results"]:
+                item["query"] = query  # também aplica relevância a caches anteriores
             results.extend(response["results"])
             attempts.append(
                 {
@@ -335,10 +352,17 @@ def automatic_search(query, *, offline=False):
                     "cached": response.get("cached", False),
                 }
             )
-            if any(automatic_candidate(i) for i in results):
+            if any(automatic_candidate(i) and max(i.get("width") or 0, i.get("height") or 0) >= 1000
+                   for i in results):
                 break
         except Exception as exc:
             attempts.append({"provider": provider, "error": str(exc)})
+    # Fotos pequenas só permanecem como fallback se nenhuma alternativa elegível
+    # de alta resolução foi encontrada (inclusive no provedor seguinte).
+    large = [i for i in results if photographic_candidate(i) and
+             max(i.get("width") or 0, i.get("height") or 0) >= 1000]
+    if large:
+        results = [i for i in results if max(i.get("width") or 0, i.get("height") or 0) >= 1000]
     results.sort(
         key=lambda i: (
             automatic_candidate(i),
@@ -359,12 +383,85 @@ def automatic_search(query, *, offline=False):
 
 def automatic_candidate(item):
     return bool(
-        item.get("lexical_score") == 1
+        item.get("lexical_score", 0) >= 0.5
+        and relevant_image(item)
         and (item.get("width") or 0) >= 600
         and (item.get("height") or 0) >= 300
         and not item.get("review_required")
         and reusable(item.get("license_url", ""))
     )
+
+
+def photographic_candidate(item):
+    """Filtro adicional do fluxo Alto que pede fotos; não é classificador visual."""
+    if item.get("provider") == "commons" and len(item.get("description", "").strip()) < 20:
+        return False  # Bare titles and broad categories do not establish a photographic subject.
+    metadata = image_metadata(item).casefold()
+    query = (item.get("people_request") or item.get("query", "")).casefold()
+    # Retrato/biografia ("X is an Indian technology professional") ilustra uma pessoa,
+    # não o conceito do slide; só vale se a busca pediu pessoas.
+    portrait = re.search(r"\b(?:is an?|was an?|portraits?|people|retrato|headshot|selfie|"
+                         r"speaker|conferences?|stage|palestrante|conferencia|palco|"
+                         r"wikimania|keynote|exhibition|booth|presentations?)\b", metadata)
+    wants_people = re.search(r"\b(?:person|people|portrait|team|man|woman|student|"
+                             r"pessoa|equipe|retrato|palestrante)s?\b", query)
+    # Person-name file title without evidence of the central object is conservative veto.
+    title = re.sub(r"^File:", "", item.get("title", ""))
+    name_title = bool(re.match(r"^[A-Z][a-z]+[ _][A-Z][a-z]+(?:[ _.]|$)", title))
+    first_words = " ".join(title.replace("_", " ").split()[:2])
+    requested_words = image_terms(item.get("central_query") or item.get("query", ""))
+    named_subject_requested = image_terms(first_words) <= requested_words
+    return automatic_candidate(item) and not ((portrait or (name_title and not named_subject_requested))
+                                             and not wants_people) and not re.search(
+        r"\b(?:logo|icon|symbol|diagram|flowchart|screenshot|logotipo|ícone|infographie|"
+        r"infographic|schematic|drawing|illustration|toolchain|vector)\b", metadata
+    ) and not re.search(r"\.png$", item.get("title", ""), re.I)
+
+
+def image_metadata(item):
+    categories = item.get("categories", [])
+    if isinstance(categories, str):
+        categories = [categories]
+    return " ".join([item.get("title", ""), item.get("description", ""), *categories])
+
+
+def image_terms(text):
+    from .research import normalize, STOPWORDS
+
+    return set(re.findall(r"[a-z]{3,}", normalize(text))) - STOPWORDS - {
+        "photo", "photograph", "file", "category", "jpg", "png", "jpeg", "close",
+        "image", "images", "picture", "photos"}
+
+
+def relevant_image(item):
+    """Filtro lexical conservador: assunto no título, sem macro de animal incidental.
+
+    Não constitui classificação semântica; pode recusar fotos úteis e aceitar homônimos.
+    """
+    query = image_terms(item.get("central_query") or item.get("query", ""))
+    if not query:  # catálogo anterior, ainda sujeito ao score estrito existente
+        return True
+    title = set(re.findall(r"[a-z]+", item.get("title", "").casefold()))
+    statistical = {"graph", "chart", "histogram", "statistics"}
+    metadata = image_metadata(item).casefold()
+    if not query & statistical and (title & statistical or re.search(
+        r"\b(?:a graph|a chart|by month|per month|by year|per year|histogram)\b", metadata
+    )):
+        return False  # números sem contexto não ilustram um conceito qualitativo
+    incidental = {"fly", "flies", "insect", "butterfly", "beetle", "spider"}
+    if title & incidental and not query & incidental:
+        return False
+    qualifiers = {"photo", "photograph", "green", "close", "up", "residential", "device"}
+    subject = query - qualifiers
+    found = image_terms(metadata)
+    original = item.get("central_query") or item.get("query", "")
+    ordered = [word for word in re.findall(r"[a-z]+", original.casefold()) if word in subject]
+    # The final concrete noun of the planned English search must survive broadening.
+    # Singular/plural are equivalent; other translations come from the outline itself.
+    def stems(words):
+        return {w[:-1] if len(w) > 4 and w.endswith("s") else w for w in words}
+    last_present = not ordered or bool(stems({ordered[-1]}) & stems(found))
+    return bool(last_present and subject and subject & found and len(subject & found) / len(subject) >= 0.5)
 
 
 def local_image(name, data, *, author="", license_note="", rights_confirmed=False):

@@ -66,3 +66,17 @@ export type Diagnostic = {
   evidence: Record<string, unknown>;
 };
 export type Report = { valid: boolean; diagnostics: Diagnostic[] };
+
+export type Usage = {
+  calls: number;
+  max_calls: number;
+  failed_calls: number;
+  known_usage_calls: number;
+  unknown_usage_calls: number;
+  known_input_tokens: number;
+  known_output_tokens: number;
+  cost_usd: number | null;
+  image_calls?: number;
+  image_cost_usd?: number;
+  unknown_image_cost?: number;
+};

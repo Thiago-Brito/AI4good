@@ -1,0 +1,301 @@
+{
+  "title": "SlideDSL: de pedido em linguagem natural a slides editáveis",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "SlideDSL gera slides editáveis",
+      "subtitle": "O TCC propõe um sistema que converte pedidos em linguagem natural em apresentações PowerPoint editáveis, com conteúdo local e forma controlada.",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": "assets/media/0b016a710272aba5aede438d34ffb73cf05a4e0ef969cc6b15ca7c04095ec1bc.png",
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A proposta importa porque junta geração de conteúdo e controle de estrutura em um único fluxo. O uso de SLMs locais concentra as decisões de conteúdo no próprio sistema. A cadeia formal de compilação preserva forma e geometria para produzir PPTX editável.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "O problema exige duas competências",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Entender o pedido",
+          "detail": "O sistema precisa interpretar a intenção do usuário em linguagem natural para decidir o conteúdo do slide."
+        },
+        {
+          "label": "Controlar a forma",
+          "detail": "O sistema também precisa manter a estrutura editável, com texto e geometria consistentes no arquivo final."
+        },
+        {
+          "label": "Evitar alucinação",
+          "detail": "SLMs locais lembram pouco sobre os assuntos e tendem a inventar quando tentam lembrar."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1",
+        "F21",
+        "F22",
+        "F23"
+      ],
+      "notes": "A banca precisa ver que o desafio não é só gerar texto, mas separar compreensão do pedido e controle da saída. O terceiro item justifica por que um modelo local, sozinho, é arriscado para uma apresentação estruturada. Aqui vale destacar que a proposta do TCC combina essas duas competências no mesmo fluxo.",
+      "line": 9,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "SLMs locais são atraentes, mas frágeis",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "SLMs locais",
+          "items": [
+            {
+              "label": "Custo e privacidade",
+              "detail": "Eles são atraentes por custo, privacidade e independência de fornecedores."
+            },
+            {
+              "label": "Execução local",
+              "detail": "O projeto integra modelos locais com Ollama e llama.cpp."
+            }
+          ]
+        },
+        {
+          "name": "Saídas estruturadas",
+          "items": [
+            {
+              "label": "Forma frágil",
+              "detail": "Eles produzem saídas estruturadas frágeis."
+            },
+            {
+              "label": "Restrições de saída",
+              "detail": "O projeto combina texto livre, JSON Schema e GBNF."
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F2",
+        "F3",
+        "F19"
+      ],
+      "notes": "A banca costuma aceitar bem a motivação de custo e privacidade, mas o ponto crítico é a confiabilidade da estrutura. Aqui vale mostrar que o problema não é gerar texto, e sim manter um formato editável consistente. Por isso, o slide contrapõe a atração dos SLMs locais ao risco específico de saída estruturada frágil.",
+      "line": 17,
+      "column": 3
+    },
+    {
+      "kind": "imagem",
+      "title": "Intenção e forma se separam",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": "A solução divide o pedido em conteúdo e geometria para gerar PPTX editável.",
+      "unit": null,
+      "image_file": null,
+      "image_query": "compiler pipeline diagram",
+      "items": [
+        {
+          "label": "DSL de intenção",
+          "detail": "A DSL de alto nível é orientada à intenção."
+        },
+        {
+          "label": "DSL de cenas",
+          "detail": "A DSL de baixo nível é para cenas de slides, ambas por GLC."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F17"
+      ],
+      "notes": "A banca pode enxergar aqui a separação central do trabalho: uma camada decide o que dizer e outra controla como isso vira slide. O compilador fecha essa ponte com AST, análise semântica, IR e exportação PPTX. A ressalva é que a editabilidade depende de validação e reparo, não só da geração inicial.",
+      "line": 30,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "O sistema compila em cadeia formal",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Analisar o pedido",
+          "detail": "A análise sintática LALR faz parte da implementação do compilador."
+        },
+        {
+          "label": "Construir a AST",
+          "detail": "A AST faz parte da implementação do compilador, junto com a análise semântica e o IR."
+        },
+        {
+          "label": "Validar e reparar",
+          "detail": "A validação, o reparo localizado e a preservação fazem parte do projeto."
+        },
+        {
+          "label": "Exportar para PPTX",
+          "detail": "A exportação PPTX faz parte da implementação do compilador, junto com regras de design."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F18",
+        "F20"
+      ],
+      "notes": "A sequência mostra que o sistema não gera o slide de uma vez: ele compila o pedido em etapas verificáveis. Primeiro, a entrada vira estrutura; depois, a estrutura passa por validação e reparo antes da exportação. A ressalva é que a cadeia formal garante controle de forma e geometria, mas não elimina a necessidade de regras de design no estágio final.",
+      "line": 39,
+      "column": 3
+    },
+    {
+      "kind": "numeros",
+      "title": "A avaliação foi incremental e rastreável",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [
+        {
+          "value": "onze",
+          "label": "Conjuntos de experimentos com modelos Qwen locais de 0,6B a 4B parâmetros via Ollama."
+        },
+        {
+          "value": "08 a 12/10/2026",
+          "label": "Período em que os experimentos foram executados e registrados no projeto."
+        }
+      ],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F9",
+        "F10",
+        "F11",
+        "F8"
+      ],
+      "notes": "A escala aparece no total de onze conjuntos, não em um único teste isolado. O recorte temporal entre 08 a 12/10/2026 mostra execução concentrada e fácil de auditar. A preservação de respostas brutas, prompts e hashes sustenta a rastreabilidade dos resultados.",
+      "line": 48,
+      "column": 3
+    },
+    {
+      "kind": "linha_do_tempo",
+      "title": "O trabalho evoluiu em ciclos curtos",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [
+        {
+          "date": "08/10/2026",
+          "label": "Início dos experimentos",
+          "detail": "Os experimentos começaram em 08/10/2026 e seguiram até 12/10/2026."
+        },
+        {
+          "date": "12/10/2026",
+          "label": "Registro detalhado",
+          "detail": "O registro detalhado das mudanças de 12/10/2026 ficou em docs/MUDANCAS_2026-10-12.md."
+        }
+      ],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F10",
+        "F16",
+        "F8"
+      ],
+      "notes": "A linha do tempo deve mostrar que o projeto avançou em ciclos curtos, não em uma única entrega. O marco de 12/10/2026 reforça a rastreabilidade das mudanças, porque há um registro específico do dia. A metodologia incremental e empírica sustenta essa organização temporal.",
+      "line": 55,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "O próximo passo é validar melhor",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Repetir casos multitemas",
+          "detail": "A equipe deve repetir os casos multitemas com o código final para confirmar a estabilidade do pipeline."
+        },
+        {
+          "label": "Avaliar com PPTEval",
+          "detail": "A banca deve usar os critérios de pessoas, conteúdo, design e coerência do PPTEval; Zheng et al., 2025."
+        },
+        {
+          "label": "Registrar custo por configuração",
+          "detail": "O experimento deve registrar chamadas e tempo de cada configuração para comparar custo entre versões."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F4",
+        "F5",
+        "F6",
+        "F7"
+      ],
+      "notes": "A conclusão deve fechar o TCC com próximos passos verificáveis, não com nova descrição da arquitetura. A primeira ação valida se o resultado se mantém quando o código final é aplicado aos mesmos casos multitemas. A segunda e a terceira ações dão critério de qualidade e custo, o que ajuda a banca a julgar utilidade e viabilidade.",
+      "line": 62,
+      "column": 3
+    }
+  ]
+}

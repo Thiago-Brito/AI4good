@@ -1,0 +1,388 @@
+{
+  "topic": "Git para iniciantes.",
+  "queries": [
+    "definição git",
+    "git com exemplos",
+    "git vs svn diferença",
+    "git com dados 2024"
+  ],
+  "sources": [
+    {
+      "id": "S1",
+      "title": "O que é o Git? | Tutorial da Atlassian sobre o Git",
+      "url": "https://www.atlassian.com/br/git/tutorials/what-is-git",
+      "provider": "searxng",
+      "snippet": "É o sistema moderno para controle de versões mais usado no mundo hoje. Além disso, é um projeto de código aberto sólido em atualização constante desenvolvido em 2005 por Linus Torvalds, o famoso criador do kernel do sistema operacional Linux.",
+      "text_chars": 8947
+    },
+    {
+      "id": "S2",
+      "title": "O que é Git? - Azure DevOps - Microsoft Learn",
+      "url": "https://learn.microsoft.com/pt-br/devops/develop/git/what-is-git",
+      "provider": "searxng",
+      "snippet": "O Git é um sistema de controle de versão distribuído, o que significa que um clone local do projeto é um repositório de controle de versão completo. Esses repositórios locais totalmente funcionais facilitam o trabalho offline ou remotamente.",
+      "text_chars": 6583
+    },
+    {
+      "id": "S3",
+      "title": "Os 20 principais comandos do Git com exemplos: Um guia prático",
+      "url": "https://www.datacamp.com/pt/blog/git-commands",
+      "provider": "searxng",
+      "snippet": "Neste guia prático, você aprenderá os comandos mais importantes do Git com exemplos. Domine os fluxos de trabalho essenciais do Git para controle de versão, ramificação, mesclagem e muito mais.",
+      "text_chars": 193
+    },
+    {
+      "id": "S4",
+      "title": "22 comandos Git mais importantes para desenvolvedores - Locaweb",
+      "url": "https://www.locaweb.com.br/ajuda/wiki/comandos-git/",
+      "provider": "searxng",
+      "snippet": "Lista de comandos Git · 1. Git add · 2. Git commit · 3. Git init · 4. Git checkout · 5. Git push · 6. Git pull · 7. Git clone · 8. Git status.",
+      "text_chars": 12264
+    },
+    {
+      "id": "S5",
+      "title": "controle de versão - Quais as diferenças entre Git, SVN e CVS? - Stack ...",
+      "url": "https://pt.stackoverflow.com/questions/8315/quais-as-diferen%C3%A7as-entre-git-svn-e-cvs",
+      "provider": "searxng",
+      "snippet": "6 de mar. de 2014 ... É um controle de versão bastante diferente do cvs e svn, pois o modelo de versionamento é descentralizado (não há exatamente um fluxo central, e ...",
+      "text_chars": 170
+    },
+    {
+      "id": "S6",
+      "title": "GIT Vs SVN - GeeksforGeeks",
+      "url": "https://www.geeksforgeeks.org/git/difference-between-git-and-svn/",
+      "provider": "searxng",
+      "snippet": "Difference between GIT and SVN ... When to use Git A distributed version control system is required. Development involves branching-based workflows. Integration with modern DevOps tools is needed. When to use SVN A centralized version control model is preferred. Existing workflows are based on SVN. ",
+      "text_chars": 5575
+    },
+    {
+      "id": "S7",
+      "title": "Learn Git and GitHub 2024 – Apps no Google Play",
+      "url": "https://play.google.com/store/apps/details?id=com.victoriadigitalagency.CompleteGitAndGithubStudyGuide&hl=pt_BR",
+      "provider": "searxng",
+      "snippet": "Desbloqueie todo o potencial do controle de versão com Aprenda Git e GitHub 2024, seu guia completo para dominar Git e GitHub.",
+      "text_chars": 2491
+    },
+    {
+      "id": "S8",
+      "title": "Como instalar Python em 2024 + VSCode, Git e Github do Zero",
+      "url": "https://www.youtube.com/watch?v=-M4pMd2yQOM",
+      "provider": "searxng",
+      "snippet": "1 de fev. de 2024 ... VITALÍCIO da Jornada de Dados por R$ 5.000 (ou 12x de R$ 499,91). Última chance da Black Friday: até sexta, 20/11, às 23h59.",
+      "text_chars": 194
+    }
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "O Git tem excelente suporte da comunidade e uma vasta base de usuários.",
+      "kind": "definicao",
+      "quote": "O Git tem excelente suporte da comunidade e uma vasta base de usuários.",
+      "source_id": "S1",
+      "url": "https://www.atlassian.com/br/git/tutorials/what-is-git",
+      "source_title": "O que é o Git? | Tutorial da Atlassian sobre o Git",
+      "value": "excelente suporte da comunidade",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F2",
+      "claim": "O código aberto reduz o custo para desenvolvedores amadores, pois eles podem usar o Git sem pagar uma taxa.",
+      "kind": "definicao",
+      "quote": "O código aberto reduz o custo para desenvolvedores amadores, pois eles podem usar o Git sem pagar uma taxa.",
+      "source_id": "S1",
+      "url": "https://www.atlassian.com/br/git/tutorials/what-is-git",
+      "source_title": "O que é o Git? | Tutorial da Atlassian sobre o Git",
+      "value": "sem pagar uma taxa",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F3",
+      "claim": "O Git tornou-se o padrão mundial para controle de versão.",
+      "kind": "definicao",
+      "quote": "O Git tornou-se o padrão mundial para controle de versão.",
+      "source_id": "S2",
+      "url": "https://learn.microsoft.com/pt-br/devops/develop/git/what-is-git",
+      "source_title": "O que é Git? - Azure DevOps - Microsoft Learn",
+      "value": "padrão mundial",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F4",
+      "claim": "O Git é um sistema de controle de versão distribuído.",
+      "kind": "definicao",
+      "quote": "O Git é um sistema de controle de versão distribuído, o que significa que um clone local do projeto é um repositório de controle de versão completo.",
+      "source_id": "S2",
+      "url": "https://learn.microsoft.com/pt-br/devops/develop/git/what-is-git",
+      "source_title": "O que é Git? - Azure DevOps - Microsoft Learn",
+      "value": "sistema de controle de versão distribuíd",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F5",
+      "claim": "Um clone local do projeto é um repositório de controle de versão completo.",
+      "kind": "exemplo",
+      "quote": "O Git é um sistema de controle de versão distribuído, o que significa que um clone local do projeto é um repositório de controle de versão completo.",
+      "source_id": "S2",
+      "url": "https://learn.microsoft.com/pt-br/devops/develop/git/what-is-git",
+      "source_title": "O que é Git? - Azure DevOps - Microsoft Learn",
+      "value": "repositório de controle de versão",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F6",
+      "claim": "Você aprenderá os comandos mais importantes do Git com exemplos.",
+      "kind": "definicao",
+      "quote": "Neste guia prático, você aprenderá os comandos mais importantes do Git com exemplos.",
+      "source_id": "S3",
+      "url": "https://www.datacamp.com/pt/blog/git-commands",
+      "source_title": "Os 20 principais comandos do Git com exemplos: Um guia prático",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F7",
+      "claim": "O comando git stash apply é usado para restaurar mudanças stashed.",
+      "kind": "definicao",
+      "quote": "Para restaurar mudanças stashed, use \"git stash apply\".",
+      "source_id": "S4",
+      "url": "https://www.locaweb.com.br/ajuda/wiki/comandos-git/",
+      "source_title": "22 comandos Git mais importantes para desenvolvedores - Locaweb",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F8",
+      "claim": "O comando git reset é usado para desfazer commits.",
+      "kind": "definicao",
+      "quote": "O comando \"git reset\" é usado para desfazer commits.",
+      "source_id": "S4",
+      "url": "https://www.locaweb.com.br/ajuda/wiki/comandos-git/",
+      "source_title": "22 comandos Git mais importantes para desenvolvedores - Locaweb",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F9",
+      "claim": "O comando git reset pode redefinir o índice e o diretório de trabalho para corresponder ao convite especificado.",
+      "kind": "definicao",
+      "quote": "A depender das opções usadas, ele pode redefinir o índice e o diretório de trabalho para corresponder ao convite especificado.",
+      "source_id": "S4",
+      "url": "https://www.locaweb.com.br/ajuda/wiki/comandos-git/",
+      "source_title": "22 comandos Git mais importantes para desenvolvedores - Locaweb",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F10",
+      "claim": "O comando git reset --soft HEAD~1 desfaz o último commit mas mantém as mudanças.",
+      "kind": "definicao",
+      "quote": "Se você quer #undo o último convite, mas quer manter as mudanças, use \"git reset –soft HEAD~1\";",
+      "source_id": "S4",
+      "url": "https://www.locaweb.com.br/ajuda/wiki/comandos-git/",
+      "source_title": "22 comandos Git mais importantes para desenvolvedores - Locaweb",
+      "value": "1",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F11",
+      "claim": "O aplicativo oferece 79 lições detalhadas sobre Git e GitHub.",
+      "kind": "exemplo",
+      "quote": "79 lições detalhadas: aprenda todos os conceitos essenciais e avançados do Git e do GitHub através de 79 lições baseadas em texto meticulosamente elaboradas.",
+      "source_id": "S7",
+      "url": "https://play.google.com/store/apps/details?id=com.victoriadigitalagency.CompleteGitAndGithubStudyGuide&hl=pt_BR",
+      "source_title": "Learn Git and GitHub 2024 – Apps no Google Play",
+      "value": "79",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F12",
+      "claim": "O aplicativo ensina conceitos básicos e avançados de comandos do Git e fluxos de trabalho de ramificação, fusão e colaboração.",
+      "kind": "definicao",
+      "quote": "De comandos básicos a fluxos de trabalho avançados de ramificação, fusão e colaboração, você ganhará experiência com facilidade.",
+      "source_id": "S7",
+      "url": "https://play.google.com/store/apps/details?id=com.victoriadigitalagency.CompleteGitAndGithubStudyGuide&hl=pt_BR",
+      "source_title": "Learn Git and GitHub 2024 – Apps no Google Play",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F13",
+      "claim": "O formato do objeto dos arquivos de repositório do Git usa uma combinação de codificação delta e compactação.",
+      "kind": "definicao",
+      "quote": "O formato do objeto dos arquivos de repositório do Git usa uma combinação de codificação delta (armazenamento de diferenças de conteúdo) e compactação e armazena com clareza o conteúdo do diretório e os objetos de metadados da versão.",
+      "source_id": "S1",
+      "url": "https://www.atlassian.com/br/git/tutorials/what-is-git",
+      "source_title": "O que é o Git? | Tutorial da Atlassian sobre o Git",
+      "value": "delta",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F14",
+      "claim": "A distribuição do Git oferece benefícios significativos de desempenho.",
+      "kind": "definicao",
+      "quote": "A distribuição também oferece benefícios significativos de desempenho.",
+      "source_id": "S1",
+      "url": "https://www.atlassian.com/br/git/tutorials/what-is-git",
+      "source_title": "O que é o Git? | Tutorial da Atlassian sobre o Git",
+      "value": "significativos",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F15",
+      "claim": "O Git é uma ótima opção para qualquer equipe devido à sua flexibilidade e popularidade.",
+      "kind": "definicao",
+      "quote": "A flexibilidade e a popularidade do Git fazem dele uma ótima opção para qualquer equipe.",
+      "source_id": "S2",
+      "url": "https://learn.microsoft.com/pt-br/devops/develop/git/what-is-git",
+      "source_title": "O que é Git? - Azure DevOps - Microsoft Learn",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    },
+    {
+      "id": "F16",
+      "claim": "Muitos desenvolvedores e universitários já sabem como usar o Git.",
+      "kind": "exemplo",
+      "quote": "Muitos desenvolvedores e universitários já sabem como usar o Git.",
+      "source_id": "S2",
+      "url": "https://learn.microsoft.com/pt-br/devops/develop/git/what-is-git",
+      "source_title": "O que é Git? - Azure DevOps - Microsoft Learn",
+      "value": "",
+      "author": "",
+      "relevance": "alta"
+    }
+  ],
+  "rejected": [
+    {
+      "afirmacao": "A documentação é excelente e abundante, incluindo livros, tutoriais e sites dedicados.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "A documentação é excelente e abundante, incluindo livros, tutoriais e sites dedicados.",
+      "valor": "abundante",
+      "source_id": "S1",
+      "reason": "fora do assunto central (não menciona git, iniciantes)"
+    },
+    {
+      "afirmacao": "Existem também podcasts e tutoriais em vídeo.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "Existem também podcasts e tutoriais em vídeo.",
+      "valor": "podcasts e tutoriais em vídeo",
+      "source_id": "S1",
+      "reason": "fora do assunto central (não menciona git, iniciantes)"
+    },
+    {
+      "afirmacao": "Esses repositórios locais totalmente funcionais facilitam o trabalho offline ou remotamente.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Esses repositórios locais totalmente funcionais facilitam o trabalho offline ou remotamente.",
+      "valor": "trabalho offline ou remotamente",
+      "source_id": "S2",
+      "reason": "fora do assunto central (não menciona git, iniciantes)"
+    },
+    {
+      "afirmacao": "Domine os fluxos de trabalho essenciais do Git para controle de versão, ramificação, mesclagem e muito mais.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Domine os fluxos de trabalho essenciais do Git para controle de vers, ramificação, mesclagem e muito mais.",
+      "valor": "",
+      "source_id": "S3",
+      "reason": "trecho não encontrado literalmente no texto"
+    },
+    {
+      "afirmacao": "Git é um controle de versão descentralizado, sem um fluxo central.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "É um controle de versão bastante diferente do cvs e svn, pois o modelo de versionamento é descentralizado (não há exatamente um fluxo central, e ...",
+      "valor": "descentralizado",
+      "source_id": "S5",
+      "reason": "trecho incompleto ou com caracteres inválidos"
+    },
+    {
+      "afirmacao": "Alice faz um commit com mensagens descritivas para alterações de uma função para a versão 2.0.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "diga que uma desenvolvedora, Alice, faça alterações no código-fonte, adicionando uma função para a próxima versão, 2.0, e faça o commit dessas alterações com mensagens descritivas.",
+      "valor": "2.0",
+      "source_id": "S1",
+      "reason": "fora do assunto central (não menciona git, iniciantes)"
+    },
+    {
+      "afirmacao": "Alice faz um segundo commit para alterações de uma segunda função.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "Ela então trabalha em uma segunda função e faz o commit dessas alterações também.",
+      "valor": "",
+      "source_id": "S1",
+      "reason": "fora do assunto central (não menciona git, iniciantes)"
+    },
+    {
+      "afirmacao": "O controle de versão centralizado exige sincronização com um servidor antes de criar novas versões de código.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "definicao",
+      "trecho": "Esse paradigma difere do controle de versão centralizado em que os clientes devem sincronizar o código com um servidor antes de criar novas versões de código.",
+      "valor": "",
+      "source_id": "S2",
+      "reason": "fora do assunto central (não menciona git, iniciantes)"
+    },
+    {
+      "afirmacao": "A comunidade de usuários do Git criou recursos para treinar desenvolvedores.",
+      "autor": "",
+      "relevancia": "alta",
+      "tipo": "exemplo",
+      "trecho": "A comunidade de usuários do Git criou recursos para treinar desenvolvedores e a popularidade do Git facilita a obtenção de ajuda quando necessário.",
+      "valor": "",
+      "source_id": "S2",
+      "reason": "limite de 5 fatos por fonte"
+    }
+  ],
+  "log": [
+    {
+      "query": "definição git",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "git com exemplos",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "git vs svn diferença",
+      "provider": "searxng",
+      "results": 2
+    },
+    {
+      "query": "git com dados 2024",
+      "provider": "searxng",
+      "results": 2
+    }
+  ],
+  "central_terms": [
+    "git",
+    "iniciantes"
+  ],
+  "created_at": "2026-11-23T04:27:07+00:00"
+}
