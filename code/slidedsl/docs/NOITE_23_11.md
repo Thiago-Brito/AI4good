@@ -36,7 +36,7 @@ Codex, só quando não houver llama-server/build rodando e a RAM livre for ≥ 4
    teste de ponta a ponta no emulador: (a) pedido curto sem fontes; (b) documento TXT/DOCX/PDF.
    Desligar o emulador ao terminar (CPU).
 3. [x] Artigo LNCS completo (Codex até a seção 2; resto escrito e revisado por Claude): 11 páginas, figura do fluxo, figura com deck gerado pelo Qwen3 4B + tela do app, resumo reescrito, E1–E11 definidos. Compila sem erros. Enviado ao Overleaf (`6ec27c9`). Pendentes em vermelho: Testes 1, 3 e 4.
-4. [ ] Teste 1 (custo do formato) via Codex — `scripts/format_cost.py`, tokenizador do Qwen3.
+4. [x] Teste 1 medido por Claude (sem Codex): 127 decks/694 slides; Alto 2,04× texto, JSON 2,15×, 1.1 9,22×, python-pptx 18,45×; p≈1e-22. `docs/RESULTADOS_T1.md`; no artigo.
 5. [ ] Teste 3 reduzido via Codex — llama-server (binário oficial do llama.cpp para Windows/CUDA em
    `D:\android\llama`), Qwen3 4B GGUF, modos json × gramatica × direto, 12 pedidos × 2 sementes,
    rodando à noite na RTX 3060; microbenchmark da gramática (ms/token).
@@ -52,3 +52,4 @@ Codex, só quando não houver llama-server/build rodando e a RAM livre for ≥ 4
 - 01:50 — Commit `0c1d856` enviado (push ok). Dossiês 12/12. RAM livre 7,6 GB. Disparado Codex T1+T3.
 - 02:00 — **Codex atingiu o limite de uso** (artigo parou na seção 2; T1/T3 não começaram). Pela regra do autor, Codex não é mais usado até ele mandar. Claude continua o artigo e os testes diretamente.
 - 02:45 — Artigo enviado ao Overleaf (`6ec27c9`). Teste de edição localizada de um slide (Qwen3 4B local) em execução: `scripts/teste_edicao.py`.
+- 03:30 — Teste 1 concluído e inserido no artigo (Overleaf). Teste de edição v2 em execução.
