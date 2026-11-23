@@ -66,6 +66,12 @@ Tudo o que é número abaixo foi medido e tem arquivo de origem; interpretaçõe
   reparo, o compilador monta o slide (capa com o título do roteiro; outros tipos como divisória), o deck
   segue e o caso fica registrado (`F001`) nos dados exportados.
 
+- **Terceiro teste no emulador (com o fallback):** apresentação completa de 5 slides em 1.577 s, 10 chamadas
+  (roteiro + 5 slides + 4 reparos), Qwen3 0.6B, só CPU, PPTX salvo. Porém 4 de 5 slides foram montados pelo
+  compilador (A005: texto acima do limite mesmo após reparo). Conclusão: o fluxo funciona no aparelho; o 0.6B é
+  fraco para os limites do formato → usar o 1.7B no celular. Corrigi também o título cortado do fallback, que
+  terminava em preposição ("... para a"). Entrou no artigo como observação de emulador (não é o Teste 4).
+
 ### Infra
 - Android SDK, JDK 17, Gradle e caches em `D:\android` (o C: tem ~4 GB livres). Gradle limitado a 1,5 GB.
 - `scripts/memoria_livre.ps1`: nenhuma tarefa pesada começa com menos de 3 GB livres.

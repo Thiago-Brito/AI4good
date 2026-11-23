@@ -26,13 +26,19 @@ export function jsonToSlide(kind: SlideKind, data: Record<string, any>): AltoSli
     sources: [...new Set<string>(data.fontes ?? [])]};
 }
 interface PlanSlide {tipo: SlideKind; mensagem: string; objetivo: string; fatos?: string[]}
-function shortTitle(text: string, max: number): string {
+const TRAILING = new Set(['a', 'o', 'as', 'os', 'um', 'uma', 'de', 'do', 'da', 'dos', 'das', 'em', 'no', 'na', 'nos', 'nas',
+  'para', 'por', 'pelo', 'pela', 'com', 'sem', 'e', 'ou', 'que', 'se', 'ao', 'aos', 'à', 'às', 'é']);
+export function shortTitle(text: string, max: number): string {
   let out = '';
   for (const word of text.trim().split(/\s+/)) {
     const next = out ? `${out} ${word}` : word;
     if (next.length > max) break;
     out = next;
   }
+  // Não terminar em artigo/preposição/conjunção ("... alternativa para a"), visto no emulador em 23/11.
+  const words = out.split(' ');
+  while (words.length > 2 && TRAILING.has(words[words.length - 1].toLowerCase().replace(/[,.;:]$/, ''))) words.pop();
+  out = words.join(' ').replace(/[,;:]$/, '');
   return out || text.trim().slice(0, max);
 }
 /** Slide montado pelo compilador quando a IA falha após o reparo (teste no emulador, 23/11/2026:

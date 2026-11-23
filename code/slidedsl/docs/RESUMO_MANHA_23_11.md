@@ -10,11 +10,12 @@
 - **Edição de 1 slide:** achei e corrigi um defeito (a IA apagava o conteúdo do slide). Agora 11/11 certos, e
   editar custa **~7%** de gerar tudo de novo.
 
-**APK:** roteiro e slides já são gerados no emulador. Se a IA falhar num slide, o compilador monta o slide e o
-deck não para mais. Resultado do último teste: ver [NOITE_23_11.md](NOITE_23_11.md) (fim do registro).
+**APK:** gerou uma apresentação **completa** no emulador (5 slides, 26 min, só CPU, modelo 0.6B) e salvou o
+.pptx. Mas o 0.6B não respeitou o tamanho dos textos em 4 de 5 slides, e o compilador montou esses slides
+(simples, só título). **No celular, use o modelo 1.7B.**
 
 **Você precisa fazer (só você pode):**
-1. Instalar `D:\slidedsl-mobile\SlideDSL-release.apk` no celular, gerar 3–5 apresentações e tocar em
+1. Instalar `D:\slidedsl-mobile\SlideDSL-release.apk` no celular, baixar o **Qwen3 1.7B**, gerar 3–5 apresentações e tocar em
    **"Exportar dados do teste"** → me mande os arquivos. Isso preenche o Teste 4.
 2. Ler o artigo no Overleaf e me dizer o que mudar.
 

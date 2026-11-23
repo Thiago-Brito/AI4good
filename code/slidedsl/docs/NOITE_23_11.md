@@ -32,7 +32,7 @@ Codex dos Testes 1 e 3 (`docs/PLANO_CODEX_TCC_T1_T3.md`). O teste no emulador (i
 Codex, só quando não houver llama-server/build rodando e a RAM livre for ≥ 4 GB.
 
 1. [x] Dossiês fixos: 12/12 (fatos por pedido: 1 a 22; `solar_obrigatorio` só 1 fato, `agua_obrigatorio` 2 — registrar como limitação). SearXNG e Ollama desligados.
-2. [ ] Revisar a rodada 3 do Codex (documento → slides); recompilar com a correção do SHA-256;
+2. [x] (feito; ver registro) Revisar a rodada 3 do Codex (documento → slides); recompilar com a correção do SHA-256;
    teste de ponta a ponta no emulador: (a) pedido curto sem fontes; (b) documento TXT/DOCX/PDF.
    Desligar o emulador ao terminar (CPU).
 3. [x] Artigo LNCS completo (Codex até a seção 2; resto escrito e revisado por Claude): 11 páginas, figura do fluxo, figura com deck gerado pelo Qwen3 4B + tela do app, resumo reescrito, E1–E11 definidos. Compila sem erros. Enviado ao Overleaf (`6ec27c9`). Pendentes em vermelho: Testes 1, 3 e 4.
@@ -55,3 +55,4 @@ Codex, só quando não houver llama-server/build rodando e a RAM livre for ≥ 4
 - (≈01:55) — Teste 1 concluído e inserido no artigo (Overleaf). Teste de edição v2 em execução.
 - (≈02:00) — Teste de edição de um slide (pedido do autor): v2 revelou que o Qwen3 4B trocava 11/12 slides por `secao` (perdendo conteúdo); corrigido em `alto_edit.allowed_kinds` (tipo só muda se pedido) + 4 testes; v3: tipo cumprido 11/11, conteúdo e fontes preservados 11/11, edição ≈7% do custo de gerar o deck. 721 pytest ok. `docs/RESULTADOS_EDICAO.md`; inserido no artigo (Overleaf).
 - 03:55 — Teste 3 concluído (36/36) e inserido no artigo; llama-server desligado. APK com fallback do compilador pronto; próximo: reteste no emulador.
+- 04:20 — Emulador: deck completo (5 slides, 10 chamadas, 1.577 s, Qwen3 0.6B), 4/5 slides por fallback (A005). Corrigido título do fallback; 51 testes do app ok; APK em recompilação. Artigo e resumos atualizados.

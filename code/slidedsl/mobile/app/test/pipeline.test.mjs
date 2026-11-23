@@ -204,3 +204,8 @@ test('pipeline não importa código nativo; todos os schemas vêm do exportador'
   assert.equal(Object.keys(prompts.outline_schemas).length, 5);
   assert.equal(Object.keys(prompts.slide_schemas).length, 10);
 });
+test('título do fallback não termina em preposição ou artigo', async () => {
+  const {shortTitle} = await import('../outputs/tests/pipeline/generate.js');
+  assert.equal(shortTitle('A energia solar residencial é uma alternativa para a economia local', 46), 'A energia solar residencial é uma alternativa');
+  assert.equal(shortTitle('Energia solar', 60), 'Energia solar');
+});
