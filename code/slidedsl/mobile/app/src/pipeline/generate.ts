@@ -26,6 +26,30 @@ export function jsonToSlide(kind: SlideKind, data: Record<string, any>): AltoSli
     sources: [...new Set<string>(data.fontes ?? [])]};
 }
 interface PlanSlide {tipo: SlideKind; mensagem: string; objetivo: string; fatos?: string[]}
+function shortTitle(text: string, max: number): string {
+  let out = '';
+  for (const word of text.trim().split(/\s+/)) {
+    const next = out ? `${out} ${word}` : word;
+    if (next.length > max) break;
+    out = next;
+  }
+  return out || text.trim().slice(0, max);
+}
+/** Slide montado pelo compilador quando a IA falha após o reparo (teste no emulador, 23/11/2026:
+ * a capa do Qwen3 0.6B continuou inválida e a geração inteira era abortada). Capa: título do roteiro;
+ * demais tipos: divisória com a mensagem planejada. Sem nova chamada ao modelo. */
+function fallbackSlide(kind: SlideKind, plan: PlanSlide, deckTitle: string, deck: AltoDeck, facts: Facts): AltoSlide | null {
+  const fbKind: SlideKind = kind === 'capa' ? 'capa' : 'secao';
+  const source = kind === 'capa' ? deckTitle : plan.mensagem;
+  for (const max of [60, 40, 28]) {
+    const slide = jsonToSlide(fbKind, {titulo: shortTitle(source, max)});
+    slide.notes = `Slide montado pelo compilador após falha da IA. Mensagem planejada: ${plan.mensagem}`;
+    const built = buildAlto({...deck, slides: [...deck.slides, slide]}, facts);
+    const own = built.diagnostics.filter(d => d.slide == null || d.slide === deck.slides.length + 1);
+    if (!own.some(d => d.severity === 'ERRO')) return slide;
+  }
+  return null;
+}
 interface Outline {titulo: string; slides: PlanSlide[]}
 export interface GenerateOptions {
   request: string; slides: number; source: SourceChoice; model: TextModel;
@@ -58,6 +82,7 @@ export async function generate(options: GenerateOptions): Promise<GenerationResu
   if (outline.slides[0].tipo !== 'capa' || outline.slides[n - 1].tipo !== 'conclusao') throw Error('O roteiro deve começar com capa e terminar com conclusão.');
   const deck: AltoDeck = {title: outline.titulo, theme: 'claro', slides: []};
   const summary = outline.slides.map((s, i) => `${i + 1}. ${s.tipo}: ${s.mensagem}`).join('\n');
+  const fallbackNotes: Diagnostic[] = [];
   for (let i = 0; i < n; i++) {
     const plan = outline.slides[i], kind = plan.tipo;
     const schema: JsonSchema = schemaWithFacts((prompts.slide_schemas as Record<string, any>)[kind][mode], ids);
@@ -87,9 +112,16 @@ export async function generate(options: GenerateOptions): Promise<GenerationResu
       }
       const actionable = diagnostics.filter(d => d.severity === 'ERRO' || (d.severity === 'AVISO' && d.code !== 'A009'));
       if (accepted && !actionable.length) break;
-      if (attempt === 1 && (!accepted || diagnostics.some(d => d.severity === 'ERRO'))) throw new GenerationError(`Slide ${i + 1} continua inválido após um reparo.`, diagnostics);
+      if (attempt === 1 && (!accepted || diagnostics.some(d => d.severity === 'ERRO'))) { accepted = null; break; }
     }
-    if (!accepted) throw new GenerationError(`Slide ${i + 1} inválido.`, diagnostics);
+    if (!accepted) {
+      const fb = fallbackSlide(kind, plan, deck.title, deck, facts);
+      if (!fb) throw new GenerationError(`Slide ${i + 1} continua inválido após um reparo.`, diagnostics);
+      progress(`Slide ${i + 1}/${n} montado pelo compilador`, i + 1);
+      fallbackNotes.push({code: 'F001', severity: 'AVISO', slide: i + 1,
+        message: `Slide ${i + 1} montado pelo compilador após a IA falhar no reparo (${diagnostics.map(d => d.code).join(', ')}).`} as Diagnostic);
+      accepted = fb;
+    }
     deck.slides.push(accepted);
     // Yield to native UI between CPU-bound compiler passes.
     await new Promise<void>(resolve => setTimeout(resolve, 0));
@@ -101,6 +133,6 @@ export async function generate(options: GenerateOptions): Promise<GenerationResu
   const pptx = await renderPptx(built.ir);
   checkCancelled(signal);
   progress('Concluído');
-  return {deck, ir: built.ir, pptx, calls: recorder.calls, diagnostics: built.diagnostics, source, facts,
+  return {deck, ir: built.ir, pptx, calls: recorder.calls, diagnostics: [...built.diagnostics, ...fallbackNotes], source, facts,
     wall_ms: Date.now() - start, max_calls: maxCalls};
 }

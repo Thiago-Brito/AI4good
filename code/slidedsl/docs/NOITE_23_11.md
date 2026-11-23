@@ -51,6 +51,6 @@ Codex, só quando não houver llama-server/build rodando e a RAM livre for ≥ 4
   código copiado para o build). Teste no emulador aguardando RAM (2,9 GB livres; dossiês em execução).
 - 01:50 — Commit `0c1d856` enviado (push ok). Dossiês 12/12. RAM livre 7,6 GB. Disparado Codex T1+T3.
 - 02:00 — **Codex atingiu o limite de uso** (artigo parou na seção 2; T1/T3 não começaram). Pela regra do autor, Codex não é mais usado até ele mandar. Claude continua o artigo e os testes diretamente.
-- 02:45 — Artigo enviado ao Overleaf (`6ec27c9`). Teste de edição localizada de um slide (Qwen3 4B local) em execução: `scripts/teste_edicao.py`.
-- 03:30 — Teste 1 concluído e inserido no artigo (Overleaf). Teste de edição v2 em execução.
-- 04:20 — Teste de edição de um slide (pedido do autor): v2 revelou que o Qwen3 4B trocava 11/12 slides por `secao` (perdendo conteúdo); corrigido em `alto_edit.allowed_kinds` (tipo só muda se pedido) + 4 testes; v3: tipo cumprido 11/11, conteúdo e fontes preservados 11/11, edição ≈7% do custo de gerar o deck. 721 pytest ok. `docs/RESULTADOS_EDICAO.md`; inserido no artigo (Overleaf).
+- (≈01:40) — Artigo enviado ao Overleaf (`6ec27c9`). Teste de edição localizada de um slide (Qwen3 4B local) em execução: `scripts/teste_edicao.py`.
+- (≈01:55) — Teste 1 concluído e inserido no artigo (Overleaf). Teste de edição v2 em execução.
+- (≈02:00) — Teste de edição de um slide (pedido do autor): v2 revelou que o Qwen3 4B trocava 11/12 slides por `secao` (perdendo conteúdo); corrigido em `alto_edit.allowed_kinds` (tipo só muda se pedido) + 4 testes; v3: tipo cumprido 11/11, conteúdo e fontes preservados 11/11, edição ≈7% do custo de gerar o deck. 721 pytest ok. `docs/RESULTADOS_EDICAO.md`; inserido no artigo (Overleaf).

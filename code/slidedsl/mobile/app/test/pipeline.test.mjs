@@ -76,11 +76,15 @@ test('todos os slides precisam reparar: teto de 11 chamadas, sem melhor de N', a
   assert.equal(result.max_calls, 11);
   assert.equal(result.calls.filter(c => c.repair).length, 5);
 });
-test('segundo erro do slide interrompe sem render e sem terceira tentativa', async () => {
+test('segundo erro do slide: sem terceira tentativa; compilador monta o slide e o deck segue', async () => {
   const model = new Mock({alwaysBad: [2]});
-  await assert.rejects(generate(base(model)), e => e instanceof GenerationError && e.diagnostics.length > 0);
+  const result = await generate(base(model));
   assert.equal(model.counts[2], 2);
-  assert.equal(model.inputs.length, 4);
+  const fb = result.diagnostics.filter(d => d.code === 'F001');
+  assert.equal(fb.length, 1); assert.equal(fb[0].slide, 2);
+  assert.equal(result.deck.slides.length, 5);
+  assert.match(result.deck.slides[1].notes, /montado pelo compilador/);
+  assert.ok(result.pptx.byteLength > 1000);
 });
 test('roteiro com quantidade incorreta é rejeitado antes de gerar conteúdo', async () => {
   const model = new Mock({overrideOutline: o => o.slides.pop()});
