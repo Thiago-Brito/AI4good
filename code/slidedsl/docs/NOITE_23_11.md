@@ -37,10 +37,10 @@ Codex, só quando não houver llama-server/build rodando e a RAM livre for ≥ 4
    Desligar o emulador ao terminar (CPU).
 3. [x] Artigo LNCS completo (Codex até a seção 2; resto escrito e revisado por Claude): 11 páginas, figura do fluxo, figura com deck gerado pelo Qwen3 4B + tela do app, resumo reescrito, E1–E11 definidos. Compila sem erros. Enviado ao Overleaf (`6ec27c9`). Pendentes em vermelho: Testes 1, 3 e 4.
 4. [x] Teste 1 medido por Claude (sem Codex): 127 decks/694 slides; Alto 2,04× texto, JSON 2,15×, 1.1 9,22×, python-pptx 18,45×; p≈1e-22. `docs/RESULTADOS_T1.md`; no artigo.
-5. [ ] Teste 3 reduzido via Codex — llama-server (binário oficial do llama.cpp para Windows/CUDA em
+5. [x] Teste 3 reduzido medido por Claude (12×3, semente 11): JSON 11/12, gramática 10/12 (0 erro de sintaxe), direto 5/12 (6 de sintaxe); gramática −30% tokens e −24% tempo vs JSON, +15,4% ms/token. `docs/RESULTADOS_T3.md`; no artigo. (Plano original: — llama-server (binário oficial do llama.cpp para Windows/CUDA em
    `D:\android\llama`), Qwen3 4B GGUF, modos json × gramatica × direto, 12 pedidos × 2 sementes,
-   rodando à noite na RTX 3060; microbenchmark da gramática (ms/token).
-6. [ ] Atualizar o artigo com os números medidos (substituir `\pendente`), recompilar e enviar.
+   rodando à noite na RTX 3060; microbenchmark da gramática (ms/token).)
+6. [x] Artigo atualizado com T1, edição e T3; só resta o Teste 4 (celular físico). Atualizar o artigo com os números medidos (substituir `\pendente`), recompilar e enviar.
 7. [ ] Resumos (pedido do autor): `docs/RESUMO_MANHA_23_11.md` **curto, pronto até 07:30** (leitura rápida antes de sair) e `docs/RESUMO_COMPLETO_23_11.md` detalhado para ler depois.
 
 ## Registro
@@ -54,3 +54,4 @@ Codex, só quando não houver llama-server/build rodando e a RAM livre for ≥ 4
 - (≈01:40) — Artigo enviado ao Overleaf (`6ec27c9`). Teste de edição localizada de um slide (Qwen3 4B local) em execução: `scripts/teste_edicao.py`.
 - (≈01:55) — Teste 1 concluído e inserido no artigo (Overleaf). Teste de edição v2 em execução.
 - (≈02:00) — Teste de edição de um slide (pedido do autor): v2 revelou que o Qwen3 4B trocava 11/12 slides por `secao` (perdendo conteúdo); corrigido em `alto_edit.allowed_kinds` (tipo só muda se pedido) + 4 testes; v3: tipo cumprido 11/11, conteúdo e fontes preservados 11/11, edição ≈7% do custo de gerar o deck. 721 pytest ok. `docs/RESULTADOS_EDICAO.md`; inserido no artigo (Overleaf).
+- 03:55 — Teste 3 concluído (36/36) e inserido no artigo; llama-server desligado. APK com fallback do compilador pronto; próximo: reteste no emulador.
