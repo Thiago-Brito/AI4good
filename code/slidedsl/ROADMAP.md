@@ -19,7 +19,7 @@
 - [x] Teste 1 medido (23/11): 127 decks/694 slides, tokenizador Qwen3 — Alto 2,04× o texto visível, JSON 2,15×, SlideDSL 1.1 9,22×, python-pptx 18,45× (Wilcoxon p≈1e-22). [Resultados](docs/RESULTADOS_T1.md).
 - [x] Edição localizada de um slide medida (23/11, Qwen3 4B local, 4 decks × 3 instruções): achado — com todos os tipos liberados o modelo reduzia 11/12 slides a `secao`; corrigido (`allowed_kinds`): tipo cumprido 11/11, conteúdo preservado 11/11, ≈7% do custo de gerar o deck. [Resultados](docs/RESULTADOS_EDICAO.md).
 - [x] Artigo do TCC (LNCS, português) no Overleaf com Teste 1 e edição; pendentes: Teste 3 e Teste 4.
-- [x] Teste 3 medido (23/11, llama.cpp b12648, Qwen3-4B-Instruct-2507, 12 pedidos × 3 modos): válidos JSON 11/12, gramática 10/12 (0 erro de sintaxe), direto 5/12 (6 de sintaxe); gramática −30% tokens de saída e −24% tempo vs JSON; +15,4% ms/token. [Resultados](docs/RESULTADOS_T3.md).
+- [x] Teste 3 medido (23/11, llama.cpp b12648, Qwen3-4B-Instruct-2507, 12 pedidos × 3 modos × 2 sementes): válidos JSON 19/24, gramática 19/24 (0 erro de sintaxe), direto 10/24 (12 de sintaxe; McNemar p=0,012); gramática −32% tokens de saída e −26% tempo vs JSON; +15,4% ms/token. [Resultados](docs/RESULTADOS_T3.md).
 - [x] App: compilador monta o slide quando a IA falha no reparo (F001), em vez de abortar o deck (achado do emulador com Qwen3 0.6B).
 - [ ] Teste 4 (celular real).
 

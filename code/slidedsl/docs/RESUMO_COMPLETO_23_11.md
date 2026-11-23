@@ -43,16 +43,16 @@ Tudo o que é número abaixo foi medido e tem arquivo de origem; interpretaçõe
 ### Teste 3 — gramática × JSON × direto
 - `llama-server` oficial (b12648, CUDA) + Qwen3-4B-Instruct-2507 Q4_K_M (SHA-256 conferido) na RTX 3060.
 - Microbenchmark: a gramática deixa a geração **~15% mais lenta por token** (78 → 68 tokens/s).
-- Matriz 12 pedidos × 3 modos × 1 semente (36 execuções, todas concluídas):
+- Matriz 12 pedidos × 3 modos × **2 sementes** (72 execuções, todas concluídas):
   | Modo | Válidos | Erros de sintaxe | Tokens de saída | Tempo total |
   |---|---:|---:|---:|---:|
-  | JSON Schema | 11/12 | 0 | 9.902 | 142 s |
-  | Gramática | 10/12 | 0 | 6.945 | 108 s |
-  | Direto | 5/12 | 6 | 5.183 | 79 s |
-- Leitura: a gramática garante a sintaxe; as falhas que sobram são de conteúdo (texto longo demais). Mesmo
-  com cada token 15% mais lento, a gramática sai ~30% mais barata e ~24% mais rápida que JSON. Com 12 pares as
-  diferenças de validade não chegam a p < 0,05 (gramática × direto: 5–0, p = 0,06) — o artigo diz isso.
-  Detalhes: [RESULTADOS_T3.md](RESULTADOS_T3.md).
+  | JSON Schema | 19/24 | 0 | 9.816 | 141 s |
+  | Gramática | 19/24 | 0 | 6.692 | 104 s |
+  | Direto | 10/24 | 12 | 5.061 | 77 s |
+- Leitura: a gramática garante a sintaxe; as falhas que sobram são de conteúdo (texto longo demais, A005).
+  Restringir (gramática ou JSON) é significativamente mais válido que não restringir (p = 0,012 e 0,035). Mesmo
+  com cada token 15% mais lento, a gramática sai ~32% mais barata e ~26% mais rápida que JSON, com a mesma
+  validade (p ≈ 10⁻⁴). Detalhes: [RESULTADOS_T3.md](RESULTADOS_T3.md).
 
 ### APK
 - O primeiro teste real no emulador falhou com `<think>` antes do JSON → corrigido (gramática estrita
@@ -81,7 +81,7 @@ Tudo o que é número abaixo foi medido e tem arquivo de origem; interpretaçõe
 1. Artigo no lugar do relatório Ordered GNN no mesmo projeto Overleaf (você pediu); o antigo ficou arquivado.
 2. Restrição de tipo na edição de slide (mudança de comportamento do produto, com testes).
 3. Fallback do compilador no app (um slide ruim não derruba mais o deck; fica registrado).
-4. Teste 3 com 1 semente (não 5) para caber na noite.
+4. Teste 3 com 2 sementes (não 5) para caber na noite.
 
 ## 4. O que falta até 27/11
 - **Teste 4 no seu celular** (o mais importante que só você pode fazer): instalar o APK, importar ou

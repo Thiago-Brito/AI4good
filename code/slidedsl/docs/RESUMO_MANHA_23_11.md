@@ -5,8 +5,9 @@
 
 **Medido esta noite (tudo no artigo):**
 - **Teste 1:** escrever o slide em SlideDSL Alto custa **~9× menos tokens** que código python-pptx (127 decks).
-- **Teste 3:** a **gramática zerou os erros de sintaxe** (0 contra 6/12 sem restrição) e gastou **30% menos
-  tokens** que JSON. Válidos: JSON 11/12, gramática 10/12, sem restrição 5/12.
+- **Teste 3 (72 execuções):** a **gramática zerou os erros de sintaxe** (0 contra 12/24 sem restrição) e gastou
+  **32% menos tokens** que JSON, com a mesma validade. Válidos: JSON 19/24, gramática 19/24, sem restrição 10/24
+  (diferença significativa, p = 0,012).
 - **Edição de 1 slide:** achei e corrigi um defeito (a IA apagava o conteúdo do slide). Agora 11/11 certos, e
   editar custa **~7%** de gerar tudo de novo.
 

@@ -9,38 +9,42 @@ Scripts: `scripts/teste3_restricao.py` (matriz), `scripts/analise_teste3.py` (an
 - `llama-server` oficial do llama.cpp, build **b12648** (Windows, CUDA 12.4), GPU RTX 3060, `-ngl 99 -c 8192 --jinja`.
 - Modelo: `Qwen3-4B-Instruct-2507-Q4_K_M.gguf` (unsloth), SHA-256
   `3605803b982cb64aead44f6c1b2ae36e3acdb41d8e46c8a94c6533bc4c67e597` (conferido com o publicado).
-- 12 pedidos de `benchmark/format_requests.json` (4 temas × 3 níveis), dossiês fixos, 6 slides, semente 11,
+- 12 pedidos de `benchmark/format_requests.json` (4 temas × 3 níveis), dossiês fixos, 6 slides, sementes 11 e 22,
   ordem sorteada com a semente 20261122. Pipeline Alto completo (roteiro, tópicos, slides, até 2 reparos,
   sustentação), igual nos três modos; só muda a restrição da escrita de cada slide:
   `json` (JSON Schema), `gramatica` (GBNF gerada da gramática Alto do tipo do slide), `direto` (texto Alto sem
   restrição, analisado depois).
 
-## Resultado (medido)
+## Resultado (medido) — 12 pedidos × 2 sementes (11 e 22) × 3 modos = 72 execuções, todas concluídas
 
-| Modo | Válidos | Falhas de sintaxe | Slides aceitos de 1ª (média/6) | Reparos (média) | Chamadas (média) | Tokens de saída (média, IC95%) | Tempo de geração (média) | Tempo total (média, IC95%) |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| JSON Schema | 11/12 | 0 | 1,83 | 10,8 | 33,8 | 9.902 (8.165–11.543) | 122,8 s | 141,9 s (116,8–165,3) |
-| Gramática (GBNF) | 10/12 | 0 | 1,58 | 11,0 | 32,4 | 6.945 (5.291–8.708) | 86,4 s | 108,5 s (86,8–131,9) |
-| Direto | 5/12 | 6 | 1,08 | 8,4 | 23,9 | 5.183 (3.510–6.836) | 64,3 s | 78,8 s (54,6–102,9) |
+| Modo | Válidos | Falhas de sintaxe | Slides aceitos de 1ª (média/6) | Reparos (média) | Tokens de saída (média, IC95%) | Tempo de geração (média) | Tempo total (média, IC95%) |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| JSON Schema | 19/24 | 0 | 1,71 | 11,4 | 9.816 (8.658–11.001) | 121,1 s | 141,0 s (124,9–157,7) |
+| Gramática (GBNF) | 19/24 | 0 | 1,54 | 11,1 | 6.692 (5.707–7.769) | 83,3 s | 103,9 s (90,2–118,6) |
+| Direto | 10/24 | 12 | 1,21 | 8,8 | 5.061 (3.938–6.207) | 62,7 s | 77,2 s (60,8–94,1) |
 
-Motivos das falhas: direto — 6 × "Sintaxe inválida na SlideDSL Alto" após os reparos, 1 × A005 (texto acima do
-limite); gramática — 2 × A005; JSON — 1 × A005. Tokens de entrada (média): JSON 58.007; gramática 68.280; direto 50.786.
+Motivos das falhas: direto — 12 × "Sintaxe inválida na SlideDSL Alto" após os reparos, 2 × A005; gramática — 5 × A005;
+JSON — 5 × A005 (A005 = texto acima do limite do tipo de slide). Tokens de entrada (média): JSON 58.254; gramática
+68.628; direto 51.324.
 
-Validade (McNemar exato, pareado por pedido): gramática × direto 5–0, p = 0,0625; JSON × direto 7–1, p = 0,070;
-JSON × gramática 2–1, p = 1,0. Custo (Friedman, 3 modos, n = 12): tokens de saída Q = 16,7, p = 0,00024; tempo
-de geração Q = 15,2, p = 0,0005; tempo total Q = 18,5, p = 0,0001. Wilcoxon pareado (n = 12): JSON × gramática
-p = 0,005 (tokens de saída e tempo de geração), p = 0,008 (tempo total).
+Validade (McNemar exato, pareado por pedido e semente, n = 24): gramática × direto 10–1, **p = 0,012**;
+JSON × direto 12–3, **p = 0,035**; JSON × gramática 4–4, p = 1,0. Custo (Friedman, 3 modos, n = 24): tokens de
+saída Q = 31,8, p ≈ 1,3 × 10⁻⁷; tempo de geração Q = 27,3, p ≈ 1,2 × 10⁻⁶; tempo total Q = 31,8, p ≈ 1,3 × 10⁻⁷.
+Wilcoxon pareado (n = 24) JSON × gramática: tokens de saída p ≈ 9 × 10⁻⁵; tempo total p ≈ 1,6 × 10⁻⁴.
+
+Com só a semente 11 (n = 12), os valores eram: válidos 11/10/5, sintaxe 0/0/6, McNemar gramática × direto p = 0,06.
 
 Microbenchmark (mesmo pedido, 20 × cada condição, aquecimento descartado, 256 tokens no máximo): sem gramática
 12,80 ms/token (78,2 tokens/s, mediana); com a GBNF da Alto 14,76 ms/token (67,8 tokens/s): **+15,4% por token**.
 
 ## Interpretação (separada do medido)
 
-- A gramática eliminou as falhas de sintaxe (0 contra 6/12 no modo direto); as falhas restantes são de conteúdo
+- A gramática eliminou as falhas de sintaxe (0 contra 12/24 no modo direto); as falhas restantes são de conteúdo
   (limites de texto), que a gramática não expressa.
-- Apesar de cada token ficar ~15% mais lento, o modo gramática gerou ~30% menos tokens de saída e foi ~24% mais
-  rápido no total que o modo JSON, com validade semelhante (10 × 11 de 12). Isso é coerente com o Teste 1: escrever
+- Apesar de cada token ficar ~15% mais lento, o modo gramática gerou ~32% menos tokens de saída e foi ~26% mais
+  rápido no total que o modo JSON, com a mesma validade (19 de 24 em ambos). Isso é coerente com o Teste 1: escrever
   a intenção diretamente em Alto custa menos que embrulhá-la em JSON (aqui a diferença é maior que os 6% do
   Teste 1 porque o custo operacional inclui as respostas de reparo e as notas).
 - O modo direto parece mais barato só porque falha cedo: com metade dos decks inválidos, custo por deck válido é
-  pior. Amostra pequena (12 pares, 1 semente, 1 modelo): as diferenças de validade não atingem p < 0,05.
+  pior. Com 24 pares as diferenças de validade em relação ao modo direto são significativas (p < 0,05); a amostra
+  ainda é de um único modelo e duas sementes por pedido.
