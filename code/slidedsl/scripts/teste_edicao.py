@@ -33,6 +33,9 @@ DET_EDITS = {"tema_escuro": {"tema": "escuro"}, "mover_para_5": {"mover_para": 5
              "excluir": {"excluir": True}}
 SLIDE = 3
 OUT = ROOT / "outputs" / "teste_edicao"
+# Rodada: v2 = antes da restrição de tipo em refazer_slide; v3 = depois (23/11/2026).
+RODADA = sys.argv[1] if len(sys.argv) > 1 else "v2"
+EDITS = OUT / ("edicoes" if RODADA == "v2" else f"edicoes_{RODADA}")
 
 
 def ir_slides(source, facts):
@@ -105,7 +108,7 @@ def main():
         return m
 
     OUT.mkdir(parents=True, exist_ok=True)
-    rows_path = OUT / "edicoes_v2.csv"
+    rows_path = OUT / f"edicoes_{RODADA}.csv"
     done = set()
     if rows_path.exists():
         with rows_path.open(encoding="utf-8", newline="") as f:
@@ -148,7 +151,7 @@ def main():
             for name, instruction in AI_EDITS.items():
                 if (rid, name) in done:
                     continue
-                edit_dir = OUT / "edicoes" / rid / name
+                edit_dir = EDITS / rid / name
                 row = dict(common, edicao=name, tipo_edicao="ia")
                 try:
                     if edit_dir.exists():

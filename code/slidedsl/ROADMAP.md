@@ -16,7 +16,10 @@
 - [ ] APK medido em aparelho real: inferência, RAM, velocidade, voz, download, PPTX abrindo no PowerPoint/Google Slides.
 - [ ] Reduzir o APK (só arm64-v8a no release; hoje inclui x86_64).
 - [ ] Otimizar `font_metrics.json` para o app (carregamento sob demanda ou formato compacto).
-- [ ] F2–F9 conforme o plano.
+- [x] Teste 1 medido (23/11): 127 decks/694 slides, tokenizador Qwen3 — Alto 2,04× o texto visível, JSON 2,15×, SlideDSL 1.1 9,22×, python-pptx 18,45× (Wilcoxon p≈1e-22). [Resultados](docs/RESULTADOS_T1.md).
+- [x] Edição localizada de um slide medida (23/11, Qwen3 4B local, 4 decks × 3 instruções): achado — com todos os tipos liberados o modelo reduzia 11/12 slides a `secao`; corrigido (`allowed_kinds`): tipo cumprido 11/11, conteúdo preservado 11/11, ≈7% do custo de gerar o deck. [Resultados](docs/RESULTADOS_EDICAO.md).
+- [x] Artigo do TCC (LNCS, português) no Overleaf com Teste 1 e edição; pendentes: Teste 3 e Teste 4.
+- [ ] Teste 3 (gramática × JSON × direto) e Teste 4 (celular real).
 
 ## Ajustes para o seminário 2 (sem2) — 11/11/2026
 - [x] Comparação aceita 1–4 itens por lado (validação e schema); prompt pede 1 ou 2 e proíbe repetir item.

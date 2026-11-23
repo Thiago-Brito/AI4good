@@ -32,6 +32,43 @@ def replace_slide(source, number, slide):
     return source[:start] + replacement + source[end:]
 
 
+# Palavras que pedem um tipo de slide. Medido em 23/11/2026 (scripts/teste_edicao.py): com todos os
+# tipos liberados, o Qwen3 4B trocou 8 de 9 slides editados por `secao` (só título), perdendo itens e
+# fontes, inclusive quando a instrução pedia comparação. Por isso o tipo só muda quando é pedido.
+KIND_WORDS = {
+    "comparacao": ("comparacao", "comparar", "compare", "comparativo", "versus"),
+    "etapas": ("etapas", "passo a passo", "passos"),
+    "linha_do_tempo": ("linha do tempo", "cronologia", "cronologico"),
+    "numeros": ("numeros", "estatisticas", "indicadores"),
+    "citacao": ("citacao", "frase de destaque"),
+    "grafico": ("grafico",),
+    "imagem": ("imagem", "foto"),
+    "topicos": ("topicos",),
+    "secao": ("secao", "divisoria"),
+    "capa": ("capa",),
+    "conclusao": ("conclusao",),
+}
+CHANGE_VERBS = ("transform", "vire", "virar", "mude", "mudar", "converta", "converter", "troque",
+                "trocar", "refaca como", "faca como", "em forma de", "use o tipo", "como um slide de")
+
+
+def _plain(text):
+    import unicodedata
+
+    return "".join(c for c in unicodedata.normalize("NFD", text.casefold())
+                   if unicodedata.category(c) != "Mn")
+
+
+def allowed_kinds(instrucao: str, current: str) -> list[str]:
+    """Tipos que a edição pode produzir: o atual, salvo pedido explícito de outro tipo."""
+    text = _plain(instrucao)
+    wants_change = any(v in text for v in CHANGE_VERBS)
+    requested = [kind for kind, words in KIND_WORDS.items()
+                 if kind in SLIDE_KINDS and any(w in text for w in words)
+                 and (wants_change or kind == "comparacao")]
+    return requested or [current]
+
+
 def refazer_slide(deck_slda, numero, instrucao, fatos, modelo, *, roteiro=None, repair_max=1):
     if not instrucao.strip() or len(instrucao) > 2000:
         raise ValueError("Escreva uma instrução de 1 a 2000 caracteres.")
@@ -39,13 +76,15 @@ def refazer_slide(deck_slda, numero, instrucao, fatos, modelo, *, roteiro=None, 
     if not 1 <= numero <= len(deck.slides):
         raise ValueError("Número de slide fora do deck.")
     facts = fatos or {}
+    current = deck.slides[numero - 1]
+    kinds = allowed_kinds(instrucao, current.kind)
     variants = []
-    for kind in SLIDE_KINDS:
+    for kind in kinds:
         variants.append({"type": "object", "properties": {
             "tipo": {"type": "string", "enum": [kind]},
             "conteudo": slide_schema(kind, list(facts))}, "required": ["tipo", "conteudo"]})
-    schema = {"type": "object", "properties": {"slide": {"anyOf": variants}}, "required": ["slide"]}
-    current = deck.slides[numero - 1]
+    schema = {"type": "object", "properties": {"slide": variants[0] if len(variants) == 1
+                                                else {"anyOf": variants}}, "required": ["slide"]}
     neighbors = [print_slide(s) for i, s in enumerate(deck.slides)
                  if abs(i - (numero - 1)) == 1]
     outline = roteiro or [{"numero": i + 1, "tipo": s.kind, "titulo": s.title}
@@ -53,7 +92,9 @@ def refazer_slide(deck_slda, numero, instrucao, fatos, modelo, *, roteiro=None, 
     user = (f"Deck: {deck.title}\nRoteiro: {json.dumps(outline, ensure_ascii=False)}\n"
             f"Slide atual {numero}:\n{print_slide(current)}\nVizinhos (não repetir):\n"
             + "\n".join(neighbors) + f"\nInstrução: {instrucao}\n"
-            + "Pode mudar o tipo se necessário para cumprir a instrução.\n"
+            + (f"Mantenha o tipo atual ({current.kind}) e todo o conteúdo que a instrução não "
+               "mandar remover.\n" if kinds == [current.kind]
+               else f"Mude o tipo do slide para: {', '.join(kinds)}.\n")
             + "Regras por tipo: " + json.dumps(KIND_RULES, ensure_ascii=False)
             + "\nFatos: " + facts_block(list(facts), facts, all_facts=True))
     for attempt in range(min(1, max(0, repair_max)) + 1):
