@@ -3,9 +3,10 @@ import {prompts, schemaErrors, schemaWithFacts} from './contracts.js';
 import {collectFacts, type SourceChoice, type FetchText, type ReadDocument, type DocumentUsage} from './sources.js';
 import {genericDocumentRequest, MAX_EXTRACT_CALLS} from './documents.js';
 import {Recorder} from './usage.js';
-import {altoFormatHint, altoToJson, slideGrammar} from './altoText.js';
-/** Como o modelo escreve cada slide: JSON Schema ou SlideDSL Alto sob gramática (mesmos campos e limites). */
-export type SlideMode = 'json' | 'gramatica';
+import {altoFormatHint, altoToJson, slideGrammar, withCompilerLimits} from './altoText.js';
+/** Como o modelo escreve cada slide: JSON Schema; SlideDSL Alto sob gramática com os mesmos campos e limites
+ * folgados do JSON; ou a mesma gramática com os limites de texto do compilador (gramatica_limites). */
+export type SlideMode = 'json' | 'gramatica' | 'gramatica_limites';
 import {checkCancelled, type CallRecord, type JsonSchema, type TextModel} from './types.js';
 export interface Progress {stage: string; slide?: number; total: number}
 export interface GenerationResult {
@@ -60,6 +61,15 @@ function fallbackSlide(kind: SlideKind, plan: PlanSlide, deckTitle: string, deck
   return null;
 }
 interface Outline {titulo: string; slides: PlanSlide[]}
+/** Porte de fix_outline (alto_generation.py): o primeiro slide vira capa, o último conclusão e capas no meio
+ * viram tópicos. Na bancada de 24/11 (Qwen3 1.7B), um roteiro sem capa/conclusão abortava o deck inteiro. */
+export function fixOutline(outline: Outline): Outline {
+  const slides = outline.slides.map(s => ({...s}));
+  if (slides.length) slides[0].tipo = 'capa';
+  if (slides.length > 1) slides[slides.length - 1].tipo = 'conclusao';
+  for (const s of slides.slice(1, -1)) if (s.tipo === 'capa') s.tipo = 'topicos';
+  return {...outline, slides};
+}
 export interface GenerateOptions {
   request: string; slides: number; source: SourceChoice; model: TextModel;
   fetchJson?: FetchText; signal?: AbortSignal; onProgress?: (p: Progress) => void;
@@ -88,8 +98,7 @@ export async function generate(options: GenerateOptions): Promise<GenerationResu
     `Pedido: ${request}\nNúmero de slides: ${n}\nFatos da pesquisa:\n${factsBlock()}${sectionPrompt}`, outlineSchema);
   const outlineErrors = schemaErrors(raw, outlineSchema);
   if (outlineErrors.length) throw Error(`Roteiro inválido: ${outlineErrors.join('; ')}`);
-  const outline = raw as Outline;
-  if (outline.slides[0].tipo !== 'capa' || outline.slides[n - 1].tipo !== 'conclusao') throw Error('O roteiro deve começar com capa e terminar com conclusão.');
+  const outline = fixOutline(raw as Outline);
   const deck: AltoDeck = {title: outline.titulo, theme: 'claro', slides: []};
   const summary = outline.slides.map((s, i) => `${i + 1}. ${s.tipo}: ${s.mensagem}`).join('\n');
   const fallbackNotes: Diagnostic[] = [];
@@ -97,7 +106,8 @@ export async function generate(options: GenerateOptions): Promise<GenerationResu
     const plan = outline.slides[i], kind = plan.tipo;
     const schema: JsonSchema = schemaWithFacts((prompts.slide_schemas as Record<string, any>)[kind][mode], ids);
     const base = `Pedido original: ${request}\nApresentação: ${deck.title}\nRoteiro:\n${summary}\nEscreva o slide ${i + 1} (tipo ${kind}).\nMensagem: ${plan.mensagem}\nObjetivo: ${plan.objetivo}\nRegras do tipo: ${(prompts.kind_rules as Record<string, string>)[kind]}\nFatos para este slide:\n${factsBlock(plan.fatos?.length ? plan.fatos : ids)}\nTítulos já escritos (não repetir): ${deck.slides.map(s => s.title).join('; ')}`;
-    const grammar = slideMode === 'gramatica' ? slideGrammar(kind, schema) : '';
+    const grammar = slideMode === 'json' ? ''
+      : slideGrammar(kind, slideMode === 'gramatica_limites' ? withCompilerLimits(schema) : schema);
     const slideBase = grammar ? `${base}\n${altoFormatHint(kind, schema)}` : base;
     let accepted: AltoSlide | null = null, previous = '', diagnostics: Diagnostic[] = [];
     for (let attempt = 0; attempt <= 1; attempt++) {

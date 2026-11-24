@@ -91,9 +91,11 @@ test('roteiro com quantidade incorreta é rejeitado antes de gerar conteúdo', a
   await assert.rejects(generate(base(model)), /Roteiro inválido/);
   assert.equal(model.inputs.length, 1);
 });
-test('roteiro exige capa e conclusão', async () => {
+test('roteiro sem capa é corrigido (fix_outline do Python) em vez de abortar', async () => {
   const model = new Mock({overrideOutline: o => o.slides[0].tipo = 'topicos'});
-  await assert.rejects(generate(base(model)), /começar com capa/);
+  const result = await generate(base(model));
+  assert.equal(result.deck.slides[0].kind, 'capa');
+  assert.equal(result.ir.slides.length, 5);
 });
 test('sem fontes esconde dados e imagens; IDs inexistentes são rejeitados pelo schema', () => {
   const s = prompts.outline_schemas['5'].without_facts;

@@ -39,6 +39,37 @@ const RECORD_KEYS: Record<string, string[]> = {item: ['rotulo', 'detalhe'], valo
 
 export function altoKinds(): string[] { return Object.keys(ORDER); }
 
+/** Limites que a validação A005 do compilador cobra (src/slidedsl/alto.py, validate_alto). */
+export const COMPILER_LIMITS = {
+  titulo: 80, subtitulo: 140, autor: 80, texto: 260, unidade: 40, notas: 1500,
+  item: {rotulo: 48, detalhe: 170}, valor: {valor: 14, legenda: 170}, lado: {nome: 40, rotulo: 48, detalhe: 80},
+  marco: {data: 16, rotulo: 36, detalhe: 90}, barra: {rotulo: 24},
+} as const;
+
+/** Cópia do schema com o maxLength de cada campo reduzido ao limite do compilador (modo gramatica_limites).
+ * Ataca a falha mais comum (A005, texto longo demais) na própria decodificação; o custo é o texto poder
+ * ser cortado no limite, o que a bancada mede. */
+export function withCompilerLimits(schema: JsonSchema): JsonSchema {
+  const out = JSON.parse(JSON.stringify(schema)) as JsonSchema, p = props(out);
+  const cap = (s: JsonSchema | undefined, limit: number) => {
+    if (s && s.type === 'string') s.maxLength = Math.min(num(s.maxLength, limit), limit);
+  };
+  for (const key of ['titulo', 'subtitulo', 'autor', 'texto', 'unidade', 'notas'] as const) cap(p[key], COMPILER_LIMITS[key]);
+  const recs: [string, Record<string, number>][] = [['itens', COMPILER_LIMITS.item], ['valores', COMPILER_LIMITS.valor],
+    ['marcos', COMPILER_LIMITS.marco], ['barras', COMPILER_LIMITS.barra]];
+  for (const [key, limits] of recs) {
+    const rp = props((p[key]?.items ?? {}) as JsonSchema);
+    for (const [k, v] of Object.entries(limits)) cap(rp[k], v);
+  }
+  const side = props((p.lados?.items ?? {}) as JsonSchema);
+  if (p.lados) {
+    cap(side.nome, COMPILER_LIMITS.lado.nome);
+    const ip = props(((side.itens as JsonSchema)?.items ?? {}) as JsonSchema);
+    cap(ip.rotulo, COMPILER_LIMITS.lado.rotulo); cap(ip.detalhe, COMPILER_LIMITS.lado.detalhe);
+  }
+  return out;
+}
+
 function fields(kind: string): Field[] {
   const order = ORDER[kind];
   if (!order) throw Error(`Tipo sem gramática Alto no app: ${kind}`);

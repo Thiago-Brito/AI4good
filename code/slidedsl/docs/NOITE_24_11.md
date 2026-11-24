@@ -30,3 +30,10 @@ testar no emulador e deixar um resumo. Claude conduz sozinho; commits sem coauto
 - ~01:44 — Decisão de projeto no piloto (antes da matriz): dica de formato do modo gramática reduzida a uma linha
   (o exemplo completo somava ~120 tokens de prompt por slide; a gramática já impõe as palavras-chave).
   Pilotos isolados variam muito por causa dos reparos A005; decisão pela matriz completa.
+- ~01:50 — Matriz da bancada (json × gramatica, 48 gerações) em execução em `outputs/teste5_app/`. Parcial: slides
+  montados pelo compilador (F001) frequentes nos dois modos, quase sempre por A005 (texto acima do limite).
+  Implementado o modo `gramatica_limites` (mesma gramática com os limites A005 do compilador em vez dos limites
+  folgados do JSON) para rodar como 3ª condição depois da matriz; 60/60 testes do app.
+- Achado do app: em solar_obrigatorio s11 o roteiro não começou com capa/terminou com conclusão e o app abortou.
+  O pipeline Python corrige isso (`fix_outline`); o porte do app não. Independe do modo dos slides (roteiro igual
+  nos dois); corrigir depois da matriz para não mudar o código no meio do experimento.

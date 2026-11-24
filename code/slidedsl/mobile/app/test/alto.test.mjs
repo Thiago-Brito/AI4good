@@ -152,6 +152,45 @@ test('modo gramatica: resposta cortada vira reparo com o texto anterior, e o dec
   assert.equal(result.calls.find(c => c.slide === 3 && c.attempt === 0).status, 'failed');
 });
 
+test('gramatica_limites: maxLength reduzido aos limites A005 do compilador, sem tocar no schema original', async () => {
+  const {withCompilerLimits} = await import('../outputs/tests/pipeline/altoText.js');
+  const base = schemaFor('comparacao'), lim = withCompilerLimits(base);
+  assert.equal(lim.properties.titulo.maxLength, 80);
+  assert.equal(lim.properties.notas.maxLength, 1500);
+  assert.equal(lim.properties.lados.items.properties.nome.maxLength, 40);
+  assert.equal(lim.properties.lados.items.properties.itens.items.properties.detalhe.maxLength, 80);
+  assert.equal(base.properties.titulo.maxLength, 160);
+  assert.match(slideGrammar('comparacao', lim), /ws "titulo" ws s-4-80/);
+  const linha = withCompilerLimits(schemaFor('linha_do_tempo'));
+  assert.equal(linha.properties.marcos.items.properties.rotulo.maxLength, 36);
+  assert.equal(withCompilerLimits(schemaFor('grafico')).properties.barras.items.properties.rotulo.maxLength, 24);
+  const model = new AltoMock();
+  const result = await generate({...request(model), slideMode: 'gramatica_limites'});
+  assert.equal(result.ir.slides.length, 5);
+  assert.ok(model.inputs.filter(x => x.grammar).every(x => /s-4-80/.test(x.grammar)));
+});
+
+test('roteiro sem capa/conclusão é corrigido como no Python, em vez de abortar o deck', async () => {
+  const {fixOutline} = await import('../outputs/tests/pipeline/generate.js');
+  const fixed = fixOutline({titulo: 'T', slides: [{tipo: 'topicos'}, {tipo: 'capa'}, {tipo: 'etapas'}, {tipo: 'topicos'}]});
+  assert.deepEqual(fixed.slides.map(s => s.tipo), ['capa', 'topicos', 'etapas', 'conclusao']);
+  const bad = new AltoMock();
+  const original = bad.complete.bind(bad);
+  bad.complete = async input => {
+    const out = await original(input);
+    if (input.schema.properties.slides) {
+      const o = JSON.parse(out.text);
+      o.slides[0].tipo = 'topicos'; o.slides[o.slides.length - 1].tipo = 'etapas';
+      return {...out, text: JSON.stringify(o)};
+    }
+    return out;
+  };
+  const result = await generate({...request(bad), slideMode: 'gramatica'});
+  assert.equal(result.ir.slides.length, 5);
+  assert.equal(result.deck.slides[0].kind, 'capa');
+  assert.equal(result.deck.slides[4].kind, 'conclusao');
+});
+
 test('modo json continua o padrão e não envia gramática', async () => {
   const inputs = [];
   const json = {async complete(input) {
