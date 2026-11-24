@@ -1,5 +1,6 @@
 import {buildAlto, renderPptx, type AltoDeck, type AltoSlide, type Diagnostic, type Facts, type SlideKind, type Presentation} from '@slidedsl/core';
 import {prompts, schemaErrors, schemaWithFacts} from './contracts.js';
+import type {ExtractMode} from './sentences.js';
 import {collectFacts, type SourceChoice, type FetchText, type ReadDocument, type DocumentUsage} from './sources.js';
 import {genericDocumentRequest, MAX_EXTRACT_CALLS} from './documents.js';
 import {Recorder} from './usage.js';
@@ -79,6 +80,8 @@ export interface GenerateOptions {
   /** Só em gramatica_limites: campo que chegou ao limite (cortado) vira aviso e pede 1 reparo. Padrão: não —
    * na bancada de 24/11 o reparo não reduziu os cortes (28/673 × 31/677) e custou +22% de reparos. */
   repairTruncated?: boolean;
+  /** Leitura do documento: `json` (o modelo copia o trecho) ou `frases` (escolhe frases numeradas). Padrão: json. */
+  extractMode?: ExtractMode;
 }
 export async function generate(options: GenerateOptions): Promise<GenerationResult> {
   const {slides: n, source: choice, model, signal} = options, slideMode: SlideMode = options.slideMode ?? 'json';
@@ -89,7 +92,8 @@ export async function generate(options: GenerateOptions): Promise<GenerationResu
   const recorder = new Recorder(model, maxCalls, signal, options.onCalls);
   const progress = (stage: string, slide?: number) => { checkCancelled(signal); options.onProgress?.({stage, slide, total: n}); };
   progress(choice.mode === 'none' ? 'Sem pesquisa' : 'Extraindo fatos da fonte');
-  const source = await collectFacts(choice, request, recorder, options.fetchJson, signal, options.readDocument, progress, options.onDocument);
+  const source = await collectFacts(choice, request, recorder, options.fetchJson, signal, options.readDocument, progress, options.onDocument,
+    options.extractMode ?? 'json');
   const facts = source.facts, ids = Object.keys(facts), mode = ids.length ? 'with_facts' : 'without_facts';
   const factsBlock = (selected = ids) => JSON.stringify(Object.fromEntries(selected.slice(0, 3).filter(id => id in facts).map(id => [id,
     {claim: facts[id].claim, quote: String(facts[id].quote).slice(0, 300), kind: facts[id].kind, value: facts[id].value}])));

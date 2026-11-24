@@ -55,7 +55,7 @@ function serverModel(seed) {
 
 const sum = (rows, f) => rows.reduce((n, c) => n + (Number(f(c)) || 0), 0);
 function summarize(calls) {
-  const slide = calls.filter(c => c.stage === 'slide');
+  const slide = calls.filter(c => c.stage === 'slide'), extract = calls.filter(c => c.stage === 'document_extract');
   const promptN = rows => sum(rows, c => c.timings?.prompt_n ?? c.input_tokens);
   const genN = rows => sum(rows, c => c.output_tokens);
   const phone = rows => (promptN(rows) / PHONE.prompt_tps + genN(rows) / PHONE.gen_tps) / 60;
@@ -63,13 +63,16 @@ function summarize(calls) {
     falhas_chamada: calls.filter(c => c.status !== 'success').length,
     tokens_entrada: sum(calls, c => c.input_tokens), tokens_saida: genN(calls), prompt_processado: promptN(calls),
     slide_tokens_entrada: sum(slide, c => c.input_tokens), slide_tokens_saida: genN(slide), slide_prompt_processado: promptN(slide),
+    extracao_prompt_processado: promptN(extract), extracao_tokens_saida: genN(extract),
+    celular_extracao_min: Math.round(phone(extract) * 10) / 10,
     pc_ms: Math.round(sum(calls, c => c.wall_ms)),
     celular_min: Math.round(phone(calls) * 10) / 10, celular_slides_min: Math.round(phone(slide) * 10) / 10};
 }
 
 const FIELDS = ['run_id', 'request_id', 'mode', 'seed', 'status', 'valido', 'slides_compilador', 'chamadas', 'reparos',
   'falhas_chamada', 'tokens_entrada', 'tokens_saida', 'prompt_processado', 'slide_tokens_entrada', 'slide_tokens_saida',
-  'slide_prompt_processado', 'pc_ms', 'celular_min', 'celular_slides_min', 'erro'];
+  'slide_prompt_processado', 'extracao_prompt_processado', 'extracao_tokens_saida', 'celular_extracao_min', 'fatos',
+  'fatos_rejeitados', 'pc_ms', 'celular_min', 'celular_slides_min', 'erro'];
 const csvCell = v => (v === undefined || v === null ? '' : /[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v));
 
 async function main() {
@@ -99,9 +102,11 @@ async function main() {
     process.stdout.write(`[${n + 1}/${plan.length}] ${id} ... `);
     try {
       // gramatica_limites = medido sem reparo de texto cortado; gramatica_limites_reparo = com o reparo.
-      const slideMode = mode.startsWith('gramatica_limites') ? 'gramatica_limites' : mode;
+      // Sufixo "+frases": leitura do documento por frases numeradas (sentences.ts) em vez de JSON com trecho copiado.
+      const [slidePart, extractPart] = mode.split('+');
+      const slideMode = slidePart.startsWith('gramatica_limites') ? 'gramatica_limites' : slidePart;
       const result = await generate({request: r.prompt, slides: 5, model: serverModel(seed), slideMode,
-        repairTruncated: mode === 'gramatica_limites_reparo',
+        repairTruncated: slidePart === 'gramatica_limites_reparo', extractMode: extractPart === 'frases' ? 'frases' : 'json',
         source: {mode: 'document', document: file}, readDocument: async () => extractBytes(file, bytes),
         onCalls: c => { calls = c; }});
       calls = result.calls;
@@ -110,6 +115,8 @@ async function main() {
         slides_compilador: f001});
       await fs.writeFile(path.join(OUT, `${id}.pptx`), new Uint8Array(result.pptx));
       await fs.writeFile(path.join(OUT, `${id}.deck.json`), JSON.stringify(result.deck, null, 1));
+      await fs.writeFile(path.join(OUT, `${id}.facts.json`), JSON.stringify({facts: result.facts, rejected: result.source.rejected}, null, 1));
+      Object.assign(row, {fatos: Object.keys(result.facts).length, fatos_rejeitados: result.source.rejected.length});
       row.erro = result.diagnostics.filter(d => d.code === 'F001').map(d => d.message).join(' | ').slice(0, 200);
     } catch (e) {
       row.erro = (e instanceof Error ? e.message : String(e)).slice(0, 200);

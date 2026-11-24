@@ -3,6 +3,7 @@ import {prompts, schemaErrors} from './contracts.js';
 import {Recorder} from './usage.js';
 import {checkCancelled} from './types.js';
 import {documentMetadata, genericDocumentRequest, retrieveDocument, type DocumentFile, type DocumentText} from './documents.js';
+import {FRASES_SYSTEM, factGrammar, numberedSentences, parseFactLines, splitSentences, type ExtractMode} from './sentences.js';
 export type SourceChoice = {mode: 'none'} | {mode: 'paste'; text: string} |
   {mode: 'wikipedia'; title: string; language: 'pt' | 'en'} | {mode: 'document'; document: DocumentFile};
 export interface FactInput {afirmacao: string; trecho: string; valor?: string; tipo?: string; autor?: string; relevancia?: string}
@@ -26,6 +27,20 @@ export function verifyFact(item: FactInput, passage: string): string | null {
   return null;
 }
 export interface Passage {title: string; url: string; text: string}
+/** Uma chamada de extração. `json`: o modelo devolve fatos com o trecho copiado; `frases`: escolhe frases numeradas. */
+export async function extractFacts(recorder: Recorder, header: string, text: string, mode: ExtractMode = 'json'): Promise<FactInput[]> {
+  if (mode === 'frases') {
+    const sentences = splitSentences(text);
+    if (!sentences.length) return [];
+    const {value} = await recorder.grammar('document_extract', FRASES_SYSTEM, `${header}\nFRASES:\n${numberedSentences(sentences)}`,
+      prompts.extract_schema, factGrammar(sentences.length), out => parseFactLines(out, sentences));
+    return value;
+  }
+  const raw = await recorder.json('document_extract', prompts.extract_system, `${header}\nTRECHO:\n${text}`, prompts.extract_schema);
+  const errors = schemaErrors(raw, prompts.extract_schema);
+  if (errors.length) throw Error(`Extração fora do formato: ${errors.join('; ')}`);
+  return (raw as {fatos: FactInput[]}).fatos;
+}
 export type FetchText = (url: string, signal?: AbortSignal) => Promise<unknown>;
 export type ReadDocument = (file: DocumentFile, signal?: AbortSignal) => Promise<DocumentText>;
 export interface DocumentUsage extends ReturnType<typeof documentMetadata> {
@@ -34,7 +49,7 @@ export interface DocumentUsage extends ReturnType<typeof documentMetadata> {
 }
 export interface CollectedFacts {facts: Facts; rejected: {item: FactInput; reason: string}[]; source: Passage | null; warning: string | null; document?: DocumentUsage}
 export async function collectDocument(doc: DocumentText, request: string, recorder: Recorder, signal?: AbortSignal,
-  progress?: (stage: string) => void, onDocument?: (doc: DocumentUsage) => void): Promise<CollectedFacts> {
+  progress?: (stage: string) => void, onDocument?: (doc: DocumentUsage) => void, mode: ExtractMode = 'json'): Promise<CollectedFacts> {
   const selected = retrieveDocument(doc, request);
   if (!selected.length) throw Error('Nenhum trecho relevante para o pedido. Use um pedido geral ou palavras presentes no documento.');
   const facts: Facts = {}, rejected: CollectedFacts['rejected'] = [], seen = new Set<string>();
@@ -42,12 +57,10 @@ export async function collectDocument(doc: DocumentText, request: string, record
   onDocument?.({...metadata});
   for (const [i, chunk] of selected.entries()) {
     checkCancelled(signal); progress?.(`Extraindo fatos ${i + 1}/${selected.length}`);
-    const raw = await recorder.json('document_extract', prompts.extract_system,
-      `Pedido: ${request}\nDocumento: ${doc.name}\nSeção: ${chunk.heading}\nTrecho ${chunk.passage}${chunk.page ? `, página ${chunk.page}` : ''}\nTRECHO:\n${chunk.text}`, prompts.extract_schema);
-    const errors = schemaErrors(raw, prompts.extract_schema);
-    if (errors.length) throw Error(`Extração fora do formato: ${errors.join('; ')}`);
+    const items = await extractFacts(recorder,
+      `Pedido: ${request}\nDocumento: ${doc.name}\nSeção: ${chunk.heading}\nTrecho ${chunk.passage}${chunk.page ? `, página ${chunk.page}` : ''}`, chunk.text, mode);
     metadata.chunks_used++; metadata.passages.push(chunk.passage);
-    for (const item of (raw as {fatos: FactInput[]}).fatos) {
+    for (const item of items) {
       // Números e citação devem estar no mesmo trecho, não em outra seção do documento.
       const reason = verifyFact(item, chunk.text), key = normalize(item.afirmacao);
       if (reason || seen.has(key) || normalize(item.trecho) === normalize(chunk.heading)) {rejected.push({item, reason: reason ?? (seen.has(key) ? 'duplicada' : 'título de seção não é fato')}); continue;}
@@ -80,14 +93,14 @@ export async function wikipedia(title: string, language: 'pt' | 'en', fetchJson:
 }
 export async function collectFacts(choice: SourceChoice, request: string, recorder: Recorder,
   fetchJson?: FetchText, signal?: AbortSignal, readDocument?: ReadDocument,
-  progress?: (stage: string) => void, onDocument?: (doc: DocumentUsage) => void): Promise<CollectedFacts> {
+  progress?: (stage: string) => void, onDocument?: (doc: DocumentUsage) => void, mode: ExtractMode = 'json'): Promise<CollectedFacts> {
   const facts: Facts = {};
   const rejected: {item: FactInput; reason: string}[] = [];
   if (choice.mode === 'none') return {facts, rejected, source: null, warning: 'conteúdo sem fontes'};
   if (choice.mode === 'document') {
     if (!readDocument) throw Error('Leitor de documento indisponível.');
     progress?.('Lendo documento');
-    return collectDocument(await readDocument(choice.document, signal), request, recorder, signal, progress, onDocument);
+    return collectDocument(await readDocument(choice.document, signal), request, recorder, signal, progress, onDocument, mode);
   }
   let source: Passage;
   if (choice.mode === 'paste') {
@@ -97,12 +110,9 @@ export async function collectFacts(choice: SourceChoice, request: string, record
     if (!fetchJson) throw Error('Wikipedia requer internet.');
     source = await wikipedia(choice.title, choice.language, fetchJson, signal);
   }
-  const raw = await recorder.json('document_extract', prompts.extract_system,
-    `Pedido: ${request}\nDocumento: ${source.title}\nTRECHO:\n${source.text}`, prompts.extract_schema);
-  const errors = schemaErrors(raw, prompts.extract_schema);
-  if (errors.length) throw Error(`Extração fora do formato: ${errors.join('; ')}`);
+  const items = await extractFacts(recorder, `Pedido: ${request}\nDocumento: ${source.title}`, source.text, mode);
   const seen = new Set<string>();
-  for (const item of (raw as {fatos: FactInput[]}).fatos) {
+  for (const item of items) {
     const reason = verifyFact(item, source.text);
     const key = normalize(item.afirmacao);
     if (reason || seen.has(key)) { rejected.push({item, reason: reason ?? 'duplicada'}); continue; }

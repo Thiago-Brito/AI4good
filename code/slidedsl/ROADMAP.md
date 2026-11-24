@@ -446,3 +446,12 @@ continuam como etapas futuras do plano maior; o histórico desta rodada é espec
 - [x] Decks do seminário gerados com local e API e revisados (`academy/ai4good/va2/sem3/`).
 - [ ] Congelar o código num commit (24/11) e rodar 12 pedidos × 3 seeds × 2 condições (25/11).
 - [ ] Conferir ciclos à mão e checagem às cegas com 3 colegas (27/11); tabela no pitch (02/12).
+
+## App no celular — gramática e frases (24/11/2026)
+- [x] App 0.4.0: slides em SlideDSL Alto com gramática e limites do compilador (Teste 5, `docs/RESULTADOS_T5.md`).
+- [x] Gramática funciona no llama.rn no emulador (`docs/NOITE_24_11.md`).
+- [x] App 0.5.0: leitura do documento por frases numeradas; total projetado no celular 72,3 → 53,5 min (−26%),
+      24/24 válidos (Teste 6, `docs/RESULTADOS_T6.md`).
+- [ ] Medir o 0.5.0 no celular (agua.txt, 1.7B, 5 slides) e comparar com os 63 min do 0.3.0.
+- [ ] Dica de formato sem palavras copiáveis ("rotulo", "detalhe" copiados pelo 0.6B no emulador).
+- [ ] Bancada do 0.6B sem treino (GLC + frases) × 1.7B, para decidir se vale o LoRA.

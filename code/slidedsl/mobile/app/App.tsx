@@ -90,6 +90,8 @@ export default function App() {
       llm = await loadModel(modelUri(selected), gpu, n => setProgress({stage: `Carregando modelo · ${Math.round(n)}%`, total: slides}));
       const generated = await generate({request, slides, source, model: llm, signal: abort.signal,
         slideMode: grammarSlides ? 'gramatica_limites' : 'json',
+        // Bancada de 24/11 (RESULTADOS_T6.md): frases numeradas reduzem a leitura do documento em 56%.
+        extractMode: grammarSlides ? 'frases' : 'json',
         readDocument: async (file, signal) => document ?? readDocument(file, signal),
         onDocument: info => {documentData = info; setDocumentInfo(info);},
         onProgress: setProgress, onCalls: c => {records = c; setCalls(c.length);},
@@ -112,7 +114,7 @@ export default function App() {
       setData(testData({calls: records, device_start: snapshot, device_end: end,
         model: {...selected, quantization: 'Q4_K_M', n_ctx: 4096, gpu}, status,
         wall_ms: Date.now() - started, slides, diagnostics, error: error || undefined, source_mode: source.mode, document: documentData,
-        slide_mode: grammarSlides ? 'gramatica_limites' : 'json'}));
+        slide_mode: grammarSlides ? 'gramatica_limites' : 'json', extract_mode: grammarSlides ? 'frases' : 'json'}));
       active.current = null; setBusy(false);
       if (queuedDocument.current) {const document = queuedDocument.current; queuedDocument.current = null; acceptDocument(document);}
     }
