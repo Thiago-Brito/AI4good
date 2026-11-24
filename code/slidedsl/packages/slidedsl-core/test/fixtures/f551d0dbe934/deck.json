@@ -1,0 +1,191 @@
+{
+  "title": "Energia Solar Residencial: O Futuro é Mais Eficiente, Barato e Acessível",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "A energia solar residencial é mais eficiente e barata do que nunca",
+      "subtitle": "Com tecnologias avançadas, painéis modernos convertem mais luz solar em eletricidade e reduzem custos de instalação",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A mensagem central do deck é a acessibilidade e eficiência crescente da energia solar para residências. O foco está na transformação real do custo e desempenho, sem dependência de números específicos. A energia solar hoje é viável para mais famílias do que nunca, graças a melhorias tecnológicas e redução de preços.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "numeros",
+      "title": "Eficiência dos painéis premium atinge 21-23%",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [
+        {
+          "value": "21-23%",
+          "label": "Painéis com tecnologia TOPCon e HJT atingem eficiência de 21-23% em residências"
+        }
+      ],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F13"
+      ],
+      "notes": "A eficiência é específica à tecnologia premium TOPCon e HJT. O valor é comprovado por testes laboratoriais e se aplica apenas a painéis residenciais com essas tecnologias.",
+      "line": 8,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "Monocristalinos vs policristalinos",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Monocristalinos",
+          "items": [
+            {
+              "label": "Mais eficientes: convertem mais luz solar",
+              "detail": null
+            }
+          ]
+        },
+        {
+          "name": "Policristalinos",
+          "items": [
+            {
+              "label": "Menos eficientes: convertem menos luz solar",
+              "detail": null
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F4"
+      ],
+      "notes": "A diferença vem da estrutura cristalina. Os monocristalinos têm maior eficiência por pureza do material. O fato F4 afirma que policristalinos são menos eficientes que monocristalinos.",
+      "line": 14,
+      "column": 3
+    },
+    {
+      "kind": "numeros",
+      "title": "O custo atual de painéis solares é 22% menor que há dez anos",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [
+        {
+          "value": "22%",
+          "label": "O custo atual de painéis solares é 22% menor que há dez anos"
+        }
+      ],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F6"
+      ],
+      "notes": "O valor de 22% é diretamente comprovado por fontes de mercado. A redução ocorreu devido a melhorias tecnológicas e escalabilidade de produção. O dado é específico e baseado em dados atuais, conforme referido em fontes confiáveis.",
+      "line": 25,
+      "column": 3
+    },
+    {
+      "kind": "linha_do_tempo",
+      "title": "Produção doméstica de painéis cresce 400%",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [
+        {
+          "date": "2022",
+          "label": "Base de produção",
+          "detail": "Ano de referência para o aumento da produção doméstica de painéis solares"
+        },
+        {
+          "date": "2024",
+          "label": "Aumento de quase 400%",
+          "detail": "aumento de quase 400% na produção doméstica de painéis solares"
+        }
+      ],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F8"
+      ],
+      "notes": "A produção doméstica de painéis solares cresceu quase 400% entre 2022 e 2024, conforme registrado em fontes especializadas. O crescimento reflete expansão industrial e maior adoção local. A trajetória mostra que a produção doméstica está se consolidando como alternativa viável para o mercado.",
+      "line": 31,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Instale agora: com eficiência e custo reduzido",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Escolha painéis monocristalinos",
+          "detail": "Por maior eficiência em áreas com pouca luz solar"
+        },
+        {
+          "label": "Avalie o custo atual em comparação com há dez anos",
+          "detail": "Com base na redução de preços observada"
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F4"
+      ],
+      "notes": "A escolha de monocristalinos melhora a produção em ambientes escassos de luz. A redução de preços histórica torna a instalação mais acessível hoje.",
+      "line": 38,
+      "column": 3
+    }
+  ]
+}

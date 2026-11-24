@@ -1,0 +1,210 @@
+{
+  "title": "Git para Estudantes: O Que Você Precisa Saber",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Git é fácil de aprender",
+      "subtitle": "Aqui está o básico para iniciantes que nunca usaram controle de versão",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Git é acessível mesmo sem experiência prévia. O aprendizado começa com ações simples e visíveis, como salvar mudanças e compartilhar versões com colegas.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Diferença entre commit e push",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Commit salva alterações localmente",
+          "detail": "O commit salva alterações no repositório local, conforme definido em."
+        },
+        {
+          "label": "Push envia alterações para o remoto",
+          "detail": "O push envia alterações do local para o repositório remoto, conforme definido em."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1",
+        "F2"
+      ],
+      "notes": "O commit é a ação de salvar mudanças no local; o push é o envio dessas mudanças para o servidor remoto. Essa distinção é fundamental para entender o fluxo de trabalho em Git.",
+      "line": 8,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Uso de branches",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Trabalhar em projetos paralelos",
+          "detail": "A plataforma mostra as branches master e testing ao lado do commit f30ab."
+        },
+        {
+          "label": "Mudar entre branches",
+          "detail": "O comando git checkout permite trocar para uma branch existente."
+        },
+        {
+          "label": "HEAD aponta para a branch atual",
+          "detail": "HEAD indica a branch atual no momento."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F3",
+        "F4",
+        "F5"
+      ],
+      "notes": "A visualização das branches na plataforma mostra o estado ativo. O comando git checkout é usado para mudar entre branches. HEAD indica a branch atual no momento. Conflitos de merge surgem quando múltiplas pessoas modificam o mesmo código. Mensagens de commit claras tornam o histórico do projeto mais compreensível.",
+      "line": 15,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "O que é um conflito de merge?",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Diferença entre commit e push",
+          "items": [
+            {
+              "label": "Commit salva localmente, push envia para remoto",
+              "detail": null
+            }
+          ]
+        },
+        {
+          "name": "Uso de branches",
+          "items": [
+            {
+              "label": "Pessoas trabalham em ramos separados",
+              "detail": null
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Um commit é local, o push sincroniza com o remoto. Branches permitem paralelismo. Boa prática: mensagens claras ajudam a rastrear mudanças.",
+      "line": 23,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Boa prática de mensagem de commit",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Mensagens claras mostram o que foi alterado",
+          "detail": "Ao mudar o layout do formulário, a mensagem 'Atualiza layout do formulário para melhorar acessibilidade' explica a mudança."
+        },
+        {
+          "label": "Uso de branches permite testar mudanças",
+          "detail": "Na branch testing, a equipe adicionou um novo campo sem afetar o código principal."
+        },
+        {
+          "label": "Conflito de merge ocorre quando duas pessoas alteram o mesmo código",
+          "detail": "Quando o desenvolvedor A e o B modificam a função de login, o merge gera um conflito que precisa ser resolvido."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1"
+      ],
+      "notes": "Mensagens bem escritas tornam o histórico do projeto mais legível para novos membros da equipe. Evitam que a equipe precise rever o código para entender o que foi feito. É importante manter o foco no que muda e por que muda.",
+      "line": 33,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Comece com commits claros, use branches, resolva conflitos com calma",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Faça commit após cada alteração",
+          "detail": "A cada mudança no código, salve o estado com uma mensagem clara e específica."
+        },
+        {
+          "label": "Use branches para trabalhar em paralelo",
+          "detail": "Crie uma branch para testar novas funcionalidades sem afetar o código principal."
+        },
+        {
+          "label": "Adote mensagens de commit descritivas",
+          "detail": "Use um commit message que explique o que foi alterado e por que."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F4"
+      ],
+      "notes": "Comits frequentes e claros permitem rastrear mudanças. Branches permitem experimentar mudanças isoladamente. Conflitos de merge exigem atenção, mas são resolvidos com calma e comunicação entre equipes.",
+      "line": 41,
+      "column": 3
+    }
+  ]
+}

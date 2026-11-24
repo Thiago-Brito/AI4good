@@ -308,22 +308,22 @@
       ]
     },
     {
-      "id": "8d55b1ec5dd0",
-      "source": "outputs/testes_multitemas_20261012/02_micro_medio/apresentacao.slda",
+      "id": "785707f9fc9d",
+      "source": "outputs/teste3/runs/agua_obrigatorio__json__s22/deck/apresentacao.slda",
       "status": "exported",
       "has_ir": false,
       "features": [
         "kind:capa",
-        "kind:citacao",
         "kind:comparacao",
         "kind:conclusao",
         "kind:etapas",
+        "kind:topicos",
         "style:claro"
       ]
     },
     {
-      "id": "5167e10bed9a",
-      "source": "outputs/testes_multitemas_20261012/05_solar_medio/apresentacao.slda",
+      "id": "6a5da7cda5d6",
+      "source": "outputs/teste3/runs/git_obrigatorio__direto__s22/deck/apresentacao.slda",
       "status": "exported",
       "has_ir": false,
       "features": [
@@ -335,8 +335,60 @@
       ]
     },
     {
-      "id": "9130fa6a1a14",
-      "source": "outputs/testes_multitemas_20261012/06_solar_detalhado_execucao_corrigida/apresentacao.slda",
+      "id": "67db892f5c9a",
+      "source": "outputs/teste3/runs/git_obrigatorio__gramatica__s22/deck/apresentacao.slda",
+      "status": "exported",
+      "has_ir": false,
+      "features": [
+        "kind:capa",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:topicos",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "031278d1f2b4",
+      "source": "outputs/teste3/runs/git_obrigatorio__json__s11/deck/apresentacao.slda",
+      "status": "exported",
+      "has_ir": false,
+      "features": [
+        "kind:capa",
+        "kind:conclusao",
+        "kind:topicos",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "f4c6926e881e",
+      "source": "outputs/teste3/runs/git_obrigatorio__json__s22/deck/apresentacao.slda",
+      "status": "exported",
+      "has_ir": false,
+      "features": [
+        "kind:capa",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:topicos",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "6fa20ee883eb",
+      "source": "outputs/teste3/runs/solar_detalhado__gramatica__s22/deck/apresentacao.slda",
+      "status": "exported",
+      "has_ir": false,
+      "features": [
+        "kind:capa",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:numeros",
+        "kind:topicos",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "ec0590a7294c",
+      "source": "outputs/teste3/runs/solar_obrigatorio__gramatica__s11/deck/apresentacao.slda",
       "status": "exported",
       "has_ir": false,
       "features": [
@@ -350,8 +402,8 @@
       ]
     },
     {
-      "id": "8a1852c281db",
-      "source": "outputs/testes_multitemas_20261012/06_solar_detalhado_repeticao/apresentacao.slda",
+      "id": "ee76772dcf7c",
+      "source": "outputs/teste3/runs/solar_obrigatorio__json__s22/deck/apresentacao.slda",
       "status": "exported",
       "has_ir": false,
       "features": [
@@ -365,64 +417,16 @@
       ]
     },
     {
-      "id": "31d1b48759fd",
-      "source": "outputs/testes_multitemas_20261012/11_estudo_medio_sem_fatos/apresentacao.slda",
+      "id": "f551d0dbe934",
+      "source": "outputs/teste3/runs/solar_tema__direto__s11/deck/apresentacao.slda",
       "status": "exported",
       "has_ir": false,
       "features": [
         "kind:capa",
         "kind:comparacao",
         "kind:conclusao",
-        "kind:etapas",
-        "kind:topicos",
-        "style:claro"
-      ]
-    },
-    {
-      "id": "b816ac92bdc7",
-      "source": "outputs/testes_multitemas_20261012/12_estudo_detalhado_sem_fatos/apresentacao.slda",
-      "status": "exported",
-      "has_ir": false,
-      "features": [
-        "kind:capa",
-        "kind:comparacao",
-        "kind:conclusao",
-        "kind:etapas",
-        "kind:topicos",
-        "style:claro"
-      ]
-    },
-    {
-      "id": "cbf8c7d8c2b3",
-      "source": "outputs/testes_reais/20261111-012756_r7/02_docx/apresentacao.slda",
-      "status": "exported",
-      "has_ir": false,
-      "features": [
-        "image",
-        "kind:capa",
-        "kind:comparacao",
-        "kind:conclusao",
-        "kind:imagem",
-        "kind:numeros",
-        "kind:topicos",
-        "style:claro"
-      ]
-    },
-    {
-      "id": "bb1130aa61ff",
-      "source": "outputs/testes_reais/20261111-0131_r7/01_documentos/apresentacao.slda",
-      "status": "exported",
-      "has_ir": false,
-      "features": [
-        "image",
-        "kind:capa",
-        "kind:comparacao",
-        "kind:conclusao",
-        "kind:etapas",
-        "kind:imagem",
         "kind:linha_do_tempo",
         "kind:numeros",
-        "kind:topicos",
         "style:claro"
       ]
     }

@@ -1,0 +1,222 @@
+{
+  "title": "Git para Estudantes: O Que Você Precisa Saber",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Git é fácil de aprender — comece agora",
+      "subtitle": "Aprenda os conceitos essenciais sem experiência prévia",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Git não exige conhecimentos técnicos prévios. O foco é mostrar que o aprendizado é progressivo e prático. O exemplo de um estudante iniciante usando Git é suficiente para ilustrar a acessibilidade. A mensagem é de que o início é simples e seguro.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Diferença entre commit e push",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Commit salva mudanças locais",
+          "detail": "O commit registra alterações no repositório local, como um snapshot do código no momento exato."
+        },
+        {
+          "label": "Push envia mudanças remotas",
+          "detail": "O push envia as alterações do local para o repositório remoto, como um envio de atualização para o servidor."
+        },
+        {
+          "label": "Uso de branches permite trabalho paralelo",
+          "detail": "O uso de branches permite que múltiplos desenvolvedores trabalhem em versões diferentes do código sem interferir um no outro."
+        },
+        {
+          "label": "Conflito de merge ocorre em alterações simultâneas",
+          "detail": "Um conflito de merge acontece quando duas pessoas modificam o mesmo trecho de código e tentam combiná-lo, exigindo resolução manual."
+        },
+        {
+          "label": "Mensagem de commit explica mudanças",
+          "detail": "Uma boa prática de mensagem de commit descreve claramente o que foi alterado e por que, facilitando a compreensão do histórico do projeto."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1",
+        "F2",
+        "F3",
+        "F4"
+      ],
+      "notes": "O commit é o ato de salvar as mudanças no seu computador; o push é o ato de compartilhar essas mudanças com o repositório online. Isso é como salvar um documento no seu celular e depois enviar para o Google Docs. A diferença é que o commit sempre pode ser feito sem internet, enquanto o push exige conexão. O uso de branches permite trabalhar em projetos paralelos sem riscos. Conflitos de merge surgem quando múltiplas pessoas modificam o mesmo código simultaneamente. Mensagens claras de commit tornam o histórico do projeto legível e útil para novos membros da equipe.",
+      "line": 8,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Uso de branches permite trabalho paralelo",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Troca de branch com git checkout",
+          "detail": "O comando git checkout permite trocar para uma branch existente, como testing, sem afetar o código principal."
+        },
+        {
+          "label": "Master e testing ao lado do commit",
+          "detail": "A plataforma mostra as branches master e testing ao lado do commit f30ab, indicando versões paralelas do projeto."
+        },
+        {
+          "label": "Conflito de merge ao unir branches",
+          "detail": "Quando duas branches modificam o mesmo código, o merge gera um conflito que exige resolução manual."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F3",
+        "F4",
+        "F5"
+      ],
+      "notes": "O uso de branches permite que estudantes trabalhem em versões separadas do código, como uma versão estável (master) e uma em desenvolvimento (testing). O comando git checkout é o mecanismo prático para mudar entre elas. A visualização de HEAD e das branches no commit f30ab mostra claramente como o controle de versão organiza o trabalho paralelo. Quando duas branches modificam o mesmo código, o merge gera um conflito de merge que precisa ser resolvido manualmente. Mensagens de commit claras, como 'Adiciona validação de email no formulário', ajudam a entender o que foi feito em cada etapa. Essa prática é essencial para manter o histórico do projeto legível e útil para novos membros da equipe.",
+      "line": 18,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "O que é um conflito de merge",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Dois usuários modificam o mesmo código",
+          "detail": "Quando dois desenvolvedores alteram a mesma linha em branches diferentes, o sistema detecta a divergência e exige escolha."
+        },
+        {
+          "label": "Git identifica a divergência",
+          "detail": "O Git compara as alterações e mostra o trecho com mudanças conflitantes, indicando que duas versões diferentes estão em conflito."
+        },
+        {
+          "label": "Boa prática de mensagem de commit",
+          "detail": "Uma mensagem clara no commit ajuda a identificar rapidamente o que foi modificado e por que, reduzindo o risco de conflito por falta de contexto."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1",
+        "F2",
+        "F3"
+      ],
+      "notes": "Um conflito de merge ocorre quando duas pessoas modificam o mesmo trecho de código. Isso é comum em projetos com múltiplos colaboradores trabalhando em branches. A resolução exige atenção ao detalhe, pois a escolha errada pode introduzir bugs. Exemplo: dois alunos editam a função 'calcular_media()' em branches diferentes e precisam decidir qual versão manter.",
+      "line": 26,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Boa prática de mensagem de commit",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Mensagem clara no commit",
+          "detail": "Uma mensagem como 'Adiciona validação de email no formulário' explica o que foi feito e por que, facilitando a revisão futura."
+        },
+        {
+          "label": "Uso de branches com mensagens descritivas",
+          "detail": "Na branch feature/busca, a mensagem 'Adiciona funcionalidade de busca' identifica claramente o ramo e o objetivo."
+        },
+        {
+          "label": "Conflito de merge detectado por mensagem",
+          "detail": "A mensagem 'Corrige conflito de merge em login.js após alteração na branch feature/login' indica a ação para resolver o conflito."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1",
+        "F2",
+        "F3"
+      ],
+      "notes": "Mensagens claras ajudam a entender rapidamente o que foi feito e por que. Por exemplo, 'Adiciona validação de email' é mais útil do que 'fez algo'. Evita-se vagarismo com detalhes concretos. Isso é especialmente importante em equipes com múltiplos membros, onde o histórico precisa ser lido rapidamente. O foco é na ação e no motivo, não na técnica. O uso de branches e o reconhecimento de conflitos de merge são melhorados com mensagens que incluem o contexto do ramo e da alteração.",
+      "line": 34,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Comece com commits claros, use branches e resolva conflitos",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Faça um commit claro com mensagem descritiva",
+          "detail": "Use uma mensagem que diga o que foi feito e por que, como 'Adiciona validação de email no formulário'."
+        },
+        {
+          "label": "Crie uma branch para nova funcionalidade",
+          "detail": "Use um ramo dedicado, como feature/login, para testar mudanças sem afetar o código principal."
+        },
+        {
+          "label": "Resolva conflito de merge quando detectado",
+          "detail": "Ao unir branches, se houver alterações em linhas iguais, revise o código para combinar as versões de forma consistente."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Essas ações ajudam a organizar o trabalho e prevenir conflitos. O commit claro facilita revisões futuras; a branch isolada permite testes seguros. Evite mudanças diretas no código principal até resolver o ramo. O conflito de merge é comum quando múltiplos desenvolvedores modificam o mesmo código; resolver com cuidado evita erros no código final.",
+      "line": 42,
+      "column": 3
+    }
+  ]
+}

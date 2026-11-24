@@ -1,0 +1,212 @@
+{
+  "title": "O Ciclo da Água: Como a Água Se Move no Planeta",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "A água evapora, se condensa e cai como chuva",
+      "subtitle": "O ciclo da água se move de forma contínua e natural",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O ciclo da água é um movimento contínuo: a água se transforma entre estados. A evaporação leva a água para o ar, a condensação forma nuvens e a precipitação é a chuva. O ciclo é natural e constante. A explicação é baseada em processos observáveis no dia a dia, como o vapor da água em uma panela ou nuvens no céu. O conceito é acessível para crianças por usar exemplos cotidianos e linguagem simples.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "As fases do ciclo da água",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Evaporação",
+          "detail": "A água do oceano evapora para o ar quando aquecida pelo sol."
+        },
+        {
+          "label": "Condensação",
+          "detail": "O vapor da evaporação se condensa formando gotas em nuvens."
+        },
+        {
+          "label": "Precipitação",
+          "detail": "As gotas da nuvem se tornam pesadas e caem como chuva."
+        },
+        {
+          "label": "Infiltração no solo",
+          "detail": "A água da chuva penetra no solo e alimenta as raízes das plantas."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1",
+        "F2"
+      ],
+      "notes": "A evaporação é o início do ciclo, quando a água passa do líquido para o gasoso. A condensação forma nuvens, que são o ponto de encontro entre vapor e gotas. A precipitação é a queda da água na forma de chuva. A infiltração no solo é o processo de água penetrar no solo, essencial para o crescimento das plantas. O ciclo é contínuo e depende de energia solar. Não há etapas que se sobrepõem ou se repetem.",
+      "line": 8,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "Evaporação vs condensação",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Evaporação",
+          "items": [
+            {
+              "label": "Água do mar para o ar",
+              "detail": "A água do mar evapora quando aquecida pelo sol, passando do líquido para o gasoso."
+            }
+          ]
+        },
+        {
+          "name": "Condensação",
+          "items": [
+            {
+              "label": "Vapor forma gotas",
+              "detail": "O vapor se condensa, criando gotas que se unem e formam nuvens."
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1",
+        "F2"
+      ],
+      "notes": "A evaporação é quando a água do mar se transforma em vapor. A condensação é quando esse vapor se reúne e forma gotas que criam nuvens. O exemplo mostra mudanças de estado naturais. A explicação é baseada em processos físicos observados no ambiente natural, sem inventar dados.",
+      "line": 17,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "A água se move em etapas sequenciais",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "A água evapora",
+          "detail": "A água do rio evapora para o ar quando aquecida pelo sol."
+        },
+        {
+          "label": "O vapor se condensa",
+          "detail": "O vapor se condensa formando gotas que se unem e criam nuvens."
+        },
+        {
+          "label": "A chuva cai",
+          "detail": "A precipitação ocorre quando as gotas da nuvem se tornam pesadas e caem como chuva."
+        },
+        {
+          "label": "A água infiltra",
+          "detail": "Parte da água da chuva penetra no solo por infiltração, recarregando os lençóis freáticos."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O ciclo começa com a evaporação de água de um rio, onde ela passa para o ar. O vapor se condensa em nuvens, formando gotas que precipitam como chuva. Uma parte da água entra no solo por infiltração, recarregando o subsolo. Isso mostra a sequência natural e contínua do ciclo. A explicação é baseada em processos observáveis no cotidiano, sem dados numéricos ou inventados.",
+      "line": 28,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Ação humana no ciclo da água",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Uso de pesticidas",
+          "detail": "Os pesticidas usados em campos podem entrar no solo e nas águas, alterando a qualidade da água que se infiltra."
+        },
+        {
+          "label": "Desmatamento",
+          "detail": "O corte de florestas reduz a capacidade do solo de reter água, aumentando o escoamento e a erosão."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1",
+        "F2"
+      ],
+      "notes": "Esses exemplos mostram como atividades humanas diretamente impactam cada etapa do ciclo. O uso de pesticidas afeta a infiltração e a qualidade da água no solo. O desmatamento altera o equilíbrio de água no ambiente. É importante destacar que essas ações são reais e observadas em regiões com intensa atividade agrícola. A poluição de rios não foi mencionada nos fatos, então não foi incluída.",
+      "line": 36,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "A água se move — e a ação humana muda o ciclo",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Plantar árvores no bairro",
+          "detail": "As árvores ajudam o solo a reter água e reduzir o escoamento, protegendo o ciclo da água."
+        },
+        {
+          "label": "Coletar água da chuva para uso doméstico",
+          "detail": "A coleta evita o desperdício e reduz a pressão sobre os recursos hídricos do ciclo."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O ciclo da água é dinâmico e depende de escolhas humanas. Alunos podem plantar árvores ou coletar água da chuva em casa. Essas ações, mesmo pequenas, ajudam a preservar o ciclo da água no ambiente local.",
+      "line": 43,
+      "column": 3
+    }
+  ]
+}

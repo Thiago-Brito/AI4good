@@ -1,0 +1,216 @@
+{
+  "title": "Git para Estudantes: O Que Você Precisa Saber",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Git é fácil de aprender",
+      "subtitle": "Aqui está o básico para iniciantes que nunca usaram controle de versão",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Git é acessível mesmo sem experiência prévia. O aprendizado começa com ações simples e visíveis, como salvar mudanças e compartilhar versões com colegas.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Diferença entre commit e push",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Commit salva alterações no local",
+          "detail": "O commit armazena mudanças no repositório local, como uma cópia local do projeto."
+        },
+        {
+          "label": "Push envia alterações para o remoto",
+          "detail": "O push envia as alterações do local para o repositório remoto, como um envio para o servidor."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1",
+        "F2"
+      ],
+      "notes": "O commit é o primeiro passo; o push só compartilha com o remoto. Branches permitem paralelismo. Conflitos exigem atenção ao código. Mensagens claras facilitam a leitura do histórico.",
+      "line": 8,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Uso de branches",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Veja master e testing",
+          "detail": "A plataforma mostra as branches master e testing ao lado do commit f30ab."
+        },
+        {
+          "label": "Mude para branch com git checkout",
+          "detail": "O comando git checkout permite trocar para uma branch existente."
+        },
+        {
+          "label": "HEAD aponta para a branch atual",
+          "detail": "HEAD aponta para a branch atual"
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F3",
+        "F4",
+        "F5"
+      ],
+      "notes": "As branches são visíveis no repositório, como master e testing. O comando git checkout permite trocar entre elas. HEAD indica a branch ativa. O uso de branches permite trabalhar em projetos paralelos sem afetar o código principal.",
+      "line": 15,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "O que é um conflito de merge?",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Ambas as pessoas modificam o mesmo código",
+          "items": [
+            {
+              "label": "Duas pessoas editam a mesma linha do arquivo",
+              "detail": null
+            },
+            {
+              "label": "Uso de branches evita conflitos ao trabalhar em paralelo",
+              "detail": null
+            }
+          ]
+        },
+        {
+          "name": "Um código é salvo e o outro é descartado",
+          "items": [
+            {
+              "label": "Git detecta mudanças conflitantes e pede resolução",
+              "detail": null
+            },
+            {
+              "label": "Mensagens claras ajudam a identificar alterações",
+              "detail": null
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Quando duas pessoas alteram o mesmo trecho, o Git não sabe qual versão é correta. O conflito exige intervenção humana. Mensagens claras e branches bem nomeadas reduzem riscos.",
+      "line": 23,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Boa prática de mensagem de commit",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Mensagens claras mostram o que foi alterado",
+          "detail": "Um commit com 'Adiciona validação de email' explica a mudança de forma direta."
+        },
+        {
+          "label": "Uso de branches permite trabalhar em paralelo",
+          "detail": "Na branch de desenvolvimento, a equipe adiciona novas funcionalidades sem afetar o código principal."
+        },
+        {
+          "label": "Conflito de merge gera erro se não resolvido",
+          "detail": "Quando duas pessoas modificam a mesma linha, o merge falha e exige resolução manual."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1"
+      ],
+      "notes": "Mensagens bem escritas tornam o histórico do projeto mais legível. Evitam que colegas precisam perguntar o que foi feito. Exemplo: 'Corrige erro de formatação no relatório de vendas'.",
+      "line": 35,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Comece com commits claros, use branches e resolva conflitos com calma",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Faça commits com mensagens claras",
+          "detail": "Use mensagens que expliquem o que foi alterado, como 'Adiciona validação de email'."
+        },
+        {
+          "label": "Crie uma branch para novas funcionalidades",
+          "detail": "Trabalhe em um ramo separado para evitar alterar o código principal."
+        },
+        {
+          "label": "Resolva conflitos de merge com calma",
+          "detail": "Quando duas pessoas modificam o mesmo código, pare para revisar antes de unir."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Essas ações ajudam a manter o código organizado e colaborativo. Comece com um commit claro e teste a branch antes de unir.",
+      "line": 43,
+      "column": 3
+    }
+  ]
+}

@@ -1,0 +1,214 @@
+{
+  "title": "Energia Solar Residencial: O que você precisa saber",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Energia solar em casa: como funciona, custo e retorno",
+      "subtitle": "Descubra o funcionamento, o custo e o tempo de retorno do investimento em painéis solares",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A apresentação orienta moradores em considerar a instalação com dados reais e cenários práticos. O foco é clareza e acessibilidade para tomada de decisão.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "Como funciona a energia solar",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Painéis captam a luz do sol",
+          "detail": "A luz solar incide nos painéis, gerando eletricidade direta por efeito fotovoltaico."
+        },
+        {
+          "label": "Custo de instalação",
+          "detail": "O preço médio para instalar um sistema doméstico é definido pelo fornecedor local."
+        },
+        {
+          "label": "Tempo de retorno do investimento",
+          "detail": "O retorno do investimento depende do consumo doméstico e da produção solar."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1"
+      ],
+      "notes": "O custo varia conforme o tamanho e localização do sistema. O retorno depende do consumo doméstico e da produção solar.",
+      "line": 8,
+      "column": 3
+    },
+    {
+      "kind": "numeros",
+      "title": "Custo médio de instalação de 12 kW em 2026",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [
+        {
+          "value": "12 kW",
+          "label": "O custo de um sistema de 12 kW de painéis solares em 2026 pode ser acessado por meio de comparações de preços locais"
+        }
+      ],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1"
+      ],
+      "notes": "O valor refere-se ao tamanho do sistema. O custo é definido localmente e varia conforme o fornecedor e região. Não há valor numérico total de custo no fato fornecido.",
+      "line": 16,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "Sombra parcial vs. sem sombra",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Sombra parcial",
+          "items": [
+            {
+              "label": "Reduz produção de energia solar",
+              "detail": null
+            }
+          ]
+        },
+        {
+          "name": "Sem sombra",
+          "items": [
+            {
+              "label": "Produção solar máxima e eficiente",
+              "detail": null
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F4"
+      ],
+      "notes": "A sombra parcial, mesmo leve, diminui a geração de energia. Sem sombra, os painéis funcionam em pleno potencial. A recomendação de poda ou remoção de árvores é comum para evitar esse impacto.",
+      "line": 22,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "Tempo de retorno do investimento",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "8 anos",
+          "items": [
+            {
+              "label": "Retorno em 8 anos para sistema doméstico",
+              "detail": null
+            }
+          ]
+        },
+        {
+          "name": "10 anos",
+          "items": [
+            {
+              "label": "Retorno médio de 10 anos em instalações residenciais",
+              "detail": null
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F7",
+        "F8"
+      ],
+      "notes": "O tempo de retorno varia com o consumo e a produção solar. O valor de 8 anos é baseado em economia anual de £600 em sistema de £5.000. O valor de 10 anos é média geral para instalações residenciais. A diferença reflete variações regionais e de consumo.",
+      "line": 33,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Instale painéis solares agora",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Verifique o tempo de retorno",
+          "detail": "O período médio de retorno do investimento é de 10,8 anos."
+        },
+        {
+          "label": "Avalie as economias ao longo do tempo",
+          "detail": "A maioria dos moradores economiza entre $41.000 e $155.000 em 25 anos com painéis solares."
+        },
+        {
+          "label": "Conheça o custo local",
+          "detail": "O preço varia conforme o fornecedor, mas é acessível em 2026."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F2",
+        "F5",
+        "F9"
+      ],
+      "notes": "O investimento é real e sustentável com base em dados de 2026. O tempo de retorno médio e as economias são baseados em estudos de mercado. A decisão deve considerar o consumo doméstico e a presença de sombras.",
+      "line": 44,
+      "column": 3
+    }
+  ]
+}

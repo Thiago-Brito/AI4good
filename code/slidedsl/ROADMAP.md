@@ -21,7 +21,11 @@
 - [x] Artigo do TCC (LNCS, português) no Overleaf com Teste 1 e edição; pendentes: Teste 3 e Teste 4.
 - [x] Teste 3 medido (23/11, llama.cpp b12648, Qwen3-4B-Instruct-2507, 12 pedidos × 3 modos × 2 sementes): válidos JSON 19/24, gramática 19/24 (0 erro de sintaxe), direto 10/24 (12 de sintaxe; McNemar p=0,012); gramática −32% tokens de saída e −26% tempo vs JSON, mas +18% tokens de entrada (+11% no total, n.s.); +15,4% ms/token. [Resultados](docs/RESULTADOS_T3.md).
 - [x] Revisão do artigo (23/11): tokens de entrada no mecanismo de restrição, testes nomeados pelo que medem (sem "Teste 1/3/4"), modelos identificados por artefato, resumo com 230 palavras, 721 testes, limite de texto (A005) como falha dominante e extensões na discussão.
-- [ ] Teste 2 (modelo escreve python-pptx direto × SlideDSL): fecha a pergunta central; hoje a economia frente ao python-pptx é só de serialização.
+- [x] Teste 2 grupo A medido (23/11): Qwen3-4B-Instruct-2507 escreve python-pptx (até 2 correções), verificador único `scripts/pptx_checks.py` (B1–B4 estrutura; B5 texto maior que a caixa, medido com `text_metrics`). A: 24/24 estrutural, **1/24 sem estouro** (4,9 caixas estouradas/deck), ~2,8 mil tokens, 20 s. C (Teste 3, recompilado): 19/24 em ambos os níveis, 0 estouro, ~68–75 mil tokens, 104–141 s. McNemar estrito C×A 18–0, p≈8e-6.
+- [x] Correção do compilador achada pelo verificador: blocos de cartões (conclusão em colunas e tópicos em cartões) não conferiam o limite inferior e encostavam no número da página (4/38 decks). `check_block_bottom` emite A010 e a variante é recusada. Decks do Teste 3 recompilados sem chamar o modelo (`scripts/recompilar_teste3.py`): validade igual (19/19/10), verificador 38/38. 727 pytest; porte TS regenerado, 44 testes TS, paridade 351/351.
+- [ ] Teste 2 condição C-mínimo (`scripts/teste2_minimo.py`, regra fixada antes de rodar): uma chamada escreve o deck inteiro em Alto sob gramática, mesmo prompt de fatos e correções do grupo A — isola formato × pipeline.
+- [ ] Conferir no PowerPoint/Google Slides se o texto do grupo A estoura de fato (o mestre do python-pptx tem ajuste automático).
+- [ ] APK: rebuild com o núcleo TS corrigido (o APK 0.2.0 ainda tem o layout antigo).
 - [ ] Limite de tamanho dentro da restrição (`maxLength`/repetição limitada) e gramática reduzida ao tipo do slide no prompt.
 - [x] App: compilador monta o slide quando a IA falha no reparo (F001), em vez de abortar o deck (achado do emulador com Qwen3 0.6B).
 - [ ] Teste 4 (celular real).

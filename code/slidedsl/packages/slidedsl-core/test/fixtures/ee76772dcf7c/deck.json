@@ -1,0 +1,195 @@
+{
+  "title": "Energia Solar Residencial: O que você precisa saber para instalar painéis em casa",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Instalar energia solar é viável e vantajoso para moradores",
+      "subtitle": "Descubra como o sistema solar pode reduzir suas contas e funcionar com facilidade em qualquer casa no Brasil.",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A energia solar é acessível em todo o Brasil, com instalações simples e custos cada vez mais baixos. O sistema funciona mesmo em regiões com pouca radiação solar. A apresentação orienta passo a passo para quem está começando. A viabilidade depende de condições locais, mas a tecnologia é amplamente disponível.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "O inversor é o coração do sistema solar",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Conversão de energia",
+          "detail": "O inversor transforma a energia solar em eletricidade utilizável para a casa."
+        },
+        {
+          "label": "Regulação de tensão",
+          "detail": "Ele mantém a tensão da corrente dentro dos limites exigidos pela rede elétrica."
+        },
+        {
+          "label": "Cuidado com a limpeza",
+          "detail": "A limpeza periódica do inversor evita acumulação de sujeira que pode afetar o desempenho."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O inversor é o componente essencial que transforma energia solar em eletricidade de uso. A limpeza preventiva é crítica para evitar desgaste e falhas. Em sistemas residenciais, a manutenção simples pode prolongar a vida útil do equipamento. A limpeza deve ser feita a cada seis meses, especialmente em regiões com chuva ou poeira.",
+      "line": 8,
+      "column": 3
+    },
+    {
+      "kind": "numeros",
+      "title": "Compensação limitada ao valor mínimo faturável",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [
+        {
+          "value": "valor mínimo faturável",
+          "label": "valor mínimo pago por kWh, por art. 16"
+        }
+      ],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1"
+      ],
+      "notes": "O art. 16 da regulamentação estabelece que a compensação só ocorre a partir do valor mínimo faturável definido. Esse valor é o mínimo pago pela distribuidora por kWh gerado, conforme a legislação.",
+      "line": 15,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "Tempo de retorno: solar vs. convencional",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Energia solar",
+          "items": [
+            {
+              "label": "Retorno com geração própria",
+              "detail": "O retorno ocorre com produção direta de energia em casa."
+            }
+          ]
+        },
+        {
+          "name": "Energia convencional",
+          "items": [
+            {
+              "label": "Retorno apenas com aumento de tarifa",
+              "detail": "O retorno é indireto, depende de aumento de tarifa e não de geração própria."
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1"
+      ],
+      "notes": "O retorno da energia solar é mais previsível e direto. A energia convencional depende de variações de preço, sem geração própria. O sistema solar oferece independência energética. A análise deve considerar o consumo médio da residência.",
+      "line": 21,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "Cuidado de manutenção para durabilidade",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Limpe os painéis",
+          "detail": "A limpeza mensal remove poeira e sujeira que reduzem a eficiência da geração solar em residências com telhado inclinado."
+        },
+        {
+          "label": "Verifique os conectores",
+          "detail": "A inspeção semanal detecta oxidação ou desgaste que pode comprometer a integridade elétrica do sistema em áreas úmidas."
+        },
+        {
+          "label": "Avalie o desempenho",
+          "detail": "A análise mensal do consumo e produção identifica variações que indicam problemas de funcionamento em sistemas com geração própria."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A limpeza mensal é essencial em regiões com chuva frequente. A inspeção semanal de conectores evita falhas elétricas. A avaliação mensal ajuda a detectar desvios. O sistema deve ser monitorado com frequência para garantir durabilidade.",
+      "line": 32,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Instale solar com clareza e segurança",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Avalie o retorno com dados reais",
+          "detail": "Compre o histórico de produção e consumo para calcular o tempo de retorno do investimento com precisão."
+        },
+        {
+          "label": "Agende limpeza e inspeção mensal",
+          "detail": "Combine manutenção preventiva com a verificação do inversor e compensação de energia com a distribuidora."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O cálculo do tempo de retorno exige dados reais de produção e consumo. A manutenção mensal garante que o inversor funcione corretamente e que a compensação seja efetiva. A ação é prática e alinha-se ao ciclo de operação do sistema solar.",
+      "line": 39,
+      "column": 3
+    }
+  ]
+}

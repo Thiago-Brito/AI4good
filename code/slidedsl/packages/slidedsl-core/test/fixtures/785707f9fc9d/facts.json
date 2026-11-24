@@ -1,0 +1,26 @@
+{
+  "F1": {
+    "id": "F1",
+    "claim": "A evaporação é a mudança da água do estado líquido para o gasoso.",
+    "kind": "definicao",
+    "quote": "evaporação (mudança da água do estado líquido para o gasoso);",
+    "source_id": "S2",
+    "url": "https://brasilescola.uol.com.br/biologia/ciclo-agua.htm",
+    "source_title": "Ciclo da água: o que é, etapas, mapa mental - Brasil Escola",
+    "value": "",
+    "author": "",
+    "relevance": "alta"
+  },
+  "F2": {
+    "id": "F2",
+    "claim": "A condensação é a passagem da água do estado de vapor para o líquido.",
+    "kind": "definicao",
+    "quote": "condensação (passagem da água do estado de vapor para o líquido);",
+    "source_id": "S2",
+    "url": "https://brasilescola.uol.com.br/biologia/ciclo-agua.htm",
+    "source_title": "Ciclo da água: o que é, etapas, mapa mental - Brasil Escola",
+    "value": "",
+    "author": "",
+    "relevance": "alta"
+  }
+}

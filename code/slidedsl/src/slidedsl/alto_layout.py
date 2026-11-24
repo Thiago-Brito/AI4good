@@ -558,6 +558,7 @@ def editorial_items(b, items, base, x, top, w, bottom, headings=(), cards=False)
         dh = max((b.height(i.detail, inner, b.body_pt) if i.detail else 0 for i in items), default=0)
         natural = rows * (2 * CARD_PADDING + lh + LABEL_GAP + dh) + MD * (rows - 1)
         y = card_position(top, natural, bottom)
+        check_block_bottom(b, y, natural, bottom, base)
         ch = 2 * CARD_PADDING + lh + LABEL_GAP + dh
         for k, (item, label) in enumerate(zip(items, labels)):
             cx = x + (k % columns) * (cw + MD)
@@ -588,6 +589,14 @@ def editorial_items(b, items, base, x, top, w, bottom, headings=(), cards=False)
             b.fitted("detalhe", item.detail, detail_x, y, detail_w, bottom - y,
                      [b.body_pt], p["muted"], role="corpo", path=f"{base}.{k}.detail")
         y += h + gap
+
+
+def check_block_bottom(b, y, height, bottom, path):
+    """Bloco de cartões dimensionado pelo conteúdo precisa terminar acima da área do rodapé."""
+    if y + height > bottom + 0.5:
+        b.diagnostics.append(Diagnostic(code="A010", severity="ERRO", slide=b.number,
+            message="Bloco de cartões ultrapassa o limite inferior da área de conteúdo.",
+            evidence={"path": path, "bottom": y + height, "limit": bottom}))
 
 
 def draw_item(b, item, label, path, x, y, w, available, lh, dh):
@@ -976,6 +985,7 @@ def layout_conclusao(b, s, base, deck, top):
         nh = b.height("00", inner, number_size, True)
         h = 2 * LG + nh + LABEL_GAP + lh + LABEL_GAP + dh
         y = card_position(top, h)
+        check_block_bottom(b, y, h, CONTENT_BOTTOM, base + ".items")
         for k, item in enumerate(items):
             cx = x + k * (cw + MD)
             b.card(cx, y, cw, h, accent=True)

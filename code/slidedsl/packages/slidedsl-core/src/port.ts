@@ -1305,6 +1305,7 @@ if (__py.truth(cards)) {
 (dh = __py.max((() => { let i; const result = []; for (i of __py.iter(items)) { result.push((__py.truth(i.detail) ? __py.method(b, "height", i.detail, inner, b.body_pt) : 0)); } return result; })(), __py.kw({default: 0})));
 (natural = __py.bin("Add", __py.bin("Mult", rows, __py.bin("Add", __py.bin("Add", __py.bin("Add", __py.bin("Mult", 2, CARD_PADDING), lh), LABEL_GAP), dh)), __py.bin("Mult", MD, __py.bin("Sub", rows, 1))));
 (y = card_position(top, natural, bottom));
+check_block_bottom(b, y, natural, bottom, base);
 (ch = __py.bin("Add", __py.bin("Add", __py.bin("Add", __py.bin("Mult", 2, CARD_PADDING), lh), LABEL_GAP), dh));
 for ([k, [item, label]] of __py.iter(__py.enumerate(__py.zip(items, labels)))) {
 (cx = __py.bin("Add", x, __py.bin("Mult", __py.bin("Mod", k, columns), __py.bin("Add", cw, MD))));
@@ -1332,6 +1333,14 @@ if (__py.truth(item.detail)) {
 __py.method(b, "fitted", "detalhe", item.detail, detail_x, y, detail_w, __py.bin("Sub", bottom, y), [b.body_pt], __py.at(p, "muted"), __py.kw({role: "corpo", path: (__py.format(base, "", -1) + "." + __py.format(k, "", -1) + ".detail")}));
 }
 y = __py.bin("Add", y, __py.bin("Add", h, gap));
+}
+}
+
+function check_block_bottom(...__args) {
+var [b, y, height, bottom, path] = __py.bind(__args, ["b", "y", "height", "bottom", "path"], [undefined, undefined, undefined, undefined, undefined], false, false);
+
+if (__py.truth((__py.cmp("Gt", __py.bin("Add", y, height), __py.bin("Add", bottom, 0.5))))) {
+__py.method(b.diagnostics, "append", Diagnostic(__py.kw({code: "A010", severity: "ERRO", slide: b.number, message: "Bloco de cartões ultrapassa o limite inferior da área de conteúdo.", evidence: ({["path"]: path, ["bottom"]: __py.bin("Add", y, height), ["limit"]: bottom})})));
 }
 }
 
@@ -1626,6 +1635,7 @@ if (__py.truth((__py.cmp("Eq", b.variant, "actions_columns")))) {
 (nh = __py.method(b, "height", "00", inner, number_size, true));
 (h = __py.bin("Add", __py.bin("Add", __py.bin("Add", __py.bin("Add", __py.bin("Add", __py.bin("Mult", 2, LG), nh), LABEL_GAP), lh), LABEL_GAP), dh));
 (y = card_position(top, h));
+check_block_bottom(b, y, h, CONTENT_BOTTOM, __py.bin("Add", base, ".items"));
 for ([k, item] of __py.iter(__py.enumerate(items))) {
 (cx = __py.bin("Add", x, __py.bin("Mult", k, __py.bin("Add", cw, MD))));
 __py.method(b, "card", cx, y, cw, h, __py.kw({accent: true}));
@@ -1738,4 +1748,4 @@ return [PresentationNode(__py.kw({title: deck.title, theme: base_theme, slides: 
 
 import { photo, variants_for } from './images.js';
 
-export { box, intersection, area, union_area, distance, bounds, resolve_position, aligned_position, translate, resize_group, TITLE_PT, LABEL_PT, BODY_PT, CREDIT_PT, MIN_TITLE_PT, MIN_LABEL_PT, MIN_BODY_PT, MIN_SUBTITLE_PT, proper_words, sentence_case, capitalize_first, normalized, distinct_label, visible_labels, ordered_steps, balanced_title, composition, WIDTH, HEIGHT, MARGIN, RIGHT, GUTTER, SPACES, XS, SM, MD, LG, XL, XXL, TITLE_Y, CONTENT_BOTTOM, CARD_PADDING, LABEL_GAP, RULE, OPTICAL_CENTER, MIN_BLOCK_FRACTION, OPTICAL_LABEL_PT, COL_WIDTH, card_position, col, distribute, Estilo, title_style, luminance, contrast, known_background, estimated_overflow, check_design, WEIGHTS, BLOCKERS, occupancy, occupation_score, balance, alignment, regularity, rhythm, aggregate, useful_elements, score_slide, content_preference, choose, OCCUPANCY_MINIMUM, content_occupancy, LIMITS, TEXT_LIMITS, GENERIC, _digits, number_tokens, _norm, validate_alto, PALETTES, _palette, _PALETTE_STYLES, STYLE_ATTRIBUTES, STYLES, RENDER_BG, FEATURE_KINDS, needed_height, Builder, source_label, header, LABELED_REF, footer, uniform, label_detail_sizes, layout_capa, layout_secao, editorial_items, draw_item, layout_topicos, layout_numeros, comparison_columns, layout_comparacao, layout_etapas, layout_linha, layout_citacao, br_number, layout_grafico, layout_imagem, layout_conclusao, full_notes, alto_to_ast };
+export { box, intersection, area, union_area, distance, bounds, resolve_position, aligned_position, translate, resize_group, TITLE_PT, LABEL_PT, BODY_PT, CREDIT_PT, MIN_TITLE_PT, MIN_LABEL_PT, MIN_BODY_PT, MIN_SUBTITLE_PT, proper_words, sentence_case, capitalize_first, normalized, distinct_label, visible_labels, ordered_steps, balanced_title, composition, WIDTH, HEIGHT, MARGIN, RIGHT, GUTTER, SPACES, XS, SM, MD, LG, XL, XXL, TITLE_Y, CONTENT_BOTTOM, CARD_PADDING, LABEL_GAP, RULE, OPTICAL_CENTER, MIN_BLOCK_FRACTION, OPTICAL_LABEL_PT, COL_WIDTH, card_position, col, distribute, Estilo, title_style, luminance, contrast, known_background, estimated_overflow, check_design, WEIGHTS, BLOCKERS, occupancy, occupation_score, balance, alignment, regularity, rhythm, aggregate, useful_elements, score_slide, content_preference, choose, OCCUPANCY_MINIMUM, content_occupancy, LIMITS, TEXT_LIMITS, GENERIC, _digits, number_tokens, _norm, validate_alto, PALETTES, _palette, _PALETTE_STYLES, STYLE_ATTRIBUTES, STYLES, RENDER_BG, FEATURE_KINDS, needed_height, Builder, source_label, header, LABELED_REF, footer, uniform, label_detail_sizes, layout_capa, layout_secao, editorial_items, check_block_bottom, draw_item, layout_topicos, layout_numeros, comparison_columns, layout_comparacao, layout_etapas, layout_linha, layout_citacao, br_number, layout_grafico, layout_imagem, layout_conclusao, full_notes, alto_to_ast };

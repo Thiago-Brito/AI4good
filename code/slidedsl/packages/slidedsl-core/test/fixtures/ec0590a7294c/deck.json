@@ -1,0 +1,199 @@
+{
+  "title": "Energia Solar Residencial: O que você precisa saber para instalar painéis em casa",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Instalar energia solar é viável e vantajoso para sua casa",
+      "subtitle": "Moradores brasileiros economizam, reduzem faturas e usam energia limpa",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A instalação é prática e benéfica, especialmente em regiões com alto sol. O sistema se adapta ao consumo doméstico e reduz dependência de redes elétricas tradicionais.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "topicos",
+      "title": "O inversor é o coração do sistema solar",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Conversão de energia",
+          "detail": "O inversor transforma a energia solar em eletricidade utilizável para a casa."
+        },
+        {
+          "label": "Compensação de energia com a distribuidora",
+          "detail": "O inversor permite que a energia excedente seja enviada à rede para compensação."
+        },
+        {
+          "label": "Tempo de retorno do investimento",
+          "detail": "O inversor influencia o retorno do investimento ao reduzir o consumo e aumentar a compensação."
+        },
+        {
+          "label": "Cuidado de manutenção",
+          "detail": "A limpeza periódica do inversor evita falhas e garante o bom funcionamento do sistema."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1"
+      ],
+      "notes": "O inversor é essencial para a conversão da energia solar em uso doméstico. A compensação depende da sua capacidade de enviar energia para a rede. O tempo de retorno é afetado pela eficiência do inversor no uso e na compensação. A manutenção preventiva evita falhas. Sem o inversor, a energia solar não é utilizável nem compensada.",
+      "line": 8,
+      "column": 3
+    },
+    {
+      "kind": "numeros",
+      "title": "Compensação até valor mínimo faturável",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [
+        {
+          "value": "valor mínimo faturável",
+          "label": "O art. 16 limita a compensação ao valor mínimo faturável definido na regulamentação."
+        }
+      ],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1"
+      ],
+      "notes": "A compensação não pode exceder o valor mínimo estipulado pela regulamentação. Isso garante que a distribuidora receba pelo menos o valor mínimo devido. O limite é fixo e aplicado por lei, não por acordo individual.",
+      "line": 17,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "Tempo de retorno: solar vs. convencional",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Papel do inversor",
+          "items": [
+            {
+              "label": "Converte energia solar em eletricidade",
+              "detail": null
+            }
+          ]
+        },
+        {
+          "name": "Manutenção regular",
+          "items": [
+            {
+              "label": "Limpeza semanal dos painéis",
+              "detail": null
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O inversor garante conversão eficiente. A limpeza evita redução de produção. Ambos impactam diretamente o retorno do investimento.",
+      "line": 23,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "Cuidado de manutenção para sistema solar",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Limpeza regular",
+          "detail": "Remover sujeira dos painéis duas vezes por ano para manter eficiência."
+        },
+        {
+          "label": "Verificação de conexão",
+          "detail": "Verificar os fios e conectores a cada seis meses para evitar falhas."
+        },
+        {
+          "label": "Monitoramento remoto",
+          "detail": "Usar aplicativo para acompanhar produção e detectar anomalias."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "A limpeza evita redução de eficiência solar. Verificações preventivas evitam falhas. O monitoramento permite resposta rápida a problemas.",
+      "line": 33,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Instale solar com clareza sobre compensação, manutenção e retorno",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Verifique a compensação mínima",
+          "detail": "Conheça o valor mínimo faturável com a distribuidora antes de instalar."
+        },
+        {
+          "label": "Crie rotina de limpeza",
+          "detail": "Limpe os painéis duas vezes por ano para manter a eficiência da conversão."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "Essas ações evitam surpresas no retorno do investimento e garantem o bom funcionamento. A compensação é regulamentada, então é essencial saber os limites. A manutenção preventiva protege a conversão de energia e melhora a produção solar.",
+      "line": 40,
+      "column": 3
+    }
+  ]
+}
