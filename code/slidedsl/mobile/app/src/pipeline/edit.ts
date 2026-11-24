@@ -111,22 +111,45 @@ export function editTexts(result: GenerationResult, index: number, changes: Reco
   return rebuild(result, slides);
 }
 
+/** Texto visível do slide, uma linha por campo (para o prompt e para saber se a IA mudou algo). */
+export function visibleText(slide: AltoSlide): string {
+  const lines = [slide.title, slide.subtitle, slide.text, slide.caption, slide.unit,
+    ...(slide.items ?? []).map(i => `- ${i.label}: ${i.detail ?? ''}`),
+    ...(slide.sides ?? []).flatMap(side => [`[${side.name}]`, ...side.items.map(i => `- ${i.label}: ${i.detail ?? ''}`)]),
+    ...(slide.values ?? []).map(v => `- ${v.value}: ${v.label}`),
+    ...(slide.milestones ?? []).map(m => `- ${m.date} ${m.label}: ${m.detail ?? ''}`),
+    ...(slide.bars ?? []).map(b => `- ${b.label}: ${b.value}`)];
+  return lines.filter(Boolean).join('\n');
+}
+
 /** Refaz o slide index com a IA (mesmo prompt, gramática e conferências da geração), seguindo a instrução. */
 export async function redoSlide(result: GenerationResult, index: number, instruction: string, model: TextModel,
     options: {signal?: AbortSignal; onProgress?: (stage: string) => void} = {}): Promise<GenerationResult> {
   const slides = result.deck.slides, plan = result.outline.slides[index], current = slides[index];
   if (!plan || !current) throw new EditError('Slide fora da apresentação.');
-  const ids = Object.keys(result.facts), recorder = new Recorder(model, 2, options.signal);
+  // Até 2 tentativas de 2 chamadas: a 2ª só se a 1ª devolver o mesmo texto (o 0.6B copiava a versão atual).
+  const ids = Object.keys(result.facts), recorder = new Recorder(model, 4, options.signal);
   const ctx: SlideContext = {request: result.request, deck: result.deck, facts: result.facts, ids,
     mode: ids.length ? 'with_facts' : 'without_facts', slideMode: result.slideMode, recorder, repairTruncated: false,
     summary: result.outline.slides.map((s, i) => `${i + 1}. ${s.tipo}: ${s.mensagem}`).join('\n'),
     progress: stage => options.onProgress?.(stage), before: slides.slice(0, index), after: slides.slice(index + 1),
     n: slides.length, signal: options.signal};
-  const {kind: _k, notes: _n, line: _l, column: _c, ...visible} = current as AltoSlide & {line?: unknown; column?: unknown};
-  const extra = `\nVersão atual deste slide: ${JSON.stringify(visible)}\n` + (instruction.trim()
+  const text = visibleText(current);
+  const ask = instruction.trim()
     ? `Pedido do usuário para este slide: ${instruction.trim()}. Reescreva o slide atendendo ao pedido.`
-    : 'Reescreva este slide com outra redação, mais clara.');
-  const {accepted, diagnostics} = await writeSlide(ctx, {...plan, tipo: current.cycle ? 'ciclo' : current.kind}, index, extra);
+    : 'Reescreva este slide com outra redação, mais clara.';
+  // Só o título da versão atual: com o texto inteiro no prompt, o 0.6B e o 1.7B o copiavam e ignoravam o pedido
+  // (teste real pela API do PC, 24/11/2026). O slide é escrito de novo a partir do roteiro e do pedido.
+  const base = `\nO slide atual tem o título "${current.title ?? ''}". Escreva uma versão NOVA deste slide, com frases diferentes.\n${ask}`;
+  const plan2 = {...plan, tipo: current.cycle ? 'ciclo' as const : current.kind};
+  let {accepted, diagnostics} = await writeSlide(ctx, plan2, index, base);
+  if (accepted && visibleText(accepted) === text) {
+    ({accepted, diagnostics} = await writeSlide(ctx, plan2, index,
+      `${base}\nSua resposta anterior repetiu a versão atual sem mudanças. Escreva frases novas.`));
+    if (accepted && visibleText(accepted) === text) {
+      throw new EditError('A IA devolveu o mesmo slide; tente uma instrução mais específica (ex.: "use um exemplo do dia a dia").');
+    }
+  }
   const calls = [...result.calls, ...recorder.calls];
   if (!accepted) throw new EditError('A IA não conseguiu refazer o slide; a versão anterior foi mantida.', diagnostics);
   // Slide de imagem: a foto já baixada continua (a busca nova não é refeita aqui).

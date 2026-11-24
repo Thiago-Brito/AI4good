@@ -55,7 +55,7 @@ test('refazer usa o prompt da geração com a instrução e substitui só aquele
   assert.ok(model.inputs.length <= 2, "1 chamada + no máximo 1 reparo");
   assert.match(model.inputs[0].user, /Escreva o slide 3 \(tipo topicos\)/);
   assert.match(model.inputs[0].user, /Pedido do usuário para este slide: fale de reuniões curtas/);
-  assert.match(model.inputs[0].user, /Versão atual deste slide: \{/);
+  assert.match(model.inputs[0].user, /Escreva uma versão NOVA deste slide/);
   assert.equal(redone.deck.slides[2].title, 'Reuniões curtas alinham a equipe');
   assert.equal(redone.deck.slides[1], r.deck.slides[1]);
   assert.equal(redone.calls.length, r.calls.length + model.inputs.length);
@@ -65,3 +65,12 @@ test('refazer que continua inválido mantém a versão anterior', async () => {
   const r = await made();
   await assert.rejects(redoSlide(r, 2, '', mock({3: 'x'.repeat(200)})), /versão anterior foi mantida/);
 });
+
+test('refazer que devolve o mesmo texto tenta de novo e, se repetir, avisa em vez de dizer que refez', async () => {
+  const r = await made();
+  const same = mock();  // devolve exatamente o conteúdo original do slide 3
+  await assert.rejects(redoSlide(r, 2, 'mude', same), /devolveu o mesmo slide/);
+  assert.ok(same.inputs.length >= 2);
+  assert.match(same.inputs.at(-1).user, /repetiu a versão atual/);
+});
+

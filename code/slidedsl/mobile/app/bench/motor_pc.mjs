@@ -12,6 +12,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import {generate} from '../outputs/tests/pipeline/generate.js';
 import {extractBytes} from '../outputs/tests/pipeline/documents.js';
+import {redoSlide} from '../outputs/tests/pipeline/edit.js';
 
 const arg = (name, fallback) => { const i = process.argv.indexOf(`--${name}`); return i > 0 ? process.argv[i + 1] : fallback; };
 const BASE = arg('url', 'http://127.0.0.1:8080');
@@ -20,6 +21,8 @@ const N = Number(arg('slides', '5')), SEED = Number(arg('semente', '11'));
 const EXTRACT = arg('extracao', 'frases'), SLIDE_MODE = arg('slides-modo', 'gramatica_limites');
 const PHOTOS = process.argv.includes('--imagens');
 if (!OUT) throw Error('Use --out.');
+// Refazer um slide com o código do celular (edit.ts redoSlide): --refazer <n> --estado <json> grava refeito.json.
+const REDO = Number(arg('refazer', '0')), STATE = arg('estado');
 const AGENT = 'SlideDSL/1.1 (local educational presentation tool; limited interactive search)';
 const emit = (evento, data = {}) => process.stdout.write(JSON.stringify({evento, ...data}) + '\n');
 
@@ -68,6 +71,7 @@ async function main() {
     onProgress: p => emit('progresso', {etapa: p.stage, slide: p.slide ?? null, total: p.total})});
   const write = (name, data) => fs.writeFile(path.join(OUT, name), JSON.stringify(data, null, 1));
   await write('deck.json', result.deck);
+  await write('roteiro.json', {request: result.request, slideMode: result.slideMode, outline: result.outline});
   await write('fatos.json', result.facts);
   await write('chamadas.json', result.calls);
   await write('diagnosticos.json', result.diagnostics);
@@ -84,4 +88,20 @@ async function main() {
     slides_compilador: result.diagnostics.filter(d => d.code === 'F001').map(d => d.slide)});
 }
 
-main().catch(e => { emit('erro', {mensagem: e instanceof Error ? e.message : String(e)}); process.exitCode = 1; });
+/** Refaz o slide REDO (1-based) do deck atual vindo do PC, com o mesmo prompt/gramática do app. */
+async function redo() {
+  const st = JSON.parse(await fs.readFile(STATE, 'utf8'));
+  const slides = st.deck.slides, saved = st.roteiro?.outline?.slides ?? [];
+  // Roteiro salvo se o deck ainda tem o mesmo número de slides; senão (slide excluído/incluído) deriva dos títulos.
+  const outline = saved.length === slides.length ? {titulo: st.deck.title, slides: saved}
+    : {titulo: st.deck.title, slides: slides.map(s => ({tipo: s.cycle ? 'ciclo' : s.kind, mensagem: s.title ?? st.deck.title, objetivo: s.title ?? st.deck.title}))};
+  const result = {deck: st.deck, facts: st.facts ?? {}, outline, request: st.roteiro?.request ?? st.deck.title,
+    slideMode: st.roteiro?.slideMode ?? SLIDE_MODE, calls: [], diagnostics: [], images: {info: {}, data: {}, log: []}};
+  const started = Date.now();
+  const out = await redoSlide(result, REDO - 1, st.instrucao ?? '', serverModel(SEED),
+    {onProgress: stage => emit('progresso', {etapa: stage, slide: REDO, total: slides.length})});
+  await fs.writeFile(path.join(OUT, 'refeito.json'), JSON.stringify({slide: out.deck.slides[REDO - 1], calls: out.calls}, null, 1));
+  emit('concluido', {segundos: Math.round((Date.now() - started) / 100) / 10, chamadas: out.calls.length});
+}
+
+(REDO ? redo() : main()).catch(e => { emit('erro', {mensagem: e instanceof Error ? e.message : String(e)}); process.exitCode = 1; });

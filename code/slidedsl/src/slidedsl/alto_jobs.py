@@ -206,7 +206,13 @@ def edit_job(id, payload):
         else:
             facts = Dossier.load(out / "dossie.json").fact_map() if (out / "dossie.json").exists() else {}
             source = job["result"]["alto"]
-            if action == "refazer":
+            if action == "refazer" and job["payload"].get("motor") == "celular":
+                # Trabalho do motor do celular: refaz com o código do app (gramática com limites), como no celular.
+                from .motor_celular import refazer_celular
+
+                source = refazer_celular(out, source, payload["slide"], payload.get("instrucao") or "",
+                                         job["payload"]["modelo_local"])
+            elif action == "refazer":
                 tracked = RecordedModel(_model(job["payload"]), revision, max_calls=2)
                 outline = json.loads((out / "roteiro.json").read_text("utf-8")) if (out / "roteiro.json").exists() else None
                 source = refazer_slide(source, payload["slide"], payload.get("instrucao") or "",

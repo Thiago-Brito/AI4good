@@ -7,7 +7,7 @@ No fim, funde o adaptador no modelo e salva em formato Hugging Face, pronto para
 
 Roda no venv de treino (D:\\lora\\venv), na GPU:
   D:\\lora\\venv\\Scripts\\python scripts\\lora_treino.py --dados outputs/lora/dataset/amostras_limpas.jsonl --out D:/lora/run1
-  4B em 4 bits (QLoRA): ... --base Qwen/Qwen3-4B-Instruct-2507 --q4 --epocas 1 --out D:/lora/run4b
+  4B em 4 bits (QLoRA): ... --base Qwen/Qwen3-4B-Instruct-2507 --q4 --epocas 1 --max-len 2800 --out D:/lora/run4b
 """
 
 from __future__ import annotations
@@ -62,21 +62,30 @@ def collate(group, pad_id, device):
     return ids.to(device), lab.to(device), att.to(device)
 
 
-def answer_loss(model, ids, lab, att):
-    """Perda só nos tokens da resposta, aplicando a cabeça de saída apenas neles.
+def _chunk_loss(head, h, target):
+    return torch.nn.functional.cross_entropy(head(h).float(), target, reduction="sum")
+
+
+def answer_loss(model, ids, lab, att, chunk=256):
+    """Perda só nos tokens da resposta, aplicando a cabeça de saída apenas neles e em blocos.
 
     O vocabulário do Qwen3 tem 151 mil tokens: logits de 4096 posições ocupam ~5 GB e estouram os 12 GB da GPU.
-    Retorna (soma das perdas, nº de tokens)."""
+    Em blocos de 256 tokens com recomputação no backward, o pico não depende do tamanho da resposta (o 4B
+    estourou com uma resposta longa, 24/11/2026). Retorna (soma das perdas, nº de tokens)."""
+    from torch.utils.checkpoint import checkpoint
+
     inner = model.get_base_model()
     # Com 1 amostra por lote não há padding: sem máscara explícita o SDPA usa o kernel causal eficiente
     # (com máscara cai no caminho que materializa a matriz de atenção e a memória cresce com n²).
     hidden = inner.model(input_ids=ids, attention_mask=None if ids.shape[0] == 1 else att).last_hidden_state
     target = lab[:, 1:]
     mask = target != -100
-    h = hidden[:, :-1][mask]
-    logits = inner.lm_head(h).float()
-    loss = torch.nn.functional.cross_entropy(logits, target[mask], reduction="sum")
-    return loss, int(mask.sum())
+    h, t = hidden[:, :-1][mask], target[mask]
+    total = hidden.new_zeros((), dtype=torch.float32)
+    for k in range(0, len(t), chunk):
+        part = (inner.lm_head, h[k:k + chunk], t[k:k + chunk])
+        total = total + (checkpoint(_chunk_loss, *part, use_reentrant=False) if torch.is_grad_enabled() else _chunk_loss(*part))
+    return total, int(mask.sum())
 
 
 @torch.no_grad()
@@ -114,7 +123,7 @@ def main(argv=None):
     device = "cuda"
     # No Windows, passar da VRAM não dá erro: o driver transborda para a RAM e o treino fica ~10x mais lento.
     # Com um teto, o alocador do PyTorch recicla o próprio cache antes de chegar lá.
-    torch.cuda.set_per_process_memory_fraction(0.8)
+    torch.cuda.set_per_process_memory_fraction(0.85)
     tok = AutoTokenizer.from_pretrained(args.base)
     data = load(Path(args.dados), tok, args.max_len)
     decks = sorted({x["deck"].split("__")[0] for x in data})
@@ -126,13 +135,13 @@ def main(argv=None):
     print(f"amostras: treino {len(train)} {stages}, validação {len(val)} ({len(val_decks)} pedidos)", flush=True)
 
     if args.q4:
-        from peft import prepare_model_for_kbit_training
         from transformers import BitsAndBytesConfig
         q = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_use_double_quant=True,
                                bnb_4bit_compute_dtype=torch.bfloat16)
         model = AutoModelForCausalLM.from_pretrained(args.base, quantization_config=q, dtype=torch.bfloat16,
                                                      device_map={"": 0})
-        model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=False)
+        # Sem prepare_model_for_kbit_training: ele converte embedding/cabeça (151 mil tokens) para fp32,
+        # ~0,8 GB a mais, e o 4B estourou os 12 GB na 2ª tentativa (24/11/2026).
     else:
         model = AutoModelForCausalLM.from_pretrained(args.base, dtype=torch.bfloat16).to(device)
     model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
