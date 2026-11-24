@@ -56,6 +56,15 @@ export async function searchImages(query: string, fetchJson: FetchJson, signal?:
   return found.sort((a, b) => score(b) - score(a));
 }
 
+const STOP_QUERY = new Set(['diagram', 'illustration', 'concept', 'workflow', 'steps', 'decision', 'vs', 'and', 'of', 'the',
+  'for', 'with', 'a', 'an', 'de', 'da', 'do', 'das', 'dos', 'e', 'em', 'na', 'no', 'com', 'para', 'o', 'as', 'os', 'um', 'uma']);
+/** Consultas mais simples quando a primeira não acha foto (igual a fallback_queries do PC). */
+export function fallbackQueries(query: string): string[] {
+  const words = (query.match(/\p{L}+(?:-\p{L}+)*/gu) ?? []).filter(w => !STOP_QUERY.has(w.toLowerCase()));
+  const options = [query, words.join(' '), words.slice(0, 2).join(' '), words.slice(-2).join(' '), ...words.filter(w => w.length > 4).slice(0, 2)];
+  return [...new Set(options.map(o => o.trim()))].filter(Boolean);
+}
+
 /** Tipo e dimensões pelo cabeçalho (sem decodificar a imagem). */
 export function imageSize(bytes: Uint8Array): {mime: 'image/png' | 'image/jpeg'; width: number; height: number} | null {
   if (bytes.length > 24 && bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47) {
@@ -96,7 +105,13 @@ export async function resolveImages(deck: AltoDeck, source: ImageSource, signal?
     onProgress?.(`Buscando foto do slide ${k + 1}`);
     let outcome = 'nenhuma foto livre encontrada';
     const slideTime = deadline(SLIDE_MS, signal);  // no máximo 1 min por slide, para não travar a geração
-    for (const c of (await searchImages(slide.image_query, source.fetchJson, slideTime.signal)).slice(0, 4)) {
+    let candidates: ImageCandidate[] = [];
+    for (const query of fallbackQueries(slide.image_query)) {
+      if (slideTime.signal.aborted) break;
+      candidates = await searchImages(query, source.fetchJson, slideTime.signal);
+      if (candidates.length) break;
+    }
+    for (const c of candidates.slice(0, 4)) {
       if (slideTime.signal.aborted) { outcome = 'tempo esgotado na busca da foto'; break; }
       try {
         const bytes = await limited(DOWNLOAD_MS, slideTime.signal, s => source.fetchBytes(c.url, s));

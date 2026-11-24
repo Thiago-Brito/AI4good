@@ -88,5 +88,46 @@
    "érica",
    "Érica"
   ]
+ ],
+ "fallback_queries": [
+  [
+   "painel solar casa iluminação natural",
+   [
+    "painel solar casa iluminação natural",
+    "painel solar",
+    "iluminação natural",
+    "painel",
+    "solar"
+   ]
+  ],
+  [
+   "solar panels roof diagram",
+   [
+    "solar panels roof diagram",
+    "solar panels roof",
+    "solar panels",
+    "panels roof",
+    "solar",
+    "panels"
+   ]
+  ],
+  [
+   "ciclo da água",
+   [
+    "ciclo da água",
+    "ciclo água",
+    "ciclo"
+   ]
+  ],
+  [
+   "git version control",
+   [
+    "git version control",
+    "git version",
+    "version control",
+    "version",
+    "control"
+   ]
+  ]
  ]
 }

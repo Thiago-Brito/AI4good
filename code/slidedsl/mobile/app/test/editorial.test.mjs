@@ -3,6 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import {stripFactIds, sentenceCase, capitalizeFirst, properWords, cleanVisible} from '../outputs/tests/pipeline/editorial.js';
+import {fallbackQueries} from '../outputs/tests/pipeline/images.js';
 
 const cases = JSON.parse(await fs.readFile(new URL('./fixtures/editorial_cases.json', import.meta.url), 'utf8'));
 
@@ -11,6 +12,7 @@ test('limpeza de texto igual à do PC', () => {
   assert.deepEqual([...properWords(cases.request)].sort(), cases.keep);
   for (const [input, expected] of cases.case) assert.equal(sentenceCase(input, cases.keep), expected, input);
   for (const [input, expected] of cases.capitalize) assert.equal(capitalizeFirst(input), expected, input);
+  for (const [input, expected] of cases.fallback_queries) assert.deepEqual(fallbackQueries(input), expected, input);
 });
 
 test('cleanVisible tira IDs de fatos de todos os campos visíveis', () => {

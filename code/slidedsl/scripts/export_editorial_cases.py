@@ -7,7 +7,7 @@ capitalize_first). O teste editorial.test.mjs exige que o celular produza exatam
 import json
 from pathlib import Path
 
-from slidedsl.alto_generation import strip_fact_ids
+from slidedsl.alto_generation import fallback_queries, strip_fact_ids
 from slidedsl.editorial import capitalize_first, proper_words, sentence_case
 
 IDS = ["F1", "F2", "F3", "F12"]
@@ -29,6 +29,7 @@ CASE = [
     "O SQL E A API REST",
     "Ciclo Da Água",
 ]
+QUERIES = ["painel solar casa iluminação natural", "solar panels roof diagram", "ciclo da água", "git version control"]
 CAP = ["avaliar fase atual", "Já maiúscula", "", "1º passo", "érica"]
 
 out = {
@@ -38,6 +39,7 @@ out = {
     "keep": sorted(proper_words(REQUEST)),
     "case": [[t, sentence_case(t, proper_words(REQUEST))] for t in CASE],
     "capitalize": [[t, capitalize_first(t)] for t in CAP],
+    "fallback_queries": [[q, fallback_queries(q)] for q in QUERIES],
 }
 path = Path(__file__).resolve().parents[1] / "mobile/app/test/fixtures/editorial_cases.json"
 path.write_text(json.dumps(out, ensure_ascii=False, indent=1) + "\n", "utf-8")

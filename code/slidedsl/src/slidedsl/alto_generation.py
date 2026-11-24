@@ -1218,12 +1218,14 @@ def generate_alto(
 IMAGE_SOURCES = ("livres", "livres_ia", "ia")
 MAX_AI_IMAGES = 3
 STOP_QUERY = {"diagram", "illustration", "concept", "workflow", "steps", "decision", "vs",
-              "and", "of", "the", "for", "with", "a", "an"}
+              "and", "of", "the", "for", "with", "a", "an",
+              # buscas em português (o 0.6B às vezes ignora o "em inglês"); app: images.ts
+              "de", "da", "do", "das", "dos", "e", "em", "na", "no", "com", "para", "o", "as", "os", "um", "uma"}
 
 
 def fallback_queries(query: str) -> list[str]:
     """Consultas mais simples para o Commons, que só indexa coisas concretas."""
-    words = [w for w in re.findall(r"[A-Za-z-]+", query or "") if w.casefold() not in STOP_QUERY]
+    words = [w for w in re.findall(r"[^\W\d_]+(?:-[^\W\d_]+)*", query or "") if w.casefold() not in STOP_QUERY]
     options = [query, " ".join(words), " ".join(words[:2]), " ".join(words[-2:])]
     options += [w for w in words if len(w) > 4][:2]
     return [q for q in dict.fromkeys(o.strip() for o in options) if q]
