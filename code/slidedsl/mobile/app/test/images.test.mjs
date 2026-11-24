@@ -55,3 +55,30 @@ test('sem foto válida o slide fica sem arquivo (layout de cartões)', async () 
   assert.equal(deck.slides[0].image_file, undefined);
   assert.equal(media.log[0].result, 'nenhuma foto livre encontrada');
 });
+
+test('generate com fotos: roteiro pede slide imagem, o slide 2 vira imagem e a foto entra no PPTX', async () => {
+  const {generate} = await import('../outputs/tests/pipeline/generate.js');
+  const usage = {input_tokens: 1, output_tokens: 1, prefill_ms: 1, decode_ms: 1}, inputs = [];
+  const model = {async complete(input) {
+    inputs.push(input);
+    if (input.schema.properties.slides) {
+      const n = input.schema.properties.slides.minItems;  // nenhum imagem: o fixOutline força o slide 2
+      return {text: JSON.stringify({titulo: 'Energia solar', slides: Array.from({length: n}, (_, i) => ({
+        tipo: i === 0 ? 'capa' : i === n - 1 ? 'conclusao' : 'topicos', mensagem: `Mensagem ${i + 1}`, objetivo: 'Objetivo'}))}), usage};
+    }
+    const kind = input.user.match(/\(tipo (\w+)\)/)[1], i = Number(input.user.match(/Escreva o slide (\d+)/)[1]);
+    const items = [{rotulo: `Ponto ${i}a`, detalhe: `Os painéis do slide ${i} convertem luz em energia elétrica.`},
+      {rotulo: `Ponto ${i}b`, detalhe: `O inversor do slide ${i} entrega corrente alternada para a casa.`}];
+    const data = kind === 'capa' ? {titulo: 'Energia solar em casa', subtitulo: 'Como os painéis funcionam.', autor: '', notas: ''}
+      : kind === 'imagem' ? {titulo: 'Painéis no telhado', busca_imagem: 'solar panels roof', legenda: '', itens: items.slice(0, 1), fontes: [], notas: ''}
+      : {titulo: kind === 'conclusao' ? 'Avalie o seu telhado' : `Tópico ${i} sobre painéis`, itens: items, fontes: [], notas: ''};
+    return {text: JSON.stringify(data), usage};
+  }};
+  const r = await generate({model, request: 'Explique painéis solares em casas.', slides: 5, source: {mode: 'none'}, images: source});
+  assert.match(inputs[0].user, /Inclua ao menos um slide imagem/);
+  assert.match(inputs[0].system, /imagem/);
+  assert.equal(r.deck.slides[1].kind, 'imagem');
+  assert.equal(r.deck.slides[1].image_file, 'foto_2.png');
+  const zip = await JSZip.loadAsync(r.pptx);
+  assert.ok(Object.keys(zip.files).some(f => /^ppt\/media\/.+/.test(f)));
+});

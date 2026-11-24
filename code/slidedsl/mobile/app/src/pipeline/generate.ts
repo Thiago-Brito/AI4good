@@ -70,11 +70,13 @@ function fallbackSlide(kind: SlideKind, plan: PlanSlide, deckTitle: string, deck
 export interface Outline {titulo: string; slides: PlanSlide[]}
 /** Porte de fix_outline (alto_generation.py): o primeiro slide vira capa, o último conclusão e capas no meio
  * viram tópicos. Na bancada de 24/11 (Qwen3 1.7B), um roteiro sem capa/conclusão abortava o deck inteiro. */
-export function fixOutline(outline: Outline): Outline {
+export function fixOutline(outline: Outline, images = false): Outline {
   const slides = outline.slides.map(s => ({...s}));
   if (slides.length) slides[0].tipo = 'capa';
   if (slides.length > 1) slides[slides.length - 1].tipo = 'conclusao';
   for (const s of slides.slice(1, -1)) if (s.tipo === 'capa') s.tipo = 'topicos';
+  // Com fotos ligadas, ao menos um slide imagem (como o PC: o 0.6B e o 1.7B quase nunca o escolhem sozinhos).
+  if (images && slides.length >= 4 && !slides.some(s => s.tipo === 'imagem')) slides[1].tipo = 'imagem';
   return {...outline, slides};
 }
 export interface GenerateOptions {
@@ -172,10 +174,10 @@ export async function generate(options: GenerateOptions): Promise<GenerationResu
   const sections = genericDocumentRequest(request) ? source.document?.sections ?? [] : [];
   const sectionPrompt = sections.length ? `\nSeções do documento em ordem; cubra estes assuntos no roteiro, agrupando se necessário. A capa pode apresentar a primeira seção. Use os IDs correspondentes:\n${JSON.stringify(sections)}` : '';
   const raw = await recorder.json('roteiro', (withImages ? prompts.outline_system_imagens : prompts.outline_system)[mode],
-    `Pedido: ${request}\nNúmero de slides: ${n}\nFatos da pesquisa:\n${factsBlock()}${sectionPrompt}`, outlineSchema);
+    `Pedido: ${request}\nNúmero de slides: ${n}\nFatos da pesquisa:\n${factsBlock()}${sectionPrompt}${withImages && n >= 4 ? prompts.image_outline_hint : ''}`, outlineSchema);
   const outlineErrors = schemaErrors(raw, outlineSchema);
   if (outlineErrors.length) throw Error(`Roteiro inválido: ${outlineErrors.join('; ')}`);
-  const outline = fixOutline(raw as Outline);
+  const outline = fixOutline(raw as Outline, withImages);
   const deck: AltoDeck = {title: outline.titulo, theme: 'claro', slides: []};
   const summary = outline.slides.map((s, i) => `${i + 1}. ${s.tipo}: ${s.mensagem}`).join('\n');
   const fallbackNotes: Diagnostic[] = [];

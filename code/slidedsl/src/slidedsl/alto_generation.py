@@ -628,6 +628,15 @@ def _parse_slide_text(raw: str, kind: str, theme: str) -> AltoSlide:
     return deck.slides[0]
 
 
+# Exportado para o app (prompts.json, image_outline_hint): o mesmo pedido de slide imagem no roteiro.
+IMAGE_OUTLINE_HINT = (
+    "\n\nInclua ao menos um slide imagem no meio do deck, com busca_imagem "
+    "concreta de 2 a 5 palavras em inglês (objeto/cena que explica a mensagem). "
+    "Proponha também uma busca para a capa e os outros slides do meio, caso seja necessário "
+    "ilustrá-los. Não use imagem decorativa genérica."
+)
+
+
 def fix_outline(outline: dict, kinds: list[str], images=False) -> dict:
     slides = outline.get("slides", [])
     if slides and slides[0].get("tipo") != "capa" and "capa" in kinds:
@@ -886,12 +895,7 @@ def generate_alto(
             + "\n".join(f"- {h}: {', '.join(ids)}" for h, ids in sections)
         )
     if images and n_slides >= 4:
-        user += (
-            "\n\nInclua ao menos um slide imagem no meio do deck, com busca_imagem "
-            "concreta de 2 a 5 palavras em inglês (objeto/cena que explica a mensagem). "
-            "Proponha também uma busca para a capa e os outros slides do meio, caso seja necessário "
-            "ilustrá-los. Não use imagem decorativa genérica."
-        )
+        user += IMAGE_OUTLINE_HINT
     schema = outline_schema(n_slides, kinds, fact_ids, topic_names, images=images)
     outline = None
     for attempt in range(2):
