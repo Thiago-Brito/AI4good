@@ -4,6 +4,7 @@ import type {ExtractMode} from './sentences.js';
 import {collectFacts, type SourceChoice, type FetchText, type ReadDocument, type DocumentUsage} from './sources.js';
 import {genericDocumentRequest, MAX_EXTRACT_CALLS} from './documents.js';
 import {Recorder} from './usage.js';
+import {cleanVisible} from './editorial.js';
 import {altoFormatHint, altoToJson, slideGrammar, truncatedPaths, withCompilerLimits} from './altoText.js';
 /** Como o modelo escreve cada slide: JSON Schema; SlideDSL Alto sob gramática com os mesmos campos e limites
  * folgados do JSON; ou a mesma gramática com os limites de texto do compilador (gramatica_limites). */
@@ -134,6 +135,7 @@ export async function generate(options: GenerateOptions): Promise<GenerationResu
         if (errors.length) { accepted = null; diagnostics = errors.map(message => ({code: 'P002', severity: 'ERRO', slide: i + 1, message})); }
         else {
           accepted = jsonToSlide(kind, data as Record<string, any>);
+          cleanVisible(accepted, ids, request);  // como o PC: sem "conforme F2", caixa de frase, inicial maiúscula
           // The cover must not invent an author, as in alto_generation.py.
           if (kind === 'capa' && accepted.author && !request.toLowerCase().includes(accepted.author.toLowerCase())) accepted.author = null;
           if (!ids.length) accepted.notes = `conteúdo sem fontes\n${accepted.notes ?? ''}`;

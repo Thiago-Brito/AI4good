@@ -1,0 +1,92 @@
+{
+ "ids": [
+  "F1",
+  "F2",
+  "F3",
+  "F12"
+ ],
+ "strip": [
+  [
+   "A agricultura consome 70% da água, conforme F2.",
+   "A agricultura consome 70% da água."
+  ],
+  [
+   "As plantas liberam água por transpiração, como em F1.",
+   "As plantas liberam água por transpiração."
+  ],
+  [
+   "Segundo F3 e F12, o uso cresceu.",
+   "O uso cresceu."
+  ],
+  [
+   "Dados (F1, F2) mostram queda",
+   "Dados mostram queda"
+  ],
+  [
+   "A F1 é uma categoria do automobilismo",
+   "A é uma categoria do automobilismo"
+  ],
+  [
+   "F9 não existe no dossiê",
+   "F9 não existe no dossiê"
+  ],
+  [
+   "Fonte: F12",
+   "Fonte: F12"
+  ],
+  [
+   "Texto sem referência",
+   "Texto sem referência"
+  ]
+ ],
+ "request": "Explique o Git e o GitHub para a equipe da Petrobras",
+ "keep": [
+  "git",
+  "github",
+  "petrobras"
+ ],
+ "case": [
+  [
+   "Como Funciona O Controle De Versões",
+   "Como funciona o controle de versões"
+  ],
+  [
+   "Como o Git guarda versões",
+   "Como o Git guarda versões"
+  ],
+  [
+   "Por Que Usar GitHub Na Petrobras",
+   "Por que usar GitHub na Petrobras"
+  ],
+  [
+   "O SQL E A API REST",
+   "O SQL E A API REST"
+  ],
+  [
+   "Ciclo Da Água",
+   "Ciclo da água"
+  ]
+ ],
+ "capitalize": [
+  [
+   "avaliar fase atual",
+   "Avaliar fase atual"
+  ],
+  [
+   "Já maiúscula",
+   "Já maiúscula"
+  ],
+  [
+   "",
+   ""
+  ],
+  [
+   "1º passo",
+   "1º passo"
+  ],
+  [
+   "érica",
+   "Érica"
+  ]
+ ]
+}

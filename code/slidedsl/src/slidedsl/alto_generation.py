@@ -663,7 +663,7 @@ def _fact_ref_pattern(ids) -> re.Pattern | None:
     ref = "(?:" + "|".join(ids) + ")"
     return re.compile(
         r"\s*[,;(]?\s*(?:\b(?:conforme|segundo|de acordo com|como (?:mostra|previsto|"
-        r"mostrado|destacado|indicado|visto) em|ver|vide|fonte:?)\s+)?(?:destacado em\s+)?"
+        r"mostrado|destacado|indicado|visto) em|como em|ver|vide|fonte:?)\s+)?(?:destacado em\s+)?"
         rf"\b{ref}\b(?:\s*(?:e|,)\s*{ref}\b)*\)?",
         re.IGNORECASE,
     )
@@ -679,6 +679,9 @@ def strip_fact_ids(text: str | None, ids=()) -> str | None:
     cleaned = pattern.sub("", text)
     cleaned = re.sub(r"\s+([.,;:!?])", r"\1", cleaned)
     cleaned = re.sub(r"\s{2,}", " ", cleaned).strip()
+    cleaned = re.sub(r"^[,;:.]\s*", "", cleaned)  # "Segundo F3, o uso..." → "o uso..."
+    if cleaned and cleaned[0].islower() and text[:1].isupper():
+        cleaned = cleaned[0].upper() + cleaned[1:]
     return cleaned or text
 
 

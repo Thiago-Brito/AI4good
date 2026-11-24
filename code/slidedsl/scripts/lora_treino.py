@@ -6,7 +6,8 @@ Separação treino/validação por apresentação (todas as chamadas de um deck 
 No fim, funde o adaptador no modelo e salva em formato Hugging Face, pronto para converter em GGUF.
 
 Roda no venv de treino (D:\\lora\\venv), na GPU:
-  D:\\lora\\venv\\Scripts\\python scripts\\lora_treino.py --dados outputs/lora/dataset/amostras.jsonl --out D:/lora/run1
+  D:\\lora\\venv\\Scripts\\python scripts\\lora_treino.py --dados outputs/lora/dataset/amostras_limpas.jsonl --out D:/lora/run1
+  4B em 4 bits (QLoRA): ... --base Qwen/Qwen3-4B-Instruct-2507 --q4 --epocas 1 --out D:/lora/run4b
 """
 
 from __future__ import annotations
@@ -103,6 +104,8 @@ def main(argv=None):
     ap.add_argument("--acum", type=int, default=16)
     ap.add_argument("--max-len", type=int, default=4096)
     ap.add_argument("--val", type=float, default=0.06)
+    ap.add_argument("--q4", action="store_true",
+                    help="QLoRA: base carregada em 4 bits (NF4) para caber na GPU (ex.: Qwen3-4B em 12 GB)")
     args = ap.parse_args(argv)
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -122,7 +125,16 @@ def main(argv=None):
     stages = {s: sum(x["stage"] == s for x in train) for s in {x["stage"] for x in train}}
     print(f"amostras: treino {len(train)} {stages}, validação {len(val)} ({len(val_decks)} pedidos)", flush=True)
 
-    model = AutoModelForCausalLM.from_pretrained(args.base, dtype=torch.bfloat16).to(device)
+    if args.q4:
+        from peft import prepare_model_for_kbit_training
+        from transformers import BitsAndBytesConfig
+        q = BitsAndBytesConfig(load_in_4bit=True, bnb_4bit_quant_type="nf4", bnb_4bit_use_double_quant=True,
+                               bnb_4bit_compute_dtype=torch.bfloat16)
+        model = AutoModelForCausalLM.from_pretrained(args.base, quantization_config=q, dtype=torch.bfloat16,
+                                                     device_map={"": 0})
+        model = prepare_model_for_kbit_training(model, use_gradient_checkpointing=False)
+    else:
+        model = AutoModelForCausalLM.from_pretrained(args.base, dtype=torch.bfloat16).to(device)
     model.gradient_checkpointing_enable(gradient_checkpointing_kwargs={"use_reentrant": False})
     model.enable_input_require_grads()
     model.config.use_cache = False
@@ -169,6 +181,14 @@ def main(argv=None):
                 break
         epoch += 1
     model.save_pretrained(out / "adaptador")
+    if args.q4:
+        # Fundir em 4 bits perderia precisão: recarrega a base em bf16 (cabe na GPU sem o treino) e funde nela.
+        from peft import PeftModel
+        del model, opt
+        torch.cuda.empty_cache()
+        torch.cuda.set_per_process_memory_fraction(1.0)
+        base = AutoModelForCausalLM.from_pretrained(args.base, dtype=torch.bfloat16, device_map={"": 0})
+        model = PeftModel.from_pretrained(base, out / "adaptador")
     merged = model.merge_and_unload()
     merged.config.use_cache = True
     merged.save_pretrained(out / "fundido", safe_serialization=True)
