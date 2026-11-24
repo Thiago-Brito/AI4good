@@ -45,6 +45,12 @@ Microbenchmark (mesmo pedido, 20 × cada condição, aquecimento descartado, 256
   rápido no total que o modo JSON, com a mesma validade (19 de 24 em ambos). Isso é coerente com o Teste 1: escrever
   a intenção diretamente em Alto custa menos que embrulhá-la em JSON (aqui a diferença é maior que os 6% do
   Teste 1 porque o custo operacional inclui as respostas de reparo e as notas).
+- **Correção (23/11, revisão do artigo):** em compensação, a gramática consumiu **18% mais tokens de entrada** que o
+  JSON (68.628 × 58.254; Wilcoxon p = 0,012), porque nos modos de texto cada chamada de slide leva a gramática Alto
+  inteira e um exemplo no prompt (`src/slidedsl/alto_generation.py`, `if mode != "json"`). Somando entrada e saída,
+  a gramática usou ~11% **mais** tokens (75.320 × 68.070; p = 0,09, não significativo). Ela é mais rápida localmente
+  porque o prefill é barato (5,4 s × 4,7 s) frente à geração (83 s × 121 s), mas **não** é mais econômica em tokens
+  totais. Melhoria óbvia: no modo gramática, mandar só as regras do tipo do slide (a decodificação já impõe a sintaxe).
 - O modo direto parece mais barato só porque falha cedo: com metade dos decks inválidos, custo por deck válido é
   pior. Com 24 pares as diferenças de validade em relação ao modo direto são significativas (p < 0,05); a amostra
   ainda é de um único modelo e duas sementes por pedido.

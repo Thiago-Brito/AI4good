@@ -51,8 +51,8 @@ Tudo o que é número abaixo foi medido e tem arquivo de origem; interpretaçõe
   | Direto | 10/24 | 12 | 5.061 | 77 s |
 - Leitura: a gramática garante a sintaxe; as falhas que sobram são de conteúdo (texto longo demais, A005).
   Restringir (gramática ou JSON) é significativamente mais válido que não restringir (p = 0,012 e 0,035). Mesmo
-  com cada token 15% mais lento, a gramática sai ~32% mais barata e ~26% mais rápida que JSON, com a mesma
-  validade (p ≈ 10⁻⁴). Detalhes: [RESULTADOS_T3.md](RESULTADOS_T3.md).
+  com cada token 15% mais lento, a gramática gera ~32% menos tokens de saída e é ~26% mais rápida que JSON, com a mesma
+  validade (p ≈ 10⁻⁴). **Correção:** ela usa 18% mais tokens de entrada; no total de tokens não é mais barata (+11%, n.s.). Detalhes: [RESULTADOS_T3.md](RESULTADOS_T3.md).
 
 ### APK
 - O primeiro teste real no emulador falhou com `<think>` antes do JSON → corrigido (gramática estrita
