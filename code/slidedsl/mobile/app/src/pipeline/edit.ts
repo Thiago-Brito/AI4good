@@ -1,7 +1,8 @@
 // Edição slide a slide da apresentação pronta, no celular (como o editor do PC: refazer com instrução, editar
 // texto, mover, excluir, desfazer). Toda edição recompila o deck com o compilador e gera um PowerPoint novo; se o
 // resultado for inválido, a edição é recusada e a versão anterior continua.
-import {buildAlto, renderPptx, type AltoSlide, type Diagnostic} from '@slidedsl/core';
+import {buildAlto, renderPptx, type AltoDeck, type AltoSlide, type Diagnostic} from '@slidedsl/core';
+import {resolveImages, type ImageSource} from './images.js';
 import {writeSlide, type GenerationResult, type SlideContext} from './generate.js';
 import {Recorder} from './usage.js';
 import type {TextModel} from './types.js';
@@ -13,8 +14,9 @@ export class EditError extends Error {
 const clone = <T>(value: T): T => JSON.parse(JSON.stringify(value)) as T;
 
 /** Recompila deck + roteiro novos; devolve um resultado novo (o anterior fica intacto para o desfazer). */
-export async function rebuild(result: GenerationResult, slides: AltoSlide[], plans = result.outline.slides): Promise<GenerationResult> {
-  const deck = {...result.deck, slides};
+export async function rebuild(result: GenerationResult, slides: AltoSlide[], plans = result.outline.slides,
+    theme = result.deck.theme): Promise<GenerationResult> {
+  const deck = {...result.deck, slides, theme};
   const built = buildAlto(deck, result.facts, result.images.info);
   const errors = built.diagnostics.filter(d => d.severity === 'ERRO');
   if (!built.ir || errors.length) {
@@ -25,6 +27,40 @@ export async function rebuild(result: GenerationResult, slides: AltoSlide[], pla
     .map(d => ({...d, slide: slides.indexOf(result.deck.slides[(d.slide ?? 0) - 1]) + 1})).filter(d => d.slide > 0);
   return {...result, deck, ir: built.ir, pptx: await renderPptx(built.ir, {images: result.images.data}), outline: {...result.outline, slides: plans},
     diagnostics: [...built.diagnostics, ...fallback]};
+}
+
+export const THEMES: NonNullable<AltoDeck['theme']>[] = ['claro', 'escuro', 'editorial', 'vibrante', 'natural', 'noturno'];
+
+/** Estilo da apresentação (como "Trocar estilo" do editor do PC). */
+export function setTheme(result: GenerationResult, theme: NonNullable<AltoDeck['theme']>): Promise<GenerationResult> {
+  if (!THEMES.includes(theme)) throw new EditError('Estilo desconhecido.');
+  return rebuild(result, result.deck.slides, result.outline.slides, theme);
+}
+
+/** Remove a foto do slide (fica o layout de cartões, como "Remover foto" do PC). */
+export function removePhoto(result: GenerationResult, index: number): Promise<GenerationResult> {
+  const slides = [...result.deck.slides];
+  if (!slides[index]?.image_file) throw new EditError('Este slide não tem foto.');
+  slides[index] = {...slides[index], image_file: null};  // a busca fica: imagem exige arquivo ou buscar (A002)
+  return rebuild(result, slides);
+}
+
+/** Troca a foto por uma nova busca (precisa de internet), como "Trocar foto" do PC. */
+export async function changePhoto(result: GenerationResult, index: number, query: string, source: ImageSource,
+    signal?: AbortSignal): Promise<GenerationResult> {
+  const slide = result.deck.slides[index];
+  if (!slide || slide.kind !== 'imagem') throw new EditError('Só slides de imagem têm foto.');
+  if (!query.trim()) throw new EditError('Escreva o que a foto deve mostrar (de preferência em inglês).');
+  const probe = {...result.deck, slides: result.deck.slides.map((s, i) => (i === index ? {...s, image_file: null, image_query: query.trim()} : {...s, kind: 'secao' as const, image_query: null}))};
+  const found = await resolveImages(probe, source, signal);
+  const file = probe.slides[index].image_file;
+  if (!file) throw new EditError(`Nenhuma foto livre encontrada para "${query.trim()}".`);
+  // Nome novo para não colidir com a foto anterior (o desfazer volta a ela).
+  const name = `foto_${index + 1}_${Date.now().toString(36)}.${file.split('.').pop()}`;
+  const images = {info: {...result.images.info, [name]: found.info[file]}, data: {...result.images.data, [name]: found.data[file]},
+    log: [...result.images.log, ...found.log]};
+  const slides = result.deck.slides.map((s, i) => (i === index ? {...s, image_file: name, image_query: query.trim()} : s));
+  return rebuild({...result, images}, slides);
 }
 
 export function moveSlide(result: GenerationResult, from: number, to: number): Promise<GenerationResult> {

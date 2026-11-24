@@ -12,7 +12,22 @@ import {ensureVerified, isDownloaded, modelUri} from './src/storage/models';
 import {exportTestData, PPTX_MIME, savePptx, shareFile, storePptx} from './src/storage/exports';
 import {loadModel, type LocalModel} from './src/llm/llamaRn';
 import {generate, GenerationError, type GenerationResult, type Progress} from './src/pipeline/generate';
-import {deleteSlide, editTexts, moveSlide, redoSlide} from './src/pipeline/edit';
+import {changePhoto, deleteSlide, editTexts, moveSlide, redoSlide, removePhoto, setTheme} from './src/pipeline/edit';
+import type {ImageSource} from './src/pipeline/images';
+
+/** Busca e download de fotos livres (Openverse/NASA) pelo fetch do aparelho. */
+const photoSource: ImageSource = {
+  fetchJson: async (url, signal) => {
+    const response = await fetch(url, {signal, headers: {'Accept': 'application/json'}});
+    if (!response.ok) throw Error(`HTTP ${response.status}`);
+    return response.json();
+  },
+  fetchBytes: async (url, signal) => {
+    const response = await fetch(url, {signal});
+    if (!response.ok) throw Error(`HTTP ${response.status}`);
+    return new Uint8Array(await response.arrayBuffer());
+  },
+};
 import type {SourceChoice, DocumentUsage} from './src/pipeline/sources';
 import {deleteDocument, onIncomingDocument, pendingDocument, readDocument} from './src/storage/documents';
 import {documentKind, documentMetadata, type DocumentFile, type DocumentText} from './src/pipeline/documents';
@@ -97,17 +112,7 @@ export default function App() {
         extractMode: grammarSlides ? 'frases' : 'json',
         readDocument: async (file, signal) => document ?? readDocument(file, signal),
         onDocument: info => {documentData = info; setDocumentInfo(info);},
-        images: photos ? {
-          fetchJson: async (url, signal) => {
-            const response = await fetch(url, {signal, headers: {'Accept': 'application/json'}});
-            if (!response.ok) throw Error(`HTTP ${response.status}`);
-            return response.json();
-          },
-          fetchBytes: async (url, signal) => {
-            const response = await fetch(url, {signal});
-            if (!response.ok) throw Error(`HTTP ${response.status}`);
-            return new Uint8Array(await response.arrayBuffer());
-          }} : undefined,
+        images: photos ? photoSource : undefined,
         onProgress: setProgress, onCalls: c => {records = c; setCalls(c.length);},
         fetchJson: async (url, signal) => {
           const response = await fetch(url, {signal, headers: {'Accept': 'application/json'}});
@@ -166,7 +171,10 @@ export default function App() {
     move: (from: number, to: number) => void applyEdit(r => moveSlide(r, from, to), `Slide ${from + 1} movido para a posição ${to + 1}.`),
     remove: (index: number) => void applyEdit(r => deleteSlide(r, index), `Slide ${index + 1} excluído.`),
     editTexts: (index: number, changes: Record<string, string>) => void applyEdit(r => editTexts(r, index, changes), `Texto do slide ${index + 1} salvo.`),
-    redo: (index: number, instruction: string) => void redo(index, instruction)};
+    redo: (index: number, instruction: string) => void redo(index, instruction),
+    setTheme: (theme: Parameters<typeof setTheme>[1]) => void applyEdit(r => setTheme(r, theme), `Estilo ${theme} aplicado.`),
+    removePhoto: (index: number) => void applyEdit(r => removePhoto(r, index), `Foto do slide ${index + 1} removida.`),
+    changePhoto: (index: number, query: string) => void applyEdit(r => changePhoto(r, index, query, photoSource), `Foto do slide ${index + 1} trocada.`)};
   return <ScrollView contentContainerStyle={styles.page} keyboardShouldPersistTaps="handled">
     <Text style={styles.title}>SlideDSL</Text>
     <Text style={styles.text}>Apresentações editáveis geradas no próprio celular.</Text>

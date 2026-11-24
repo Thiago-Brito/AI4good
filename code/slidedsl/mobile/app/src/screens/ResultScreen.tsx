@@ -2,7 +2,7 @@ import {useState} from 'react';
 import {Text, TextInput, View} from 'react-native';
 import type {Slide} from '@slidedsl/core';
 import type {GenerationResult} from '../pipeline/generate';
-import {editableFields} from '../pipeline/edit';
+import {editableFields, THEMES} from '../pipeline/edit';
 import {Button, styles} from '../ui';
 /** Ações de edição; App aplica, recompila, salva o .pptx e guarda a versão anterior para o desfazer. */
 export interface SlideEditor {
@@ -10,9 +10,12 @@ export interface SlideEditor {
   move: (from: number, to: number) => void; remove: (index: number) => void;
   editTexts: (index: number, changes: Record<string, string>) => void;
   redo: (index: number, instruction: string) => void;
+  setTheme: (theme: (typeof THEMES)[number]) => void;
+  removePhoto: (index: number) => void; changePhoto: (index: number, query: string) => void;
 }
 function SlideCard({result, slide, index, editor}: {result: GenerationResult; slide: Slide; index: number; editor: SlideEditor}) {
-  const [mode, setMode] = useState<'view' | 'text' | 'ai'>('view'), [instruction, setInstruction] = useState('');
+  const [mode, setMode] = useState<'view' | 'text' | 'ai' | 'photo'>('view'), [instruction, setInstruction] = useState('');
+  const current = result.deck.slides[index], [photoQuery, setPhotoQuery] = useState(current.image_query ?? '');
   const fields = editableFields(result.deck.slides[index]), [draft, setDraft] = useState<Record<string, string>>({});
   const n = result.deck.slides.length, kind = result.deck.slides[index].kind;
   return <View style={styles.card}>
@@ -24,7 +27,17 @@ function SlideCard({result, slide, index, editor}: {result: GenerationResult; sl
       <Button secondary={mode !== 'text'} disabled={editor.busy} onPress={() => {setDraft({}); setMode(mode === 'text' ? 'view' : 'text');}}>Editar texto</Button>
       <Button secondary={mode !== 'ai'} disabled={editor.busy} onPress={() => setMode(mode === 'ai' ? 'view' : 'ai')}>Refazer com IA</Button>
       <Button secondary disabled={editor.busy || n <= 2} onPress={() => editor.remove(index)}>Excluir</Button>
+      {kind === 'imagem' ? <Button secondary={mode !== 'photo'} disabled={editor.busy} onPress={() => setMode(mode === 'photo' ? 'view' : 'photo')}>Foto</Button> : null}
     </View>
+    {mode === 'photo' ? <>
+      <TextInput accessibilityLabel={`Busca da foto do slide ${slide.number}`} style={styles.input} maxLength={120}
+        placeholder="O que a foto mostra, em inglês (ex.: solar panels roof)" value={photoQuery} onChangeText={setPhotoQuery}/>
+      <View style={styles.row}>
+        <Button disabled={editor.busy || !photoQuery.trim()} onPress={() => {editor.changePhoto(index, photoQuery); setMode('view');}}>Trocar foto</Button>
+        <Button secondary disabled={editor.busy || !current.image_file} onPress={() => {editor.removePhoto(index); setMode('view');}}>Remover foto</Button>
+      </View>
+      <Text style={styles.text}>Foto livre do Openverse/NASA com crédito; precisa de internet.</Text>
+    </> : null}
     {mode === 'text' ? <>
       {fields.map(f => <View key={f.path} style={{gap: 4}}>
         <Text style={styles.text}>{f.label}</Text>
@@ -62,6 +75,8 @@ export default function ResultScreen({result, file, onSave, onShare, editor}: {r
     {result.source.source ? <Text style={styles.text} selectable>Fonte: {result.source.source.title}{'\n'}{result.source.source.url}</Text> : null}
     {result.source.document ? <Text style={styles.text}>{result.source.document.type.toUpperCase()} · {result.source.document.pages === null ? 'Paginação não disponível' : `${result.source.document.pages} páginas`} · {result.source.document.characters} caracteres · {result.source.document.chunks_used}/{result.source.document.chunks_total} trechos · {result.source.document.facts_used} fatos</Text> : null}
     <Text style={styles.text}>Prévia geométrica simples. Edite slide a slide; o PowerPoint é refeito a cada mudança.</Text>
+    <Text style={styles.label}>Estilo</Text>
+    <View style={styles.row}>{THEMES.map(t => <Button key={t} secondary={(result.deck.theme ?? 'claro') !== t} disabled={editor.busy} onPress={() => editor.setTheme(t)}>{t}</Button>)}</View>
     {editor.canUndo ? <Button secondary disabled={editor.busy} onPress={editor.undo}>Desfazer última edição</Button> : null}
     {result.ir.slides.map((slide, index) => <SlideCard key={`${slide.number}-${result.deck.slides[index]?.title}`} result={result} slide={slide} index={index} editor={editor}/>)}
     <Button onPress={onSave}>Salvar .pptx em uma pasta</Button>

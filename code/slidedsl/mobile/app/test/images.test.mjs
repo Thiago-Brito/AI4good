@@ -82,3 +82,30 @@ test('generate com fotos: roteiro pede slide imagem, o slide 2 vira imagem e a f
   const zip = await JSZip.loadAsync(r.pptx);
   assert.ok(Object.keys(zip.files).some(f => /^ppt\/media\/.+/.test(f)));
 });
+
+test('editar: trocar estilo, remover e trocar foto recompilam; desfazer volta à anterior', async () => {
+  const {generate} = await import('../outputs/tests/pipeline/generate.js');
+  const {setTheme, removePhoto, changePhoto} = await import('../outputs/tests/pipeline/edit.js');
+  const usage = {input_tokens: 1, output_tokens: 1, prefill_ms: 1, decode_ms: 1};
+  const model = {async complete(input) {
+    if (input.schema.properties.slides) {
+      const n = input.schema.properties.slides.minItems;
+      return {text: JSON.stringify({titulo: 'Solar', slides: Array.from({length: n}, (_, i) => ({
+        tipo: i === 0 ? 'capa' : i === n - 1 ? 'conclusao' : i === 1 ? 'imagem' : 'topicos', mensagem: `Mensagem do slide ${i}`, objetivo: 'Objetivo do slide'}))}), usage};
+    }
+    const kind = input.user.match(/\(tipo (\w+)\)/)[1], i = Number(input.user.match(/Escreva o slide (\d+)/)[1]);
+    const items = [{rotulo: `Ponto ${i}a`, detalhe: `Os painéis do slide ${i} convertem luz em energia.`}, {rotulo: `Ponto ${i}b`, detalhe: `O inversor do slide ${i} alimenta a casa.`}];
+    return {text: JSON.stringify(kind === 'capa' ? {titulo: 'Energia solar', subtitulo: 'Painéis em casa.', autor: '', notas: ''}
+      : kind === 'imagem' ? {titulo: 'Painéis no telhado', busca_imagem: 'solar panels roof', legenda: '', itens: items.slice(0, 1), fontes: [], notas: ''}
+      : {titulo: `Tópico ${i}`, itens: items, fontes: [], notas: ''}), usage};
+  }};
+  const r = await generate({model, request: 'Painéis solares.', slides: 5, source: {mode: 'none'}, images: source});
+  const dark = await setTheme(r, 'noturno');
+  assert.equal(dark.deck.theme, 'noturno'); assert.equal(r.deck.theme, 'claro');
+  const without = await removePhoto(r, 1);
+  assert.equal(without.deck.slides[1].image_file, null);
+  const swapped = await changePhoto(without, 1, 'solar panels roof', source);
+  assert.match(swapped.deck.slides[1].image_file, /^foto_2_/);
+  assert.ok(swapped.images.data[swapped.deck.slides[1].image_file]);
+  await assert.rejects(changePhoto(r, 1, 'nada', {fetchJson: async () => ({}), fetchBytes: async () => new Uint8Array()}), /Nenhuma foto livre/);
+});
