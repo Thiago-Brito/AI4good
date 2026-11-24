@@ -126,6 +126,24 @@
       ]
     },
     {
+      "id": "68cbb61e0d48",
+      "source": "examples/alto/diagramas.slda",
+      "status": "exported",
+      "has_ir": true,
+      "features": [
+        "font:Calibri",
+        "kind:capa",
+        "kind:conclusao",
+        "kind:etapas",
+        "kind:grafico",
+        "layout:capa",
+        "layout:conclusao",
+        "layout:etapas",
+        "layout:grafico",
+        "style:claro"
+      ]
+    },
+    {
       "id": "bc9384e023d6",
       "source": "outputs/api_voz_mobile/visual3_reciclagem_0003/apresentacao.slda",
       "status": "exported",
@@ -142,30 +160,6 @@
         "layout:conclusao",
         "layout:imagem",
         "layout:secao",
-        "layout:topicos",
-        "style:claro"
-      ]
-    },
-    {
-      "id": "5bf3bd7c9c20",
-      "source": "outputs/criar/41acf4f921054061883ab830828def01/apresentacao.slda",
-      "status": "exported",
-      "has_ir": true,
-      "features": [
-        "font:Calibri",
-        "kind:capa",
-        "kind:comparacao",
-        "kind:conclusao",
-        "kind:etapas",
-        "kind:grafico",
-        "kind:numeros",
-        "kind:topicos",
-        "layout:capa",
-        "layout:comparacao",
-        "layout:conclusao",
-        "layout:etapas",
-        "layout:grafico",
-        "layout:numeros",
         "layout:topicos",
         "style:claro"
       ]

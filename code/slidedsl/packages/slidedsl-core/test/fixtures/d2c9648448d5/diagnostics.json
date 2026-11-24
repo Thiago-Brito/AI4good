@@ -22,5 +22,21 @@
   {
     "code": "A030",
     "severity": "INFORMAÇÃO"
+  },
+  {
+    "code": "D002",
+    "severity": "INFORMAÇÃO"
+  },
+  {
+    "code": "D002",
+    "severity": "INFORMAÇÃO"
+  },
+  {
+    "code": "D002",
+    "severity": "INFORMAÇÃO"
+  },
+  {
+    "code": "D002",
+    "severity": "INFORMAÇÃO"
   }
 ]

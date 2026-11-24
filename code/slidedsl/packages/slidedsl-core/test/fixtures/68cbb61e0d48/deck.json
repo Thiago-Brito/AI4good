@@ -1,0 +1,247 @@
+{
+  "title": "Diagramas do compilador",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "Diagramas desenhados pelo compilador",
+      "subtitle": "A IA escreve os itens; o compilador calcula caixas, setas e barras",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": null,
+      "line": 5,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "A fotossíntese em quatro etapas",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Luz absorvida",
+          "detail": "A clorofila das folhas capta a luz do sol."
+        },
+        {
+          "label": "Água quebrada",
+          "detail": "A água se divide e libera oxigênio no ar."
+        },
+        {
+          "label": "Gás carbônico fixado",
+          "detail": "O gás carbônico do ar entra pela folha."
+        },
+        {
+          "label": "Glicose produzida",
+          "detail": "A planta guarda a energia como açúcar."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": null,
+      "line": 9,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "O ciclo da água",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Evaporação",
+          "detail": "O sol aquece a água dos rios e oceanos."
+        },
+        {
+          "label": "Condensação",
+          "detail": "O vapor sobe, esfria e forma as nuvens."
+        },
+        {
+          "label": "Precipitação",
+          "detail": "A água das nuvens cai como chuva."
+        },
+        {
+          "label": "Escoamento",
+          "detail": "A água da chuva volta aos rios e mares."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": true,
+      "sources": [],
+      "notes": null,
+      "line": 16,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "Ciclo de melhoria em três fases",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Planejar",
+          "detail": "A equipe define a meta da semana."
+        },
+        {
+          "label": "Fazer",
+          "detail": "Cada pessoa executa as suas tarefas."
+        },
+        {
+          "label": "Revisar",
+          "detail": "A equipe compara o resultado com a meta."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": true,
+      "sources": [],
+      "notes": null,
+      "line": 23,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "Pedido online em cinco etapas",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Pedido",
+          "detail": "O cliente escolhe o produto."
+        },
+        {
+          "label": "Pagamento",
+          "detail": "O banco aprova o cartão."
+        },
+        {
+          "label": "Separação",
+          "detail": "O estoque separa o pacote."
+        },
+        {
+          "label": "Envio",
+          "detail": "A transportadora leva o pacote."
+        },
+        {
+          "label": "Entrega",
+          "detail": "O cliente recebe em casa."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": null,
+      "line": 29,
+      "column": 3
+    },
+    {
+      "kind": "grafico",
+      "title": "Crescimento por luz",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": "cm em quatro semanas",
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [
+        {
+          "label": "Luz plena",
+          "value": 24.0
+        },
+        {
+          "label": "Meia sombra",
+          "value": 15.0
+        },
+        {
+          "label": "Sombra",
+          "value": 6.0
+        },
+        {
+          "label": "Escuro",
+          "value": 1.0
+        }
+      ],
+      "cycle": false,
+      "sources": [],
+      "notes": null,
+      "line": 37,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Conteúdo da IA, desenho do compilador",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Conteúdo",
+          "detail": "A IA escreve só os itens do diagrama."
+        },
+        {
+          "label": "Desenho",
+          "detail": "O compilador calcula a geometria e confere o texto."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": null,
+      "line": 45,
+      "column": 3
+    }
+  ]
+}
