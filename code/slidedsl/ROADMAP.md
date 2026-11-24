@@ -453,5 +453,7 @@ continuam como etapas futuras do plano maior; o histórico desta rodada é espec
 - [x] App 0.5.0: leitura do documento por frases numeradas; total projetado no celular 72,3 → 53,5 min (−26%),
       24/24 válidos (Teste 6, `docs/RESULTADOS_T6.md`).
 - [ ] Medir o 0.5.0 no celular (agua.txt, 1.7B, 5 slides) e comparar com os 63 min do 0.3.0.
-- [ ] Dica de formato sem palavras copiáveis ("rotulo", "detalhe" copiados pelo 0.6B no emulador).
-- [ ] Bancada do 0.6B sem treino (GLC + frases) × 1.7B, para decidir se vale o LoRA.
+- [x] Dica de formato só com "…" (marcadores eram copiados por 1.7B e 0.6B); app 0.5.1 (Teste 7).
+- [x] Bancada do 0.6B sem treino × 1.7B: válido 24/24, mas conteúdo pior (`docs/RESULTADOS_T7.md`).
+- [ ] Decidir destilação (LoRA) no 0.6B; medir velocidade real do 0.6B no celular.
+- [ ] Exemplo "cresceu 30%" do prompt de conteúdo vaza para slides (1–2 de 24).

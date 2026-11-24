@@ -79,11 +79,14 @@ test('sintaxe inválida gera erro claro (vira P002 e reparo no pipeline)', () =>
 
 test('dica de formato: linha curta por tipo (padrão) e exemplo completo opcional', () => {
   const short = altoFormatHint('comparacao', schemaFor('comparacao'));
-  assert.match(short, /comparacao \{ titulo "…" lado "nome" \{ item "rótulo" "detalhe" \}/);
-  assert.match(short, /fontes F1, F2 notas "…" \}$/);
-  assert.match(altoFormatHint('numeros', schemaFor('numeros')), /valor "número" "legenda"/);
+  assert.match(short, /comparacao \{ titulo "…" lado "…" \{ item "…" "…" \}/);
+  assert.match(short, /nunca os nomes dos campos/);
+  // Marcadores com palavras eram copiados como conteúdo pelo modelo.
+  for (const kind of altoKinds()) assert.doesNotMatch(altoFormatHint(kind, schemaFor(kind)), /"(rótulo|detalhe|nome|data|número|legenda)"/);
+  assert.match(short, /fontes F1, F2 notas "…" \} \(/);
+  assert.match(altoFormatHint('numeros', schemaFor('numeros')), /valor "…" "…" … .*o 1º texto é o número/);
   assert.doesNotMatch(altoFormatHint('topicos', schemaFor('topicos', [])), /fontes/);
-  assert.ok(short.length < 200);
+  assert.ok(short.length < 400);
   const full = altoFormatHint('comparacao', schemaFor('comparacao'), true);
   assert.match(full, /lado "Alternativa A" \{/);
   assert.match(full, /fontes F1, F2/);

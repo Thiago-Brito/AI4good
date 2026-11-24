@@ -269,13 +269,23 @@ const EXAMPLE_VALUES: Record<string, string> = {
 export function altoFormatHint(kind: string, schema: JsonSchema, full = false): string {
   if (!full) {
     const p = props(schema);
-    const shape: Record<string, string> = {item: 'item "rótulo" "detalhe"', valor: 'valor "número" "legenda"',
-      marco: 'marco "data" "rótulo" "detalhe"', barra: 'barra "rótulo" número'};
-    const parts = fields(kind).filter(f => p[f.key]).map(f => f.kind === 'str' ? `${f.word} "…"`
-      : f.kind === 'notes' ? 'notas "…"' : f.kind === 'items' ? `${shape[f.word]} …`
-      : f.kind === 'sides' ? 'lado "nome" { item "rótulo" "detalhe" } lado "nome" { … }'
-      : ((p[f.key].items as JsonSchema)?.enum as string[] | undefined)?.[0]?.startsWith('F') ? 'fontes F1, F2' : '').filter(Boolean);
-    return `Responda SOMENTE com o bloco SlideDSL Alto deste slide (a gramática impõe a sintaxe): ${kind} { ${parts.join(' ')} }`;
+    // Só "…" como marcador: com palavras ("rótulo", "detalhe") o 0.6B e o 1.7B copiavam o marcador como conteúdo
+    // (bancada de 24/11: 17 de 24 apresentações do 1.7B). O papel de cada texto vai numa frase à parte.
+    const shape: Record<string, [string, string]> = {
+      item: ['item "…" "…"', 'em item, o 1º texto é um rótulo curto e o 2º uma frase que o explica'],
+      valor: ['valor "…" "…"', 'em valor, o 1º texto é o número e o 2º o que ele mede'],
+      marco: ['marco "…" "…" "…"', 'em marco, os textos são data, nome do marco e detalhe'],
+      barra: ['barra "…" 10', 'em barra, o texto é o nome da barra e o número é o valor']};
+    const roles: string[] = [];
+    const parts = fields(kind).filter(f => p[f.key]).map(f => {
+      if (f.kind === 'str') return `${f.word} "…"`;
+      if (f.kind === 'notes') return 'notas "…"';
+      if (f.kind === 'items') { roles.push(shape[f.word][1]); return `${shape[f.word][0]} …`; }
+      if (f.kind === 'sides') { roles.push(`em lado, o texto é o nome da alternativa; ${shape.item[1]}`); return 'lado "…" { item "…" "…" } lado "…" { … }'; }
+      return ((p[f.key].items as JsonSchema)?.enum as string[] | undefined)?.[0]?.startsWith('F') ? 'fontes F1, F2' : '';
+    }).filter(Boolean);
+    const role = roles.length ? ` (${roles.join('; ')}; escreva conteúdo real, nunca os nomes dos campos)` : '';
+    return `Responda SOMENTE com o bloco SlideDSL Alto deste slide (a gramática impõe a sintaxe): ${kind} { ${parts.join(' ')} }${role}`;
   }
   return altoFormatExample(kind, schema);
 }
