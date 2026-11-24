@@ -25,7 +25,8 @@ const DOCS = arg('docs'), REQUESTS = arg('requests'), OUT = arg('out');
 const SEEDS = arg('seeds', '11,22').split(',').map(Number);
 const MODES = arg('modes', 'json,gramatica').split(',');
 const ONLY = arg('only', '');
-const PHONE = {prompt_tps: 3.88, gen_tps: 1.49}; // medianas medidas no celular (RESULTADOS_T4.md)
+// Padrão: medianas medidas no celular com o 1.7B (RESULTADOS_T4.md). Outro modelo: --phone-prompt-tps / --phone-gen-tps.
+const PHONE = {prompt_tps: Number(arg('phone-prompt-tps', '3.88')), gen_tps: Number(arg('phone-gen-tps', '1.49'))};
 if (!DOCS || !REQUESTS || !OUT) throw Error('Use --docs, --requests e --out.');
 
 async function post(endpoint, body, signal) {
