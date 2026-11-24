@@ -55,7 +55,8 @@ def font_data(characters):
         "method": "Pillow/FreeType getlength, kerning ligado; round ties-to-even(pt*96/72*4); /4; margem 1.04 ou 1.14",
         "families": {},
     }
-    chars = sorted(characters | {chr(i) for i in range(256)} | set("—–“”‘’•…€"))
+    # Só caracteres que o compilador mede de verdade (tm.measurable); os demais valem "?" nos dois lados.
+    chars = sorted(c for c in characters | {chr(i) for i in range(256)} | set("—–“”‘’•…€") if tm.measurable(c) or ord(c) < 32)
     for family in tm.FAMILIES:
         weights = {}
         for bold in (False, True):
@@ -126,18 +127,35 @@ def main():
             continue
         if "apresentacao.slda" in files:
             paths.append(Path(folder) / "apresentacao.slda")
+        # Decks das bancadas do app (deck.json + facts.json): o compilador do celular os aceitou na geração;
+        # sem eles, uma divergência PC × celular passou despercebida (24/11/2026).
+        for name in sorted(files):
+            if name.endswith(".deck.json") and name[:-10] + ".facts.json" in files:
+                paths.append(Path(folder) / name)
     entries, characters = [], set()
     for path in paths:
         relative = path.relative_to(ROOT).as_posix()
         ident = hashlib.sha256(relative.encode()).hexdigest()[:12]
         row = {"id": ident, "source": relative}
+        bench = path.name.endswith(".deck.json")
         try:
-            deck = parse_alto(path.read_text(encoding="utf-8-sig"))
+            if bench:
+                from slidedsl.alto import AltoDeck
+
+                deck = AltoDeck.model_validate(json.loads(path.read_text(encoding="utf-8")))
+            else:
+                deck = parse_alto(path.read_text(encoding="utf-8-sig"))
         except Exception as exc:
             entries.append({**row, "status": "parser_error", "reason": str(exc)})
             continue
         try:
-            facts = facts_in(path.parent)
+            if bench:
+                from slidedsl.motor_celular import _dossie
+
+                raw = json.loads(path.with_name(path.name[:-10] + ".facts.json").read_text("utf-8")).get("facts", {})
+                facts = _dossie(deck.title, raw).fact_map() if raw else {}
+            else:
+                facts = facts_in(path.parent)
             images = {}
             for slide in deck.slides:
                 if not slide.image_file:

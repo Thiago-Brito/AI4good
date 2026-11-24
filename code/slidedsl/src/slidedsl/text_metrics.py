@@ -103,8 +103,23 @@ def optical_size(nominal, family="Arial", minimum=0, effective_minimum=0):
     return max(minimum, round(nominal / ratio), math.ceil(effective_minimum / ratio))
 
 
+# Faixas que as fontes latinas do compilador cobrem: latim (com estendidos), pontuação, sobrescritos e
+# subscritos, moedas, símbolos de letra, setas e matemáticos. Fora delas o caractere é medido como "?",
+# no PC e no celular (a tabela do núcleo TS só exporta caracteres destas faixas). Um caractere sem glifo na
+# fonte ("倭", escrito por engano por um modelo em 24/11/2026) era medido de um jeito sozinho e de outro
+# dentro da frase pelo Pillow, e o mesmo slide passava num lado e não no outro.
+MEASURABLE = ((0x20, 0x24F), (0x2000, 0x20BF), (0x2100, 0x214F), (0x2190, 0x21FF), (0x2200, 0x22FF))
+
+
+def measurable(c: str) -> bool:
+    o = ord(c)
+    return any(lo <= o <= hi for lo, hi in MEASURABLE)
+
+
 @lru_cache(maxsize=32768)
 def text_width(value, size, bold=False, family="Arial"):
+    if not all(measurable(c) for c in value):
+        value = "".join(c if measurable(c) or c in "\n\t" else "?" for c in value)
     font = local_font(size, bold, family)
     return (
         font.getlength(value) / 4 * (1.14 if (family, bool(bold)) in FALLBACKS else 1.04)
