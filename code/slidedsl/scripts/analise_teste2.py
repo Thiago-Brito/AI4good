@@ -124,10 +124,14 @@ def main(argv=None):
     ap.add_argument("--c", default=str(ROOT / "outputs" / "teste3"))
     ap.add_argument("--c-recompilado", default=str(ROOT / "outputs" / "teste3_recompilado"),
                     help="PPTX do grupo C recompilados com o código atual ('' para usar os originais)")
+    ap.add_argument("--minimo", default=str(ROOT / "outputs" / "teste2_minimo"),
+                    help="condição C-mínimo (teste2_minimo.py); ignorada se não existir")
     ap.add_argument("--slides", type=int, default=6)
     args = ap.parse_args(argv)
     a = group_a(Path(args.a), args.slides)
     groups = {"A_codigo": a}
+    if args.minimo and (Path(args.minimo) / "results.csv").exists():
+        groups["C_minimo"] = group_a(Path(args.minimo), args.slides)
     recompiled = Path(args.c_recompilado) if args.c_recompilado else None
     for mode in ("gramatica", "json"):
         groups[f"C_{mode}"] = group_c(Path(args.c), mode, args.slides, recompiled)
@@ -136,6 +140,8 @@ def main(argv=None):
     out = {"grupos": {k: summary(v) for k, v in groups.items()},
            "pareado": {f"A_x_{k}": paired(a, v) for k, v in groups.items() if k != "A_codigo"},
            "falhas_A": {f"{k[0]}__s{k[1]}": v["bloqueios"] for k, v in sorted(a.items()) if not v["estrito"]},
+           "falhas_C_minimo": {f"{k[0]}__s{k[1]}": v["bloqueios"]
+                               for k, v in sorted(groups.get("C_minimo", {}).items()) if not v["estrito"]},
            "c_recompilado": str(recompiled) if recompiled else None,
            "falhas_C": {f"{m}:{k[0]}__s{k[1]}": v["bloqueios"] for m in ("gramatica", "json")
                         for k, v in sorted(groups[f"C_{m}"].items()) if not v["valido"]}}
