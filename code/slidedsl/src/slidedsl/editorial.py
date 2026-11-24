@@ -19,6 +19,10 @@ def proper_words(text):
     return found
 
 
+# Letras soltas que são artigo/conjunção/preposição; outras ("C", "R") podem ser nomes e ficam.
+SINGLE_LOWER = {"A", "O", "E", "À", "É"}
+
+
 def sentence_case(text, keep=()):
     """Converte Title Case em caixa de frase; títulos já em caixa de frase ficam intactos.
 
@@ -29,7 +33,7 @@ def sentence_case(text, keep=()):
     if len(long_words) < 2 or len(capitalized) / len(long_words) <= 0.7:
         return text
     keep = {k.casefold() for k in keep}
-    return " ".join(w if k == 0 or (w.isupper() and len(w) > 1) or w.strip('.,:;').casefold() in keep
+    return " ".join(w if k == 0 or (w.isupper() and w not in SINGLE_LOWER) or w.strip('.,:;').casefold() in keep
                     or any(c.isupper() for c in w[1:]) else w.lower()
                     for k, w in enumerate(words))
 

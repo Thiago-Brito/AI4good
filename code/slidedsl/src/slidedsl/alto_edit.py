@@ -38,6 +38,7 @@ def replace_slide(source, number, slide):
 KIND_WORDS = {
     "comparacao": ("comparacao", "comparar", "compare", "comparativo", "versus"),
     "etapas": ("etapas", "passo a passo", "passos"),
+    "ciclo": ("ciclo", "circulo", "que se repete"),
     "linha_do_tempo": ("linha do tempo", "cronologia", "cronologico"),
     "numeros": ("numeros", "estatisticas", "indicadores"),
     "citacao": ("citacao", "frase de destaque"),
@@ -64,7 +65,7 @@ def allowed_kinds(instrucao: str, current: str) -> list[str]:
     text = _plain(instrucao)
     wants_change = any(v in text for v in CHANGE_VERBS)
     requested = [kind for kind, words in KIND_WORDS.items()
-                 if kind in SLIDE_KINDS and any(w in text for w in words)
+                 if kind in (*SLIDE_KINDS, "ciclo") and any(w in text for w in words)
                  and (wants_change or kind == "comparacao")]
     return requested or [current]
 
@@ -77,7 +78,9 @@ def refazer_slide(deck_slda, numero, instrucao, fatos, modelo, *, roteiro=None, 
         raise ValueError("Número de slide fora do deck.")
     facts = fatos or {}
     current = deck.slides[numero - 1]
-    kinds = allowed_kinds(instrucao, current.kind)
+    # Ciclo é etapas com cycle: refazer mantém o ciclo (antes voltava a etapas comuns).
+    current_kind = "ciclo" if current.cycle else current.kind
+    kinds = allowed_kinds(instrucao, current_kind)
     variants = []
     for kind in kinds:
         variants.append({"type": "object", "properties": {
@@ -92,8 +95,8 @@ def refazer_slide(deck_slda, numero, instrucao, fatos, modelo, *, roteiro=None, 
     user = (f"Deck: {deck.title}\nRoteiro: {json.dumps(outline, ensure_ascii=False)}\n"
             f"Slide atual {numero}:\n{print_slide(current)}\nVizinhos (não repetir):\n"
             + "\n".join(neighbors) + f"\nInstrução: {instrucao}\n"
-            + (f"Mantenha o tipo atual ({current.kind}) e todo o conteúdo que a instrução não "
-               "mandar remover.\n" if kinds == [current.kind]
+            + (f"Mantenha o tipo atual ({current_kind}) e todo o conteúdo que a instrução não "
+               "mandar remover.\n" if kinds == [current_kind]
                else f"Mude o tipo do slide para: {', '.join(kinds)}.\n")
             + "Regras por tipo: " + json.dumps(KIND_RULES, ensure_ascii=False)
             + "\nFatos: " + facts_block(list(facts), facts, all_facts=True))

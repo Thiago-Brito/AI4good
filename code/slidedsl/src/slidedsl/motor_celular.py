@@ -196,7 +196,9 @@ def create_presentation_celular(request: str, out_dir: Path, *, modelo: str, n_s
         args += ["--documento", str(_documento_para_node(document_ids[0], out_dir))]
     if imagens:
         args.append("--imagens")
-    proc = subprocess.Popen(args, cwd=app, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8",
+    # stderr vai para arquivo: com PIPE lido só no fim, muito aviso do Node travaria os dois processos.
+    errlog = open(out_dir / "motor_node.log", "w", encoding="utf-8")
+    proc = subprocess.Popen(args, cwd=app, stdout=subprocess.PIPE, stderr=errlog, text=True, encoding="utf-8",
                             creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
     erro = None
     for line in proc.stdout:
@@ -209,8 +211,10 @@ def create_presentation_celular(request: str, out_dir: Path, *, modelo: str, n_s
         elif ev["evento"] == "erro":
             erro = ev["mensagem"]
     proc.wait()
+    errlog.close()
     if proc.returncode or erro:
-        raise RuntimeError(erro or (proc.stderr.read() or "motor do celular falhou")[-400:])
+        detalhe = (out_dir / "motor_node.log").read_text("utf-8", errors="replace")[-400:]
+        raise RuntimeError(erro or detalhe or "motor do celular falhou")
 
     deck = AltoDeck.model_validate(json.loads((out_dir / "deck.json").read_text("utf-8")))
     _registrar_fotos(deck, out_dir)

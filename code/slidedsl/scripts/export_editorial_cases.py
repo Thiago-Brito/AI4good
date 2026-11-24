@@ -28,6 +28,8 @@ CASE = [
     "Por Que Usar GitHub Na Petrobras",
     "O SQL E A API REST",
     "Ciclo Da Água",
+    "Programação Em C Para Iniciantes",
+    "Estatística Com R E Python",
 ]
 QUERIES = ["painel solar casa iluminação natural", "solar panels roof diagram", "ciclo da água", "git version control"]
 CAP = ["avaliar fase atual", "Já maiúscula", "", "1º passo", "érica"]

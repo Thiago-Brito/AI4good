@@ -34,13 +34,16 @@ export function properWords(text: string | null | undefined): Set<string> {
   return found;
 }
 
+// Letras soltas que são artigo/conjunção/preposição; outras ("C", "R") podem ser nomes e ficam.
+const SINGLE_LOWER = new Set(['A', 'O', 'E', 'À', 'É']);
+
 /** Title Case → caixa de frase; preserva siglas, grafias mistas (GitHub) e nomes próprios atestados. */
 export function sentenceCase(text: string | null | undefined, keep: Iterable<string> = []): string | null | undefined {
   const words = (text ?? '').split(/\s+/).filter(Boolean);
   const long = words.filter(w => [...w].length > 3), caps = long.filter(w => isUpper(w[0]));
   if (long.length < 2 || caps.length / long.length <= 0.7) return text;
   const kept = new Set([...keep].map(k => k.toLowerCase()));
-  return words.map((w, k) => k === 0 || ([...w].length > 1 && w === w.toUpperCase() && w !== w.toLowerCase()) ||
+  return words.map((w, k) => k === 0 || (!SINGLE_LOWER.has(w) && w === w.toUpperCase() && w !== w.toLowerCase()) ||
     kept.has(w.replace(/^[.,:;]+|[.,:;]+$/g, '').toLowerCase()) || [...w.slice(1)].some(isUpper) ? w : w.toLowerCase()).join(' ');
 }
 

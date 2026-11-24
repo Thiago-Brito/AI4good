@@ -61,3 +61,25 @@ def test_exemplo_de_diagramas_compila_estrito():
 
     deck = parse_alto((Path(__file__).parents[1] / "examples/alto/diagramas.slda").read_text("utf-8"))
     assert build_alto(deck).success(strict=True)
+
+
+def test_refazer_slide_de_ciclo_mantem_o_ciclo():
+    import json
+    from pathlib import Path
+
+    from slidedsl.alto_edit import refazer_slide
+
+    class Model:
+        metadata = {}
+
+        def generate(self, system, user, **kwargs):
+            schema = kwargs["response_schema"]["properties"]["slide"]
+            assert schema["properties"]["tipo"]["enum"] == ["ciclo"]
+            return json.dumps({"slide": {"tipo": "ciclo", "conteudo": {"titulo": "A água circula sem parar", "itens": [
+                {"rotulo": r, "detalhe": f"Nesta fase a água {d}."} for r, d in [
+                    ("Evaporação", "sobe como vapor"), ("Condensação", "forma as nuvens"),
+                    ("Precipitação", "cai como chuva"), ("Escoamento", "volta aos rios")]], "fontes": [], "notas": ""}}})
+
+    src = (Path(__file__).parents[1] / "examples/alto/diagramas.slda").read_text("utf-8")
+    out = refazer_slide(src, 3, "Deixe o título mais direto", {}, Model())
+    assert parse_alto(out).slides[2].cycle and "ciclo {" in out
