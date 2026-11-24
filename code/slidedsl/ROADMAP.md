@@ -30,7 +30,9 @@
 - [ ] APK: rebuild com o núcleo TS corrigido (o APK 0.2.0 ainda tem o layout antigo).
 - [ ] Limite de tamanho dentro da restrição (`maxLength`/repetição limitada) e gramática reduzida ao tipo do slide no prompt.
 - [x] App: compilador monta o slide quando a IA falha no reparo (F001), em vez de abortar o deck (achado do emulador com Qwen3 0.6B).
-- [ ] Teste 4 (celular real).
+- [x] Teste 4 em celular físico (24/11): moto g(8) power lite, 4 GB, Android 10, Qwen3 1.7B CPU, `agua.txt`, 5 slides — sucesso em 63 min, 12 chamadas, 0 reparos, verificador estrito ok; prompt 3,9 tok/s, geração 1,5 tok/s; leitura do documento 46% do tempo; bateria 95→77%. Conteúdo repetitivo e com afirmações fora do documento (2 erradas). [Resultados](docs/RESULTADOS_T4.md).
+- [ ] Modo rápido no app: documento curto em 1 leitura, saída das leituras limitada, deck em 1 chamada; medir de novo.
+- [ ] (opcional) 2ª execução no celular com GPU ligada.
 
 ## Ajustes para o seminário 2 (sem2) — 11/11/2026
 - [x] Comparação aceita 1–4 itens por lado (validação e schema); prompt pede 1 ou 2 e proíbe repetir item.
