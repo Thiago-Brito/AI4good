@@ -191,6 +191,29 @@ test('roteiro sem capa/conclusão é corrigido como no Python, em vez de abortar
   assert.equal(result.deck.slides[4].kind, 'conclusao');
 });
 
+test('gramatica_limites: texto cortado no limite pede 1 reparo e, se persistir, o slide é aceito', async () => {
+  const {truncatedPaths, withCompilerLimits} = await import('../outputs/tests/pipeline/altoText.js');
+  const lim = withCompilerLimits(schemaFor('topicos'));
+  const data = {titulo: 'x'.repeat(80), itens: [{rotulo: 'Ok', detalhe: 'y'.repeat(170)}], fontes: [], notas: ''};
+  assert.deepEqual(truncatedPaths(data, lim).map(t => t.path), ['titulo', 'itens.0.detalhe']);
+  class Cut extends AltoMock {
+    async complete(input) {
+      const out = await super.complete(input);
+      if (input.grammar && /tipo topicos/.test(input.user)) return {...out, text: out.text.replace(/item "Escopo definido" "[^"]*"/, `item "Escopo definido" "${'A equipe confere '.repeat(10).slice(0, 170)}"`)};
+      return out;
+    }
+  }
+  const model = new Cut();
+  const result = await generate({...request(model), slideMode: 'gramatica_limites'});
+  assert.equal(result.ir.slides.length, 5);
+  const repairs = model.inputs.filter(x => /Corrija os diagnósticos/.test(x.user));
+  assert.ok(repairs.length >= 1 && repairs.every(x => /cortado no limite de 170/.test(x.user)));
+  assert.equal(result.diagnostics.filter(d => d.code === 'F001').length, 0);
+  const off = new Cut();
+  const plain = await generate({...request(off), slideMode: 'gramatica_limites', repairTruncated: false});
+  assert.equal(plain.calls.filter(c => c.repair).length, 0);
+});
+
 test('modo json continua o padrão e não envia gramática', async () => {
   const inputs = [];
   const json = {async complete(input) {

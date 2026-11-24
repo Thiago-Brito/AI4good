@@ -133,6 +133,21 @@ export function slideGrammar(kind: string, schema: JsonSchema): string {
   return [root, ...[...rules].map(([k, v]) => `${k} ::= ${v}`)].join('\n');
 }
 
+/** Caminhos de texto que chegaram exatamente ao maxLength do schema: com o limite na gramática, a
+ * decodificação fecha a string no limite, e o texto sai cortado no meio (bancada de 24/11: 31 de 677 campos). */
+export function truncatedPaths(data: unknown, schema: JsonSchema, path = ''): {path: string; limit: number}[] {
+  if (schema.type === 'string' && typeof data === 'string') {
+    const limit = num(schema.maxLength, Infinity);
+    return Array.from(data).length >= limit ? [{path, limit}] : [];
+  }
+  if (schema.type === 'array' && Array.isArray(data) && schema.items)
+    return data.flatMap((v, i) => truncatedPaths(v, schema.items as JsonSchema, `${path}.${i}`));
+  if (schema.type === 'object' && data && typeof data === 'object')
+    return Object.entries(props(schema)).flatMap(([k, s]) =>
+      k in (data as Record<string, unknown>) ? truncatedPaths((data as Record<string, unknown>)[k], s, path ? `${path}.${k}` : k) : []);
+  return [];
+}
+
 // ---------------------------------------------------------------------------
 // Leitura do bloco Alto
 

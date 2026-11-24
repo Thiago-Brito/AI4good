@@ -3,7 +3,7 @@ import {prompts, schemaErrors, schemaWithFacts} from './contracts.js';
 import {collectFacts, type SourceChoice, type FetchText, type ReadDocument, type DocumentUsage} from './sources.js';
 import {genericDocumentRequest, MAX_EXTRACT_CALLS} from './documents.js';
 import {Recorder} from './usage.js';
-import {altoFormatHint, altoToJson, slideGrammar, withCompilerLimits} from './altoText.js';
+import {altoFormatHint, altoToJson, slideGrammar, truncatedPaths, withCompilerLimits} from './altoText.js';
 /** Como o modelo escreve cada slide: JSON Schema; SlideDSL Alto sob gramática com os mesmos campos e limites
  * folgados do JSON; ou a mesma gramática com os limites de texto do compilador (gramatica_limites). */
 export type SlideMode = 'json' | 'gramatica' | 'gramatica_limites';
@@ -76,6 +76,8 @@ export interface GenerateOptions {
   onCalls?: (c: CallRecord[]) => void;
   readDocument?: ReadDocument; onDocument?: (doc: DocumentUsage) => void;
   slideMode?: SlideMode;
+  /** Só em gramatica_limites: campo que chegou ao limite (cortado) vira aviso e pede 1 reparo. Padrão: sim. */
+  repairTruncated?: boolean;
 }
 export async function generate(options: GenerateOptions): Promise<GenerationResult> {
   const {slides: n, source: choice, model, signal} = options, slideMode: SlideMode = options.slideMode ?? 'json';
@@ -106,8 +108,8 @@ export async function generate(options: GenerateOptions): Promise<GenerationResu
     const plan = outline.slides[i], kind = plan.tipo;
     const schema: JsonSchema = schemaWithFacts((prompts.slide_schemas as Record<string, any>)[kind][mode], ids);
     const base = `Pedido original: ${request}\nApresentação: ${deck.title}\nRoteiro:\n${summary}\nEscreva o slide ${i + 1} (tipo ${kind}).\nMensagem: ${plan.mensagem}\nObjetivo: ${plan.objetivo}\nRegras do tipo: ${(prompts.kind_rules as Record<string, string>)[kind]}\nFatos para este slide:\n${factsBlock(plan.fatos?.length ? plan.fatos : ids)}\nTítulos já escritos (não repetir): ${deck.slides.map(s => s.title).join('; ')}`;
-    const grammar = slideMode === 'json' ? ''
-      : slideGrammar(kind, slideMode === 'gramatica_limites' ? withCompilerLimits(schema) : schema);
+    const limited = slideMode === 'gramatica_limites' ? withCompilerLimits(schema) : null;
+    const grammar = slideMode === 'json' ? '' : slideGrammar(kind, limited ?? schema);
     const slideBase = grammar ? `${base}\n${altoFormatHint(kind, schema)}` : base;
     let accepted: AltoSlide | null = null, previous = '', diagnostics: Diagnostic[] = [];
     for (let attempt = 0; attempt <= 1; attempt++) {
@@ -132,6 +134,11 @@ export async function generate(options: GenerateOptions): Promise<GenerationResu
           if (!ids.length) accepted.notes = `conteúdo sem fontes\n${accepted.notes ?? ''}`;
           const built = buildAlto({...deck, slides: [...deck.slides, accepted]}, facts);
           diagnostics = built.diagnostics.filter(d => d.slide == null || d.slide === i + 1);
+          // Texto cortado no limite da gramática: aviso que pede reparo (não bloqueia; após o reparo, aceita).
+          if (limited && (options.repairTruncated ?? true)) for (const t of truncatedPaths(data, limited)) diagnostics.push({
+            code: 'A005', severity: 'AVISO', slide: i + 1, evidence: {path: t.path},
+            message: `Texto cortado no limite de ${t.limit} caracteres.`,
+            suggestion: 'Reescreva este campo mais curto, com a ideia completa.'} as Diagnostic);
         }
       } catch (e) {
         checkCancelled(signal);

@@ -37,3 +37,14 @@ testar no emulador e deixar um resumo. Claude conduz sozinho; commits sem coauto
 - Achado do app: em solar_obrigatorio s11 o roteiro não começou com capa/terminou com conclusão e o app abortou.
   O pipeline Python corrige isso (`fix_outline`); o porte do app não. Independe do modo dos slides (roteiro igual
   nos dois); corrigir depois da matriz para não mudar o código no meio do experimento.
+- ~02:10 — Matriz json × gramatica concluída (48). gramatica: −21% tokens gerados nos slides (p = 0,008), −11% no
+  tempo projetado dos slides (p = 0,08); slides montados pelo compilador 52 → 41 (de 115). Nos dois modos ~40% dos
+  slides caem no compilador, quase sempre por A005.
+- ~02:20 — 3ª condição `gramatica_limites` (24): slides do compilador 52 → 16 (−69%, p = 0,0002); decks completos
+  1 → 10 de 24 (McNemar p = 0,012); tokens gerados nos slides −35%; celular projetado 80,1 → 70,9 min (p = 0,001).
+  Custos: 31 de 677 campos cortados no limite (ex.: "…Essa capac"); 2 decks com B4 (bloco sobre o número da página)
+  — é o defeito já corrigido no núcleo de 23/11: a cópia do núcleo usada pela bancada é anterior; recompilados
+  com o compilador atual, os 2 passam.
+- 02:21 — Fix no app: roteiro sem capa/conclusão é corrigido (porte de `fix_outline`) em vez de abortar.
+- ~02:25 — 4ª condição `gramatica_limites_reparo`: texto que chega ao limite vira aviso e pede 1 reparo (se persistir,
+  o slide é aceito). Testes do app 62/62. Rodando; já com o fix do roteiro (par solar_obrigatorio s11 passa a contar).

@@ -98,7 +98,10 @@ async function main() {
     await post('/slots/0?action=erase', {});
     process.stdout.write(`[${n + 1}/${plan.length}] ${id} ... `);
     try {
-      const result = await generate({request: r.prompt, slides: 5, model: serverModel(seed), slideMode: mode,
+      // gramatica_limites = medido sem reparo de texto cortado; gramatica_limites_reparo = com o reparo.
+      const slideMode = mode.startsWith('gramatica_limites') ? 'gramatica_limites' : mode;
+      const result = await generate({request: r.prompt, slides: 5, model: serverModel(seed), slideMode,
+        repairTruncated: mode === 'gramatica_limites_reparo',
         source: {mode: 'document', document: file}, readDocument: async () => extractBytes(file, bytes),
         onCalls: c => { calls = c; }});
       calls = result.calls;
