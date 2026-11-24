@@ -12,6 +12,7 @@ import {ensureVerified, isDownloaded, modelUri} from './src/storage/models';
 import {exportTestData, PPTX_MIME, savePptx, shareFile, storePptx} from './src/storage/exports';
 import {loadModel, type LocalModel} from './src/llm/llamaRn';
 import {generate, GenerationError, type GenerationResult, type Progress} from './src/pipeline/generate';
+import {deleteSlide, editTexts, moveSlide, redoSlide} from './src/pipeline/edit';
 import type {SourceChoice, DocumentUsage} from './src/pipeline/sources';
 import {deleteDocument, onIncomingDocument, pendingDocument, readDocument} from './src/storage/documents';
 import {documentKind, documentMetadata, type DocumentFile, type DocumentText} from './src/pipeline/documents';
@@ -29,6 +30,7 @@ export default function App() {
   const [busy, setBusy] = useState(false), [message, setMessage] = useState('');
   const [progress, setProgress] = useState<Progress>({stage: '', total: slides});
   const [result, setResult] = useState<GenerationResult | null>(null), [file, setFile] = useState('');
+  const [history, setHistory] = useState<GenerationResult[]>([]);
   const [data, setData] = useState<ReturnType<typeof testData> | null>(null);
   const [calls, setCalls] = useState(0);
   const active = useRef<AbortController | null>(null);
@@ -66,7 +68,7 @@ export default function App() {
   async function run() {
     if (active.current) return;
     const abort = new AbortController(); active.current = abort;
-    setBusy(true); setMessage(''); setResult(null); setFile(''); setData(null); setCalls(0); setDocumentInfo(null); setScreen('progress');
+    setBusy(true); setMessage(''); setResult(null); setHistory([]); setFile(''); setData(null); setCalls(0); setDocumentInfo(null); setScreen('progress');
     setProgress({stage: 'Preparando modelo', total: slides});
     const started = Date.now();
     let llm: LocalModel | null = null, records: CallRecord[] = [], status = 'failed', diagnostics: unknown = [], error = '';
@@ -119,6 +121,40 @@ export default function App() {
       if (queuedDocument.current) {const document = queuedDocument.current; queuedDocument.current = null; acceptDocument(document);}
     }
   }
+  /** Aplica uma edição: recompila (em edit.ts), grava o novo .pptx e guarda a versão atual para o desfazer. */
+  async function applyEdit(change: (current: GenerationResult) => Promise<GenerationResult>, done: string) {
+    if (!result || busy) return;
+    setBusy(true); setMessage('');
+    try {
+      const next = await change(result);
+      const uri = await storePptx(next.pptx);
+      setHistory(h => [...h.slice(-9), result]); setResult(next); setFile(uri); setMessage(done);
+    } catch (e) {setMessage(e instanceof Error ? e.message : String(e));}
+    finally {setBusy(false);}
+  }
+  /** Refazer com IA: carrega o modelo selecionado só para esse slide e o libera em seguida. */
+  async function redo(index: number, instruction: string) {
+    await applyEdit(async current => {
+      if (!await isDownloaded(selected)) throw Error('Baixe o modelo na tela Modelo antes de refazer.');
+      await ensureVerified(selected, () => setMessage('Conferindo SHA-256 do modelo'));
+      setMessage(`Carregando modelo para refazer o slide ${index + 1}`);
+      const llm = await loadModel(modelUri(selected), gpu, () => {});
+      try {
+        return await redoSlide(current, index, instruction, llm, {onProgress: stage => setMessage(stage)});
+      } finally {await llm.release();}
+    }, `Slide ${index + 1} refeito.`);
+  }
+  const editor = {busy, canUndo: history.length > 0,
+    undo: () => void act(async () => {
+      const previous = history[history.length - 1];
+      if (!previous) return;
+      const uri = await storePptx(previous.pptx);
+      setHistory(h => h.slice(0, -1)); setResult(previous); setFile(uri); setMessage('Edição desfeita.');
+    }),
+    move: (from: number, to: number) => void applyEdit(r => moveSlide(r, from, to), `Slide ${from + 1} movido para a posição ${to + 1}.`),
+    remove: (index: number) => void applyEdit(r => deleteSlide(r, index), `Slide ${index + 1} excluído.`),
+    editTexts: (index: number, changes: Record<string, string>) => void applyEdit(r => editTexts(r, index, changes), `Texto do slide ${index + 1} salvo.`),
+    redo: (index: number, instruction: string) => void redo(index, instruction)};
   return <ScrollView contentContainerStyle={styles.page} keyboardShouldPersistTaps="handled">
     <Text style={styles.title}>SlideDSL</Text>
     <Text style={styles.text}>Apresentações editáveis geradas no próprio celular.</Text>
@@ -136,7 +172,7 @@ export default function App() {
       <Text style={styles.text}>{progress.slide ? `Slide ${progress.slide}/${progress.total} · ` : ''}{calls} chamadas realizadas</Text>
       <Button secondary onPress={() => {active.current?.abort(); setProgress(p => ({...p, stage: 'Cancelando; aguardando liberação do modelo'}));}}>Cancelar</Button>
     </> : null}
-    {screen === 'result' && result ? <ResultScreen result={result} file={file} onShare={() => void act(() => shareFile(file, PPTX_MIME))}
+    {screen === 'result' && result ? <ResultScreen result={result} file={file} editor={editor} onShare={() => void act(() => shareFile(file, PPTX_MIME))}
       onSave={() => void act(async () => {if (await savePptx(file)) setMessage('PowerPoint salvo na pasta escolhida.');})}/> : null}
     {data ? <Button secondary disabled={busy} onPress={() => void act(() => exportTestData(data))}>Exportar dados do teste</Button> : null}
     <StatusBar style="dark"/>

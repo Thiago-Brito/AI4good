@@ -1,8 +1,46 @@
 import {useState} from 'react';
-import {Text, View} from 'react-native';
+import {Text, TextInput, View} from 'react-native';
 import type {Slide} from '@slidedsl/core';
 import type {GenerationResult} from '../pipeline/generate';
+import {editableFields} from '../pipeline/edit';
 import {Button, styles} from '../ui';
+/** Ações de edição; App aplica, recompila, salva o .pptx e guarda a versão anterior para o desfazer. */
+export interface SlideEditor {
+  busy: boolean; canUndo: boolean; undo: () => void;
+  move: (from: number, to: number) => void; remove: (index: number) => void;
+  editTexts: (index: number, changes: Record<string, string>) => void;
+  redo: (index: number, instruction: string) => void;
+}
+function SlideCard({result, slide, index, editor}: {result: GenerationResult; slide: Slide; index: number; editor: SlideEditor}) {
+  const [mode, setMode] = useState<'view' | 'text' | 'ai'>('view'), [instruction, setInstruction] = useState('');
+  const fields = editableFields(result.deck.slides[index]), [draft, setDraft] = useState<Record<string, string>>({});
+  const n = result.deck.slides.length, kind = result.deck.slides[index].kind;
+  return <View style={styles.card}>
+    <Text style={styles.label}>Slide {slide.number} · {kind}</Text>
+    <Thumbnail slide={slide}/>
+    <View style={styles.row}>
+      <Button secondary disabled={editor.busy || index === 0} onPress={() => editor.move(index, index - 1)}>↑</Button>
+      <Button secondary disabled={editor.busy || index === n - 1} onPress={() => editor.move(index, index + 1)}>↓</Button>
+      <Button secondary={mode !== 'text'} disabled={editor.busy} onPress={() => {setDraft({}); setMode(mode === 'text' ? 'view' : 'text');}}>Editar texto</Button>
+      <Button secondary={mode !== 'ai'} disabled={editor.busy} onPress={() => setMode(mode === 'ai' ? 'view' : 'ai')}>Refazer com IA</Button>
+      <Button secondary disabled={editor.busy || n <= 2} onPress={() => editor.remove(index)}>Excluir</Button>
+    </View>
+    {mode === 'text' ? <>
+      {fields.map(f => <View key={f.path} style={{gap: 4}}>
+        <Text style={styles.text}>{f.label}</Text>
+        <TextInput accessibilityLabel={`${f.label} do slide ${slide.number}`} style={[styles.input, f.multiline && {minHeight: 80}]}
+          multiline={f.multiline} value={draft[f.path] ?? f.value} onChangeText={text => setDraft(d => ({...d, [f.path]: text}))}/>
+      </View>)}
+      <Button disabled={editor.busy || !Object.keys(draft).length} onPress={() => {editor.editTexts(index, draft); setMode('view');}}>Salvar texto</Button>
+    </> : null}
+    {mode === 'ai' ? <>
+      <TextInput accessibilityLabel={`Instrução para refazer o slide ${slide.number}`} style={[styles.input, {minHeight: 80}]} multiline maxLength={300}
+        placeholder="Ex.: use um exemplo do dia a dia; deixe mais curto" value={instruction} onChangeText={setInstruction}/>
+      <Text style={styles.text}>Carrega o modelo e reescreve só este slide (1 chamada + 1 reparo), com as mesmas regras da geração.</Text>
+      <Button disabled={editor.busy} onPress={() => {editor.redo(index, instruction); setMode('view');}}>Refazer este slide</Button>
+    </> : null}
+  </View>;
+}
 function Thumbnail({slide}: {slide: Slide}) {
   const [width, setWidth] = useState(280), scale = width / 1280;
   return <View accessibilityLabel={`Miniatura do slide ${slide.number}`} onLayout={e => setWidth(e.nativeEvent.layout.width)}
@@ -16,15 +54,16 @@ function Thumbnail({slide}: {slide: Slide}) {
     })}
   </View>;
 }
-export default function ResultScreen({result, file, onSave, onShare}: {result: GenerationResult; file: string; onSave: () => void; onShare: () => void}) {
+export default function ResultScreen({result, file, onSave, onShare, editor}: {result: GenerationResult; file: string; onSave: () => void; onShare: () => void; editor: SlideEditor}) {
   return <>
     <Text style={styles.heading}>{result.deck.title}</Text>
     <Text style={styles.text}>{result.ir.slides.length} slides · {result.calls.length} chamadas · {(result.wall_ms / 1000).toFixed(1)} s</Text>
     {result.source.warning ? <Text style={styles.warning}>{result.source.warning}</Text> : null}
     {result.source.source ? <Text style={styles.text} selectable>Fonte: {result.source.source.title}{'\n'}{result.source.source.url}</Text> : null}
     {result.source.document ? <Text style={styles.text}>{result.source.document.type.toUpperCase()} · {result.source.document.pages === null ? 'Paginação não disponível' : `${result.source.document.pages} páginas`} · {result.source.document.characters} caracteres · {result.source.document.chunks_used}/{result.source.document.chunks_total} trechos · {result.source.document.facts_used} fatos</Text> : null}
-    <Text style={styles.text}>Prévia geométrica simples. O PowerPoint mantém textos e formas editáveis.</Text>
-    {result.ir.slides.map(slide => <View key={slide.number} style={styles.card}><Text style={styles.label}>Slide {slide.number}</Text><Thumbnail slide={slide}/></View>)}
+    <Text style={styles.text}>Prévia geométrica simples. Edite slide a slide; o PowerPoint é refeito a cada mudança.</Text>
+    {editor.canUndo ? <Button secondary disabled={editor.busy} onPress={editor.undo}>Desfazer última edição</Button> : null}
+    {result.ir.slides.map((slide, index) => <SlideCard key={`${slide.number}-${result.deck.slides[index]?.title}`} result={result} slide={slide} index={index} editor={editor}/>)}
     <Button onPress={onSave}>Salvar .pptx em uma pasta</Button>
     <Button secondary onPress={onShare}>Compartilhar .pptx</Button>
     <Text style={{fontSize: 12, color: '#475467'}} selectable>Arquivo local: {file}</Text>

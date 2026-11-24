@@ -15,6 +15,8 @@ export interface GenerationResult {
   deck: AltoDeck; ir: Presentation; pptx: ArrayBuffer; diagnostics: Diagnostic[];
   calls: CallRecord[]; facts: Facts; source: Awaited<ReturnType<typeof collectFacts>>;
   wall_ms: number; max_calls: number;
+  /** Para editar depois (refazer um slide com o mesmo prompt): pedido, roteiro e modo de escrita. */
+  request: string; outline: Outline; slideMode: SlideMode;
 }
 export class GenerationError extends Error {
   constructor(message: string, readonly diagnostics: Diagnostic[]) { super(message); }
@@ -31,7 +33,7 @@ export function jsonToSlide(kind: SlideKind, data: Record<string, any>): AltoSli
     bars: (data.barras ?? []).map((v: any) => ({label: v.rotulo.trim(), value: v.valor})),
     sources: [...new Set<string>(data.fontes ?? [])]};
 }
-interface PlanSlide {tipo: SlideKind; mensagem: string; objetivo: string; fatos?: string[]}
+export interface PlanSlide {tipo: SlideKind; mensagem: string; objetivo: string; fatos?: string[]}
 const TRAILING = new Set(['a', 'o', 'as', 'os', 'um', 'uma', 'de', 'do', 'da', 'dos', 'das', 'em', 'no', 'na', 'nos', 'nas',
   'para', 'por', 'pelo', 'pela', 'com', 'sem', 'e', 'ou', 'que', 'se', 'ao', 'aos', 'à', 'às', 'é']);
 export function shortTitle(text: string, max: number): string {
@@ -62,7 +64,7 @@ function fallbackSlide(kind: SlideKind, plan: PlanSlide, deckTitle: string, deck
   }
   return null;
 }
-interface Outline {titulo: string; slides: PlanSlide[]}
+export interface Outline {titulo: string; slides: PlanSlide[]}
 /** Porte de fix_outline (alto_generation.py): o primeiro slide vira capa, o último conclusão e capas no meio
  * viram tópicos. Na bancada de 24/11 (Qwen3 1.7B), um roteiro sem capa/conclusão abortava o deck inteiro. */
 export function fixOutline(outline: Outline): Outline {
@@ -83,6 +85,67 @@ export interface GenerateOptions {
   repairTruncated?: boolean;
   /** Leitura do documento: `json` (o modelo copia o trecho) ou `frases` (escolhe frases numeradas). Padrão: json. */
   extractMode?: ExtractMode;
+}
+/** O que writeSlide precisa da geração em curso (ou de uma apresentação pronta, ao refazer um slide). */
+export interface SlideContext {
+  request: string; deck: AltoDeck; facts: Facts; ids: string[]; mode: 'with_facts' | 'without_facts'; summary: string;
+  slideMode: SlideMode; recorder: Recorder; repairTruncated: boolean; progress: (stage: string, slide?: number) => void;
+  /** Slides antes e depois do slide i (na geração, `after` é vazio). */
+  before: AltoSlide[]; after: AltoSlide[]; n: number; signal?: AbortSignal;
+}
+/** Escreve o slide i (1 chamada + 1 reparo) com o prompt, a gramática e as conferências da geração.
+ * `extra` vai ao fim do pedido (ex.: instrução do usuário ao refazer). Retorna null se continuar inválido. */
+export async function writeSlide(ctx: SlideContext, plan: PlanSlide, i: number, extra = ''):
+    Promise<{accepted: AltoSlide | null; diagnostics: Diagnostic[]}> {
+  const {request, deck, facts, ids, mode, summary, slideMode, recorder, n, signal} = ctx, kind = plan.tipo;
+  const factsBlock = (selected = ids) => JSON.stringify(Object.fromEntries(selected.slice(0, 3).filter(id => id in facts).map(id => [id,
+    {claim: facts[id].claim, quote: String(facts[id].quote).slice(0, 300), kind: facts[id].kind, value: facts[id].value}])));
+  const progress = ctx.progress;
+  const schema: JsonSchema = schemaWithFacts((prompts.slide_schemas as Record<string, any>)[kind][mode], ids);
+  const base = `Pedido original: ${request}\nApresentação: ${deck.title}\nRoteiro:\n${summary}\nEscreva o slide ${i + 1} (tipo ${kind}).\nMensagem: ${plan.mensagem}\nObjetivo: ${plan.objetivo}\nRegras do tipo: ${(prompts.kind_rules as Record<string, string>)[kind]}\nFatos para este slide:\n${factsBlock(plan.fatos?.length ? plan.fatos : ids)}\nTítulos já escritos (não repetir): ${[...ctx.before, ...ctx.after].map(s => s.title).join('; ')}${extra}`;
+  const limited = slideMode === 'gramatica_limites' ? withCompilerLimits(schema) : null;
+  const grammar = slideMode === 'json' ? '' : slideGrammar(kind, limited ?? schema);
+  const slideBase = grammar ? `${base}\n${altoFormatHint(kind, schema)}` : base;
+  let accepted: AltoSlide | null = null, previous = '', diagnostics: Diagnostic[] = [];
+  for (let attempt = 0; attempt <= 1; attempt++) {
+    progress(attempt ? `Reparando slide ${i + 1}/${n}` : `Slide ${i + 1}/${n}`, i + 1);
+    try {
+      const user = attempt ? `${slideBase}\nResposta anterior:\n${previous.slice(0, 2200)}\nCorrija os diagnósticos mantendo o tipo:\n${JSON.stringify(diagnostics.filter(d => d.severity !== 'INFORMAÇÃO').slice(0, 8).map(d => ({code: d.code, severity: d.severity, message: d.message, path: d.evidence?.path, suggestion: d.suggestion})))}` : slideBase;
+      let data: unknown;
+      if (grammar) {
+        const out = await recorder.grammar('slide', prompts.content_system, user, schema, grammar,
+          text => altoToJson(kind, text, schema), i + 1, attempt);
+        data = out.value; previous = out.text;
+      } else {
+        data = await recorder.json('slide', prompts.content_system, user, schema, i + 1, attempt);
+        previous = JSON.stringify(data);
+      }
+      const errors = schemaErrors(data, schema);
+      if (errors.length) { accepted = null; diagnostics = errors.map(message => ({code: 'P002', severity: 'ERRO', slide: i + 1, message})); }
+      else {
+        accepted = jsonToSlide(kind, data as Record<string, any>);
+        cleanVisible(accepted, ids, request);  // como o PC: sem "conforme F2", caixa de frase, inicial maiúscula
+        // The cover must not invent an author, as in alto_generation.py.
+        if (kind === 'capa' && accepted.author && !request.toLowerCase().includes(accepted.author.toLowerCase())) accepted.author = null;
+        if (!ids.length) accepted.notes = `conteúdo sem fontes\n${accepted.notes ?? ''}`;
+        const built = buildAlto({...deck, slides: [...ctx.before, accepted, ...ctx.after]}, facts);
+        diagnostics = built.diagnostics.filter(d => d.slide == null || d.slide === i + 1);
+        // Texto cortado no limite da gramática: aviso que pede reparo (não bloqueia; após o reparo, aceita).
+        if (limited && ctx.repairTruncated) for (const t of truncatedPaths(data, limited)) diagnostics.push({
+          code: 'A005', severity: 'AVISO', slide: i + 1, evidence: {path: t.path},
+          message: `Texto cortado no limite de ${t.limit} caracteres.`,
+          suggestion: 'Reescreva este campo mais curto, com a ideia completa.'} as Diagnostic);
+      }
+    } catch (e) {
+      checkCancelled(signal);
+      accepted = null;
+      diagnostics = [{code: 'P002', severity: 'ERRO', slide: i + 1, message: e instanceof Error ? e.message : String(e)}];
+    }
+    const actionable = diagnostics.filter(d => d.severity === 'ERRO' || (d.severity === 'AVISO' && d.code !== 'A009'));
+    if (accepted && !actionable.length) break;
+    if (attempt === 1 && (!accepted || diagnostics.some(d => d.severity === 'ERRO'))) { accepted = null; break; }
+  }
+  return {accepted, diagnostics};
 }
 export async function generate(options: GenerateOptions): Promise<GenerationResult> {
   const {slides: n, source: choice, model, signal} = options, slideMode: SlideMode = options.slideMode ?? 'json';
@@ -112,50 +175,9 @@ export async function generate(options: GenerateOptions): Promise<GenerationResu
   const fallbackNotes: Diagnostic[] = [];
   for (let i = 0; i < n; i++) {
     const plan = outline.slides[i], kind = plan.tipo;
-    const schema: JsonSchema = schemaWithFacts((prompts.slide_schemas as Record<string, any>)[kind][mode], ids);
-    const base = `Pedido original: ${request}\nApresentação: ${deck.title}\nRoteiro:\n${summary}\nEscreva o slide ${i + 1} (tipo ${kind}).\nMensagem: ${plan.mensagem}\nObjetivo: ${plan.objetivo}\nRegras do tipo: ${(prompts.kind_rules as Record<string, string>)[kind]}\nFatos para este slide:\n${factsBlock(plan.fatos?.length ? plan.fatos : ids)}\nTítulos já escritos (não repetir): ${deck.slides.map(s => s.title).join('; ')}`;
-    const limited = slideMode === 'gramatica_limites' ? withCompilerLimits(schema) : null;
-    const grammar = slideMode === 'json' ? '' : slideGrammar(kind, limited ?? schema);
-    const slideBase = grammar ? `${base}\n${altoFormatHint(kind, schema)}` : base;
-    let accepted: AltoSlide | null = null, previous = '', diagnostics: Diagnostic[] = [];
-    for (let attempt = 0; attempt <= 1; attempt++) {
-      progress(attempt ? `Reparando slide ${i + 1}/${n}` : `Slide ${i + 1}/${n}`, i + 1);
-      try {
-        const user = attempt ? `${slideBase}\nResposta anterior:\n${previous.slice(0, 2200)}\nCorrija os diagnósticos mantendo o tipo:\n${JSON.stringify(diagnostics.filter(d => d.severity !== 'INFORMAÇÃO').slice(0, 8).map(d => ({code: d.code, severity: d.severity, message: d.message, path: d.evidence?.path, suggestion: d.suggestion})))}` : slideBase;
-        let data: unknown;
-        if (grammar) {
-          const out = await recorder.grammar('slide', prompts.content_system, user, schema, grammar,
-            text => altoToJson(kind, text, schema), i + 1, attempt);
-          data = out.value; previous = out.text;
-        } else {
-          data = await recorder.json('slide', prompts.content_system, user, schema, i + 1, attempt);
-          previous = JSON.stringify(data);
-        }
-        const errors = schemaErrors(data, schema);
-        if (errors.length) { accepted = null; diagnostics = errors.map(message => ({code: 'P002', severity: 'ERRO', slide: i + 1, message})); }
-        else {
-          accepted = jsonToSlide(kind, data as Record<string, any>);
-          cleanVisible(accepted, ids, request);  // como o PC: sem "conforme F2", caixa de frase, inicial maiúscula
-          // The cover must not invent an author, as in alto_generation.py.
-          if (kind === 'capa' && accepted.author && !request.toLowerCase().includes(accepted.author.toLowerCase())) accepted.author = null;
-          if (!ids.length) accepted.notes = `conteúdo sem fontes\n${accepted.notes ?? ''}`;
-          const built = buildAlto({...deck, slides: [...deck.slides, accepted]}, facts);
-          diagnostics = built.diagnostics.filter(d => d.slide == null || d.slide === i + 1);
-          // Texto cortado no limite da gramática: aviso que pede reparo (não bloqueia; após o reparo, aceita).
-          if (limited && (options.repairTruncated ?? false)) for (const t of truncatedPaths(data, limited)) diagnostics.push({
-            code: 'A005', severity: 'AVISO', slide: i + 1, evidence: {path: t.path},
-            message: `Texto cortado no limite de ${t.limit} caracteres.`,
-            suggestion: 'Reescreva este campo mais curto, com a ideia completa.'} as Diagnostic);
-        }
-      } catch (e) {
-        checkCancelled(signal);
-        accepted = null;
-        diagnostics = [{code: 'P002', severity: 'ERRO', slide: i + 1, message: e instanceof Error ? e.message : String(e)}];
-      }
-      const actionable = diagnostics.filter(d => d.severity === 'ERRO' || (d.severity === 'AVISO' && d.code !== 'A009'));
-      if (accepted && !actionable.length) break;
-      if (attempt === 1 && (!accepted || diagnostics.some(d => d.severity === 'ERRO'))) { accepted = null; break; }
-    }
+    const ctx: SlideContext = {request, deck, facts, ids, mode, summary, slideMode, recorder, repairTruncated: options.repairTruncated ?? false,
+      progress: (stage, slide) => progress(stage, slide), before: deck.slides, after: [], n, signal};
+    let {accepted, diagnostics} = await writeSlide(ctx, plan, i);
     if (!accepted) {
       const fb = fallbackSlide(kind, plan, deck.title, deck, facts);
       if (!fb) throw new GenerationError(`Slide ${i + 1} continua inválido após um reparo.`, diagnostics);
@@ -176,5 +198,5 @@ export async function generate(options: GenerateOptions): Promise<GenerationResu
   checkCancelled(signal);
   progress('Concluído');
   return {deck, ir: built.ir, pptx, calls: recorder.calls, diagnostics: [...built.diagnostics, ...fallbackNotes], source, facts,
-    wall_ms: Date.now() - start, max_calls: maxCalls};
+    wall_ms: Date.now() - start, max_calls: maxCalls, request, outline, slideMode};
 }
