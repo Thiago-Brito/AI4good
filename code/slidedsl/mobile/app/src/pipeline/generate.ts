@@ -25,10 +25,11 @@ export class GenerationError extends Error {
   constructor(message: string, readonly diagnostics: Diagnostic[]) { super(message); }
 }
 // Conversion of the Python json_to_slide field mapping; data is schema-validated first.
-export function jsonToSlide(kind: SlideKind, data: Record<string, any>): AltoSlide {
+export function jsonToSlide(kind: SlideKind | 'ciclo', data: Record<string, any>): AltoSlide {
   const text = (key: string) => (data[key] as string | undefined)?.trim() || null;
   const items = (values: any[] = []) => values.map(v => ({label: v.rotulo.trim(), detail: v.detalhe?.trim() || null}));
-  return {kind, title: text('titulo'), subtitle: text('subtitulo'), author: text('autor'),
+  // "ciclo" é etapas com cycle (como json_to_slide do PC): o compilador desenha as fases em círculo.
+  return {...(kind === 'ciclo' ? {kind: 'etapas' as SlideKind, cycle: true} : {kind}), title: text('titulo'), subtitle: text('subtitulo'), author: text('autor'),
     text: text('texto'), caption: text('legenda'), unit: text('unidade'), notes: text('notas'), image_query: text('busca_imagem'),
     items: items(data.itens), values: (data.valores ?? []).map((v: any) => ({value: v.valor.trim(), label: v.legenda.trim()})),
     sides: (data.lados ?? []).map((v: any) => ({name: v.nome.trim(), items: items(v.itens)})),
@@ -36,7 +37,7 @@ export function jsonToSlide(kind: SlideKind, data: Record<string, any>): AltoSli
     bars: (data.barras ?? []).map((v: any) => ({label: v.rotulo.trim(), value: v.valor})),
     sources: [...new Set<string>(data.fontes ?? [])]};
 }
-export interface PlanSlide {tipo: SlideKind; mensagem: string; objetivo: string; fatos?: string[]}
+export interface PlanSlide {tipo: SlideKind | 'ciclo'; mensagem: string; objetivo: string; fatos?: string[]}
 const TRAILING = new Set(['a', 'o', 'as', 'os', 'um', 'uma', 'de', 'do', 'da', 'dos', 'das', 'em', 'no', 'na', 'nos', 'nas',
   'para', 'por', 'pelo', 'pela', 'com', 'sem', 'e', 'ou', 'que', 'se', 'ao', 'aos', 'à', 'às', 'é']);
 export function shortTitle(text: string, max: number): string {
@@ -55,7 +56,7 @@ export function shortTitle(text: string, max: number): string {
 /** Slide montado pelo compilador quando a IA falha após o reparo (teste no emulador, 23/11/2026:
  * a capa do Qwen3 0.6B continuou inválida e a geração inteira era abortada). Capa: título do roteiro;
  * demais tipos: divisória com a mensagem planejada. Sem nova chamada ao modelo. */
-function fallbackSlide(kind: SlideKind, plan: PlanSlide, deckTitle: string, deck: AltoDeck, facts: Facts): AltoSlide | null {
+function fallbackSlide(kind: SlideKind | 'ciclo', plan: PlanSlide, deckTitle: string, deck: AltoDeck, facts: Facts): AltoSlide | null {
   const fbKind: SlideKind = kind === 'capa' ? 'capa' : 'secao';
   const source = kind === 'capa' ? deckTitle : plan.mensagem;
   for (const max of [60, 40, 28]) {

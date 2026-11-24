@@ -46,6 +46,9 @@ from .repetition import alto_blocks, repetition_pairs, sibling_repetitions, toke
 from .editorial import capitalize_visible, normalized, proper_words, sentence_case
 
 DATA_KINDS = {"numeros", "grafico", "citacao", "linha_do_tempo"}
+# Tipos que o roteiro pode escolher: os da Alto e "ciclo" (etapas com cycle; o compilador desenha em círculo).
+GEN_KINDS = (*SLIDE_KINDS, "ciclo")
+CICLO_LIMITS = ("items", 3, 5)
 PATH_WORDS = {
     "items": "itens",
     "label": "rotulo",
@@ -163,6 +166,8 @@ KIND_RULES = {
     "secao": "titulo curto da parte e subtitulo opcional.",
     "topicos": "2 a 5 itens paralelos (3 é o ideal).",
     "etapas": "2 a 5 passos em ordem; rotulo começa com verbo no infinitivo.",
+    "ciclo": "3 a 5 fases que se repetem (a última volta à primeira), como ciclo da água ou "
+    "de melhoria; rotulo curto com a fase, detalhe com o que acontece nela.",
     "conclusao": "2 a 4 conclusões acionáveis; rotulo é a recomendação, detalhe é o porquê.",
     "numeros": '1 a 3 valores; valor é o número curto exatamente como no fato (ex.: "90%", '
     '"7 anos"), legenda explica o que ele mede (até 110 caracteres).',
@@ -269,8 +274,8 @@ def slide_schema(kind: str, fact_ids: list[str]) -> dict:
         props["subtitulo"] = _str(300, 0)
     if kind == "capa":
         props["autor"] = _str(160, 0)
-    if kind in ("topicos", "etapas", "conclusao"):
-        _, low, high = LIMITS[kind]
+    if kind in ("topicos", "etapas", "conclusao", "ciclo"):
+        _, low, high = CICLO_LIMITS if kind == "ciclo" else LIMITS[kind]
         props["itens"] = _items_schema(low, high)
     if kind == "imagem":
         props.update(busca_imagem=_str(120, 3), legenda=_str(300, 0), itens=_items_schema(0, 2))
@@ -337,7 +342,7 @@ def _items(values) -> list[Item]:
 
 
 def json_to_slide(kind: str, data: dict) -> AltoSlide:
-    s = AltoSlide(kind=kind)
+    s = AltoSlide(kind="etapas", cycle=True) if kind == "ciclo" else AltoSlide(kind=kind)
     s.title = (data.get("titulo") or "").strip() or None
     s.subtitle = (data.get("subtitulo") or "").strip() or None
     s.author = (data.get("autor") or "").strip() or None
@@ -621,7 +626,7 @@ def _parse_slide_text(raw: str, kind: str, theme: str) -> AltoSlide:
                 break
     block = text[start:end] if end else text[start:]
     deck = parse_alto(f'deck "x" {{\n  tema {theme}\n{block}\n}}\n')
-    if len(deck.slides) != 1 or deck.slides[0].kind != kind:
+    if len(deck.slides) != 1 or deck.slides[0].kind != ("etapas" if kind == "ciclo" else kind):
         raise DSLException(
             [Diagnostic(code="A003", severity="ERRO", message=f"Esperado um único slide {kind}.")]
         )
@@ -832,7 +837,7 @@ def generate_alto(
     result = result or GenerationResult(request=request)
     kinds = [
         k
-        for k in SLIDE_KINDS
+        for k in GEN_KINDS
         if (facts or k not in DATA_KINDS)
         and (images or k != "imagem")
         and data_kind_supported(k, facts)

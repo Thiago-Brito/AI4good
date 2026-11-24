@@ -18,7 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 APP_KINDS = {"capa", "secao", "topicos", "etapas", "conclusao", "numeros", "comparacao",
-             "linha_do_tempo", "citacao", "grafico", "imagem"}
+             "linha_do_tempo", "citacao", "grafico", "imagem", "ciclo"}
 OUT = ROOT / "mobile/app/test/fixtures/alto_slides.json"
 
 
@@ -52,7 +52,8 @@ def main(argv=None):
             skipped["erro"] += 1
             continue
         for s in deck.slides:
-            if s.kind not in APP_KINDS or s.cycle:
+            kind = "ciclo" if s.cycle else s.kind  # ciclo = etapas com cycle, escrito como bloco ciclo
+            if kind not in APP_KINDS:
                 skipped["tipo"] += 1
                 continue
             if s.image_file or (s.image_query and s.kind != "imagem"):
@@ -63,10 +64,10 @@ def main(argv=None):
             if digest in seen:
                 continue
             seen.add(digest)
-            if sum(c["kind"] == s.kind for c in cases) >= args.por_tipo:
+            if sum(c["kind"] == kind for c in cases) >= args.por_tipo:
                 continue
-            cases.append({"kind": s.kind, "text": text,
-                          "expected": slide_fields(_parse_slide_text(text, s.kind, "claro"))})
+            cases.append({"kind": kind, "text": text,
+                          "expected": slide_fields(_parse_slide_text(text, kind, "claro"))})
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps({"source": "scripts/export_alto_parity.py", "cases": cases},
                               ensure_ascii=False, separators=(",", ":")), "utf-8")

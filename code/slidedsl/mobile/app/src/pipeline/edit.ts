@@ -126,7 +126,7 @@ export async function redoSlide(result: GenerationResult, index: number, instruc
   const extra = `\nVersão atual deste slide: ${JSON.stringify(visible)}\n` + (instruction.trim()
     ? `Pedido do usuário para este slide: ${instruction.trim()}. Reescreva o slide atendendo ao pedido.`
     : 'Reescreva este slide com outra redação, mais clara.');
-  const {accepted, diagnostics} = await writeSlide(ctx, {...plan, tipo: current.kind}, index, extra);
+  const {accepted, diagnostics} = await writeSlide(ctx, {...plan, tipo: current.cycle ? 'ciclo' : current.kind}, index, extra);
   const calls = [...result.calls, ...recorder.calls];
   if (!accepted) throw new EditError('A IA não conseguiu refazer o slide; a versão anterior foi mantida.', diagnostics);
   // Slide de imagem: a foto já baixada continua (a busca nova não é refeita aqui).

@@ -1,0 +1,50 @@
+// Diagramas desenhados pelo compilador dentro do slide (formas editáveis): etapas viram caixas com setas,
+// ciclo vira caixas em volta com setas no sentido horário. A IA escreve só os itens.
+deck "Diagramas do compilador" {
+  tema claro
+  capa {
+    titulo "Diagramas desenhados pelo compilador"
+    subtitulo "A IA escreve os itens; o compilador calcula caixas, setas e barras"
+  }
+  etapas {
+    titulo "A fotossíntese em quatro etapas"
+    item "Luz absorvida" "A clorofila das folhas capta a luz do sol."
+    item "Água quebrada" "A água se divide e libera oxigênio no ar."
+    item "Gás carbônico fixado" "O gás carbônico do ar entra pela folha."
+    item "Glicose produzida" "A planta guarda a energia como açúcar."
+  }
+  ciclo {
+    titulo "O ciclo da água"
+    item "Evaporação" "O sol aquece a água dos rios e oceanos."
+    item "Condensação" "O vapor sobe, esfria e forma as nuvens."
+    item "Precipitação" "A água das nuvens cai como chuva."
+    item "Escoamento" "A água da chuva volta aos rios e mares."
+  }
+  ciclo {
+    titulo "Ciclo de melhoria em três fases"
+    item "Planejar" "A equipe define a meta da semana."
+    item "Fazer" "Cada pessoa executa as suas tarefas."
+    item "Revisar" "A equipe compara o resultado com a meta."
+  }
+  etapas {
+    titulo "Pedido online em cinco etapas"
+    item "Pedido" "O cliente escolhe o produto."
+    item "Pagamento" "O banco aprova o cartão."
+    item "Separação" "O estoque separa o pacote."
+    item "Envio" "A transportadora leva o pacote."
+    item "Entrega" "O cliente recebe em casa."
+  }
+  grafico {
+    titulo "Crescimento por luz"
+    unidade "cm em quatro semanas"
+    barra "Luz plena" 24
+    barra "Meia sombra" 15
+    barra "Sombra" 6
+    barra "Escuro" 1
+  }
+  conclusao {
+    titulo "Conteúdo da IA, desenho do compilador"
+    item "Conteúdo" "A IA escreve só os itens do diagrama."
+    item "Desenho" "O compilador calcula a geometria e confere o texto."
+  }
+}

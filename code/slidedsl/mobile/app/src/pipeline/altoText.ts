@@ -24,6 +24,7 @@ const ORDER: Record<string, string[]> = {
   secao: ['titulo', 'subtitulo', 'notas'],
   topicos: ['titulo', 'itens', 'fontes', 'notas'],
   etapas: ['titulo', 'itens', 'fontes', 'notas'],
+  ciclo: ['titulo', 'itens', 'fontes', 'notas'],  // etapas que se repetem; o compilador desenha em círculo
   conclusao: ['titulo', 'itens', 'fontes', 'notas'],
   numeros: ['titulo', 'valores', 'fontes', 'notas'],
   comparacao: ['titulo', 'lados', 'fontes', 'notas'],

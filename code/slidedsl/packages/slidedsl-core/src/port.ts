@@ -170,7 +170,7 @@ if (__py.truth(__py.or([() => (__py.cmp("Lt", __py.len(long_words), 2)), () => (
 return text;
 }
 (keep = (() => { let k; const result = []; for (k of __py.iter(keep)) { result.push(__py.method(k, "casefold")); } return new Set(result); })());
-return __py.method(" ", "join", (() => { let k, w; const result = []; for ([k, w] of __py.iter(__py.enumerate(words))) { result.push((__py.truth(__py.or([() => (__py.cmp("Eq", k, 0)), () => __py.method(w, "isupper"), () => (__py.cmp("In", __py.method(__py.method(w, "strip", ".,:;"), "casefold"), keep)), () => __py.any((() => { let c; const result = []; for (c of __py.iter(__py.slice(w, 1, null, null))) { result.push(__py.method(c, "isupper")); } return result; })())])) ? w : __py.method(w, "lower"))); } return result; })());
+return __py.method(" ", "join", (() => { let k, w; const result = []; for ([k, w] of __py.iter(__py.enumerate(words))) { result.push((__py.truth(__py.or([() => (__py.cmp("Eq", k, 0)), () => __py.and([() => __py.method(w, "isupper"), () => (__py.cmp("Gt", __py.len(w), 1))]), () => (__py.cmp("In", __py.method(__py.method(w, "strip", ".,:;"), "casefold"), keep)), () => __py.any((() => { let c; const result = []; for (c of __py.iter(__py.slice(w, 1, null, null))) { result.push(__py.method(c, "isupper")); } return result; })())])) ? w : __py.method(w, "lower"))); } return result; })());
 }
 
 function capitalize_first(...__args) {
@@ -1486,9 +1486,217 @@ cy = __py.bin("Add", cy, __py.bin("Add", __py.at(row_heights, j), MD));
 }
 }
 
+var ARROWS;
+(ARROWS = "→↘↓↙←↖↑↗");
+
+var BADGE;
+(BADGE = 20);
+
+function diagram_sizes_options(...__args) {
+var [b] = __py.bind(__args, ["b"], [undefined], false, false);
+var k, o, options;
+
+(options = [[b.label_pt, b.body_pt], [__py.bin("Sub", b.label_pt, 2), __py.bin("Sub", b.body_pt, 2)], [MIN_LABEL_PT, MIN_BODY_PT]]);
+return (() => { let k, o; const result = []; for ([k, o] of __py.iter(__py.enumerate(options))) { if (!__py.truth(__py.and([() => (__py.cmp("NotIn", o, __py.slice(options, null, k, null))), () => (__py.cmp("GtE", __py.at(o, 0), MIN_LABEL_PT)), () => (__py.cmp("GtE", __py.at(o, 1), MIN_BODY_PT))]))) continue; result.push(o); } return result; })();
+}
+
+function arrow_glyph(...__args) {
+var [dx, dy] = __py.bind(__args, ["dx", "dy"], [undefined, undefined], false, false);
+
+return __py.at(ARROWS, __py.bin("Mod", __py.round(__py.bin("Div", __py.math.atan2(dy, dx), __py.bin("Div", __py.math.pi, 4))), 8));
+}
+
+function diagram_content_height(...__args) {
+var [b, items, w, ls, ds] = __py.bind(__args, ["b", "items", "w", "ls", "ds"], [undefined, undefined, undefined, undefined, undefined], false, false);
+var detail_h, i, inner, label_h;
+
+(inner = __py.bin("Sub", w, __py.bin("Mult", 2, SM)));
+(label_h = __py.max((() => { let i; const result = []; for (i of __py.iter(items)) { result.push(__py.method(b, "height", i.label, inner, ls, true)); } return result; })()));
+(detail_h = __py.max(__py.bin("Add", (() => { let i; const result = []; for (i of __py.iter(items)) { if (!__py.truth(i.detail)) continue; result.push(__py.method(b, "height", i.detail, inner, ds)); } return result; })(), [0])));
+return __py.bin("Add", __py.bin("Add", __py.bin("Add", __py.bin("Mult", 2, BADGE), XS), label_h), (__py.truth(detail_h) ? __py.bin("Add", XS, detail_h) : 0));
+}
+
+function diagram_box_height(...__args) {
+var [b, items, w, ls, ds] = __py.bind(__args, ["b", "items", "w", "ls", "ds"], [undefined, undefined, undefined, undefined, undefined], false, false);
+return __py.bin("Add", __py.bin("Add", SM, diagram_content_height(b, items, w, ls, ds)), SM);
+}
+
+function words_fit(...__args) {
+var [b, items, w, ls, ds] = __py.bind(__args, ["b", "items", "w", "ls", "ds"], [undefined, undefined, undefined, undefined, undefined], false, false);
+var i, room, word;
+
+(room = __py.bin("Sub", __py.bin("Sub", w, __py.bin("Mult", 2, SM)), __py.bin("Mult", 2, __py.at(load_rules(), "text_padding"))));
+for (i of __py.iter(items)) {
+for (word of __py.iter(__py.method(i.label, "split"))) {
+if (__py.truth((__py.cmp("Gt", text_width(word, ls, true, __py.method(b, "family", ls, true)), room)))) {
+return false;
+}
+}
+for (word of __py.iter(__py.method(__py.or([() => i.detail, () => ""]), "split"))) {
+if (__py.truth((__py.cmp("Gt", text_width(word, ds, false, __py.method(b, "family", ds)), room)))) {
+return false;
+}
+}
+}
+return true;
+}
+
+function diagram_sizes(...__args) {
+var [b, items, w, max_h] = __py.bind(__args, ["b", "items", "w", "max_h"], [undefined, undefined, undefined, undefined], false, false);
+var ds, h, ls;
+
+for ([ls, ds] of __py.iter(diagram_sizes_options(b))) {
+(h = diagram_box_height(b, items, w, ls, ds));
+if (__py.truth(__py.and([() => (__py.cmp("LtE", h, max_h)), () => words_fit(b, items, w, ls, ds)]))) {
+return [ls, ds, h];
+}
+}
+return null;
+}
+
+function diagram_box(...__args) {
+var [b, item, k, path, x, y, w, h, ls, ds, label_h, content_h] = __py.bind(__args, ["b", "item", "k", "path", "x", "y", "w", "h", "ls", "ds", "label_h", "content_h"], [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], false, false);
+var dh, inner, lh, nh, p, ty;
+(p = b.palette);
+__py.method(b, "rect", "etapa", x, y, w, h, __py.at(p, "soft"), __py.kw({rounded: true}));
+(y = __py.bin("Sub", __py.bin("Add", y, __py.bin("Div", __py.bin("Sub", h, content_h), 2)), SM));
+__py.method(b, "rect", "numero_fundo", __py.bin("Sub", __py.bin("Add", x, __py.bin("Div", w, 2)), BADGE), __py.bin("Add", y, SM), __py.bin("Mult", 2, BADGE), __py.bin("Mult", 2, BADGE), __py.at(p, "primary"), __py.kw({rounded: true}));
+(nh = __py.method(b, "height", __py.str(__py.bin("Add", k, 1)), __py.bin("Mult", 2, BADGE), 16, true));
+__py.method(b, "text", "numero", __py.str(__py.bin("Add", k, 1)), __py.bin("Sub", __py.bin("Add", x, __py.bin("Div", w, 2)), BADGE), __py.bin("Sub", __py.bin("Add", __py.bin("Add", y, SM), BADGE), __py.bin("Div", nh, 2)), __py.bin("Mult", 2, BADGE), nh, 16, __py.at(p, "on_primary"), __py.kw({bold: true, align: "center"}));
+(inner = __py.bin("Sub", w, __py.bin("Mult", 2, SM)));
+(ty = __py.bin("Add", __py.bin("Add", __py.bin("Add", y, SM), __py.bin("Mult", 2, BADGE)), XS));
+(lh = __py.method(b, "height", item.label, inner, ls, true));
+__py.method(b, "text", "rotulo", item.label, __py.bin("Add", x, SM), ty, inner, lh, ls, __py.at(p, "text"), __py.kw({bold: true, align: "center", path: __py.bin("Add", path, ".label")}));
+if (__py.truth(item.detail)) {
+(dh = __py.method(b, "height", item.detail, inner, ds));
+__py.method(b, "text", "detalhe", item.detail, __py.bin("Add", x, SM), __py.bin("Add", __py.bin("Add", ty, label_h), XS), inner, dh, ds, __py.at(p, "muted"), __py.kw({align: "center", path: __py.bin("Add", path, ".detail")}));
+}
+}
+
+function diagram_arrow(...__args) {
+var [b, x, y, glyph] = __py.bind(__args, ["b", "x", "y", "glyph"], [undefined, undefined, undefined, undefined], false, false);
+var h;
+
+(h = needed_height(glyph, XL, 24, true));
+__py.method(b, "text", "seta", glyph, __py.bin("Sub", x, __py.bin("Div", XL, 2)), __py.bin("Sub", y, __py.bin("Div", h, 2)), XL, h, 24, __py.at(b.palette, "muted"), __py.kw({bold: true, align: "center"}));
+}
+
+function diagram_etapas(...__args) {
+var [b, s, base, top] = __py.bind(__args, ["b", "s", "base", "top"], [undefined, undefined, undefined, undefined], false, false);
+var content_h, ds, fit, h, i, item, k, label_h, ls, n, w, x, y;
+
+(n = __py.len(s.items));
+(w = __py.bin("Div", __py.bin("Sub", __py.bin("Sub", W, __py.bin("Mult", 2, M)), __py.bin("Mult", __py.bin("Sub", n, 1), XL)), n));
+if (__py.truth((__py.cmp("Lt", w, 180)))) {
+return false;
+}
+(fit = diagram_sizes(b, s.items, w, __py.bin("Sub", CONTENT_BOTTOM, top)));
+if (__py.truth((__py.cmp("Is", fit, null)))) {
+return false;
+}
+([ls, ds, h] = fit);
+(label_h = __py.max((() => { let i; const result = []; for (i of __py.iter(s.items)) { result.push(__py.method(b, "height", i.label, __py.bin("Sub", w, __py.bin("Mult", 2, SM)), ls, true)); } return result; })()));
+(content_h = diagram_content_height(b, s.items, w, ls, ds));
+(h = __py.max(h, __py.bin("Mult", __py.bin("Sub", CONTENT_BOTTOM, top), 0.55)));
+(y = card_position(top, h));
+for ([k, item] of __py.iter(__py.enumerate(s.items))) {
+(x = __py.bin("Add", M, __py.bin("Mult", k, __py.bin("Add", w, XL))));
+if (__py.truth((__py.cmp("Lt", k, __py.bin("Sub", n, 1))))) {
+diagram_arrow(b, __py.bin("Add", __py.bin("Add", x, w), __py.bin("Div", XL, 2)), __py.bin("Add", y, __py.bin("Div", h, 2)), "→");
+}
+diagram_box(b, item, k, (__py.format(base, "", -1) + ".items." + __py.format(k, "", -1)), x, y, w, h, ls, ds, label_h, content_h);
+}
+return true;
+}
+
+function clip_to_box(...__args) {
+var [cx, cy, tx, ty, hw, hh] = __py.bind(__args, ["cx", "cy", "tx", "ty", "hw", "hh"], [undefined, undefined, undefined, undefined, undefined, undefined], false, false);
+var dx, dy, k, sx, sy;
+
+([dx, dy] = [__py.bin("Sub", tx, cx), __py.bin("Sub", ty, cy)]);
+(sx = (__py.truth(dx) ? __py.bin("Div", hw, __py.abs(dx)) : 1000000000.0));
+(sy = (__py.truth(dy) ? __py.bin("Div", hh, __py.abs(dy)) : 1000000000.0));
+(k = __py.min(sx, sy));
+return [__py.bin("Add", cx, __py.bin("Mult", dx, k)), __py.bin("Add", cy, __py.bin("Mult", dy, k))];
+}
+
+function boxes_apart(...__args) {
+var [a, c, gap] = __py.bind(__args, ["a", "c", "gap"], [undefined, undefined, undefined], false, false);
+return __py.or([() => (__py.cmp("LtE", __py.bin("Add", __py.bin("Add", __py.at(a, 0), __py.at(a, 2)), gap), __py.at(c, 0))), () => (__py.cmp("LtE", __py.bin("Add", __py.bin("Add", __py.at(c, 0), __py.at(c, 2)), gap), __py.at(a, 0))), () => (__py.cmp("LtE", __py.bin("Add", __py.bin("Add", __py.at(a, 1), __py.at(a, 3)), gap), __py.at(c, 1))), () => (__py.cmp("LtE", __py.bin("Add", __py.bin("Add", __py.at(c, 1), __py.at(c, 3)), gap), __py.at(a, 1)))]);
+}
+
+function ciclo_geometry(...__args) {
+var [n, bw, bh, top] = __py.bind(__args, ["n", "bw", "bh", "top"], [undefined, undefined, undefined, undefined], false, false);
+var arrows, avail, ax, ay, box, boxes, centers, cx, cx0, cy, cy0, i, j, k, mx, my, rx, ry, spot, x1, x2, y1, y2;
+
+(avail = __py.bin("Sub", CONTENT_BOTTOM, top));
+([rx, ry] = [__py.bin("Div", __py.bin("Sub", __py.bin("Sub", W, __py.bin("Mult", 2, M)), bw), 2), __py.bin("Div", __py.bin("Sub", avail, bh), 2)]);
+if (__py.truth((__py.cmp("LtE", ry, 0)))) {
+return null;
+}
+([cx0, cy0] = [__py.bin("Div", W, 2), __py.bin("Add", top, __py.bin("Div", avail, 2))]);
+(centers = (() => { let k; const result = []; for (k of __py.iter(__py.range(n))) { result.push([__py.bin("Add", cx0, __py.bin("Mult", rx, __py.math.sin(__py.bin("Div", __py.bin("Mult", __py.bin("Mult", 2, __py.math.pi), k), n)))), __py.bin("Sub", cy0, __py.bin("Mult", ry, __py.math.cos(__py.bin("Div", __py.bin("Mult", __py.bin("Mult", 2, __py.math.pi), k), n))))]); } return result; })());
+(boxes = (() => { let cx, cy; const result = []; for ([cx, cy] of __py.iter(centers)) { result.push([__py.bin("Sub", cx, __py.bin("Div", bw, 2)), __py.bin("Sub", cy, __py.bin("Div", bh, 2)), bw, bh]); } return result; })());
+for (i of __py.iter(__py.range(n))) {
+for (j of __py.iter(__py.range(__py.bin("Add", i, 1), n))) {
+if (__py.truth(!__py.truth(boxes_apart(__py.at(boxes, i), __py.at(boxes, j), MD)))) {
+return null;
+}
+}
+}
+(arrows = []);
+for (k of __py.iter(__py.range(n))) {
+([[ax, ay], [cx, cy]] = [__py.at(centers, k), __py.at(centers, __py.bin("Mod", __py.bin("Add", k, 1), n))]);
+([x1, y1] = clip_to_box(ax, ay, cx, cy, __py.bin("Div", bw, 2), __py.bin("Div", bh, 2)));
+([x2, y2] = clip_to_box(cx, cy, ax, ay, __py.bin("Div", bw, 2), __py.bin("Div", bh, 2)));
+([mx, my] = [__py.bin("Div", __py.bin("Add", x1, x2), 2), __py.bin("Div", __py.bin("Add", y1, y2), 2)]);
+(spot = [__py.bin("Sub", mx, __py.bin("Div", XL, 2)), __py.bin("Sub", my, __py.bin("Div", XL, 2)), XL, XL]);
+if (__py.truth(!__py.truth(__py.all((() => { let box; const result = []; for (box of __py.iter(boxes)) { result.push(boxes_apart(spot, box, 0)); } return result; })())))) {
+return null;
+}
+__py.method(arrows, "append", [mx, my, arrow_glyph(__py.bin("Sub", cx, ax), __py.bin("Sub", cy, ay))]);
+}
+return [boxes, arrows];
+}
+
+function diagram_ciclo(...__args) {
+var [b, s, base, top] = __py.bind(__args, ["b", "s", "base", "top"], [undefined, undefined, undefined, undefined], false, false);
+var arrows, bh, boxes, bw, ds, geometry, glyph, i, item, k, label_h, ls, mx, my, n;
+
+(n = __py.len(s.items));
+if (__py.truth(!__py.truth((__py.cmp("LtE", 3, n) && __py.cmp("LtE", n, 5))))) {
+return false;
+}
+for (bw of __py.iter((__py.truth((__py.cmp("LtE", n, 4))) ? [340, 300] : [280, 240]))) {
+for ([ls, ds] of __py.iter(diagram_sizes_options(b))) {
+if (__py.truth(!__py.truth(words_fit(b, s.items, bw, ls, ds)))) {
+continue;
+}
+(bh = diagram_box_height(b, s.items, bw, ls, ds));
+(geometry = ciclo_geometry(n, bw, bh, top));
+if (__py.truth((__py.cmp("Is", geometry, null)))) {
+continue;
+}
+([boxes, arrows] = geometry);
+for ([mx, my, glyph] of __py.iter(arrows)) {
+diagram_arrow(b, mx, my, glyph);
+}
+(label_h = __py.max((() => { let i; const result = []; for (i of __py.iter(s.items)) { result.push(__py.method(b, "height", i.label, __py.bin("Sub", bw, __py.bin("Mult", 2, SM)), ls, true)); } return result; })()));
+for ([k, item] of __py.iter(__py.enumerate(s.items))) {
+diagram_box(b, item, k, (__py.format(base, "", -1) + ".items." + __py.format(k, "", -1)), __py.at(__py.at(boxes, k), 0), __py.at(__py.at(boxes, k), 1), bw, bh, ls, ds, label_h, __py.bin("Sub", bh, __py.bin("Mult", 2, SM)));
+}
+return true;
+}
+}
+return false;
+}
+
 function layout_etapas(...__args) {
 var [b, s, base, deck, top] = __py.bind(__args, ["b", "s", "base", "deck", "top"], [undefined, undefined, undefined, undefined, undefined], false, false);
 var original, w, x;
+if (__py.truth((__py.truth(s.cycle) ? diagram_ciclo(b, s, base, top) : diagram_etapas(b, s, base, top)))) {
+return null;
+}
 
 (original = b.style);
 (b.style = __py.replace(b.style, __py.kw({marcador: "numero"})));
@@ -1748,4 +1956,4 @@ return [PresentationNode(__py.kw({title: deck.title, theme: base_theme, slides: 
 
 import { photo, variants_for } from './images.js';
 
-export { box, intersection, area, union_area, distance, bounds, resolve_position, aligned_position, translate, resize_group, TITLE_PT, LABEL_PT, BODY_PT, CREDIT_PT, MIN_TITLE_PT, MIN_LABEL_PT, MIN_BODY_PT, MIN_SUBTITLE_PT, proper_words, sentence_case, capitalize_first, normalized, distinct_label, visible_labels, ordered_steps, balanced_title, composition, WIDTH, HEIGHT, MARGIN, RIGHT, GUTTER, SPACES, XS, SM, MD, LG, XL, XXL, TITLE_Y, CONTENT_BOTTOM, CARD_PADDING, LABEL_GAP, RULE, OPTICAL_CENTER, MIN_BLOCK_FRACTION, OPTICAL_LABEL_PT, COL_WIDTH, card_position, col, distribute, Estilo, title_style, luminance, contrast, known_background, estimated_overflow, check_design, WEIGHTS, BLOCKERS, occupancy, occupation_score, balance, alignment, regularity, rhythm, aggregate, useful_elements, score_slide, content_preference, choose, OCCUPANCY_MINIMUM, content_occupancy, LIMITS, TEXT_LIMITS, GENERIC, _digits, number_tokens, _norm, validate_alto, PALETTES, _palette, _PALETTE_STYLES, STYLE_ATTRIBUTES, STYLES, RENDER_BG, FEATURE_KINDS, needed_height, Builder, source_label, header, LABELED_REF, footer, uniform, label_detail_sizes, layout_capa, layout_secao, editorial_items, check_block_bottom, draw_item, layout_topicos, layout_numeros, comparison_columns, layout_comparacao, layout_etapas, layout_linha, layout_citacao, br_number, layout_grafico, layout_imagem, layout_conclusao, full_notes, alto_to_ast };
+export { box, intersection, area, union_area, distance, bounds, resolve_position, aligned_position, translate, resize_group, TITLE_PT, LABEL_PT, BODY_PT, CREDIT_PT, MIN_TITLE_PT, MIN_LABEL_PT, MIN_BODY_PT, MIN_SUBTITLE_PT, proper_words, sentence_case, capitalize_first, normalized, distinct_label, visible_labels, ordered_steps, balanced_title, composition, WIDTH, HEIGHT, MARGIN, RIGHT, GUTTER, SPACES, XS, SM, MD, LG, XL, XXL, TITLE_Y, CONTENT_BOTTOM, CARD_PADDING, LABEL_GAP, RULE, OPTICAL_CENTER, MIN_BLOCK_FRACTION, OPTICAL_LABEL_PT, COL_WIDTH, card_position, col, distribute, Estilo, title_style, luminance, contrast, known_background, estimated_overflow, check_design, WEIGHTS, BLOCKERS, occupancy, occupation_score, balance, alignment, regularity, rhythm, aggregate, useful_elements, score_slide, content_preference, choose, OCCUPANCY_MINIMUM, content_occupancy, LIMITS, TEXT_LIMITS, GENERIC, _digits, number_tokens, _norm, validate_alto, PALETTES, _palette, _PALETTE_STYLES, STYLE_ATTRIBUTES, STYLES, RENDER_BG, FEATURE_KINDS, needed_height, Builder, source_label, header, LABELED_REF, footer, uniform, label_detail_sizes, layout_capa, layout_secao, editorial_items, check_block_bottom, draw_item, layout_topicos, layout_numeros, comparison_columns, layout_comparacao, ARROWS, BADGE, diagram_sizes_options, arrow_glyph, diagram_content_height, diagram_box_height, words_fit, diagram_sizes, diagram_box, diagram_arrow, diagram_etapas, clip_to_box, boxes_apart, ciclo_geometry, diagram_ciclo, layout_etapas, layout_linha, layout_citacao, br_number, layout_grafico, layout_imagem, layout_conclusao, full_notes, alto_to_ast };

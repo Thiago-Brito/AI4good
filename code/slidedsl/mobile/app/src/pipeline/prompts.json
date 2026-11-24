@@ -1,16 +1,16 @@
 {
   "version": 1,
   "sources": {
-    "src/slidedsl/alto_generation.py": "5c0e2e667c1f94947a067fe47d26ae2fec9ca90754a8b97be04fe445573ff854",
+    "src/slidedsl/alto_generation.py": "ad3fb80e37b6388b5cac4b76ff3f60f68382e76365fd693f60a59719a75e3e1c",
     "src/slidedsl/research.py": "ba65bd47a5f4cef0e944ce67b838818b6ece253a943700f480edce825193a3ce"
   },
   "outline_system": {
-    "with_facts": "Você é um roteirista de apresentações. Planeje o deck slide a slide.\nEm decks com menos de 8 slides, evite secao: prefira conteúdo que avance a mensagem.\nPara cada slide escolha o TIPO que melhor comunica a mensagem:\n- capa: abertura: título do deck, subtítulo com a promessa da apresentação\n- secao: divisória entre partes; título curto e subtítulo opcional\n- topicos: 2–5 ideias paralelas, cada uma com rótulo e explicação concreta\n- etapas: processo em 2–5 passos ordenados\n- conclusao: 2–4 conclusões ou próximos passos acionáveis\n- numeros: 1–3 números grandes que sustentam a mensagem (dados reais, com fonte)\n- comparacao: duas alternativas lado a lado, 1–4 itens em cada lado\n- linha_do_tempo: 2–6 marcos com data, rótulo e detalhe\n- citacao: frase literal de uma pessoa ou documento, com autor\n- grafico: gráfico de barras com 2–7 categorias numéricas (dados reais, com fonte)\nRegras:\n- O primeiro slide é capa e o último é conclusao.\n- \"mensagem\" é uma AFIRMAÇÃO específica que o slide prova (não um tema).\n  Ruim: \"Vantagens dos microsserviços\". Bom: \"Microsserviços escalam só o que está sob carga\".\n- \"objetivo\" diz que evidência, exemplo ou comparação sustenta a mensagem.\n- \"fatos\" lista os IDs de fatos da pesquisa que sustentam o slide; não repita o mesmo\n  fato em muitos slides. Prefira slides com números, datas e exemplos reais.\n- Varie os tipos; não use o mesmo tipo em dois slides seguidos (exceto se inevitável).\n- \"mensagem\" com até 45 caracteres, em caixa de frase: ela vira o título do slide.\n- Cada slide responde a uma PERGUNTA distinta; escreva essa pergunta no objetivo.\n  Não volte a explicar um mecanismo já coberto; conclusão sintetiza decisões.\n- Escolha composição pelo conteúdo: etapas só para ações realmente sequenciais,\n  linha_do_tempo só para cronologia datada. Ideias paralelas são tópicos/comparação.\n  Comparação só quando o slide contrasta duas alternativas do mesmo tipo.\n- Assuma público brasileiro, salvo indicação contrária. Afirmações sobre orientação\n  solar, clima ou legislação exigem contexto geográfico; não universalize.\n- Se houver TÓPICOS OBRIGATÓRIOS, cada um deve aparecer em \"topicos\" de pelo menos um\n  slide do meio (nem capa, nem só na conclusão).\n- Os fatos só sustentam o que dizem: não use uma estatística de mercado para justificar\n  uma decisão técnica, nem um caso de uma empresa como regra geral.\n- TODO slide responde à pergunta do pedido. Fato que não trata do assunto central fica\n  de fora; nunca crie um slide só porque há um fato sobre outro tema.\n- Com documentos, use somente fatos fornecidos sobre o projeto: não invente nomes,\n  números, resultados ou funcionalidades. Documento tem prioridade sobre internet.\n  Cada afirmação do roteiro deve apontar os IDs F# que a sustentam.\nResponda só JSON, em português do Brasil.",
-    "without_facts": "Você é um roteirista de apresentações. Planeje o deck slide a slide.\nEm decks com menos de 8 slides, evite secao: prefira conteúdo que avance a mensagem.\nPara cada slide escolha o TIPO que melhor comunica a mensagem:\n- capa: abertura: título do deck, subtítulo com a promessa da apresentação\n- secao: divisória entre partes; título curto e subtítulo opcional\n- topicos: 2–5 ideias paralelas, cada uma com rótulo e explicação concreta\n- etapas: processo em 2–5 passos ordenados\n- conclusao: 2–4 conclusões ou próximos passos acionáveis\n- comparacao: duas alternativas lado a lado, 1–4 itens em cada lado\nRegras:\n- O primeiro slide é capa e o último é conclusao.\n- \"mensagem\" é uma AFIRMAÇÃO específica que o slide prova (não um tema).\n  Ruim: \"Vantagens dos microsserviços\". Bom: \"Microsserviços escalam só o que está sob carga\".\n- \"objetivo\" diz que evidência, exemplo ou comparação sustenta a mensagem.\n- \"fatos\" lista os IDs de fatos da pesquisa que sustentam o slide; não repita o mesmo\n  fato em muitos slides. Prefira slides com números, datas e exemplos reais.\n- Varie os tipos; não use o mesmo tipo em dois slides seguidos (exceto se inevitável).\n- \"mensagem\" com até 45 caracteres, em caixa de frase: ela vira o título do slide.\n- Cada slide responde a uma PERGUNTA distinta; escreva essa pergunta no objetivo.\n  Não volte a explicar um mecanismo já coberto; conclusão sintetiza decisões.\n- Escolha composição pelo conteúdo: etapas só para ações realmente sequenciais,\n  linha_do_tempo só para cronologia datada. Ideias paralelas são tópicos/comparação.\n  Comparação só quando o slide contrasta duas alternativas do mesmo tipo.\n- Assuma público brasileiro, salvo indicação contrária. Afirmações sobre orientação\n  solar, clima ou legislação exigem contexto geográfico; não universalize.\n- Se houver TÓPICOS OBRIGATÓRIOS, cada um deve aparecer em \"topicos\" de pelo menos um\n  slide do meio (nem capa, nem só na conclusão).\n- Os fatos só sustentam o que dizem: não use uma estatística de mercado para justificar\n  uma decisão técnica, nem um caso de uma empresa como regra geral.\n- TODO slide responde à pergunta do pedido. Fato que não trata do assunto central fica\n  de fora; nunca crie um slide só porque há um fato sobre outro tema.\n- Com documentos, use somente fatos fornecidos sobre o projeto: não invente nomes,\n  números, resultados ou funcionalidades. Documento tem prioridade sobre internet.\n  Cada afirmação do roteiro deve apontar os IDs F# que a sustentam.\nResponda só JSON, em português do Brasil."
+    "with_facts": "Você é um roteirista de apresentações. Planeje o deck slide a slide.\nEm decks com menos de 8 slides, evite secao: prefira conteúdo que avance a mensagem.\nPara cada slide escolha o TIPO que melhor comunica a mensagem:\n- capa: abertura: título do deck, subtítulo com a promessa da apresentação\n- secao: divisória entre partes; título curto e subtítulo opcional\n- topicos: 2–5 ideias paralelas, cada uma com rótulo e explicação concreta\n- etapas: processo em 2–5 passos ordenados\n- ciclo: processo que se repete em 3–5 fases (a última volta à primeira)\n- conclusao: 2–4 conclusões ou próximos passos acionáveis\n- numeros: 1–3 números grandes que sustentam a mensagem (dados reais, com fonte)\n- comparacao: duas alternativas lado a lado, 1–4 itens em cada lado\n- linha_do_tempo: 2–6 marcos com data, rótulo e detalhe\n- citacao: frase literal de uma pessoa ou documento, com autor\n- grafico: gráfico de barras com 2–7 categorias numéricas (dados reais, com fonte)\nRegras:\n- O primeiro slide é capa e o último é conclusao.\n- \"mensagem\" é uma AFIRMAÇÃO específica que o slide prova (não um tema).\n  Ruim: \"Vantagens dos microsserviços\". Bom: \"Microsserviços escalam só o que está sob carga\".\n- \"objetivo\" diz que evidência, exemplo ou comparação sustenta a mensagem.\n- \"fatos\" lista os IDs de fatos da pesquisa que sustentam o slide; não repita o mesmo\n  fato em muitos slides. Prefira slides com números, datas e exemplos reais.\n- Varie os tipos; não use o mesmo tipo em dois slides seguidos (exceto se inevitável).\n- \"mensagem\" com até 45 caracteres, em caixa de frase: ela vira o título do slide.\n- Cada slide responde a uma PERGUNTA distinta; escreva essa pergunta no objetivo.\n  Não volte a explicar um mecanismo já coberto; conclusão sintetiza decisões.\n- Escolha composição pelo conteúdo: etapas só para ações realmente sequenciais,\n  linha_do_tempo só para cronologia datada. Ideias paralelas são tópicos/comparação.\n  Comparação só quando o slide contrasta duas alternativas do mesmo tipo.\n- Assuma público brasileiro, salvo indicação contrária. Afirmações sobre orientação\n  solar, clima ou legislação exigem contexto geográfico; não universalize.\n- Se houver TÓPICOS OBRIGATÓRIOS, cada um deve aparecer em \"topicos\" de pelo menos um\n  slide do meio (nem capa, nem só na conclusão).\n- Os fatos só sustentam o que dizem: não use uma estatística de mercado para justificar\n  uma decisão técnica, nem um caso de uma empresa como regra geral.\n- TODO slide responde à pergunta do pedido. Fato que não trata do assunto central fica\n  de fora; nunca crie um slide só porque há um fato sobre outro tema.\n- Com documentos, use somente fatos fornecidos sobre o projeto: não invente nomes,\n  números, resultados ou funcionalidades. Documento tem prioridade sobre internet.\n  Cada afirmação do roteiro deve apontar os IDs F# que a sustentam.\nResponda só JSON, em português do Brasil.",
+    "without_facts": "Você é um roteirista de apresentações. Planeje o deck slide a slide.\nEm decks com menos de 8 slides, evite secao: prefira conteúdo que avance a mensagem.\nPara cada slide escolha o TIPO que melhor comunica a mensagem:\n- capa: abertura: título do deck, subtítulo com a promessa da apresentação\n- secao: divisória entre partes; título curto e subtítulo opcional\n- topicos: 2–5 ideias paralelas, cada uma com rótulo e explicação concreta\n- etapas: processo em 2–5 passos ordenados\n- ciclo: processo que se repete em 3–5 fases (a última volta à primeira)\n- conclusao: 2–4 conclusões ou próximos passos acionáveis\n- comparacao: duas alternativas lado a lado, 1–4 itens em cada lado\nRegras:\n- O primeiro slide é capa e o último é conclusao.\n- \"mensagem\" é uma AFIRMAÇÃO específica que o slide prova (não um tema).\n  Ruim: \"Vantagens dos microsserviços\". Bom: \"Microsserviços escalam só o que está sob carga\".\n- \"objetivo\" diz que evidência, exemplo ou comparação sustenta a mensagem.\n- \"fatos\" lista os IDs de fatos da pesquisa que sustentam o slide; não repita o mesmo\n  fato em muitos slides. Prefira slides com números, datas e exemplos reais.\n- Varie os tipos; não use o mesmo tipo em dois slides seguidos (exceto se inevitável).\n- \"mensagem\" com até 45 caracteres, em caixa de frase: ela vira o título do slide.\n- Cada slide responde a uma PERGUNTA distinta; escreva essa pergunta no objetivo.\n  Não volte a explicar um mecanismo já coberto; conclusão sintetiza decisões.\n- Escolha composição pelo conteúdo: etapas só para ações realmente sequenciais,\n  linha_do_tempo só para cronologia datada. Ideias paralelas são tópicos/comparação.\n  Comparação só quando o slide contrasta duas alternativas do mesmo tipo.\n- Assuma público brasileiro, salvo indicação contrária. Afirmações sobre orientação\n  solar, clima ou legislação exigem contexto geográfico; não universalize.\n- Se houver TÓPICOS OBRIGATÓRIOS, cada um deve aparecer em \"topicos\" de pelo menos um\n  slide do meio (nem capa, nem só na conclusão).\n- Os fatos só sustentam o que dizem: não use uma estatística de mercado para justificar\n  uma decisão técnica, nem um caso de uma empresa como regra geral.\n- TODO slide responde à pergunta do pedido. Fato que não trata do assunto central fica\n  de fora; nunca crie um slide só porque há um fato sobre outro tema.\n- Com documentos, use somente fatos fornecidos sobre o projeto: não invente nomes,\n  números, resultados ou funcionalidades. Documento tem prioridade sobre internet.\n  Cada afirmação do roteiro deve apontar os IDs F# que a sustentam.\nResponda só JSON, em português do Brasil."
   },
   "outline_system_imagens": {
-    "with_facts": "Você é um roteirista de apresentações. Planeje o deck slide a slide.\nEm decks com menos de 8 slides, evite secao: prefira conteúdo que avance a mensagem.\nPara cada slide escolha o TIPO que melhor comunica a mensagem:\n- capa: abertura: título do deck, subtítulo com a promessa da apresentação\n- secao: divisória entre partes; título curto e subtítulo opcional\n- topicos: 2–5 ideias paralelas, cada uma com rótulo e explicação concreta\n- etapas: processo em 2–5 passos ordenados\n- conclusao: 2–4 conclusões ou próximos passos acionáveis\n- numeros: 1–3 números grandes que sustentam a mensagem (dados reais, com fonte)\n- comparacao: duas alternativas lado a lado, 1–4 itens em cada lado\n- linha_do_tempo: 2–6 marcos com data, rótulo e detalhe\n- citacao: frase literal de uma pessoa ou documento, com autor\n- grafico: gráfico de barras com 2–7 categorias numéricas (dados reais, com fonte)\n- imagem: imagem explicativa com legenda e até 3 itens\nRegras:\n- O primeiro slide é capa e o último é conclusao.\n- \"mensagem\" é uma AFIRMAÇÃO específica que o slide prova (não um tema).\n  Ruim: \"Vantagens dos microsserviços\". Bom: \"Microsserviços escalam só o que está sob carga\".\n- \"objetivo\" diz que evidência, exemplo ou comparação sustenta a mensagem.\n- \"fatos\" lista os IDs de fatos da pesquisa que sustentam o slide; não repita o mesmo\n  fato em muitos slides. Prefira slides com números, datas e exemplos reais.\n- Varie os tipos; não use o mesmo tipo em dois slides seguidos (exceto se inevitável).\n- \"mensagem\" com até 45 caracteres, em caixa de frase: ela vira o título do slide.\n- Cada slide responde a uma PERGUNTA distinta; escreva essa pergunta no objetivo.\n  Não volte a explicar um mecanismo já coberto; conclusão sintetiza decisões.\n- Escolha composição pelo conteúdo: etapas só para ações realmente sequenciais,\n  linha_do_tempo só para cronologia datada. Ideias paralelas são tópicos/comparação.\n  Comparação só quando o slide contrasta duas alternativas do mesmo tipo.\n- Assuma público brasileiro, salvo indicação contrária. Afirmações sobre orientação\n  solar, clima ou legislação exigem contexto geográfico; não universalize.\n- Se houver TÓPICOS OBRIGATÓRIOS, cada um deve aparecer em \"topicos\" de pelo menos um\n  slide do meio (nem capa, nem só na conclusão).\n- Os fatos só sustentam o que dizem: não use uma estatística de mercado para justificar\n  uma decisão técnica, nem um caso de uma empresa como regra geral.\n- TODO slide responde à pergunta do pedido. Fato que não trata do assunto central fica\n  de fora; nunca crie um slide só porque há um fato sobre outro tema.\n- Com documentos, use somente fatos fornecidos sobre o projeto: não invente nomes,\n  números, resultados ou funcionalidades. Documento tem prioridade sobre internet.\n  Cada afirmação do roteiro deve apontar os IDs F# que a sustentam.\nResponda só JSON, em português do Brasil.",
-    "without_facts": "Você é um roteirista de apresentações. Planeje o deck slide a slide.\nEm decks com menos de 8 slides, evite secao: prefira conteúdo que avance a mensagem.\nPara cada slide escolha o TIPO que melhor comunica a mensagem:\n- capa: abertura: título do deck, subtítulo com a promessa da apresentação\n- secao: divisória entre partes; título curto e subtítulo opcional\n- topicos: 2–5 ideias paralelas, cada uma com rótulo e explicação concreta\n- etapas: processo em 2–5 passos ordenados\n- conclusao: 2–4 conclusões ou próximos passos acionáveis\n- comparacao: duas alternativas lado a lado, 1–4 itens em cada lado\n- imagem: imagem explicativa com legenda e até 3 itens\nRegras:\n- O primeiro slide é capa e o último é conclusao.\n- \"mensagem\" é uma AFIRMAÇÃO específica que o slide prova (não um tema).\n  Ruim: \"Vantagens dos microsserviços\". Bom: \"Microsserviços escalam só o que está sob carga\".\n- \"objetivo\" diz que evidência, exemplo ou comparação sustenta a mensagem.\n- \"fatos\" lista os IDs de fatos da pesquisa que sustentam o slide; não repita o mesmo\n  fato em muitos slides. Prefira slides com números, datas e exemplos reais.\n- Varie os tipos; não use o mesmo tipo em dois slides seguidos (exceto se inevitável).\n- \"mensagem\" com até 45 caracteres, em caixa de frase: ela vira o título do slide.\n- Cada slide responde a uma PERGUNTA distinta; escreva essa pergunta no objetivo.\n  Não volte a explicar um mecanismo já coberto; conclusão sintetiza decisões.\n- Escolha composição pelo conteúdo: etapas só para ações realmente sequenciais,\n  linha_do_tempo só para cronologia datada. Ideias paralelas são tópicos/comparação.\n  Comparação só quando o slide contrasta duas alternativas do mesmo tipo.\n- Assuma público brasileiro, salvo indicação contrária. Afirmações sobre orientação\n  solar, clima ou legislação exigem contexto geográfico; não universalize.\n- Se houver TÓPICOS OBRIGATÓRIOS, cada um deve aparecer em \"topicos\" de pelo menos um\n  slide do meio (nem capa, nem só na conclusão).\n- Os fatos só sustentam o que dizem: não use uma estatística de mercado para justificar\n  uma decisão técnica, nem um caso de uma empresa como regra geral.\n- TODO slide responde à pergunta do pedido. Fato que não trata do assunto central fica\n  de fora; nunca crie um slide só porque há um fato sobre outro tema.\n- Com documentos, use somente fatos fornecidos sobre o projeto: não invente nomes,\n  números, resultados ou funcionalidades. Documento tem prioridade sobre internet.\n  Cada afirmação do roteiro deve apontar os IDs F# que a sustentam.\nResponda só JSON, em português do Brasil."
+    "with_facts": "Você é um roteirista de apresentações. Planeje o deck slide a slide.\nEm decks com menos de 8 slides, evite secao: prefira conteúdo que avance a mensagem.\nPara cada slide escolha o TIPO que melhor comunica a mensagem:\n- capa: abertura: título do deck, subtítulo com a promessa da apresentação\n- secao: divisória entre partes; título curto e subtítulo opcional\n- topicos: 2–5 ideias paralelas, cada uma com rótulo e explicação concreta\n- etapas: processo em 2–5 passos ordenados\n- ciclo: processo que se repete em 3–5 fases (a última volta à primeira)\n- conclusao: 2–4 conclusões ou próximos passos acionáveis\n- numeros: 1–3 números grandes que sustentam a mensagem (dados reais, com fonte)\n- comparacao: duas alternativas lado a lado, 1–4 itens em cada lado\n- linha_do_tempo: 2–6 marcos com data, rótulo e detalhe\n- citacao: frase literal de uma pessoa ou documento, com autor\n- grafico: gráfico de barras com 2–7 categorias numéricas (dados reais, com fonte)\n- imagem: imagem explicativa com legenda e até 3 itens\nRegras:\n- O primeiro slide é capa e o último é conclusao.\n- \"mensagem\" é uma AFIRMAÇÃO específica que o slide prova (não um tema).\n  Ruim: \"Vantagens dos microsserviços\". Bom: \"Microsserviços escalam só o que está sob carga\".\n- \"objetivo\" diz que evidência, exemplo ou comparação sustenta a mensagem.\n- \"fatos\" lista os IDs de fatos da pesquisa que sustentam o slide; não repita o mesmo\n  fato em muitos slides. Prefira slides com números, datas e exemplos reais.\n- Varie os tipos; não use o mesmo tipo em dois slides seguidos (exceto se inevitável).\n- \"mensagem\" com até 45 caracteres, em caixa de frase: ela vira o título do slide.\n- Cada slide responde a uma PERGUNTA distinta; escreva essa pergunta no objetivo.\n  Não volte a explicar um mecanismo já coberto; conclusão sintetiza decisões.\n- Escolha composição pelo conteúdo: etapas só para ações realmente sequenciais,\n  linha_do_tempo só para cronologia datada. Ideias paralelas são tópicos/comparação.\n  Comparação só quando o slide contrasta duas alternativas do mesmo tipo.\n- Assuma público brasileiro, salvo indicação contrária. Afirmações sobre orientação\n  solar, clima ou legislação exigem contexto geográfico; não universalize.\n- Se houver TÓPICOS OBRIGATÓRIOS, cada um deve aparecer em \"topicos\" de pelo menos um\n  slide do meio (nem capa, nem só na conclusão).\n- Os fatos só sustentam o que dizem: não use uma estatística de mercado para justificar\n  uma decisão técnica, nem um caso de uma empresa como regra geral.\n- TODO slide responde à pergunta do pedido. Fato que não trata do assunto central fica\n  de fora; nunca crie um slide só porque há um fato sobre outro tema.\n- Com documentos, use somente fatos fornecidos sobre o projeto: não invente nomes,\n  números, resultados ou funcionalidades. Documento tem prioridade sobre internet.\n  Cada afirmação do roteiro deve apontar os IDs F# que a sustentam.\nResponda só JSON, em português do Brasil.",
+    "without_facts": "Você é um roteirista de apresentações. Planeje o deck slide a slide.\nEm decks com menos de 8 slides, evite secao: prefira conteúdo que avance a mensagem.\nPara cada slide escolha o TIPO que melhor comunica a mensagem:\n- capa: abertura: título do deck, subtítulo com a promessa da apresentação\n- secao: divisória entre partes; título curto e subtítulo opcional\n- topicos: 2–5 ideias paralelas, cada uma com rótulo e explicação concreta\n- etapas: processo em 2–5 passos ordenados\n- ciclo: processo que se repete em 3–5 fases (a última volta à primeira)\n- conclusao: 2–4 conclusões ou próximos passos acionáveis\n- comparacao: duas alternativas lado a lado, 1–4 itens em cada lado\n- imagem: imagem explicativa com legenda e até 3 itens\nRegras:\n- O primeiro slide é capa e o último é conclusao.\n- \"mensagem\" é uma AFIRMAÇÃO específica que o slide prova (não um tema).\n  Ruim: \"Vantagens dos microsserviços\". Bom: \"Microsserviços escalam só o que está sob carga\".\n- \"objetivo\" diz que evidência, exemplo ou comparação sustenta a mensagem.\n- \"fatos\" lista os IDs de fatos da pesquisa que sustentam o slide; não repita o mesmo\n  fato em muitos slides. Prefira slides com números, datas e exemplos reais.\n- Varie os tipos; não use o mesmo tipo em dois slides seguidos (exceto se inevitável).\n- \"mensagem\" com até 45 caracteres, em caixa de frase: ela vira o título do slide.\n- Cada slide responde a uma PERGUNTA distinta; escreva essa pergunta no objetivo.\n  Não volte a explicar um mecanismo já coberto; conclusão sintetiza decisões.\n- Escolha composição pelo conteúdo: etapas só para ações realmente sequenciais,\n  linha_do_tempo só para cronologia datada. Ideias paralelas são tópicos/comparação.\n  Comparação só quando o slide contrasta duas alternativas do mesmo tipo.\n- Assuma público brasileiro, salvo indicação contrária. Afirmações sobre orientação\n  solar, clima ou legislação exigem contexto geográfico; não universalize.\n- Se houver TÓPICOS OBRIGATÓRIOS, cada um deve aparecer em \"topicos\" de pelo menos um\n  slide do meio (nem capa, nem só na conclusão).\n- Os fatos só sustentam o que dizem: não use uma estatística de mercado para justificar\n  uma decisão técnica, nem um caso de uma empresa como regra geral.\n- TODO slide responde à pergunta do pedido. Fato que não trata do assunto central fica\n  de fora; nunca crie um slide só porque há um fato sobre outro tema.\n- Com documentos, use somente fatos fornecidos sobre o projeto: não invente nomes,\n  números, resultados ou funcionalidades. Documento tem prioridade sobre internet.\n  Cada afirmação do roteiro deve apontar os IDs F# que a sustentam.\nResponda só JSON, em português do Brasil."
   },
   "image_outline_hint": "\n\nInclua ao menos um slide imagem no meio do deck, com busca_imagem concreta de 2 a 5 palavras em inglês (objeto/cena que explica a mensagem). Proponha também uma busca para a capa e os outros slides do meio, caso seja necessário ilustrá-los. Não use imagem decorativa genérica.",
   "content_system": "Você escreve o conteúdo de UM slide de uma apresentação profissional.\nContrato editorial:\n- O título é a mensagem do slide: uma afirmação completa, com até 45 caracteres,\n  em caixa de frase (preserve siglas e nomes próprios). Para imagem, até 32 caracteres.\n- Cada item tem \"rotulo\" (2 a 5 palavras em português natural, preserve artigos e preposições,\n  sem repetir o título nem o cabeçalho da coluna) e \"detalhe\": UMA frase\n  completa, com sujeito e verbo, de 8 a 22 palavras, que explica o rótulo com algo\n  concreto (número, nome, data, exemplo ou condição). Não escreva cenário solto como\n  \"uma casa com telhado inclinado\"; escreva o que acontece nele e por quê.\n- Ao usar um fato, mantenha o mesmo sujeito, número e período do fato: \"a plataforma\n  cresceu 30%\" não vira \"o mercado cresceu 30%\"; \"nos anos 1970\" não vira \"em 1970\".\n- Proibido detalhe genérico como \"facilita a manutenção\" ou \"melhora o desempenho\"\n  sem dizer quanto, onde, para quem ou em que condição.\n- Use SOMENTE números e datas presentes nos fatos fornecidos e cite seus IDs em\n  \"fontes\". Sem fato numérico, use exemplos qualitativos nomeados — nunca invente dados.\n- \"notas\" são 2 a 4 frases para o apresentador: o raciocínio, o exemplo e a ressalva.\n- Nunca invente empresas, pessoas, produtos, datas ou estatísticas. Nomes próprios e\n  números só podem vir dos fatos. Sem fatos, use exemplos descritos de forma genérica\n  (\"uma loja online\", \"um aplicativo de entregas\") e condições (\"quando a equipe cresce\").\n- Dados de projeto devem vir dos fatos documentais, que têm prioridade sobre a web.\n  Cite F# em fontes para toda afirmação factual, inclusive qualitativa.\n- Não escreva IDs de fatos (F1, F2...) no texto visível; eles vão só em \"fontes\".\n- Escreva em português do Brasil, com acentos corretos.\n- Público brasileiro salvo pedido contrário. Afirmações que dependem de lugar (clima,\n  orientação geográfica, leis, preços) devem dizer o contexto; evite regras universais.\n- Responda somente à pergunta deste slide, sem explicar novamente o já coberto.\n- Nunca use gráfico ou números como decoração. Etapas exigem sequência real.\n- Em slide imagem: no máximo 2 itens, detalhes até 70 caracteres, foto pertinente.\n  Os itens explicam o conceito do slide; não descreva a imagem (\"o desenho mostra\",\n  \"as setas indicam\"), pois ela é escolhida depois e pode não ter esses elementos.\n- Rótulos nomeiam o mecanismo, a condição ou o exemplo concreto, com inicial maiúscula.\n  Evite rótulos genéricos como \"Função de...\", \"Importância de...\", \"Definição de...\".\n- Os tópicos pedidos orientam o assunto; não os copie como rótulo nem como nome de lado.\n- Título e detalhes devem ser tecnicamente corretos para o público; na dúvida, simplifique\n  sem atribuir a uma parte o que é feito por outra.\n- Uma foto deve mostrar objeto/cena identificável. Na busca use o nome concreto em\n  inglês, preferencialmente 2 palavras; não peça \"diagram\", \"workflow\" ou \"steps\".\n\n- Capa: autor SOMENTE se explicitamente informado no pedido; senão autor vazio.\n  Não invente autoria, organização ou data na capa ou no subtítulo.\n- Não repita itens já escritos: avance a explicação com outro exemplo ou ação.\n- Cada descrição traz um fato diferente, sem repetir o rótulo nem o início das irmãs.\n- Conclusão: proponha uma decisão ou próxima atividade; não liste novamente mecanismos,\n  avaliação do imóvel, sombra ou exemplos explicados nos slides anteriores.\n- Respeite o espaço do layout: prefira 2 ou 3 itens, rótulos até 30 caracteres e\n  detalhes até 110; em comparação, até 70. Ponha explicações longas nas notas.\n",
@@ -20,6 +20,7 @@
     "secao": "titulo curto da parte e subtitulo opcional.",
     "topicos": "2 a 5 itens paralelos (3 é o ideal).",
     "etapas": "2 a 5 passos em ordem; rotulo começa com verbo no infinitivo.",
+    "ciclo": "3 a 5 fases que se repetem (a última volta à primeira), como ciclo da água ou de melhoria; rotulo curto com a fase, detalhe com o que acontece nela.",
     "conclusao": "2 a 4 conclusões acionáveis; rotulo é a recomendação, detalhe é o porquê.",
     "numeros": "1 a 3 valores; valor é o número curto exatamente como no fato (ex.: \"90%\", \"7 anos\"), legenda explica o que ele mede (até 110 caracteres).",
     "comparacao": "exatamente 2 lados, cada um com 1 ou 2 itens (1 quando o lado tem uma só ideia; nunca repita um item para completar); detalhe até 70 caracteres; os lados são duas alternativas do mesmo tipo, e o nome de cada lado é a própria alternativa (ex.: \"Monolito\" e \"Microsserviços\", \"Antes\" e \"Depois\"), nunca uma letra; itens na mesma ordem comparam o mesmo aspecto.",
@@ -58,6 +59,7 @@
                     "secao",
                     "topicos",
                     "etapas",
+                    "ciclo",
                     "conclusao",
                     "numeros",
                     "comparacao",
@@ -123,6 +125,7 @@
                     "secao",
                     "topicos",
                     "etapas",
+                    "ciclo",
                     "conclusao",
                     "comparacao"
                   ]
@@ -175,6 +178,7 @@
                     "secao",
                     "topicos",
                     "etapas",
+                    "ciclo",
                     "conclusao",
                     "numeros",
                     "comparacao",
@@ -240,6 +244,7 @@
                     "secao",
                     "topicos",
                     "etapas",
+                    "ciclo",
                     "conclusao",
                     "comparacao"
                   ]
@@ -292,6 +297,7 @@
                     "secao",
                     "topicos",
                     "etapas",
+                    "ciclo",
                     "conclusao",
                     "numeros",
                     "comparacao",
@@ -357,6 +363,7 @@
                     "secao",
                     "topicos",
                     "etapas",
+                    "ciclo",
                     "conclusao",
                     "comparacao"
                   ]
@@ -409,6 +416,7 @@
                     "secao",
                     "topicos",
                     "etapas",
+                    "ciclo",
                     "conclusao",
                     "numeros",
                     "comparacao",
@@ -474,6 +482,7 @@
                     "secao",
                     "topicos",
                     "etapas",
+                    "ciclo",
                     "conclusao",
                     "comparacao"
                   ]
@@ -526,6 +535,7 @@
                     "secao",
                     "topicos",
                     "etapas",
+                    "ciclo",
                     "conclusao",
                     "numeros",
                     "comparacao",
@@ -591,6 +601,7 @@
                     "secao",
                     "topicos",
                     "etapas",
+                    "ciclo",
                     "conclusao",
                     "comparacao"
                   ]
@@ -645,6 +656,7 @@
                     "secao",
                     "topicos",
                     "etapas",
+                    "ciclo",
                     "conclusao",
                     "numeros",
                     "comparacao",
@@ -711,6 +723,7 @@
                     "secao",
                     "topicos",
                     "etapas",
+                    "ciclo",
                     "conclusao",
                     "comparacao",
                     "imagem"
@@ -764,6 +777,7 @@
                     "secao",
                     "topicos",
                     "etapas",
+                    "ciclo",
                     "conclusao",
                     "numeros",
                     "comparacao",
@@ -830,6 +844,7 @@
                     "secao",
                     "topicos",
                     "etapas",
+                    "ciclo",
                     "conclusao",
                     "comparacao",
                     "imagem"
@@ -883,6 +898,7 @@
                     "secao",
                     "topicos",
                     "etapas",
+                    "ciclo",
                     "conclusao",
                     "numeros",
                     "comparacao",
@@ -949,6 +965,7 @@
                     "secao",
                     "topicos",
                     "etapas",
+                    "ciclo",
                     "conclusao",
                     "comparacao",
                     "imagem"
@@ -1002,6 +1019,7 @@
                     "secao",
                     "topicos",
                     "etapas",
+                    "ciclo",
                     "conclusao",
                     "numeros",
                     "comparacao",
@@ -1068,6 +1086,7 @@
                     "secao",
                     "topicos",
                     "etapas",
+                    "ciclo",
                     "conclusao",
                     "comparacao",
                     "imagem"
@@ -1121,6 +1140,7 @@
                     "secao",
                     "topicos",
                     "etapas",
+                    "ciclo",
                     "conclusao",
                     "numeros",
                     "comparacao",
@@ -1187,6 +1207,7 @@
                     "secao",
                     "topicos",
                     "etapas",
+                    "ciclo",
                     "conclusao",
                     "comparacao",
                     "imagem"
@@ -1508,6 +1529,112 @@
           "itens": {
             "type": "array",
             "minItems": 2,
+            "maxItems": 5,
+            "items": {
+              "type": "object",
+              "properties": {
+                "rotulo": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 120
+                },
+                "detalhe": {
+                  "type": "string",
+                  "minLength": 8,
+                  "maxLength": 360
+                }
+              },
+              "required": [
+                "rotulo",
+                "detalhe"
+              ]
+            }
+          },
+          "fontes": {
+            "type": "array",
+            "maxItems": 0
+          },
+          "notas": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "titulo",
+          "itens",
+          "fontes",
+          "notas"
+        ]
+      }
+    },
+    "ciclo": {
+      "with_facts": {
+        "type": "object",
+        "properties": {
+          "titulo": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 160
+          },
+          "itens": {
+            "type": "array",
+            "minItems": 3,
+            "maxItems": 5,
+            "items": {
+              "type": "object",
+              "properties": {
+                "rotulo": {
+                  "type": "string",
+                  "minLength": 2,
+                  "maxLength": 120
+                },
+                "detalhe": {
+                  "type": "string",
+                  "minLength": 8,
+                  "maxLength": 360
+                }
+              },
+              "required": [
+                "rotulo",
+                "detalhe"
+              ]
+            }
+          },
+          "fontes": {
+            "type": "array",
+            "maxItems": 4,
+            "items": {
+              "type": "string",
+              "enum": [
+                "__FACT_IDS__"
+              ]
+            }
+          },
+          "notas": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "titulo",
+          "itens",
+          "fontes",
+          "notas"
+        ]
+      },
+      "without_facts": {
+        "type": "object",
+        "properties": {
+          "titulo": {
+            "type": "string",
+            "minLength": 4,
+            "maxLength": 160
+          },
+          "itens": {
+            "type": "array",
+            "minItems": 3,
             "maxItems": 5,
             "items": {
               "type": "object",

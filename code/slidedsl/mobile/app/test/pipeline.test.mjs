@@ -205,7 +205,7 @@ test('pipeline não importa código nativo; todos os schemas vêm do exportador'
     assert.doesNotMatch(source, /from ['"](?:react-native|llama\.rn|expo-)/);
   }
   assert.equal(Object.keys(prompts.outline_schemas).length, 5);
-  assert.equal(Object.keys(prompts.slide_schemas).length, 11);  // 10 tipos + imagem (Fotos da internet)
+  assert.equal(Object.keys(prompts.slide_schemas).length, 12);  // 10 tipos + ciclo + imagem (Fotos da internet)
   assert.equal(Object.keys(prompts.outline_schemas_imagens).length, 5);
 });
 test('título do fallback não termina em preposição ou artigo', async () => {

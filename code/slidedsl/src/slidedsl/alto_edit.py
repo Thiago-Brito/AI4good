@@ -15,7 +15,7 @@ from .models.base import generate_text
 def slide_spans(source):
     tree = alto_parser().parse(source).children[0]
     return [(c.meta.start_pos, c.meta.end_pos) for c in tree.children
-            if isinstance(c, Tree) and str(c.data) in SLIDE_KINDS]
+            if isinstance(c, Tree) and str(c.data) in (*SLIDE_KINDS, "ciclo")]  # ciclo = etapas com cycle
 
 
 def replace_slide(source, number, slide):

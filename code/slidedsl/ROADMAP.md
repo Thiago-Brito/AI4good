@@ -477,4 +477,8 @@ continuam como etapas futuras do plano maior; o histórico desta rodada é espec
 - [ ] Commons: informar contato (SLIDEDSL_CONTACT) se o usuário quiser fotos do Wikimedia de volta.
 - [ ] Testar a edição e as fotos no emulador/celular (APK 0.7.0).
 - [ ] O LoRA do 0.6B não viu slides "imagem" no treino: com fotos ligadas, gerar dataset com imagem.
+- [x] Diagramas no próprio slide: etapas em caixas com setas e ciclo em círculo, formas editáveis, iguais no PC e
+      no celular (paridade 356/356); geração pode escolher "ciclo" (`docs/DIAGRAMAS_NO_SLIDE.md`).
+- [x] Código do teste SVG do Seminário 3 congelado na tag `sem3-svg-congelado`.
+- [ ] Ciclo de 5 fases sai como lista (não cabe); avaliar composição 3+2.
 

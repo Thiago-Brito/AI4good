@@ -63,7 +63,7 @@ export const replace = (obj,opts) => Object.assign(Object.create(Object.getProto
 export const pstdev = v => {const avg=sum(v)/len(v);return Math.sqrt(sum(v.map(x=>(x-avg)**2))/len(v));};
 export const combinations = (v,n) => {if(n!==2)throw Error('combinations');return v.flatMap((a,i)=>v.slice(i+1).map(b=>[a,b]));};
 export const urlsplit = v => {try {return {hostname:new URL(v).hostname};}catch{return {hostname:null};}};
-export const math = {floor:Math.floor,ceil:Math.ceil,hypot:Math.hypot,isfinite:Number.isFinite};
+export const math = {floor:Math.floor,ceil:Math.ceil,hypot:Math.hypot,isfinite:Number.isFinite,sin:Math.sin,cos:Math.cos,atan2:Math.atan2,pi:Math.PI};
 export const unicodedata = {normalize:(form,s)=>s.normalize(form)};
 export const format = (v,spec='',conversion=-1) => spec==='02d' ? String(v).padStart(2,'0') : spec===',.2f' ? Number(v).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2,useGrouping:true}) : conversion===114 ? JSON.stringify(v) : String(v);
 function regex(pattern, flags=0, anchored=false) {

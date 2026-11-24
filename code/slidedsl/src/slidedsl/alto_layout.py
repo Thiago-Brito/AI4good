@@ -747,7 +747,180 @@ def layout_comparacao(b, s, base, deck, top):
             cy += row_heights[j] + MD
 
 
+# Diagramas de etapas e ciclo no próprio slide, com formas editáveis e a geometria de svg_diagrams.py
+# (caixas iguais, número no círculo, setas na ordem). A seta é um caractere: o IR só tem seta para baixo,
+# e o texto aparece igual no PowerPoint, no Google Slides e no celular. Se o texto não couber nas caixas
+# nas fontes mínimas (A019), o slide volta para a lista numerada.
+ARROWS = "→↘↓↙←↖↑↗"
+BADGE = 20
+
+
+def diagram_sizes_options(b):
+    """Escala fixa dos papéis primeiro (a mesma dos outros slides); só reduz até os mínimos se precisar."""
+    options = [(b.label_pt, b.body_pt), (b.label_pt - 2, b.body_pt - 2), (MIN_LABEL_PT, MIN_BODY_PT)]
+    return [o for k, o in enumerate(options) if o not in options[:k] and o[0] >= MIN_LABEL_PT and o[1] >= MIN_BODY_PT]
+
+
+def arrow_glyph(dx, dy):
+    """Seta em uma de 8 direções para o vetor (dx, dy), com y para baixo."""
+    return ARROWS[round(math.atan2(dy, dx) / (math.pi / 4)) % 8]
+
+
+def diagram_content_height(b, items, w, ls, ds):
+    """Altura do selo + rótulo + detalhe mais altos (sem o respiro da caixa)."""
+    inner = w - 2 * SM
+    label_h = max(b.height(i.label, inner, ls, True) for i in items)
+    detail_h = max([b.height(i.detail, inner, ds) for i in items if i.detail] + [0])
+    return 2 * BADGE + XS + label_h + (XS + detail_h if detail_h else 0)
+
+
+def diagram_box_height(b, items, w, ls, ds):
+    return SM + diagram_content_height(b, items, w, ls, ds) + SM
+
+
+def words_fit(b, items, w, ls, ds):
+    """Nenhuma palavra mais larga que a caixa (a mesma conta de longest_word da regra D010)."""
+    room = w - 2 * SM - 2 * load_rules()["text_padding"]
+    for i in items:
+        for word in i.label.split():
+            if text_width(word, ls, True, b.family(ls, True)) > room:
+                return False
+        for word in (i.detail or "").split():
+            if text_width(word, ds, False, b.family(ds)) > room:
+                return False
+    return True
+
+
+def diagram_sizes(b, items, w, max_h):
+    """Maior par (rótulo, detalhe) em que todas as caixas cabem; None se nem o mínimo cabe."""
+    for ls, ds in diagram_sizes_options(b):
+        h = diagram_box_height(b, items, w, ls, ds)
+        if h <= max_h and words_fit(b, items, w, ls, ds):
+            return ls, ds, h
+    return None
+
+
+def diagram_box(b, item, k, path, x, y, w, h, ls, ds, label_h, content_h):
+    p = b.palette
+    b.rect("etapa", x, y, w, h, p["soft"], rounded=True)
+    y = y + (h - content_h) / 2 - SM  # conteúdo centrado na caixa (caixas podem ser mais altas que o texto)
+    # Selo do número em retângulo arredondado: o contraste é medido contra retângulos (known_background).
+    b.rect("numero_fundo", x + w / 2 - BADGE, y + SM, 2 * BADGE, 2 * BADGE, p["primary"], rounded=True)
+    nh = b.height(str(k + 1), 2 * BADGE, 16, True)
+    b.text("numero", str(k + 1), x + w / 2 - BADGE, y + SM + BADGE - nh / 2, 2 * BADGE, nh, 16,
+           p["on_primary"], bold=True, align="center")
+    inner = w - 2 * SM
+    ty = y + SM + 2 * BADGE + XS
+    lh = b.height(item.label, inner, ls, True)
+    b.text("rotulo", item.label, x + SM, ty, inner, lh, ls, p["text"], bold=True, align="center",
+           path=path + ".label")
+    if item.detail:
+        dh = b.height(item.detail, inner, ds)
+        # Detalhes começam na mesma altura em todas as caixas (rótulos de 1 e 2 linhas).
+        b.text("detalhe", item.detail, x + SM, ty + label_h + XS, inner, dh, ds, p["muted"], align="center",
+               path=path + ".detail")
+
+
+def diagram_arrow(b, x, y, glyph):
+    """Seta centrada em (x, y)."""
+    # Altura pela estimativa Arial (a mesma da regra D010), que é maior que a medição em Calibri.
+    # 24 pt: a 28 pt o caractere passa da largura útil da caixa (regra D010, longest_word).
+    h = needed_height(glyph, XL, 24, True)
+    b.text("seta", glyph, x - XL / 2, y - h / 2, XL, h, 24, b.palette["muted"], bold=True, align="center")
+
+
+def diagram_etapas(b, s, base, top):
+    """Fluxo horizontal: caixas iguais lado a lado, setas → entre elas."""
+    n = len(s.items)
+    w = (W - 2 * M - (n - 1) * XL) / n
+    if w < 180:
+        return False
+    fit = diagram_sizes(b, s.items, w, CONTENT_BOTTOM - top)
+    if fit is None:
+        return False
+    ls, ds, h = fit
+    label_h = max(b.height(i.label, w - 2 * SM, ls, True) for i in s.items)
+    content_h = diagram_content_height(b, s.items, w, ls, ds)
+    # Caixas com pelo menos 55% da altura útil: com poucas etapas curtas a área ficava vazia (A021).
+    h = max(h, (CONTENT_BOTTOM - top) * 0.55)
+    y = card_position(top, h)
+    for k, item in enumerate(s.items):
+        x = M + k * (w + XL)
+        if k < n - 1:
+            diagram_arrow(b, x + w + XL / 2, y + h / 2, "→")
+        diagram_box(b, item, k, f"{base}.items.{k}", x, y, w, h, ls, ds, label_h, content_h)
+    return True
+
+
+def clip_to_box(cx, cy, tx, ty, hw, hh):
+    """Ponto onde o segmento centro→alvo sai do retângulo de meia largura hw e meia altura hh."""
+    dx, dy = tx - cx, ty - cy
+    sx = hw / abs(dx) if dx else 1e9
+    sy = hh / abs(dy) if dy else 1e9
+    k = min(sx, sy)
+    return cx + dx * k, cy + dy * k
+
+
+def boxes_apart(a, c, gap):
+    return a[0] + a[2] + gap <= c[0] or c[0] + c[2] + gap <= a[0] or a[1] + a[3] + gap <= c[1] or c[1] + c[3] + gap <= a[1]
+
+
+def ciclo_geometry(n, bw, bh, top):
+    """Caixas numa elipse (sentido horário a partir do topo) e setas no trecho livre entre bordas;
+    None se caixas se sobrepõem ou uma seta encosta numa caixa."""
+    avail = CONTENT_BOTTOM - top
+    rx, ry = (W - 2 * M - bw) / 2, (avail - bh) / 2
+    if ry <= 0:
+        return None
+    cx0, cy0 = W / 2, top + avail / 2
+    centers = [(cx0 + rx * math.sin(2 * math.pi * k / n), cy0 - ry * math.cos(2 * math.pi * k / n)) for k in range(n)]
+    boxes = [(cx - bw / 2, cy - bh / 2, bw, bh) for cx, cy in centers]
+    for i in range(n):
+        for j in range(i + 1, n):
+            if not boxes_apart(boxes[i], boxes[j], MD):
+                return None
+    arrows = []
+    for k in range(n):
+        (ax, ay), (cx, cy) = centers[k], centers[(k + 1) % n]
+        # Seta no meio do trecho livre entre as bordas das duas caixas (como em svg_diagrams.ciclo_svg).
+        x1, y1 = clip_to_box(ax, ay, cx, cy, bw / 2, bh / 2)
+        x2, y2 = clip_to_box(cx, cy, ax, ay, bw / 2, bh / 2)
+        mx, my = (x1 + x2) / 2, (y1 + y2) / 2
+        spot = (mx - XL / 2, my - XL / 2, XL, XL)
+        if not all(boxes_apart(spot, box, 0) for box in boxes):
+            return None
+        arrows.append((mx, my, arrow_glyph(cx - ax, cy - ay)))
+    return boxes, arrows
+
+
+def diagram_ciclo(b, s, base, top):
+    """Ciclo: caixas numa elipse; a última seta volta à primeira. Tenta da maior fonte para a menor e
+    da caixa mais larga para a mais estreita; fica com a primeira composição sem sobreposição."""
+    n = len(s.items)
+    if not 3 <= n <= 5:
+        return False
+    for bw in ((340, 300) if n <= 4 else (280, 240)):
+        for ls, ds in diagram_sizes_options(b):
+            if not words_fit(b, s.items, bw, ls, ds):
+                continue
+            bh = diagram_box_height(b, s.items, bw, ls, ds)
+            geometry = ciclo_geometry(n, bw, bh, top)
+            if geometry is None:
+                continue
+            boxes, arrows = geometry
+            for mx, my, glyph in arrows:
+                diagram_arrow(b, mx, my, glyph)
+            label_h = max(b.height(i.label, bw - 2 * SM, ls, True) for i in s.items)
+            for k, item in enumerate(s.items):
+                diagram_box(b, item, k, f"{base}.items.{k}", boxes[k][0], boxes[k][1], bw, bh, ls, ds, label_h,
+                            bh - 2 * SM)
+            return True
+    return False
+
+
 def layout_etapas(b, s, base, deck, top):
+    if diagram_ciclo(b, s, base, top) if s.cycle else diagram_etapas(b, s, base, top):
+        return
     # Passos usam a grade; numeração permanece mesmo nos estilos com marcador discreto.
     from dataclasses import replace
     original = b.style

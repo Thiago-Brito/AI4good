@@ -63,6 +63,7 @@ DESCRIPTIONS = {
     "numeros": "1–3 números grandes que sustentam a mensagem (dados reais, com fonte)",
     "comparacao": "duas alternativas lado a lado, 1–4 itens em cada lado",
     "etapas": "processo em 2–5 passos ordenados",
+    "ciclo": "processo que se repete em 3–5 fases (a última volta à primeira)",
     "linha_do_tempo": "2–6 marcos com data, rótulo e detalhe",
     "citacao": "frase literal de uma pessoa ou documento, com autor",
     "grafico": "gráfico de barras com 2–7 categorias numéricas (dados reais, com fonte)",
