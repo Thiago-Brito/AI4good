@@ -47,7 +47,7 @@ export default function ModelScreen({selected, onSelect, gpu, setGpu, grammarSli
     </View>)}
     <View style={styles.row}><Switch accessibilityLabel="Baixar somente por Wi-Fi" value={wifi} onValueChange={setWifi} disabled={busy}/><Text style={styles.text}>Baixar somente por Wi-Fi</Text></View>
     <View style={styles.row}><Switch accessibilityLabel="Usar GPU" value={gpu} onValueChange={setGpu} disabled={busy}/><Text style={styles.text}>GPU experimental (padrão: desligada)</Text></View>
-    <View style={styles.row}><Switch accessibilityLabel="Escrever slides em SlideDSL Alto" value={grammarSlides} onValueChange={setGrammarSlides} disabled={busy}/><Text style={styles.text}>Escrever slides em SlideDSL Alto (gramática; experimental)</Text></View>
+    <View style={styles.row}><Switch accessibilityLabel="Escrever slides em SlideDSL Alto" value={grammarSlides} onValueChange={setGrammarSlides} disabled={busy}/><Text style={styles.text}>Escrever slides em SlideDSL Alto com gramática (padrão; desligue para JSON)</Text></View>
     <Text style={styles.text}>O download pausa ao sair desta tela, ir para segundo plano ou perder a rede permitida. Toque em baixar/retomar para continuar. A conferência SHA-256 ocorre antes do uso.</Text>
     <Button disabled={busy || !modelAllowed(selected, Device.totalMemory)} onPress={() => void download()}>Baixar / retomar selecionado</Button>
     <Button secondary disabled={busy || !modelAllowed(selected, Device.totalMemory)} onPress={() => void importFile()}>Importar arquivo .gguf do aparelho</Button>

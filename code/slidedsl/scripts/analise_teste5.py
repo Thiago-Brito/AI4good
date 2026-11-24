@@ -77,10 +77,13 @@ def load(d: Path) -> dict:
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--dir", default=str(ROOT / "outputs" / "teste5_app"))
+    ap.add_argument("--excluir", default="", help="pares pedido:semente a excluir, separados por vírgula")
+    ap.add_argument("--saida", default="analise.json")
     args = ap.parse_args(argv)
     d = Path(args.dir)
-    rows = load(d)
-    modes = [m for m in ["json", "gramatica", "gramatica_limites"] if any(r["mode"] == m for r in rows.values())]
+    excl = {tuple(x.split(":")) for x in args.excluir.split(",") if x}
+    rows = {k: r for k, r in load(d).items() if (r["request_id"], r["seed"]) not in excl}
+    modes = [m for m in ["json", "gramatica", "gramatica_limites", "gramatica_limites_reparo"] if any(r["mode"] == m for r in rows.values())]
     by = {m: {(r["request_id"], r["seed"]): r for r in rows.values() if r["mode"] == m} for m in modes}
     keys = sorted(set.intersection(*(set(by[m]) for m in modes)))
     out = {"pares": len(keys), "modos": {}, "pareado": {}}
@@ -115,7 +118,7 @@ def main(argv=None):
             mean_a = st.mean(a)
             res[f"wilcoxon_{f}"] = {**wilcoxon(a, g), "media_" + ma: round(mean_a, 2), "media_" + mb: round(st.mean(g), 2),
                                     "variacao_%": round((st.mean(g) - mean_a) / mean_a * 100, 1) if mean_a else None}
-    (d / "analise.json").write_text(json.dumps(out, ensure_ascii=False, indent=2), "utf-8")
+    (d / args.saida).write_text(json.dumps(out, ensure_ascii=False, indent=2), "utf-8")
     print(json.dumps(out, ensure_ascii=False, indent=1))
 
 

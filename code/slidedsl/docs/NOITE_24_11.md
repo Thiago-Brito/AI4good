@@ -48,3 +48,6 @@ testar no emulador e deixar um resumo. Claude conduz sozinho; commits sem coauto
 - 02:21 — Fix no app: roteiro sem capa/conclusão é corrigido (porte de `fix_outline`) em vez de abortar.
 - ~02:25 — 4ª condição `gramatica_limites_reparo`: texto que chega ao limite vira aviso e pede 1 reparo (se persistir,
   o slide é aceito). Testes do app 62/62. Rodando; já com o fix do roteiro (par solar_obrigatorio s11 passa a contar).
+- ~03:05 — 4ª condição concluída: o reparo de texto cortado não reduziu cortes (28/673 × 31/677) e custou +22% de
+  reparos (resultado negativo). Decisão: app 0.4.0 com `gramatica_limites` ligado por padrão, sem o reparo.
+  Testes do app 62/62. Resultados em `docs/RESULTADOS_T5.md`. Próximo: desligar llama-server, build do APK, emulador.

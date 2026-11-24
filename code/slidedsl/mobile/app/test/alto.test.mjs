@@ -204,13 +204,14 @@ test('gramatica_limites: texto cortado no limite pede 1 reparo e, se persistir, 
     }
   }
   const model = new Cut();
-  const result = await generate({...request(model), slideMode: 'gramatica_limites'});
+  const result = await generate({...request(model), slideMode: 'gramatica_limites', repairTruncated: true});
   assert.equal(result.ir.slides.length, 5);
   const repairs = model.inputs.filter(x => /Corrija os diagnósticos/.test(x.user));
   assert.ok(repairs.length >= 1 && repairs.every(x => /cortado no limite de 170/.test(x.user)));
   assert.equal(result.diagnostics.filter(d => d.code === 'F001').length, 0);
   const off = new Cut();
-  const plain = await generate({...request(off), slideMode: 'gramatica_limites', repairTruncated: false});
+  // Padrão: sem reparo de texto cortado (não ajudou na bancada).
+  const plain = await generate({...request(off), slideMode: 'gramatica_limites'});
   assert.equal(plain.calls.filter(c => c.repair).length, 0);
 });
 

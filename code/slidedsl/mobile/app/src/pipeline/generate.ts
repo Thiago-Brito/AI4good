@@ -76,7 +76,8 @@ export interface GenerateOptions {
   onCalls?: (c: CallRecord[]) => void;
   readDocument?: ReadDocument; onDocument?: (doc: DocumentUsage) => void;
   slideMode?: SlideMode;
-  /** Só em gramatica_limites: campo que chegou ao limite (cortado) vira aviso e pede 1 reparo. Padrão: sim. */
+  /** Só em gramatica_limites: campo que chegou ao limite (cortado) vira aviso e pede 1 reparo. Padrão: não —
+   * na bancada de 24/11 o reparo não reduziu os cortes (28/673 × 31/677) e custou +22% de reparos. */
   repairTruncated?: boolean;
 }
 export async function generate(options: GenerateOptions): Promise<GenerationResult> {
@@ -135,7 +136,7 @@ export async function generate(options: GenerateOptions): Promise<GenerationResu
           const built = buildAlto({...deck, slides: [...deck.slides, accepted]}, facts);
           diagnostics = built.diagnostics.filter(d => d.slide == null || d.slide === i + 1);
           // Texto cortado no limite da gramática: aviso que pede reparo (não bloqueia; após o reparo, aceita).
-          if (limited && (options.repairTruncated ?? true)) for (const t of truncatedPaths(data, limited)) diagnostics.push({
+          if (limited && (options.repairTruncated ?? false)) for (const t of truncatedPaths(data, limited)) diagnostics.push({
             code: 'A005', severity: 'AVISO', slide: i + 1, evidence: {path: t.path},
             message: `Texto cortado no limite de ${t.limit} caracteres.`,
             suggestion: 'Reescreva este campo mais curto, com a ideia completa.'} as Diagnostic);
