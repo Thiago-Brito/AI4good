@@ -1248,8 +1248,9 @@ def resolve_images(deck: AltoDeck, say=lambda m: None, *, source="livres", ai_pr
                     queries = queries[:2]
                 for query in queries:
                     if query not in searches:
-                        searches[query] = automatic_search(query, providers=("commons",),
-                                                           wait_for_provider=True)
+                        # Provedores automáticos (Openverse, NASA em temas espaciais e Commons se houver
+                        # contato): só Commons dava 403 sem contato e nenhuma foto (teste de 24/11/2026).
+                        searches[query] = automatic_search(query, wait_for_provider=True)
                     found = searches[query]
                     # Keep the original slide subject even when a broader fallback is searched.
                     found = {**found, "results": [{**i, "central_query": s.image_query,

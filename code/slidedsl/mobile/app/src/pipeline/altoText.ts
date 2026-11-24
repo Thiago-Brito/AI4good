@@ -17,7 +17,7 @@ type Field =
   | {kind: 'notes'; key: string};
 
 const SINGLE: Record<string, string> = {titulo: 'titulo', subtitulo: 'subtitulo', autor: 'autor',
-  texto: 'texto', unidade: 'unidade', legenda: 'legenda'};
+  texto: 'texto', unidade: 'unidade', legenda: 'legenda', busca_imagem: 'buscar'};
 // Ordem da gramática Alto por tipo (somente os tipos que o app gera).
 const ORDER: Record<string, string[]> = {
   capa: ['titulo', 'subtitulo', 'autor', 'notas'],
@@ -30,6 +30,7 @@ const ORDER: Record<string, string[]> = {
   linha_do_tempo: ['titulo', 'marcos', 'fontes', 'notas'],
   citacao: ['texto', 'autor', 'fontes', 'notas'],
   grafico: ['titulo', 'unidade', 'barras', 'fontes', 'notas'],
+  imagem: ['titulo', 'busca_imagem', 'legenda', 'itens', 'fontes', 'notas'],
 };
 const ITEM_WORD: Record<string, 'item' | 'valor' | 'marco' | 'barra'> =
   {itens: 'item', valores: 'valor', marcos: 'marco', barras: 'barra'};

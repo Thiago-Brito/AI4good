@@ -15,7 +15,7 @@ const s = v => (typeof v === 'string' ? v.trim() || null : v ?? null);
 const items = list => (list ?? []).map(i => ({label: s(i.label), detail: s(i.detail)}));
 function normal(x) {
   return {kind: x.kind, title: s(x.title), subtitle: s(x.subtitle), author: s(x.author), text: s(x.text),
-    unit: s(x.unit), notes: s(x.notes), items: items(x.items),
+    unit: s(x.unit), notes: s(x.notes), caption: s(x.caption), image_query: s(x.image_query), items: items(x.items),
     values: (x.values ?? []).map(v => ({value: s(v.value), label: s(v.label)})),
     sides: (x.sides ?? []).map(d => ({name: s(d.name), items: items(d.items)})),
     milestones: (x.milestones ?? []).map(m => ({date: s(m.date), label: s(m.label), detail: s(m.detail)})),

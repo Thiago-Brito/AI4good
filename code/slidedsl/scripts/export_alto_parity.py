@@ -1,6 +1,6 @@
 """Exporta slides do corpus para a paridade do leitor Alto do app (mobile/app/src/pipeline/altoText.ts).
 
-Para cada slide de um tipo que o app gera (sem imagem), grava o bloco impresso pelo printer Python e o
+Para cada slide de um tipo que o app gera (imagem só com `buscar`, como o app escreve), grava o bloco impresso pelo printer Python e o
 resultado do parser Python (`_parse_slide_text`) sobre esse mesmo texto. O teste do app lê o texto com
 `altoToJson` + `jsonToSlide` e compara campo a campo. Python continua sendo a referência.
 
@@ -18,14 +18,14 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 APP_KINDS = {"capa", "secao", "topicos", "etapas", "conclusao", "numeros", "comparacao",
-             "linha_do_tempo", "citacao", "grafico"}
+             "linha_do_tempo", "citacao", "grafico", "imagem"}
 OUT = ROOT / "mobile/app/test/fixtures/alto_slides.json"
 
 
 def slide_fields(s) -> dict:
     return {
         "kind": s.kind, "title": s.title, "subtitle": s.subtitle, "author": s.author, "text": s.text,
-        "unit": s.unit, "notes": s.notes,
+        "unit": s.unit, "notes": s.notes, "caption": s.caption, "image_query": s.image_query,
         "items": [{"label": i.label, "detail": i.detail} for i in s.items],
         "values": [{"value": v.value, "label": v.label} for v in s.values],
         "sides": [{"name": d.name, "items": [{"label": i.label, "detail": i.detail} for i in d.items]}
@@ -55,7 +55,7 @@ def main(argv=None):
             if s.kind not in APP_KINDS or s.cycle:
                 skipped["tipo"] += 1
                 continue
-            if s.image_file or s.image_query:
+            if s.image_file or (s.image_query and s.kind != "imagem"):
                 skipped["imagem"] += 1
                 continue
             text = print_slide(s, indent="")

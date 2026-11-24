@@ -111,7 +111,7 @@ def _work(id: str, payload: dict):
 
             report = create_presentation_celular(
                 payload["pedido"], out, modelo=payload["modelo_local"], n_slides=payload["slides"],
-                document_ids=payload.get("documentos"), progress=say)
+                document_ids=payload.get("documentos"), imagens=payload.get("imagens", False), progress=say)
         else:
             report = _completo(payload, out, say, usage)
         result = {"report": report, "folder": str(out.relative_to(project_root()))}

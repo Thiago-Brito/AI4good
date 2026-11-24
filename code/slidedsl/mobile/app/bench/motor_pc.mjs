@@ -7,7 +7,7 @@
 //   deck.json (AltoDeck), fatos.json, chamadas.json, diagnosticos.json, fonte.json, apresentacao_celular.pptx
 // Uso (na cópia de build, depois de `npm test`):
 //   node bench/motor_pc.mjs --pedido "..." --slides 5 [--documento arquivo.txt|.md|.docx] --out <pasta>
-//     [--url http://127.0.0.1:8080] [--semente 11] [--extracao frases|json] [--slides-modo gramatica_limites|json]
+//     [--url http://127.0.0.1:8080] [--semente 11] [--extracao frases|json] [--slides-modo gramatica_limites|json] [--imagens]
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {generate} from '../outputs/tests/pipeline/generate.js';
@@ -18,7 +18,9 @@ const BASE = arg('url', 'http://127.0.0.1:8080');
 const OUT = arg('out'), REQUEST = arg('pedido', ''), DOC = arg('documento');
 const N = Number(arg('slides', '5')), SEED = Number(arg('semente', '11'));
 const EXTRACT = arg('extracao', 'frases'), SLIDE_MODE = arg('slides-modo', 'gramatica_limites');
+const PHOTOS = process.argv.includes('--imagens');
 if (!OUT) throw Error('Use --out.');
+const AGENT = 'SlideDSL/1.1 (local educational presentation tool; limited interactive search)';
 const emit = (evento, data = {}) => process.stdout.write(JSON.stringify({evento, ...data}) + '\n');
 
 async function post(endpoint, body, signal) {
@@ -60,6 +62,9 @@ async function main() {
   const started = Date.now();
   const result = await generate({request: REQUEST, slides: N, model: serverModel(SEED), source, readDocument,
     slideMode: SLIDE_MODE, extractMode: EXTRACT,
+    images: PHOTOS ? {
+      fetchJson: async (url, signal) => { const r = await fetch(url, {signal, headers: {Accept: 'application/json', 'User-Agent': AGENT}}); if (!r.ok) throw Error(`HTTP ${r.status}`); return r.json(); },
+      fetchBytes: async (url, signal) => { const r = await fetch(url, {signal, headers: {'User-Agent': AGENT}}); if (!r.ok) throw Error(`HTTP ${r.status}`); return new Uint8Array(await r.arrayBuffer()); }} : undefined,
     onProgress: p => emit('progresso', {etapa: p.stage, slide: p.slide ?? null, total: p.total})});
   const write = (name, data) => fs.writeFile(path.join(OUT, name), JSON.stringify(data, null, 1));
   await write('deck.json', result.deck);
@@ -69,6 +74,12 @@ async function main() {
   await write('fonte.json', {mode: result.source.mode, document: result.source.document ? {name: result.source.document.name,
     sections: result.source.document.sections ?? []} : null});
   await fs.writeFile(path.join(OUT, 'apresentacao_celular.pptx'), Buffer.from(result.pptx));
+  // Fotos para o compilador do PC: arquivos em imagens/ e crédito em imagens.json.
+  if (Object.keys(result.images.data).length) {
+    await fs.mkdir(path.join(OUT, 'imagens'), {recursive: true});
+    for (const [file, uri] of Object.entries(result.images.data)) await fs.writeFile(path.join(OUT, 'imagens', file), Buffer.from(uri.split(',')[1], 'base64'));
+  }
+  await write('imagens.json', {info: result.images.info, log: result.images.log});
   emit('concluido', {segundos: Math.round((Date.now() - started) / 100) / 10, chamadas: result.calls.length,
     slides_compilador: result.diagnostics.filter(d => d.code === 'F001').map(d => d.slide)});
 }

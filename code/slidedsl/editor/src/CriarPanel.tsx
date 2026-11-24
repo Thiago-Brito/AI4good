@@ -554,7 +554,7 @@ export function CriarPanel({
           />
           Buscar imagens licenciadas
         </label>
-        {imagens && (
+        {imagens && motor === "completo" && (
           <div className="image-source-options">
             <label>
               Fonte das imagens{" "}
@@ -569,7 +569,7 @@ export function CriarPanel({
                 }
               >
                 <option value="livres">
-                  Só fotos livres (Wikimedia) · grátis
+                  Só fotos livres (Openverse/NASA) · grátis
                 </option>
                 <option value="livres_ia">
                   Fotos livres; IA quando faltar · pago só se faltar

@@ -143,8 +143,33 @@ def _dossie(request: str, facts: dict):
     return Dossier(topic=request, facts=lista)
 
 
+def _registrar_fotos(deck, out_dir: Path) -> None:
+    """Fotos baixadas pelo app (imagens/ + imagens.json) entram no catálogo do PC, com crédito, para o
+    compilador e o editor (trocar/remover foto) funcionarem como no fluxo completo."""
+    import hashlib
+
+    from .media import _store_image
+
+    meta_path = out_dir / "imagens.json"
+    if not meta_path.is_file():
+        return
+    info = json.loads(meta_path.read_text("utf-8")).get("info", {})
+    for slide in deck.slides:
+        meta = info.get(slide.image_file or "")
+        if not meta:
+            continue
+        data = (out_dir / "imagens" / slide.image_file).read_bytes()
+        m = meta.get("metadata", {})
+        provider = m.get("attribution", "").rsplit("(", 1)[-1].rstrip(")") or "openverse"
+        candidate = {"id": hashlib.sha256(data).hexdigest(), "provider": provider, "title": m.get("attribution", "")[:200],
+                     "author": m.get("author", ""), "license": m.get("license", ""), "license_url": m.get("license_url", ""),
+                     "page": m.get("page", ""), "url": "", "attribution": m.get("attribution", "")}
+        mime = "image/png" if data.startswith(bytes([0x89]) + b"PNG") else "image/jpeg"
+        slide.image_file = _store_image(candidate, data, mime, reviewed=False)["asset"]
+
+
 def create_presentation_celular(request: str, out_dir: Path, *, modelo: str, n_slides: int = 5,
-                                document_ids: list[str] | None = None, seed: int = 11,
+                                document_ids: list[str] | None = None, seed: int = 11, imagens: bool = False,
                                 progress: Callable[[str], None] | None = None, preview: bool = True) -> dict:
     from .alto import AltoDeck, print_alto
     from .alto_compile import build_alto
@@ -169,6 +194,8 @@ def create_presentation_celular(request: str, out_dir: Path, *, modelo: str, n_s
             "--url", url, "--semente", str(seed)]
     if document_ids:
         args += ["--documento", str(_documento_para_node(document_ids[0], out_dir))]
+    if imagens:
+        args.append("--imagens")
     proc = subprocess.Popen(args, cwd=app, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, encoding="utf-8",
                             creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
     erro = None
@@ -186,6 +213,7 @@ def create_presentation_celular(request: str, out_dir: Path, *, modelo: str, n_s
         raise RuntimeError(erro or (proc.stderr.read() or "motor do celular falhou")[-400:])
 
     deck = AltoDeck.model_validate(json.loads((out_dir / "deck.json").read_text("utf-8")))
+    _registrar_fotos(deck, out_dir)
     facts = json.loads((out_dir / "fatos.json").read_text("utf-8"))
     calls = json.loads((out_dir / "chamadas.json").read_text("utf-8"))
     diagnostics = json.loads((out_dir / "diagnosticos.json").read_text("utf-8"))

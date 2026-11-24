@@ -27,6 +27,7 @@ export default function App() {
   // Escrita dos slides: SlideDSL Alto sob gramática com os limites do compilador (padrão desde 0.4.0, pela
   // bancada de 24/11: −69% de slides montados pelo compilador e −11% de tempo projetado) ou JSON Schema.
   const [grammarSlides, setGrammarSlides] = useState(true);
+  const [photos, setPhotos] = useState(false);
   const [busy, setBusy] = useState(false), [message, setMessage] = useState('');
   const [progress, setProgress] = useState<Progress>({stage: '', total: slides});
   const [result, setResult] = useState<GenerationResult | null>(null), [file, setFile] = useState('');
@@ -96,6 +97,17 @@ export default function App() {
         extractMode: grammarSlides ? 'frases' : 'json',
         readDocument: async (file, signal) => document ?? readDocument(file, signal),
         onDocument: info => {documentData = info; setDocumentInfo(info);},
+        images: photos ? {
+          fetchJson: async (url, signal) => {
+            const response = await fetch(url, {signal, headers: {'Accept': 'application/json'}});
+            if (!response.ok) throw Error(`HTTP ${response.status}`);
+            return response.json();
+          },
+          fetchBytes: async (url, signal) => {
+            const response = await fetch(url, {signal});
+            if (!response.ok) throw Error(`HTTP ${response.status}`);
+            return new Uint8Array(await response.arrayBuffer());
+          }} : undefined,
         onProgress: setProgress, onCalls: c => {records = c; setCalls(c.length);},
         fetchJson: async (url, signal) => {
           const response = await fetch(url, {signal, headers: {'Accept': 'application/json'}});
@@ -165,7 +177,7 @@ export default function App() {
     </View>
     {message ? <Text accessibilityLiveRegion="polite" style={styles.error}>{message}</Text> : null}
     {screen === 'request' ? <><Text style={styles.text}>Selecionado: {selected.label}</Text><RequestScreen request={request} setRequest={setRequest} slides={slides} setSlides={setSlides} source={source} setSource={setSource} onGenerate={() => void run()}/></> : null}
-    {screen === 'model' ? <ModelScreen selected={selected} onSelect={setSelected} gpu={gpu} setGpu={setGpu} grammarSlides={grammarSlides} setGrammarSlides={setGrammarSlides}/> : null}
+    {screen === 'model' ? <ModelScreen selected={selected} onSelect={setSelected} gpu={gpu} setGpu={setGpu} grammarSlides={grammarSlides} setGrammarSlides={setGrammarSlides} photos={photos} setPhotos={setPhotos}/> : null}
     {screen === 'progress' ? <>
       <ActivityIndicator size="large"/><Text accessibilityLiveRegion="polite" style={styles.heading}>{progress.stage}</Text>
       {documentInfo ? <Text style={styles.text}>{documentInfo.name} · {documentInfo.type.toUpperCase()} · {documentInfo.pages === null ? 'sem paginação' : `${documentInfo.pages} páginas`} · {documentInfo.characters} caracteres · {documentInfo.chunks_used}/{documentInfo.chunks_total} trechos · {documentInfo.facts_used} fatos</Text> : null}

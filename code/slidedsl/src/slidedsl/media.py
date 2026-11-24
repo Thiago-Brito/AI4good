@@ -6,6 +6,7 @@ import html
 from io import BytesIO
 import ipaddress
 import json
+import os
 import re
 import socket
 import time
@@ -333,6 +334,8 @@ def automatic_search(query, *, offline=False, providers=None, wait_for_provider=
     )
     if providers is None:
         providers = ["nasa", "openverse", "commons"] if space else ["openverse", "commons"]
+        if not os.environ.get("SLIDEDSL_CONTACT"):
+            providers.remove("commons")  # sem contato no User-Agent o Commons responde 403
     results, attempts = [], []
     for provider in providers:
         try:

@@ -15,7 +15,7 @@ const clone = <T>(value: T): T => JSON.parse(JSON.stringify(value)) as T;
 /** Recompila deck + roteiro novos; devolve um resultado novo (o anterior fica intacto para o desfazer). */
 export async function rebuild(result: GenerationResult, slides: AltoSlide[], plans = result.outline.slides): Promise<GenerationResult> {
   const deck = {...result.deck, slides};
-  const built = buildAlto(deck, result.facts);
+  const built = buildAlto(deck, result.facts, result.images.info);
   const errors = built.diagnostics.filter(d => d.severity === 'ERRO');
   if (!built.ir || errors.length) {
     throw new EditError(`Edição recusada: ${errors.slice(0, 3).map(d => `${d.code} ${d.message}`).join('; ') || 'apresentação inválida'}.`, errors);
@@ -23,7 +23,7 @@ export async function rebuild(result: GenerationResult, slides: AltoSlide[], pla
   // Avisos de slide montado pelo compilador acompanham o slide (mesmo objeto) para a nova posição.
   const fallback = result.diagnostics.filter(d => d.code === 'F001')
     .map(d => ({...d, slide: slides.indexOf(result.deck.slides[(d.slide ?? 0) - 1]) + 1})).filter(d => d.slide > 0);
-  return {...result, deck, ir: built.ir, pptx: await renderPptx(built.ir), outline: {...result.outline, slides: plans},
+  return {...result, deck, ir: built.ir, pptx: await renderPptx(built.ir, {images: result.images.data}), outline: {...result.outline, slides: plans},
     diagnostics: [...built.diagnostics, ...fallback]};
 }
 
@@ -93,6 +93,8 @@ export async function redoSlide(result: GenerationResult, index: number, instruc
   const {accepted, diagnostics} = await writeSlide(ctx, {...plan, tipo: current.kind}, index, extra);
   const calls = [...result.calls, ...recorder.calls];
   if (!accepted) throw new EditError('A IA não conseguiu refazer o slide; a versão anterior foi mantida.', diagnostics);
+  // Slide de imagem: a foto já baixada continua (a busca nova não é refeita aqui).
+  if (current.image_file && accepted.kind === 'imagem') { accepted.image_file = current.image_file; accepted.image_query = current.image_query; }
   const rebuilt = await rebuild(result, slides.map((s, i) => (i === index ? accepted : s)));
   return {...rebuilt, calls};
 }

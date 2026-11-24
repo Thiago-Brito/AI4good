@@ -105,7 +105,7 @@ def test_metric_is_normalized_and_ignores_short_common_labels():
 
 
 @pytest.mark.parametrize("available", [True, False])
-def test_images_planned_commons_only_and_fallback_without_model_calls(monkeypatch, available):
+def test_images_planned_automatic_providers_and_fallback_without_model_calls(monkeypatch, available):
     seen = []
 
     def search(query, **kwargs):
@@ -120,10 +120,11 @@ def test_images_planned_commons_only_and_fallback_without_model_calls(monkeypatc
     assert len(model.calls) == 5
     assert result.outline["slides"][1]["tipo"] == "imagem"
     assert result.outline["slides"][1]["busca_imagem"] == "green leaf"
-    # Sem resultado, consultas mais simples são tentadas, sempre só no Commons e sem IA.
+    # Sem resultado, consultas mais simples são tentadas, nos provedores automáticos e sem IA
+    # (só Commons dava 403 sem contato no User-Agent e nenhuma foto; teste de 24/11/2026).
     expected = ["green leaf"] if available else ["green leaf", "green"]
     assert [q for q, _ in seen] == expected
-    assert all(kw == {"providers": ("commons",), "wait_for_provider": True} for _, kw in seen)
+    assert all(kw == {"wait_for_provider": True} for _, kw in seen)
     # R7 keeps imagem so that the compiler uses its dedicated textual cards fallback.
     assert result.deck.slides[1].kind == "imagem"
     assert bool(result.deck.slides[1].image_file) is available

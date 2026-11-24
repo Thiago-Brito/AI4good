@@ -186,10 +186,16 @@ def lark_to_gbnf(text: str, start: str = "start") -> str:
 
 
 @lru_cache
-def alto_gbnf(start: str = "start") -> str:
+def alto_gbnf(start: str = "start", generation: bool = True) -> str:
+    """GBNF da Alto. Na geração (padrão), a imagem só pode ser `buscar`: o modelo não tem arquivos, e com
+    `arquivo` liberado o Qwen3 1.7B escreveu `arquivo "buscar ..."` (teste de imagens, 24/11/2026)."""
     from .alto import grammar_text
 
-    return lark_to_gbnf(grammar_text(), start)
+    gbnf = lark_to_gbnf(grammar_text(), start)
+    if generation:
+        gbnf = gbnf.replace('origem-imagem ::= ws "arquivo" ws t-string | ws "buscar" ws t-string',
+                            'origem-imagem ::= ws "buscar" ws t-string')
+    return gbnf
 
 
 def low_level_gbnf() -> str:

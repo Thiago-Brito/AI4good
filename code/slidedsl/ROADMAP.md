@@ -460,3 +460,21 @@ continuam como etapas futuras do plano maior; o histórico desta rodada é espec
 - [ ] Medir no celular o 0.6B + LoRA (velocidade real e qualidade) com o app 0.6.0.
 - [ ] "como em F1" (id interno do fato) aparece no texto em 14/24 decks (1.7B e LoRA): corrigir no prompt.
 - [ ] Exemplo "cresceu 30%" do prompt de conteúdo vaza para slides (1–2 de 24).
+
+## PC e celular parecidos, fotos e edição no celular (24/11/2026)
+- [x] Celular limpa o texto visível como o PC (sem "como em F1", caixa de frase); paridade conferida contra
+      saídas do Python (`scripts/export_editorial_cases.py`, `test/editorial.test.mjs`).
+- [x] PC ganha o motor "igual ao celular": o mesmo `generate()` do app (`bench/motor_pc.mjs`) em GGUF local
+      escolhido no editor (`config/modelos_locais.json`, `src/slidedsl/motor_celular.py`); o editor do PC edita o
+      resultado como no fluxo completo.
+- [x] Celular edita slide a slide: refazer com IA (mesmo prompt/gramática, com instrução), editar texto, mover,
+      excluir, desfazer (`src/pipeline/edit.ts`).
+- [x] Fotos da internet no celular (opcional): slides "imagem" com foto livre do Openverse/NASA e crédito
+      (`src/pipeline/images.ts`); também no motor do celular no PC (`--imagens`).
+- [x] Imagens do PC voltaram a funcionar: a busca estava presa no Wikimedia Commons, que responde 403 sem
+      contato no User-Agent; e a gramática de geração permitia `arquivo` inexistente (agora só `buscar`).
+- [ ] LoRA no Qwen3-4B-Instruct (QLoRA em 4 bits) para o PC: treino em andamento; converter, medir na bancada.
+- [ ] Commons: informar contato (SLIDEDSL_CONTACT) se o usuário quiser fotos do Wikimedia de volta.
+- [ ] Testar a edição e as fotos no emulador/celular (APK 0.7.0).
+- [ ] O LoRA do 0.6B não viu slides "imagem" no treino: com fotos ligadas, gerar dataset com imagem.
+

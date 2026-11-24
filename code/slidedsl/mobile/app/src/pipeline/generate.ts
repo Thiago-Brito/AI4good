@@ -5,6 +5,7 @@ import {collectFacts, type SourceChoice, type FetchText, type ReadDocument, type
 import {genericDocumentRequest, MAX_EXTRACT_CALLS} from './documents.js';
 import {Recorder} from './usage.js';
 import {cleanVisible} from './editorial.js';
+import {resolveImages, type DeckImages, type ImageSource} from './images.js';
 import {altoFormatHint, altoToJson, slideGrammar, truncatedPaths, withCompilerLimits} from './altoText.js';
 /** Como o modelo escreve cada slide: JSON Schema; SlideDSL Alto sob gramática com os mesmos campos e limites
  * folgados do JSON; ou a mesma gramática com os limites de texto do compilador (gramatica_limites). */
@@ -17,6 +18,8 @@ export interface GenerationResult {
   wall_ms: number; max_calls: number;
   /** Para editar depois (refazer um slide com o mesmo prompt): pedido, roteiro e modo de escrita. */
   request: string; outline: Outline; slideMode: SlideMode;
+  /** Fotos dos slides "imagem" (com Fotos da internet ligado): dimensões/crédito e data URIs. */
+  images: DeckImages;
 }
 export class GenerationError extends Error {
   constructor(message: string, readonly diagnostics: Diagnostic[]) { super(message); }
@@ -26,7 +29,7 @@ export function jsonToSlide(kind: SlideKind, data: Record<string, any>): AltoSli
   const text = (key: string) => (data[key] as string | undefined)?.trim() || null;
   const items = (values: any[] = []) => values.map(v => ({label: v.rotulo.trim(), detail: v.detalhe?.trim() || null}));
   return {kind, title: text('titulo'), subtitle: text('subtitulo'), author: text('autor'),
-    text: text('texto'), caption: text('legenda'), unit: text('unidade'), notes: text('notas'),
+    text: text('texto'), caption: text('legenda'), unit: text('unidade'), notes: text('notas'), image_query: text('busca_imagem'),
     items: items(data.itens), values: (data.valores ?? []).map((v: any) => ({value: v.valor.trim(), label: v.legenda.trim()})),
     sides: (data.lados ?? []).map((v: any) => ({name: v.nome.trim(), items: items(v.itens)})),
     milestones: (data.marcos ?? []).map((v: any) => ({date: v.data.trim(), label: v.rotulo.trim(), detail: v.detalhe?.trim() || null})),
@@ -85,6 +88,8 @@ export interface GenerateOptions {
   repairTruncated?: boolean;
   /** Leitura do documento: `json` (o modelo copia o trecho) ou `frases` (escolhe frases numeradas). Padrão: json. */
   extractMode?: ExtractMode;
+  /** Fotos da internet: o roteiro pode usar slides "imagem" e a foto é buscada no Openverse/NASA. */
+  images?: ImageSource;
 }
 /** O que writeSlide precisa da geração em curso (ou de uma apresentação pronta, ao refazer um slide). */
 export interface SlideContext {
@@ -162,10 +167,11 @@ export async function generate(options: GenerateOptions): Promise<GenerationResu
   const factsBlock = (selected = ids) => JSON.stringify(Object.fromEntries(selected.slice(0, 3).filter(id => id in facts).map(id => [id,
     {claim: facts[id].claim, quote: String(facts[id].quote).slice(0, 300), kind: facts[id].kind, value: facts[id].value}])));
   progress('Planejando roteiro');
-  const outlineSchema = schemaWithFacts((prompts.outline_schemas as Record<string, any>)[String(n)][mode], ids);
+  const withImages = !!options.images;
+  const outlineSchema = schemaWithFacts(((withImages ? prompts.outline_schemas_imagens : prompts.outline_schemas) as Record<string, any>)[String(n)][mode], ids);
   const sections = genericDocumentRequest(request) ? source.document?.sections ?? [] : [];
   const sectionPrompt = sections.length ? `\nSeções do documento em ordem; cubra estes assuntos no roteiro, agrupando se necessário. A capa pode apresentar a primeira seção. Use os IDs correspondentes:\n${JSON.stringify(sections)}` : '';
-  const raw = await recorder.json('roteiro', prompts.outline_system[mode],
+  const raw = await recorder.json('roteiro', (withImages ? prompts.outline_system_imagens : prompts.outline_system)[mode],
     `Pedido: ${request}\nNúmero de slides: ${n}\nFatos da pesquisa:\n${factsBlock()}${sectionPrompt}`, outlineSchema);
   const outlineErrors = schemaErrors(raw, outlineSchema);
   if (outlineErrors.length) throw Error(`Roteiro inválido: ${outlineErrors.join('; ')}`);
@@ -190,13 +196,14 @@ export async function generate(options: GenerateOptions): Promise<GenerationResu
     // Yield to native UI between CPU-bound compiler passes.
     await new Promise<void>(resolve => setTimeout(resolve, 0));
   }
+  const images: DeckImages = options.images ? await resolveImages(deck, options.images, signal, stage => progress(stage)) : {info: {}, data: {}, log: []};
   progress('Validando apresentação');
-  const built = buildAlto(deck, facts);
+  const built = buildAlto(deck, facts, images.info);
   if (!built.ir || built.diagnostics.some(d => d.severity === 'ERRO')) throw new GenerationError('Apresentação inválida após compilação.', built.diagnostics);
   progress('Gerando PowerPoint editável');
-  const pptx = await renderPptx(built.ir);
+  const pptx = await renderPptx(built.ir, {images: images.data});
   checkCancelled(signal);
   progress('Concluído');
   return {deck, ir: built.ir, pptx, calls: recorder.calls, diagnostics: [...built.diagnostics, ...fallbackNotes], source, facts,
-    wall_ms: Date.now() - start, max_calls: maxCalls, request, outline, slideMode};
+    wall_ms: Date.now() - start, max_calls: maxCalls, request, outline, slideMode, images};
 }

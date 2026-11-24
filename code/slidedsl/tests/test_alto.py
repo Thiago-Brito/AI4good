@@ -152,7 +152,7 @@ def test_validate_ir_rejects_text_style_on_shapes(compile_scene, root):
 
 
 def test_gbnf_accepts_examples_and_rejects_invalid_programs():
-    matcher = GBNFMatcher(alto_gbnf())
+    matcher = GBNFMatcher(alto_gbnf(generation=False))  # a linguagem completa, com `arquivo`
     for path in EXAMPLES:
         source = "\n".join(
             line
@@ -169,7 +169,11 @@ def test_gbnf_per_slide_rule_and_low_level_grammar():
     from slidedsl.alto import print_slide
 
     for slide in deck.slides:
-        assert GBNFMatcher(alto_gbnf(slide.kind)).accepts(print_slide(slide, ""))
+        assert GBNFMatcher(alto_gbnf(slide.kind, generation=False)).accepts(print_slide(slide, ""))
+    # Na geração, imagem só por busca: o modelo não conhece arquivos locais.
+    gen = GBNFMatcher(alto_gbnf("imagem"))
+    assert gen.accepts('imagem {\n  titulo "Painéis"\n  buscar "solar panels"\n}')
+    assert not gen.accepts('imagem {\n  titulo "Painéis"\n  arquivo "buscar solar"\n}')
     low = GBNFMatcher(low_level_gbnf())
     for path in (ROOT / "examples").glob("*.sld"):
         assert low.accepts(path.read_text("utf-8")), path.name
