@@ -52,6 +52,40 @@ def _model(payload):
     return model
 
 
+def _completo(payload, out, say, usage):
+    """Fluxo completo do PC: pesquisa na internet/documentos, imagens, candidatos, lote."""
+    from .alto_generation import create_presentation
+
+    model = _model(payload)
+    ok, message = model.available()
+    if not ok:
+        raise ValueError(f"Modelo indisponível: {message}")
+    mode = payload.get("modo") or ("gramatica" if payload["provider"] == "llamacpp" else "json")
+    return create_presentation(
+        payload["pedido"],
+        out,
+        model,
+        research_provider=None if payload["buscador"] == "nenhum" else payload["buscador"],
+        langs=tuple(payload["idiomas"]),
+        document_ids=payload.get("documentos"),
+        sources_mode=payload.get("fontes"),
+        n_slides=payload["slides"],
+        theme=payload["tema"],
+        mode=mode,
+        candidates=payload["candidatos"],
+        repair_max=payload["reparos"],
+        images=payload["imagens"],
+        batch=payload.get("lote", False),
+        image_source=payload.get("imagens_fonte", "livres"),
+        ai_profile=payload.get("imagens_ia_qualidade", "economica"),
+        contact=payload.get("contato") or None,
+        allow_without_facts=payload["permitir_sem_fatos"],
+        progress=say,
+        max_calls=payload.get("max_calls", 60),
+        on_usage=usage,
+    )
+
+
 def _work(id: str, payload: dict):
     def usage(summary):
         with lock:
@@ -70,37 +104,16 @@ def _work(id: str, payload: dict):
         _persist(jobs[id])
     out = folder(id)
     try:
-        from .alto_generation import create_presentation
         from .pipeline import validate_source
 
-        model = _model(payload)
-        ok, message = model.available()
-        if not ok:
-            raise ValueError(f"Modelo indisponível: {message}")
-        mode = payload.get("modo") or ("gramatica" if payload["provider"] == "llamacpp" else "json")
-        report = create_presentation(
-            payload["pedido"],
-            out,
-            model,
-            research_provider=None if payload["buscador"] == "nenhum" else payload["buscador"],
-            langs=tuple(payload["idiomas"]),
-            document_ids=payload.get("documentos"),
-            sources_mode=payload.get("fontes"),
-            n_slides=payload["slides"],
-            theme=payload["tema"],
-            mode=mode,
-            candidates=payload["candidatos"],
-            repair_max=payload["reparos"],
-            images=payload["imagens"],
-            batch=payload.get("lote", False),
-            image_source=payload.get("imagens_fonte", "livres"),
-            ai_profile=payload.get("imagens_ia_qualidade", "economica"),
-            contact=payload.get("contato") or None,
-            allow_without_facts=payload["permitir_sem_fatos"],
-            progress=say,
-            max_calls=payload.get("max_calls", 60),
-            on_usage=usage,
-        )
+        if payload.get("motor") == "celular":
+            from .motor_celular import create_presentation_celular
+
+            report = create_presentation_celular(
+                payload["pedido"], out, modelo=payload["modelo_local"], n_slides=payload["slides"],
+                document_ids=payload.get("documentos"), progress=say)
+        else:
+            report = _completo(payload, out, say, usage)
         result = {"report": report, "folder": str(out.relative_to(project_root()))}
         dossier = out / "dossie.json"
         if dossier.is_file():

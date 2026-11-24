@@ -1,0 +1,10 @@
+{
+ "comentario": "Modelos GGUF do motor igual ao celular (src/slidedsl/motor_celular.py). Arquivos em SLIDEDSL_GGUF_DIR. LoRA: docs/RESULTADOS_T8.md.",
+ "modelos": [
+  {"id": "qwen3-0.6b-lora", "rotulo": "Qwen3 0.6B SlideDSL (LoRA) · rápido, o mesmo do celular", "arquivo": "Qwen3-0.6B-SlideDSL-LoRA-Q4_K_M.gguf", "padrao": true},
+  {"id": "qwen3-0.6b", "rotulo": "Qwen3 0.6B (sem treino)", "arquivo": "Qwen3-0.6B.Q4_K_M.gguf"},
+  {"id": "qwen3-1.7b", "rotulo": "Qwen3 1.7B", "arquivo": "Qwen3-1.7B-Q4_K_M.gguf"},
+  {"id": "qwen3-4b-instruct", "rotulo": "Qwen3 4B Instruct 2507 · melhor conteúdo, mais lento", "arquivo": "Qwen3-4B-Instruct-2507-Q4_K_M.gguf"},
+  {"id": "qwen3-4b-instruct-lora", "rotulo": "Qwen3 4B Instruct SlideDSL (LoRA)", "arquivo": "Qwen3-4B-Instruct-SlideDSL-LoRA-Q4_K_M.gguf"}
+ ]
+}

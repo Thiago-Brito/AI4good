@@ -61,6 +61,7 @@ test("OpenAI envia limites, mantém modelo remoto e mostra consumo parcial", asy
     });
   });
   await page.goto("/");
+  await page.getByLabel("Motor de geração").selectOption("completo");
   await page.getByLabel("Provedor", { exact: true }).selectOption("openai");
   await expect(
     page.getByLabel("Modelo para criar", { exact: true }),
@@ -111,6 +112,7 @@ test("chave ausente fica visível e impede envio pela interface", async ({
     }),
   );
   await page.goto("/");
+  await page.getByLabel("Motor de geração").selectOption("completo");
   await page.getByLabel("Provedor", { exact: true }).selectOption("openai");
   await expect(
     page.getByText(

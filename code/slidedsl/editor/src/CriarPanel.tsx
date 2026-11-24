@@ -88,6 +88,16 @@ export function CriarPanel({
   onLoad: (source: string, ir: Deck, diagnostics: Diagnostic[]) => void;
 }) {
   const [models, setModels] = useState<string[]>([]);
+  // "celular": o mesmo pipeline do app Android, em GGUF local (src/slidedsl/motor_celular.py).
+  const [motor, setMotor] = useState<"celular" | "completo">(() =>
+    stored("criar.motor", "celular") === "completo" ? "completo" : "celular",
+  );
+  const [localModels, setLocalModels] = useState<
+    { id: string; rotulo: string; disponivel: boolean; padrao?: boolean }[]
+  >([]);
+  const [modeloLocal, setModeloLocal] = useState(
+    stored("criar.modeloLocal", "qwen3-0.6b-lora"),
+  );
   const [provider, setProvider] = useState<Provider>(() => {
     const value = stored("criar.provider", "ollama");
     return value === "openai" || value === "llamacpp" ? value : "ollama";
@@ -151,6 +161,26 @@ export function CriarPanel({
     };
   }, []);
   useEffect(() => {
+    void fetch("/api/modelos-locais")
+      .then((response) => (response.ok ? response.json() : null))
+      .then((data) => {
+        if (!active.current || !data) return;
+        const list = (data.modelos ?? []).filter(
+          (m: { disponivel: boolean }) => m.disponivel,
+        );
+        setLocalModels(list);
+        setModeloLocal((current) =>
+          list.some((m: { id: string }) => m.id === current)
+            ? current
+            : ((list.find((m: { padrao?: boolean }) => m.padrao) ?? list[0])
+                ?.id ?? current),
+        );
+      })
+      .catch(() => {
+        /* sem lista: o motor completo continua disponível */
+      });
+  }, []);
+  useEffect(() => {
     void fetch("/api/providers")
       .then((response) => (response.ok ? response.json() : null))
       .then((data: Providers | null) => {
@@ -207,10 +237,14 @@ export function CriarPanel({
     setError("");
     setJob(null);
     store(`criar.${provider}.model`, model);
+    store("criar.motor", motor);
+    store("criar.modeloLocal", modeloLocal);
     onStatus(
-      pesquisar
-        ? "Criando apresentação com pesquisa…"
-        : "Criando apresentação…",
+      motor === "celular"
+        ? "Criando apresentação com o pipeline do celular…"
+        : pesquisar
+          ? "Criando apresentação com pesquisa…"
+          : "Criando apresentação…",
     );
     try {
       let current = await request<CriarJob>("criar", {
@@ -234,6 +268,8 @@ export function CriarPanel({
         permitir_sem_fatos: semFatos || (!pesquisar && !documents.length),
         max_calls: maxCalls,
         max_output_tokens: maxOutput,
+        motor,
+        modelo_local: motor === "celular" ? modeloLocal : null,
       });
       while (active.current) {
         setJob(current);
@@ -331,51 +367,93 @@ export function CriarPanel({
       />
       <div className="generation-options">
         <label>
-          Provedor
+          Motor
           <select
-            aria-label="Provedor"
-            value={provider}
+            aria-label="Motor de geração"
+            value={motor}
             disabled={disabled}
-            onChange={(e) => chooseProvider(e.target.value as Provider)}
+            onChange={(e) => {
+              const value = e.target.value as "celular" | "completo";
+              setMotor(value);
+              if (value === "celular")
+                setSlides((n) => Math.max(4, Math.min(8, n)));
+            }}
           >
-            <option value="ollama">Ollama · local</option>
-            <option value="llamacpp">llama.cpp · local</option>
-            <option value="openai">OpenAI · API paga</option>
+            <option value="celular">Igual ao celular · modelo local</option>
+            <option value="completo">Completo · pesquisa e imagens</option>
           </select>
         </label>
-        <label>
-          Modelo
-          {provider === "ollama" && models.includes(model) ? (
+        {motor === "celular" ? (
+          <label>
+            Modelo GGUF
             <select
-              aria-label="Modelo para criar"
-              value={model}
-              disabled={disabled}
-              onChange={(e) => setModel(e.target.value)}
+              aria-label="Modelo GGUF"
+              value={modeloLocal}
+              disabled={disabled || !localModels.length}
+              onChange={(e) => setModeloLocal(e.target.value)}
             >
-              {models.map((m) => (
-                <option key={m}>{m}</option>
+              {localModels.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.rotulo}
+                </option>
               ))}
             </select>
-          ) : (
-            <input
-              aria-label="Modelo para criar"
-              value={model}
-              disabled={disabled}
-              onChange={(e) => setModel(e.target.value)}
-            />
-          )}
-        </label>
+          </label>
+        ) : null}
+        {motor === "completo" ? (
+          <>
+            <label>
+              Provedor
+              <select
+                aria-label="Provedor"
+                value={provider}
+                disabled={disabled}
+                onChange={(e) => chooseProvider(e.target.value as Provider)}
+              >
+                <option value="ollama">Ollama · local</option>
+                <option value="llamacpp">llama.cpp · local</option>
+                <option value="openai">OpenAI · API paga</option>
+              </select>
+            </label>
+            <label>
+              Modelo
+              {provider === "ollama" && models.includes(model) ? (
+                <select
+                  aria-label="Modelo para criar"
+                  value={model}
+                  disabled={disabled}
+                  onChange={(e) => setModel(e.target.value)}
+                >
+                  {models.map((m) => (
+                    <option key={m}>{m}</option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  aria-label="Modelo para criar"
+                  value={model}
+                  disabled={disabled}
+                  onChange={(e) => setModel(e.target.value)}
+                />
+              )}
+            </label>
+          </>
+        ) : null}
         <label>
           Slides
           <input
             aria-label="Número de slides"
             type="number"
-            min={3}
-            max={12}
+            min={motor === "celular" ? 4 : 3}
+            max={motor === "celular" ? 8 : 12}
             value={slides}
             disabled={disabled}
             onChange={(e) =>
-              setSlides(Math.max(3, Math.min(12, Number(e.target.value))))
+              setSlides(
+                motor === "celular"
+                  ? Math.max(4, Math.min(8, Number(e.target.value)))
+                  : Math.max(3, Math.min(12, Number(e.target.value))),
+              )
             }
           />
         </label>

@@ -84,6 +84,14 @@ def local_models():
         return {"available": False, "models": [], "error": str(exc)}
 
 
+@app.get("/api/modelos-locais")
+def modelos_locais_api():
+    """GGUF do motor igual ao celular (config/modelos_locais.json), com o que existe nesta máquina."""
+    from .motor_celular import modelos_locais
+
+    return {"modelos": modelos_locais()}
+
+
 @app.post("/api/generations", status_code=202)
 def start_generation(payload: GenerationPayload):
     from .evolution import requested_count
@@ -180,6 +188,9 @@ class CriarPayload(BaseModel):
     contato: str | None = Field(default=None, max_length=120)
     permitir_sem_fatos: bool = False
     modo: Literal["json", "gramatica", "direto"] | None = None
+    # "celular": o mesmo pipeline do app Android (gramática com limites + frases), em modelo GGUF local.
+    motor: Literal["completo", "celular"] = "completo"
+    modelo_local: str | None = Field(default=None, max_length=80)
     max_calls: int = Field(default=60, ge=1, le=200)
     max_output_tokens: int = Field(default=2048, ge=256, le=8192)
 
@@ -191,6 +202,17 @@ def start_creation(payload: CriarPayload):
 
     if not payload.pedido.strip():
         raise HTTPException(422, detail="Escreva o pedido da apresentação.")
+    if payload.motor == "celular":
+        from .motor_celular import modelo_local
+
+        try:
+            modelo_local(payload.modelo_local or "")
+        except ValueError as exc:
+            raise HTTPException(422, detail=str(exc)) from exc
+        if not 4 <= payload.slides <= 8 or len(payload.documentos) > 1:
+            raise HTTPException(422, detail="O motor do celular aceita de 4 a 8 slides e no máximo um documento.")
+        # Edições depois (refazer slide) usam o llama-server que o motor deixou ligado.
+        payload = payload.model_copy(update={"provider": "llamacpp", "model": payload.modelo_local})
     if payload.modo == "gramatica" and payload.provider != "llamacpp":
         raise HTTPException(422, detail="O modo gramática (GBNF) exige o provedor llama.cpp.")
     if payload.provider == "openai":
