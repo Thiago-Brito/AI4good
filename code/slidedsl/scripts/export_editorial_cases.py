@@ -19,6 +19,8 @@ STRIP = [
     "A F1 é uma categoria do automobilismo",
     "F9 não existe no dossiê",
     "Fonte: F12",
+    "A falta de sono prejudica a memória, conforme afirmado em F3.",
+    "Os dados foram citados no F2 e no relatório.",
     "Texto sem referência",
 ]
 REQUEST = "Explique o Git e o GitHub para a equipe da Petrobras"

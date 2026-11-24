@@ -677,7 +677,9 @@ def _fact_ref_pattern(ids) -> re.Pattern | None:
     ref = "(?:" + "|".join(ids) + ")"
     return re.compile(
         r"\s*[,;(]?\s*(?:\b(?:conforme|segundo|de acordo com|como (?:mostra|previsto|"
-        r"mostrado|destacado|indicado|visto) em|como em|ver|vide|fonte:?)\s+)?(?:destacado em\s+)?"
+        r"mostrado|destacado|indicado|visto) em|como em|ver|vide|fonte:?)\s+)?"
+        # "conforme afirmado em F3" deixava "conforme afirmado em." no texto (deck do 4B, 24/11/2026)
+        r"(?:(?:destacado|afirmado|citado|descrito|relatado|apontado|mostrado|indicado)\s+(?:em|no|na)\s+)?"
         rf"\b{ref}\b(?:\s*(?:e|,)\s*{ref}\b)*\)?",
         re.IGNORECASE,
     )

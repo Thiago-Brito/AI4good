@@ -8,31 +8,39 @@ Responde à P6 do `docs/PLANO_TCC.md`: além de válidos, os slides são bons?
 - Os dados ficam em `outputs/avaliacao_cega/`, fora do git.
 - O gabarito código → modelo fica só em `gabarito.json`, que não é publicado.
 
-## Material
+## Material (revisado em 24/11, antes de qualquer resposta: entrou um sistema externo)
 
-Foram usadas 12 apresentações de 5 slides: 4 temas (ciclo da água, sono e estudos, Git, energia solar) × 3 modelos. Todas foram geradas na bancada do app, nas mesmas condições:
+15 apresentações de 5 slides: 4 temas (ciclo da água, sono e estudos, Git, energia solar) × 4 condições.
+Em todas, a entrada é a mesma: o pedido (nível detalhado), o documento-fonte e 5 slides.
 
-| Item | Valor |
-|---|---|
-| Pedido | nível detalhado |
-| Documento-fonte | o mesmo para os 3 modelos |
-| Semente | 11 |
-| Pipeline | `gramatica_limites+frases` |
-| Contexto | 4096 |
+| Condição | O que é | Origem |
+|---|---|---|
+| celular 0.6B LoRA | app, Qwen3 0.6B destilado | `outputs/teste8_lora` (semente 11) |
+| celular 1.7B | app, Qwen3 1.7B | `outputs/teste6_17b_dica` (semente 11) |
+| PC 4B | fluxo completo do PC (modo gramática), Qwen3-4B-Instruct-2507 | `scripts/avaliacao_pc_4b.py` |
+| externo GPT-4.1-mini | IA comercial escrevendo o PowerPoint direto (python-pptx, prompt do Teste 2), mostrado como sai pelo LibreOffice | `scripts/avaliacao_externo_gpt.py` |
 
-| Condição | Execução |
-|---|---|
-| 1.7B | `outputs/teste6_17b_dica` |
-| 0.6B | `outputs/teste7_06b_dica` |
-| 0.6B LoRA | `outputs/teste8_lora` |
+**Regra das sementes (definida antes de gerar a condição PC 4B):**
+- usa-se a semente 11;
+- se a apresentação for inválida, tentam-se as sementes 12 e 13;
+- fica a primeira válida, e as falhas são registradas.
 
-Os slides são renderizados pelo mesmo compilador. Assim, o visual é igual entre as condições e só o conteúdo varia. Os avaliadores veem códigos aleatórios (A103, A145…) e não sabem o modelo.
+**Resultado da regra:**
+- No tema água, o PC 4B falhou nas 3 sementes, sempre por rótulo de comparação acima de 48 caracteres (A005). O fluxo do PC ainda não tem os limites do compilador na gramática, que o app tem.
+- Por isso a combinação água × PC 4B fica fora: são 15 apresentações, e a falha entra nos resultados.
+- O externo gerou 4/4 na primeira tentativa (cerca de 10 mil tokens, ~US$ 0,01).
+
+**Renderização e visual:**
+- As três condições SlideDSL são renderizadas pelo mesmo compilador.
+- A externa tem o visual que o modelo escreveu: o modelo padrão do python-pptx, com texto em tópicos.
+- Os avaliadores podem reconhecer a externa pelo visual. A página pede que avaliem o conteúdo, e isso é uma limitação registrada.
+- Os códigos (A103, A145…) são aleatórios.
 
 ## Avaliadores
 
 São 3 colegas voluntários, maiores de 18 anos, sem dado pessoal coletado.
 - **Consentimento:** é registrado na própria página, e o avaliador pode parar a qualquer momento.
-- **Tarefa:** cada um avalia as 12 apresentações, numa ordem sorteada por avaliador (cerca de 30 minutos).
+- **Tarefa:** cada um avalia as 15 apresentações, numa ordem sorteada por avaliador (cerca de 40 minutos).
 
 ## Rubrica (por apresentação)
 
@@ -44,21 +52,22 @@ São 3 colegas voluntários, maiores de 18 anos, sem dado pessoal coletado.
 
 O tempo gasto em cada apresentação é registrado.
 
-## Hipóteses (definidas antes)
+## Hipóteses (definidas antes das respostas)
 
-- **H1.** O 0.6B LoRA tem clareza e utilidade maiores que o 0.6B sem treino. Na bancada, o LoRA teve 22/24 apresentações completas contra 8/24, e 13 textos repetidos contra 117.
-- **H2.** O 0.6B LoRA não é pior que o 1.7B em clareza e utilidade, mas tem mais afirmações marcadas como erradas. A bancada mostrou menos fatos usados pelo LoRA e conteúdo mais raso.
-- **H3.** A repetição percebida segue a ordem 0.6B > 1.7B ≈ 0.6B LoRA, como na contagem automática de textos repetidos.
+- **H1.** O externo (modelo comercial grande) tem utilidade e clareza maiores que as condições do celular. O que se quer medir é a distância, não a vitória.
+- **H2.** O 0.6B LoRA não é pior que o 1.7B em clareza e utilidade, mas tem mais afirmações marcadas como erradas. A bancada mostrou menos fatos usados pelo LoRA.
+- **H3.** O PC 4B tem clareza e utilidade maiores que o 1.7B do celular, porque é um modelo maior e o fluxo do PC tem verificações de cobertura e sustentação.
+- **H4.** O externo tem mais repetição e textos mais longos por slide, porque escreve os tópicos sem os limites do compilador.
 
 ## Análise
 
-**Unidade de análise:** a média dos 3 avaliadores por apresentação. São 12 apresentações, ou seja, 4 temas pareados por condição.
+**Unidade de análise:** a média dos 3 avaliadores por apresentação. São 15 apresentações: 4 temas por condição, 3 no PC 4B, pareadas por tema.
 
 **Concordância entre avaliadores:** alfa de Krippendorff ordinal para clareza e utilidade. Valores abaixo de 0,4 serão relatados como concordância fraca, e as médias serão lidas com cautela.
 
-**Comparação das 3 condições:** teste de Friedman sobre os 4 temas, para clareza e utilidade. Pares com Wilcoxon (H1: LoRA × 0.6B; H2: LoRA × 1.7B). Com 4 temas o poder é baixo, então os resultados são relatados como descritivos.
+**Comparação das 4 condições:** teste de Friedman sobre os temas completos (3, porque água × PC 4B ficou fora), para clareza e utilidade. Pares por tema com teste do sinal (H1: externo × LoRA e externo × 1.7B; H2: LoRA × 1.7B; H3: PC 4B × 1.7B). Com 3 ou 4 temas o poder é baixo, então os resultados são relatados como descritivos.
 
-**Erro e repetição:** proporção de "sim" e de "muito" por condição, contada por avaliação (36 por condição).
+**Erro e repetição:** proporção de "sim" e de "muito" por condição, contada por avaliação (12 por condição; 9 no PC 4B).
 
 **Ressalvas registradas:**
 - São 4 temas e 1 semente, com estudantes como juízes.

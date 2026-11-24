@@ -11,7 +11,8 @@ function factRefPattern(ids: Iterable<string>): RegExp | null {
   if (!list.length) return null;
   const ref = `(?:${list.join('|')})`;
   return new RegExp(String.raw`\s*[,;(]?\s*(?:\b(?:conforme|segundo|de acordo com|como (?:mostra|previsto|` +
-    String.raw`mostrado|destacado|indicado|visto) em|como em|ver|vide|fonte:?)\s+)?(?:destacado em\s+)?` +
+    String.raw`mostrado|destacado|indicado|visto) em|como em|ver|vide|fonte:?)\s+)?` +
+    String.raw`(?:(?:destacado|afirmado|citado|descrito|relatado|apontado|mostrado|indicado)\s+(?:em|no|na)\s+)?` +
     String.raw`\b${ref}\b(?:\s*(?:e|,)\s*${ref}\b)*\)?`, 'gi');
 }
 

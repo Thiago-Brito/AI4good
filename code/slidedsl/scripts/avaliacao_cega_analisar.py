@@ -18,7 +18,7 @@ from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-CONDS = ["1.7B", "0.6B", "0.6B LoRA"]
+CONDS = ["celular 0.6B LoRA", "celular 1.7B", "PC 4B", "externo GPT-4.1-mini"]
 REP = {"nao": 0, "pouco": 1, "muito": 2}
 
 
@@ -70,8 +70,13 @@ def friedman(blocks: list[list[float]]) -> tuple[float, float]:
         ranks.append(r)
     sums = [sum(r[c] for r in ranks) for c in range(k)]
     chi = 12 / (n * k * (k + 1)) * sum(s * s for s in sums) - 3 * n * (k + 1)
-    # p da qui-quadrado com 2 gl (k = 3): exp(-x/2)
-    p = math.exp(-chi / 2) if k == 3 else float("nan")
+    # p da qui-quadrado com k-1 gl (k = 3: exp(-x/2); k = 4: 3 gl)
+    if k == 3:
+        p = math.exp(-chi / 2)
+    elif k == 4:
+        p = math.erfc(math.sqrt(chi / 2)) + math.sqrt(2 * chi / math.pi) * math.exp(-chi / 2)
+    else:
+        p = float("nan")
     return chi, p
 
 
@@ -85,7 +90,8 @@ def sign_test(diffs: list[float]) -> float:
 
 
 def main(folder: str):
-    gab = json.loads((ROOT / "outputs/avaliacao_cega/gabarito.json").read_text("utf-8"))["codigos"]
+    gab = {c: g for c, g in json.loads((ROOT / "outputs/avaliacao_cega/gabarito.json").read_text("utf-8"))["codigos"].items()
+           if not c.startswith("ausente-")}
     pub = json.loads((ROOT / "outputs/avaliacao_cega/publicar/avaliacao.json").read_text("utf-8"))
     tema_of = {a["codigo"]: a["tema"] for a in pub["apresentacoes"]}
     raters = load(Path(folder))
@@ -117,18 +123,23 @@ def main(folder: str):
             mean[c] = st.mean(vals) if vals else None
         blocks = []
         for t in temas:
-            row = [next(mean[c] for c, g in gab.items() if g["condicao"] == cond and tema_of[c] == t) for cond in CONDS]
+            row = [next((mean[c] for c, g in gab.items() if g["condicao"] == cond and tema_of[c] == t), None) for cond in CONDS]
             if None not in row:
                 blocks.append(row)
         chi, p = friedman(blocks) if len(blocks) >= 2 else (None, None)
-        lora, base, big = (CONDS.index(x) for x in ("0.6B LoRA", "0.6B", "1.7B"))
-        out["testes"][q] = {
-            "friedman_chi2": chi, "friedman_p": p, "temas": len(blocks),
-            "H1_lora_menos_06b": [round(b[lora] - b[base], 2) for b in blocks],
-            "H1_p_sinal": sign_test([b[lora] - b[base] for b in blocks]),
-            "H2_lora_menos_17b": [round(b[lora] - b[big], 2) for b in blocks],
-            "H2_p_sinal": sign_test([b[lora] - b[big] for b in blocks]),
-        }
+        idx = {c: i for i, c in enumerate(CONDS)}
+        def diffs(a, b):  # por tema, só onde as duas condições existem
+            return [round(r[idx[a]] - r[idx[b]], 2) for t in temas
+                    for r in [[next((mean[c] for c, g in gab.items() if g["condicao"] == cond and tema_of[c] == t), None)
+                               for cond in CONDS]] if r[idx[a]] is not None and r[idx[b]] is not None]
+        out["testes"][q] = {"friedman_chi2": chi, "friedman_p": p, "temas_completos": len(blocks)}
+        for nome, (a, b) in {"H1_externo_menos_lora": ("externo GPT-4.1-mini", "celular 0.6B LoRA"),
+                             "H1_externo_menos_17b": ("externo GPT-4.1-mini", "celular 1.7B"),
+                             "H2_lora_menos_17b": ("celular 0.6B LoRA", "celular 1.7B"),
+                             "H3_pc4b_menos_17b": ("PC 4B", "celular 1.7B")}.items():
+            d = diffs(a, b)
+            out["testes"][q][nome] = d
+            out["testes"][q][nome + "_p_sinal"] = sign_test(d)
     dst = ROOT / "outputs/avaliacao_cega/resultado.json"
     dst.write_text(json.dumps(out, ensure_ascii=False, indent=1), "utf-8")
     print(json.dumps({k: v for k, v in out.items() if k != "por_condicao"}, ensure_ascii=False, indent=1))

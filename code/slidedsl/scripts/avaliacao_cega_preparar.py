@@ -1,8 +1,12 @@
-"""Prepara a avaliação cega de qualidade (P6 do PLANO_TCC): 12 apresentações = 4 temas × 3 modelos.
+"""Prepara a avaliação cega de qualidade (P6 do PLANO_TCC): 16 apresentações = 4 temas × 4 condições.
 
-Mesmo pedido (nível detalhado), mesmo documento, semente 11 e pipeline do app (gramática com limites + frases):
-- 1.7B: outputs/teste6_17b_dica; 0.6B: outputs/teste7_06b_dica; 0.6B LoRA: outputs/teste8_lora.
-Os slides são renderizados pelo compilador atual (o mesmo para todos), então só o conteúdo difere.
+Mesmo pedido (nível detalhado), mesmo documento-fonte e 5 slides em todas:
+- celular 0.6B LoRA e celular 1.7B: bancada do app (gramática com limites + frases, semente 11),
+  outputs/teste8_lora e outputs/teste6_17b_dica;
+- PC 4B: fluxo completo do PC com o documento (scripts/avaliacao_pc_4b.py), outputs/avaliacao_cega/pc4b;
+- externo: GPT-4.1-mini escreve o PowerPoint direto (scripts/avaliacao_externo_gpt.py), mostrado como sai
+  (LibreOffice), outputs/avaliacao_cega/externo.
+As três condições SlideDSL são renderizadas pelo compilador atual; a externa tem o visual que o modelo fez.
 
 Saídas em outputs/avaliacao_cega/ (fora do git):
 - publicar/: o que vai na página (imagens com códigos aleatórios e avaliacao.json, sem o modelo);
@@ -24,16 +28,16 @@ from slidedsl.ir_preview import render_deck
 from slidedsl.motor_celular import _dossie
 
 ROOT = Path(__file__).resolve().parents[1]
-CONDICOES = {"1.7B": "teste6_17b_dica", "0.6B": "teste7_06b_dica", "0.6B LoRA": "teste8_lora"}
+CONDICOES = {"celular 0.6B LoRA": "teste8_lora", "celular 1.7B": "teste6_17b_dica", "PC 4B": "pc4b", "externo GPT-4.1-mini": "externo"}
 TEMAS = {"agua": "Ciclo da água", "sono": "Sono e estudos", "git": "Git", "solar": "Energia solar em casa"}
 SEED = 20261124  # sorteio dos códigos, registrado para reprodução
 
 
 def main():
     out = ROOT / "outputs/avaliacao_cega"
-    if out.exists():
-        shutil.rmtree(out)
     pub = out / "publicar"
+    if pub.exists():  # só a pasta publicada; externo/, pc4b/ e a página ficam
+        shutil.rmtree(pub)
     pub.mkdir(parents=True)
     reqs = {r["id"]: r for r in json.loads((ROOT / "benchmark/format_requests.json").read_text("utf-8"))["requests"]}
     rng = random.Random(SEED)
@@ -41,16 +45,42 @@ def main():
     itens, gabarito, k = [], {}, 0
     for tema, nome in TEMAS.items():
         for cond, pasta in CONDICOES.items():
-            run = f"{tema}_detalhado__gramatica_limites+frases__s11"
-            base = ROOT / "outputs" / pasta / run
-            deck = AltoDeck.model_validate(json.loads(Path(f"{base}.deck.json").read_text("utf-8")))
-            facts = json.loads(Path(f"{base}.facts.json").read_text("utf-8")).get("facts", {})
-            built = build_alto(deck, _dossie(nome, facts).fact_map() if facts else {})
-            if not built.success():
-                raise SystemExit(f"{run} ({cond}) não compila: {[d.code for d in built.errors]}")
             code = f"A{codes[k]}"
             k += 1
-            paths = render_deck(built.validation.ir, pub / code, 0.75)
+            if pasta == "pc4b":
+                rel = ROOT / "outputs/avaliacao_cega/pc4b" / tema / "relatorio.json"
+                if not rel.is_file() or not json.loads(rel.read_text("utf-8")).get("valid"):
+                    # Regra do protocolo: até 3 sementes; sem versão válida, a combinação fica fora e é registrada.
+                    gabarito[f"ausente-{tema}-pc4b"] = {"condicao": cond, "pasta": pasta, "execucao": f"pc4b/{tema}",
+                                                       "motivo": "nenhuma das sementes 11, 12 e 13 gerou apresentação válida"}
+                    continue
+            if pasta == "externo":
+                src = ROOT / "outputs/avaliacao_cega/externo" / tema
+                (pub / code).mkdir(parents=True)
+                paths = []
+                for png in sorted(src.glob("slide_*.png")):
+                    shutil.copy(png, pub / code / png.name)
+                    paths.append(pub / code / png.name)
+                run = f"externo/{tema}"
+            else:
+                if pasta == "pc4b":
+                    from slidedsl.alto import parse_alto
+                    from slidedsl.research import Dossier
+
+                    folder = ROOT / "outputs/avaliacao_cega/pc4b" / tema
+                    deck = parse_alto((folder / "apresentacao.slda").read_text("utf-8"))
+                    fact_map = Dossier.load(folder / "dossie.json").fact_map() if (folder / "dossie.json").exists() else {}
+                    run = f"pc4b/{tema}"
+                else:
+                    run = f"{tema}_detalhado__gramatica_limites+frases__s11"
+                    base = ROOT / "outputs" / pasta / run
+                    deck = AltoDeck.model_validate(json.loads(Path(f"{base}.deck.json").read_text("utf-8")))
+                    facts = json.loads(Path(f"{base}.facts.json").read_text("utf-8")).get("facts", {})
+                    fact_map = _dossie(nome, facts).fact_map() if facts else {}
+                built = build_alto(deck, fact_map, ROOT)
+                if not built.success():
+                    raise SystemExit(f"{run} ({cond}) não compila: {[d.code for d in built.errors]}")
+                paths = render_deck(built.validation.ir, pub / code, 0.75, ROOT)
             itens.append({"codigo": code, "tema": tema, "slides": [f"{code}/{p.name}" for p in paths]})
             gabarito[code] = {"condicao": cond, "pasta": pasta, "execucao": run}
     docs = {t: (ROOT / "outputs/teste4/documentos" / f"{t}.txt").read_text("utf-8") for t in TEMAS}
