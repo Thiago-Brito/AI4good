@@ -455,5 +455,8 @@ continuam como etapas futuras do plano maior; o histórico desta rodada é espec
 - [ ] Medir o 0.5.0 no celular (agua.txt, 1.7B, 5 slides) e comparar com os 63 min do 0.3.0.
 - [x] Dica de formato só com "…" (marcadores eram copiados por 1.7B e 0.6B); app 0.5.1 (Teste 7).
 - [x] Bancada do 0.6B sem treino × 1.7B: válido 24/24, mas conteúdo pior (`docs/RESULTADOS_T7.md`).
-- [ ] Decidir destilação (LoRA) no 0.6B; medir velocidade real do 0.6B no celular.
+- [x] LoRA no 0.6B destilado do 4B (pipeline do app): 22/24 completas (1.7B: 13; 0.6B: 8), 20,6 min projetados
+      (1.7B: 53,5); app 0.6.0 importa o .gguf (Teste 8, `docs/RESULTADOS_T8.md`).
+- [ ] Medir no celular o 0.6B + LoRA (velocidade real e qualidade) com o app 0.6.0.
+- [ ] "como em F1" (id interno do fato) aparece no texto em 14/24 decks (1.7B e LoRA): corrigir no prompt.
 - [ ] Exemplo "cresceu 30%" do prompt de conteúdo vaza para slides (1–2 de 24).

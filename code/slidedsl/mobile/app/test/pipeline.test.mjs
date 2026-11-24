@@ -196,7 +196,8 @@ test('modelo 4B bloqueado abaixo de 12 GiB; recomendação conservadora sem RAM'
   assert.equal(modelAllowed(models[2], 11 * 1024 ** 3), false);
   assert.equal(modelAllowed(models[2], null), false); assert.equal(modelAllowed(models[2], 12 * 1024 ** 3), true);
   assert.equal(suggestedModel(null).id, models[0].id); assert.equal(suggestedModel(8 * 1024 ** 3).id, models[1].id);
-  for (const model of models) {assert.match(model.sha256, /^[a-f0-9]{64}$/); assert.ok(model.bytes > 0); assert.match(model.url, /^https:\/\/huggingface.co\//);}
+  for (const model of models) {assert.match(model.sha256, /^[a-f0-9]{64}$/); assert.ok(model.bytes > 0); if (model.url) assert.match(model.url, /^https:\/\/huggingface.co\//);}
+  assert.equal(models.filter(m => !m.url).map(m => m.id).join(), 'qwen3-0.6b-slidedsl');
 });
 test('pipeline não importa código nativo; todos os schemas vêm do exportador', async () => {
   for (const file of await fs.readdir('src/pipeline')) if (file.endsWith('.ts')) {

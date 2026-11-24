@@ -42,14 +42,14 @@ export default function ModelScreen({selected, onSelect, gpu, setGpu, grammarSli
     {models.map(m => <View key={m.id} style={styles.card}>
       <Button secondary={selected.id !== m.id} disabled={busy || !modelAllowed(m, Device.totalMemory)} onPress={() => onSelect(m)}>{m.label}</Button>
       <Text style={styles.text}>Q4_K_M · {(m.bytes / 1e9).toFixed(2)} GB · {ready[m.id] ? 'baixado' : 'não baixado'}</Text>
-      <Text style={{fontSize: 11, color: '#475467'}} selectable>{m.url}</Text>
+      <Text style={{fontSize: 11, color: '#475467'}} selectable>{m.url || 'Arquivo Qwen3-0.6B-SlideDSL-LoRA-Q4_K_M.gguf (importar)'}</Text>
       <Text style={{fontSize: 11, color: '#475467'}} selectable>SHA-256: {m.sha256}</Text>
     </View>)}
     <View style={styles.row}><Switch accessibilityLabel="Baixar somente por Wi-Fi" value={wifi} onValueChange={setWifi} disabled={busy}/><Text style={styles.text}>Baixar somente por Wi-Fi</Text></View>
     <View style={styles.row}><Switch accessibilityLabel="Usar GPU" value={gpu} onValueChange={setGpu} disabled={busy}/><Text style={styles.text}>GPU experimental (padrão: desligada)</Text></View>
     <View style={styles.row}><Switch accessibilityLabel="Escrever slides em SlideDSL Alto" value={grammarSlides} onValueChange={setGrammarSlides} disabled={busy}/><Text style={styles.text}>Gramática: slides em SlideDSL Alto e leitura do documento por frases numeradas (padrão; desligue para JSON)</Text></View>
     <Text style={styles.text}>O download pausa ao sair desta tela, ir para segundo plano ou perder a rede permitida. Toque em baixar/retomar para continuar. A conferência SHA-256 ocorre antes do uso.</Text>
-    <Button disabled={busy || !modelAllowed(selected, Device.totalMemory)} onPress={() => void download()}>Baixar / retomar selecionado</Button>
+    <Button disabled={busy || !selected.url || !modelAllowed(selected, Device.totalMemory)} onPress={() => void download()}>{selected.url ? 'Baixar / retomar selecionado' : 'Este modelo só por importação'}</Button>
     <Button secondary disabled={busy || !modelAllowed(selected, Device.totalMemory)} onPress={() => void importFile()}>Importar arquivo .gguf do aparelho</Button>
     {busy ? <Button secondary onPress={() => {void downloader.pause().then(() => setMessage('Download pausado; pronto para retomar.')).catch(e => setMessage(String(e)));}}>Pausar download</Button> : null}
     <Button secondary disabled={busy} onPress={() => {void deleteModel(selected).then(refresh).then(() => setMessage('Modelo e download parcial apagados.')).catch(e => setMessage(String(e)));}}>Apagar selecionado</Button>
