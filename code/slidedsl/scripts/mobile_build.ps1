@@ -4,8 +4,11 @@
 param([switch]$Clean, [switch]$Debug, [switch]$SkipPrebuild)
 $ErrorActionPreference = 'Stop'
 if ($Clean -and $SkipPrebuild) { throw 'Clean e SkipPrebuild são incompatíveis.' }
-if (Get-Process java -ErrorAction SilentlyContinue) {
-  throw 'Há processo Java ativo. Aguarde o build anterior encerrar antes de executar mobile_build.ps1.'
+# Só builds anteriores (Gradle/Kotlin) bloqueiam; Java de outras ferramentas (ex.: extensão Java do VS Code) não.
+$builds = Get-CimInstance Win32_Process -Filter "Name='java.exe'" -ErrorAction SilentlyContinue |
+  Where-Object { $_.CommandLine -match 'GradleDaemon|GradleWrapperMain|org\.jetbrains\.kotlin\.daemon' }
+if ($builds) {
+  throw 'Há build Gradle/Kotlin ativo. Aguarde o build anterior encerrar antes de executar mobile_build.ps1.'
 }
 . (Join-Path $PSScriptRoot 'android_env.ps1')
 $repo = Split-Path -Parent $PSScriptRoot
