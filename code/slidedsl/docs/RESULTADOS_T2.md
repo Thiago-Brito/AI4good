@@ -65,9 +65,11 @@ verificador 38/38. 727 pytest; porte TS regenerado, 44 testes TS, paridade 351/3
   utilizável sob o critério estrito, C-mínimo custou ~4× menos tokens e ~13× menos tempo que A.
 - **O pipeline completo** (tópicos, roteiro, uma chamada por slide, reparos, sustentação) eleva a validade de
   13 para 19 de 24, a ~5× o custo do C-mínimo. É uma troca, não um requisito da linguagem.
-- **Ressalva do critério estrito:** o mestre do python-pptx liga ajuste automático (`normAutofit`) em título e
-  corpo, sem fator de escala gravado; se e quando o texto é reduzido depende do programa que abre o arquivo
-  (não verificado aqui). O encaixe dos decks do compilador não depende disso: o texto é medido antes de gravar.
+- **Critério estrito conferido no PowerPoint (23/11, pelo autor):** o mestre do python-pptx liga ajuste
+  automático (`normAutofit`) sem fator de escala gravado. Abertos sem edição os três decks de
+  `outputs/teste2/conferir_no_powerpoint/` (10, 5 e 0 estouros medidos), **o texto ultrapassou as caixas em todas
+  as páginas dos três**, inclusive no deck sem estouro medido. O ajuste automático não corrigiu, e a medição
+  subestima o estouro (ignora espaço entre parágrafos e recuo de marcador). Google Slides não conferido.
   Conferência manual pendente: `outputs/teste2/conferir_no_powerpoint/`.
 - Próximo passo natural: limites de texto e número de slides dentro da própria gramática (hoje só no
   compilador), o que atacaria as falhas restantes do C-mínimo.

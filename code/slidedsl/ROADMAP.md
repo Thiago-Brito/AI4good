@@ -26,7 +26,7 @@
 - [x] Teste 2 condição C-mínimo (`scripts/teste2_minimo.py`, regra fixada antes de rodar): 13/24 válidos, todos sem estouro; tokens de saída e tempo iguais ao grupo A (1.344 × 1.380; 19,6 × 19,8 s; p = 0,98/0,93); estrito 13–1 contra A (p = 0,002); 15 mil tokens e 36 s por deck válido estrito (A: 67 mil e 476 s). Falha de protocolo registrada: limite de 36 caracteres do rótulo da linha do tempo ausente do prompt. [Resultados](docs/RESULTADOS_T2.md).
 - [x] Artigo reenquadrado (23/11): a vantagem medida da linguagem é garantia sobre o arquivo a custo equivalente, não economia de tokens; seção "Geração direta de código", correção do compilador, paridade 351/351.
 - [ ] Limites de texto e número de slides dentro da gramática (atacaria as falhas restantes do C-mínimo).
-- [ ] Conferir no PowerPoint/Google Slides se o texto do grupo A estoura de fato (o mestre do python-pptx tem ajuste automático).
+- [x] Conferido no PowerPoint pelo autor (23/11): texto do grupo A estoura em todas as páginas dos 3 decks, inclusive no deck sem estouro medido (a medição é conservadora). Google Slides não conferido.
 - [ ] APK: rebuild com o núcleo TS corrigido (o APK 0.2.0 ainda tem o layout antigo).
 - [ ] Limite de tamanho dentro da restrição (`maxLength`/repetição limitada) e gramática reduzida ao tipo do slide no prompt.
 - [x] App: compilador monta o slide quando a IA falha no reparo (F001), em vez de abortar o deck (achado do emulador com Qwen3 0.6B).
