@@ -6,6 +6,15 @@ export class Recorder {
     private signal?: AbortSignal, private onCall?: (calls: CallRecord[]) => void) {}
   async json(stage: CallRecord['stage'], system: string, user: string, schema: JsonSchema,
     slide: number | null = null, attempt = 0): Promise<unknown> {
+    return (await this.call(stage, system, user, schema, undefined, text => JSON.parse(text) as unknown, slide, attempt)).value;
+  }
+  /** Chamada restrita por gramática; `parse` converte o texto (ex.: bloco Alto → objeto do schema). */
+  async grammar<T>(stage: CallRecord['stage'], system: string, user: string, schema: JsonSchema, grammar: string,
+    parse: (text: string) => T, slide: number | null = null, attempt = 0): Promise<{value: T; text: string}> {
+    return this.call(stage, system, user, schema, grammar, parse, slide, attempt);
+  }
+  private async call<T>(stage: CallRecord['stage'], system: string, user: string, schema: JsonSchema,
+    grammar: string | undefined, parse: (text: string) => T, slide: number | null, attempt: number): Promise<{value: T; text: string}> {
     checkCancelled(this.signal);
     if (this.calls.length >= this.maxCalls) throw new Error('Limite de chamadas atingido.');
     const started = Date.now();
@@ -14,12 +23,13 @@ export class Recorder {
       input_tokens: null, output_tokens: null, prefill_ms: null, decode_ms: null};
     this.calls.push(record);
     try {
-      const result = await this.model.complete({system, user, schema, signal: this.signal});
+      const result = await this.model.complete(grammar ? {system, user, schema, grammar, signal: this.signal}
+        : {system, user, schema, signal: this.signal});
       Object.assign(record, result.usage);
       checkCancelled(this.signal);
-      const parsed: unknown = JSON.parse(result.text);
+      const value = parse(result.text);
       record.status = 'success';
-      return parsed;
+      return {value, text: result.text};
     } catch (e) {
       record.status = this.signal?.aborted ? 'cancelled' : 'failed';
       record.error = e instanceof Error ? e.message : String(e);

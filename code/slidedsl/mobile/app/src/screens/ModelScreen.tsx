@@ -5,7 +5,7 @@ import * as DocumentPicker from 'expo-document-picker';
 import {models, modelAllowed, suggestedModel, type ModelSpec} from '../models';
 import {deleteModel, importModel, isDownloaded, ModelDownload} from '../storage/models';
 import {Button, styles} from '../ui';
-export default function ModelScreen({selected, onSelect, gpu, setGpu}: {selected: ModelSpec; onSelect: (m: ModelSpec) => void; gpu: boolean; setGpu: (v: boolean) => void}) {
+export default function ModelScreen({selected, onSelect, gpu, setGpu, grammarSlides, setGrammarSlides}: {selected: ModelSpec; onSelect: (m: ModelSpec) => void; gpu: boolean; setGpu: (v: boolean) => void; grammarSlides: boolean; setGrammarSlides: (v: boolean) => void}) {
   const [wifi, setWifi] = useState(true), [busy, setBusy] = useState(false);
   const [ready, setReady] = useState<Record<string, boolean>>({}), [message, setMessage] = useState('');
   const [fraction, setFraction] = useState(0);
@@ -47,6 +47,7 @@ export default function ModelScreen({selected, onSelect, gpu, setGpu}: {selected
     </View>)}
     <View style={styles.row}><Switch accessibilityLabel="Baixar somente por Wi-Fi" value={wifi} onValueChange={setWifi} disabled={busy}/><Text style={styles.text}>Baixar somente por Wi-Fi</Text></View>
     <View style={styles.row}><Switch accessibilityLabel="Usar GPU" value={gpu} onValueChange={setGpu} disabled={busy}/><Text style={styles.text}>GPU experimental (padrão: desligada)</Text></View>
+    <View style={styles.row}><Switch accessibilityLabel="Escrever slides em SlideDSL Alto" value={grammarSlides} onValueChange={setGrammarSlides} disabled={busy}/><Text style={styles.text}>Escrever slides em SlideDSL Alto (gramática; experimental)</Text></View>
     <Text style={styles.text}>O download pausa ao sair desta tela, ir para segundo plano ou perder a rede permitida. Toque em baixar/retomar para continuar. A conferência SHA-256 ocorre antes do uso.</Text>
     <Button disabled={busy || !modelAllowed(selected, Device.totalMemory)} onPress={() => void download()}>Baixar / retomar selecionado</Button>
     <Button secondary disabled={busy || !modelAllowed(selected, Device.totalMemory)} onPress={() => void importFile()}>Importar arquivo .gguf do aparelho</Button>

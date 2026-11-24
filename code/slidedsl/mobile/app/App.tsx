@@ -23,6 +23,8 @@ export default function App() {
   const [request, setRequest] = useState(''), [slides, setSlides] = useState(5);
   const [source, setSource] = useState<SourceChoice>({mode: 'none'});
   const [selected, setSelected] = useState(suggestedModel(Device.totalMemory)), [gpu, setGpu] = useState(false);
+  // Escrita dos slides: JSON Schema (padrão) ou SlideDSL Alto sob gramática (mesmos campos e limites).
+  const [grammarSlides, setGrammarSlides] = useState(false);
   const [busy, setBusy] = useState(false), [message, setMessage] = useState('');
   const [progress, setProgress] = useState<Progress>({stage: '', total: slides});
   const [result, setResult] = useState<GenerationResult | null>(null), [file, setFile] = useState('');
@@ -86,6 +88,7 @@ export default function App() {
       setProgress({stage: 'Carregando modelo', total: slides});
       llm = await loadModel(modelUri(selected), gpu, n => setProgress({stage: `Carregando modelo · ${Math.round(n)}%`, total: slides}));
       const generated = await generate({request, slides, source, model: llm, signal: abort.signal,
+        slideMode: grammarSlides ? 'gramatica' : 'json',
         readDocument: async (file, signal) => document ?? readDocument(file, signal),
         onDocument: info => {documentData = info; setDocumentInfo(info);},
         onProgress: setProgress, onCalls: c => {records = c; setCalls(c.length);},
@@ -107,7 +110,8 @@ export default function App() {
       const end = await deviceSnapshot();
       setData(testData({calls: records, device_start: snapshot, device_end: end,
         model: {...selected, quantization: 'Q4_K_M', n_ctx: 4096, gpu}, status,
-        wall_ms: Date.now() - started, slides, diagnostics, error: error || undefined, source_mode: source.mode, document: documentData}));
+        wall_ms: Date.now() - started, slides, diagnostics, error: error || undefined, source_mode: source.mode, document: documentData,
+        slide_mode: grammarSlides ? 'gramatica' : 'json'}));
       active.current = null; setBusy(false);
       if (queuedDocument.current) {const document = queuedDocument.current; queuedDocument.current = null; acceptDocument(document);}
     }
@@ -122,7 +126,7 @@ export default function App() {
     </View>
     {message ? <Text accessibilityLiveRegion="polite" style={styles.error}>{message}</Text> : null}
     {screen === 'request' ? <><Text style={styles.text}>Selecionado: {selected.label}</Text><RequestScreen request={request} setRequest={setRequest} slides={slides} setSlides={setSlides} source={source} setSource={setSource} onGenerate={() => void run()}/></> : null}
-    {screen === 'model' ? <ModelScreen selected={selected} onSelect={setSelected} gpu={gpu} setGpu={setGpu}/> : null}
+    {screen === 'model' ? <ModelScreen selected={selected} onSelect={setSelected} gpu={gpu} setGpu={setGpu} grammarSlides={grammarSlides} setGrammarSlides={setGrammarSlides}/> : null}
     {screen === 'progress' ? <>
       <ActivityIndicator size="large"/><Text accessibilityLiveRegion="polite" style={styles.heading}>{progress.stage}</Text>
       {documentInfo ? <Text style={styles.text}>{documentInfo.name} · {documentInfo.type.toUpperCase()} · {documentInfo.pages === null ? 'sem paginação' : `${documentInfo.pages} páginas`} · {documentInfo.characters} caracteres · {documentInfo.chunks_used}/{documentInfo.chunks_total} trechos · {documentInfo.facts_used} fatos</Text> : null}

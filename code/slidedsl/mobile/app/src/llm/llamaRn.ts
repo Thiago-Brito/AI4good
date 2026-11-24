@@ -6,7 +6,7 @@ export async function loadModel(path: string, gpu = false, onProgress?: (n: numb
   const context: LlamaContext = await initLlama({model: path, n_ctx: 4096,
     n_batch: 256, n_gpu_layers: gpu ? 99 : 0, use_mmap: true}, onProgress);
   return {
-    async complete({system, user, schema, signal}) {
+    async complete({system, user, schema, grammar, signal}) {
       checkCancelled(signal);
       const abort = () => { void context.stopCompletion().catch(() => {}); };
       signal?.addEventListener('abort', abort, {once: true});
@@ -24,8 +24,10 @@ export async function loadModel(path: string, gpu = false, onProgress?: (n: numb
         // messages+jinja o formato de chat do Qwen3 monta uma gramática que admite um bloco
         // <think> antes do JSON. Sem messages, o llama.rn envia `json_schema` ao llama.cpp,
         // que o converte em gramática estrita desde o primeiro token (teste no emulador, 23/11/2026).
+        // Modo gramática: a GBNF do slide em SlideDSL Alto restringe desde o primeiro token, como o
+        // JSON Schema convertido (o llama.rn dá prioridade a `grammar` quando ambos existem).
         const result = await context.completion({
-          prompt: formatted.prompt, response_format,
+          prompt: formatted.prompt, ...(grammar ? {grammar} : {response_format}),
           n_predict: Math.min(1400, available), temperature: 0.2, seed: 42,
         });
         // Preserve observed usage even for cancellation or truncated output; Recorder checks JSON.

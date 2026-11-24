@@ -3,6 +3,9 @@ import {prompts, schemaErrors, schemaWithFacts} from './contracts.js';
 import {collectFacts, type SourceChoice, type FetchText, type ReadDocument, type DocumentUsage} from './sources.js';
 import {genericDocumentRequest, MAX_EXTRACT_CALLS} from './documents.js';
 import {Recorder} from './usage.js';
+import {altoFormatHint, altoToJson, slideGrammar} from './altoText.js';
+/** Como o modelo escreve cada slide: JSON Schema ou SlideDSL Alto sob gramática (mesmos campos e limites). */
+export type SlideMode = 'json' | 'gramatica';
 import {checkCancelled, type CallRecord, type JsonSchema, type TextModel} from './types.js';
 export interface Progress {stage: string; slide?: number; total: number}
 export interface GenerationResult {
@@ -62,9 +65,10 @@ export interface GenerateOptions {
   fetchJson?: FetchText; signal?: AbortSignal; onProgress?: (p: Progress) => void;
   onCalls?: (c: CallRecord[]) => void;
   readDocument?: ReadDocument; onDocument?: (doc: DocumentUsage) => void;
+  slideMode?: SlideMode;
 }
 export async function generate(options: GenerateOptions): Promise<GenerationResult> {
-  const {slides: n, source: choice, model, signal} = options;
+  const {slides: n, source: choice, model, signal} = options, slideMode: SlideMode = options.slideMode ?? 'json';
   const request = options.request.trim() || (choice.mode === 'document' ? `Apresente os pontos principais do documento ${choice.document.name}` : '');
   if (!request.trim() || request.length > 600) throw Error('Escreva um pedido de até 600 caracteres.');
   if (!Number.isInteger(n) || n < 4 || n > 8) throw Error('Escolha de 4 a 8 slides.');
@@ -93,14 +97,22 @@ export async function generate(options: GenerateOptions): Promise<GenerationResu
     const plan = outline.slides[i], kind = plan.tipo;
     const schema: JsonSchema = schemaWithFacts((prompts.slide_schemas as Record<string, any>)[kind][mode], ids);
     const base = `Pedido original: ${request}\nApresentação: ${deck.title}\nRoteiro:\n${summary}\nEscreva o slide ${i + 1} (tipo ${kind}).\nMensagem: ${plan.mensagem}\nObjetivo: ${plan.objetivo}\nRegras do tipo: ${(prompts.kind_rules as Record<string, string>)[kind]}\nFatos para este slide:\n${factsBlock(plan.fatos?.length ? plan.fatos : ids)}\nTítulos já escritos (não repetir): ${deck.slides.map(s => s.title).join('; ')}`;
+    const grammar = slideMode === 'gramatica' ? slideGrammar(kind, schema) : '';
+    const slideBase = grammar ? `${base}\n${altoFormatHint(kind, schema)}` : base;
     let accepted: AltoSlide | null = null, previous = '', diagnostics: Diagnostic[] = [];
     for (let attempt = 0; attempt <= 1; attempt++) {
       progress(attempt ? `Reparando slide ${i + 1}/${n}` : `Slide ${i + 1}/${n}`, i + 1);
       try {
-        const data = await recorder.json('slide', prompts.content_system,
-          attempt ? `${base}\nResposta anterior:\n${previous.slice(0, 2200)}\nCorrija os diagnósticos mantendo o tipo:\n${JSON.stringify(diagnostics.filter(d => d.severity !== 'INFORMAÇÃO').slice(0, 8).map(d => ({code: d.code, severity: d.severity, message: d.message, path: d.evidence?.path, suggestion: d.suggestion})))}` : base,
-          schema, i + 1, attempt);
-        previous = JSON.stringify(data);
+        const user = attempt ? `${slideBase}\nResposta anterior:\n${previous.slice(0, 2200)}\nCorrija os diagnósticos mantendo o tipo:\n${JSON.stringify(diagnostics.filter(d => d.severity !== 'INFORMAÇÃO').slice(0, 8).map(d => ({code: d.code, severity: d.severity, message: d.message, path: d.evidence?.path, suggestion: d.suggestion})))}` : slideBase;
+        let data: unknown;
+        if (grammar) {
+          const out = await recorder.grammar('slide', prompts.content_system, user, schema, grammar,
+            text => altoToJson(kind, text, schema), i + 1, attempt);
+          data = out.value; previous = out.text;
+        } else {
+          data = await recorder.json('slide', prompts.content_system, user, schema, i + 1, attempt);
+          previous = JSON.stringify(data);
+        }
         const errors = schemaErrors(data, schema);
         if (errors.length) { accepted = null; diagnostics = errors.map(message => ({code: 'P002', severity: 'ERRO', slide: i + 1, message})); }
         else {

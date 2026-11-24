@@ -7,7 +7,8 @@ export interface Usage {
   timings?: Record<string, number>;
 }
 export interface TextModel {
-  complete(input: {system: string; user: string; schema: JsonSchema; signal?: AbortSignal}):
+  /** `grammar` (GBNF), quando presente, substitui o `schema` na restrição da geração. */
+  complete(input: {system: string; user: string; schema: JsonSchema; grammar?: string; signal?: AbortSignal}):
     Promise<{text: string; usage: Usage}>;
 }
 export interface CallRecord extends Usage {
