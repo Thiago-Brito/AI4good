@@ -514,3 +514,4 @@ continuam como etapas futuras do plano maior; o histórico desta rodada é espec
   - Verificação: pytest 755/755, app 97/97, núcleo 44/44, editor 15 (+5 pulados), paridade PC/celular 861/861, contratos mobile em sincronia.
   - Emulador: APK 0.7.5 gerou 5 slides com o 0.6B base (19,0 min) e com o LoRA (20,5 min).
   - Bancada do 0.7.6 igual à do 0.7.5 (T9).
+- **App 0.7.7 (25/11, tarde):** capa com título centralizado agora fica no centro do slide (antes centrava nas 10 colunas da esquerda). Vale para PC e celular, pois o núcleo é o mesmo. Só muda a posição da capa nos estilos centralizados; os números do T9 continuam valendo. pytest 755/755, núcleo 44/44, paridade 866/866.
