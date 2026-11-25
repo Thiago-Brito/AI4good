@@ -5,6 +5,7 @@ Entrada: a pasta com as respostas exportadas da página (um JSON por avaliador, 
 Saída: outputs/avaliacao_cega/resultado.json e um resumo no terminal.
 
 Uso: .venv/Scripts/python scripts/avaliacao_cega_analisar.py outputs/avaliacao_cega/respostas
+     v2: .venv/Scripts/python scripts/avaliacao_cega_analisar.py outputs/avaliacao_cega_v2/respostas outputs/avaliacao_cega_v2
 """
 
 from __future__ import annotations
@@ -19,6 +20,18 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CONDS = ["celular 0.6B LoRA", "celular 1.7B", "PC 4B", "externo GPT-4.1-mini"]
+PARES_V1 = {"H1_externo_menos_lora": ("externo GPT-4.1-mini", "celular 0.6B LoRA"),
+            "H1_externo_menos_17b": ("externo GPT-4.1-mini", "celular 1.7B"),
+            "H2_lora_menos_17b": ("celular 0.6B LoRA", "celular 1.7B"),
+            "H3_pc4b_menos_17b": ("PC 4B", "celular 1.7B")}
+# v2 (docs/AVALIACAO_CEGA_V2_PROTOCOLO.md): pares de versão por modelo e referências.
+CONDS_V2 = ["celular 0.6B LoRA (app 0.6)", "celular 0.6B LoRA (app 0.7.7)", "celular 1.7B (app 0.5)",
+            "celular 1.7B (app 0.7.7)", "PC 4B", "externo GPT-4.1-mini"]
+PARES_V2 = {"V1_lora_077_menos_06": ("celular 0.6B LoRA (app 0.7.7)", "celular 0.6B LoRA (app 0.6)"),
+            "V1_17b_077_menos_05": ("celular 1.7B (app 0.7.7)", "celular 1.7B (app 0.5)"),
+            "V4_lora_menos_17b_077": ("celular 0.6B LoRA (app 0.7.7)", "celular 1.7B (app 0.7.7)"),
+            "V5_externo_menos_lora_077": ("externo GPT-4.1-mini", "celular 0.6B LoRA (app 0.7.7)"),
+            "V5_pc4b_menos_lora_077": ("PC 4B", "celular 0.6B LoRA (app 0.7.7)")}
 REP = {"nao": 0, "pouco": 1, "muito": 2}
 
 
@@ -89,19 +102,22 @@ def sign_test(diffs: list[float]) -> float:
     return min(1.0, 2 * sum(math.comb(m, i) for i in range(min(pos, neg) + 1)) / 2 ** m)
 
 
-def main(folder: str):
-    gab = {c: g for c, g in json.loads((ROOT / "outputs/avaliacao_cega/gabarito.json").read_text("utf-8"))["codigos"].items()
+def main(folder: str, pasta: str = "outputs/avaliacao_cega"):
+    base = ROOT / pasta
+    gab = {c: g for c, g in json.loads((base / "gabarito.json").read_text("utf-8"))["codigos"].items()
            if not c.startswith("ausente-")}
-    pub = json.loads((ROOT / "outputs/avaliacao_cega/publicar/avaliacao.json").read_text("utf-8"))
+    pub = json.loads((base / "publicar/avaliacao.json").read_text("utf-8"))
     tema_of = {a["codigo"]: a["tema"] for a in pub["apresentacoes"]}
     raters = load(Path(folder))
+    v2 = any(g["condicao"] in CONDS_V2[:4] for g in gab.values())
+    conds, pares = (CONDS_V2, PARES_V2) if v2 else (CONDS, PARES_V1)
     if not raters:
         raise SystemExit("Nenhuma resposta encontrada.")
     out = {"avaliadores": len(raters), "por_condicao": {}, "concordancia": {}, "testes": {}}
     for q in ("clareza", "utilidade"):
         units = [[float(r["answers"][c][q]) for r in raters if c in r["answers"]] for c in gab]
         out["concordancia"][q] = krippendorff_ordinal(units)
-    for cond in CONDS:
+    for cond in conds:
         codes = [c for c, g in gab.items() if g["condicao"] == cond]
         ans = [r["answers"][c] for r in raters for c in codes if c in r["answers"]]
         out["por_condicao"][cond] = {
@@ -123,24 +139,21 @@ def main(folder: str):
             mean[c] = st.mean(vals) if vals else None
         blocks = []
         for t in temas:
-            row = [next((mean[c] for c, g in gab.items() if g["condicao"] == cond and tema_of[c] == t), None) for cond in CONDS]
+            row = [next((mean[c] for c, g in gab.items() if g["condicao"] == cond and tema_of[c] == t), None) for cond in conds]
             if None not in row:
                 blocks.append(row)
         chi, p = friedman(blocks) if len(blocks) >= 2 else (None, None)
-        idx = {c: i for i, c in enumerate(CONDS)}
+        idx = {c: i for i, c in enumerate(conds)}
         def diffs(a, b):  # por tema, só onde as duas condições existem
             return [round(r[idx[a]] - r[idx[b]], 2) for t in temas
                     for r in [[next((mean[c] for c, g in gab.items() if g["condicao"] == cond and tema_of[c] == t), None)
-                               for cond in CONDS]] if r[idx[a]] is not None and r[idx[b]] is not None]
+                               for cond in conds]] if r[idx[a]] is not None and r[idx[b]] is not None]
         out["testes"][q] = {"friedman_chi2": chi, "friedman_p": p, "temas_completos": len(blocks)}
-        for nome, (a, b) in {"H1_externo_menos_lora": ("externo GPT-4.1-mini", "celular 0.6B LoRA"),
-                             "H1_externo_menos_17b": ("externo GPT-4.1-mini", "celular 1.7B"),
-                             "H2_lora_menos_17b": ("celular 0.6B LoRA", "celular 1.7B"),
-                             "H3_pc4b_menos_17b": ("PC 4B", "celular 1.7B")}.items():
+        for nome, (a, b) in pares.items():
             d = diffs(a, b)
             out["testes"][q][nome] = d
             out["testes"][q][nome + "_p_sinal"] = sign_test(d)
-    dst = ROOT / "outputs/avaliacao_cega/resultado.json"
+    dst = base / "resultado.json"
     dst.write_text(json.dumps(out, ensure_ascii=False, indent=1), "utf-8")
     print(json.dumps({k: v for k, v in out.items() if k != "por_condicao"}, ensure_ascii=False, indent=1))
     for cond, v in out["por_condicao"].items():
@@ -149,4 +162,4 @@ def main(folder: str):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    main(sys.argv[1], sys.argv[2] if len(sys.argv) > 2 else "outputs/avaliacao_cega")
