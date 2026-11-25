@@ -56,7 +56,7 @@ Pedido: *"Apresente este TCC para a banca: o problema (…), a proposta do Slide
 2. **Escolha de trechos.** A leitura genérica por páginas pega as referências (p. 23) e tabelas. A busca por palavras-chave do pedido específico pegou tabelas e notas.
 3. **Texto do PDF sujo:** hifenização ("ntativas") e cabeçalhos de página repetidos.
 4. **O modelo inventa para preencher tipos numéricos.** Com o roteiro pedindo `numeros` ou `grafico` sem fato numérico, o 0.6B e o 4B inventaram valores. O verificador avisou (A007/A012), mas aviso não bloqueia.
-5. **Capa:** com o título em 3 linhas, o subtítulo se sobrepõe ao título nos decks locais. Nenhuma verificação pegou isso.
+5. **Capa (falso alarme):** na prévia do VS Code (extensão `pptx-preview`), o título de 2–3 linhas aparecia por cima do subtítulo. No PowerPoint para a web, o mesmo arquivo fica correto (conferido pelo autor em 25/11/2026). A extensão aplica o espaçamento de linha de outro jeito, então essa prévia não serve para conferir layout. Conferir no PowerPoint ou no LibreOffice.
 
 ## Leitura para o artigo
 

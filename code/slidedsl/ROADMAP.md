@@ -496,4 +496,4 @@ continuam como etapas futuras do plano maior; o histórico desta rodada é espec
   1. o roteiro do app ver todos os fatos (só as afirmações);
   2. pular as referências e seguir as seções do documento, sempre com o resumo;
   3. limpar a hifenização e os cabeçalhos do PDF;
-  4. corrigir a sobreposição de título e subtítulo na capa.
+  4. ~~sobreposição na capa~~: falso alarme, era só a prévia do VS Code (no PowerPoint fica correto).
