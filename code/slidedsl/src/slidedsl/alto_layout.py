@@ -439,12 +439,14 @@ def layout_capa(b, s, base, deck):
     ah = b.height(s.author, w, 18) if s.author else 0
     total = th + (sh + 12 if s.subtitle else 0) + (ah + 20 if s.author else 0)
     y = max(120, (H - total) / 2)
-    b.rect("marca", M + (w - 72) / 2 if align == "center" else M,
+    # Título centralizado sem foto: o bloco fica no centro do slide, não no centro das 10 colunas da esquerda.
+    x = (W - w) / 2 if align == "center" and not has_photo else M
+    b.rect("marca", x + (w - 72) / 2 if align == "center" else x,
            y - 28, 72, 8, p["primary"])
     b.text(
         "titulo",
         title,
-        M,
+        x,
         y,
         w,
         th,
@@ -457,11 +459,11 @@ def layout_capa(b, s, base, deck):
     )
     y += th + 12
     if s.subtitle:
-        b.text("subtitulo", s.subtitle, M, y, w, sh, ss, p["muted"],
+        b.text("subtitulo", s.subtitle, x, y, w, sh, ss, p["muted"],
                align=align, path=f"{base}.subtitle")
         y += sh + 20
     if s.author:
-        b.text("autor", s.author, M, y, w, ah, 18, p["primary"], bold=True,
+        b.text("autor", s.author, x, y, w, ah, 18, p["primary"], bold=True,
                align=align, path=f"{base}.author")
 
 

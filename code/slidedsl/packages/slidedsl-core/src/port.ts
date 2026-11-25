@@ -1186,7 +1186,7 @@ return [ls, lh, ds, dh];
 
 function layout_capa(...__args) {
 var [b, s, base, deck] = __py.bind(__args, ["b", "s", "base", "deck"], [undefined, undefined, undefined, undefined], false, false);
-var ah, align, has_photo, k, motif, p, sh, ss, th, title, total, w, y;
+var ah, align, has_photo, k, motif, p, sh, ss, th, title, total, w, x, y;
 (p = b.palette);
 (has_photo = (__py.truth(s.image_file) ? photo(b, s, base) : false));
 if (__py.truth(!__py.truth(has_photo))) {
@@ -1227,15 +1227,16 @@ __py.method(b, "fit", s.title, w, 320, [b.title_pt], true, (__py.format(base, ""
 (ah = (__py.truth(s.author) ? __py.method(b, "height", s.author, w, 18) : 0));
 (total = __py.bin("Add", __py.bin("Add", th, (__py.truth(s.subtitle) ? __py.bin("Add", sh, 12) : 0)), (__py.truth(s.author) ? __py.bin("Add", ah, 20) : 0)));
 (y = __py.max(120, __py.bin("Div", __py.bin("Sub", H, total), 2)));
-__py.method(b, "rect", "marca", (__py.truth((__py.cmp("Eq", align, "center"))) ? __py.bin("Add", M, __py.bin("Div", __py.bin("Sub", w, 72), 2)) : M), __py.bin("Sub", y, 28), 72, 8, __py.at(p, "primary"));
-__py.method(b, "text", "titulo", title, M, y, w, th, b.title_pt, __py.at(p, "text"), __py.kw({bold: true, role: "titulo", path: (__py.format(base, "", -1) + ".title"), align: b.style.alinhamento_titulo}));
+(x = (__py.truth(__py.and([() => (__py.cmp("Eq", align, "center")), () => !__py.truth(has_photo)])) ? __py.bin("Div", __py.bin("Sub", W, w), 2) : M));
+__py.method(b, "rect", "marca", (__py.truth((__py.cmp("Eq", align, "center"))) ? __py.bin("Add", x, __py.bin("Div", __py.bin("Sub", w, 72), 2)) : x), __py.bin("Sub", y, 28), 72, 8, __py.at(p, "primary"));
+__py.method(b, "text", "titulo", title, x, y, w, th, b.title_pt, __py.at(p, "text"), __py.kw({bold: true, role: "titulo", path: (__py.format(base, "", -1) + ".title"), align: b.style.alinhamento_titulo}));
 y = __py.bin("Add", y, __py.bin("Add", th, 12));
 if (__py.truth(s.subtitle)) {
-__py.method(b, "text", "subtitulo", s.subtitle, M, y, w, sh, ss, __py.at(p, "muted"), __py.kw({align: align, path: (__py.format(base, "", -1) + ".subtitle")}));
+__py.method(b, "text", "subtitulo", s.subtitle, x, y, w, sh, ss, __py.at(p, "muted"), __py.kw({align: align, path: (__py.format(base, "", -1) + ".subtitle")}));
 y = __py.bin("Add", y, __py.bin("Add", sh, 20));
 }
 if (__py.truth(s.author)) {
-__py.method(b, "text", "autor", s.author, M, y, w, ah, 18, __py.at(p, "primary"), __py.kw({bold: true, align: align, path: (__py.format(base, "", -1) + ".author")}));
+__py.method(b, "text", "autor", s.author, x, y, w, ah, 18, __py.at(p, "primary"), __py.kw({bold: true, align: align, path: (__py.format(base, "", -1) + ".author")}));
 }
 }
 
