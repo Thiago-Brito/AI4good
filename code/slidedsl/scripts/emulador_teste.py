@@ -25,7 +25,8 @@ FILES = f"/data/data/{PKG}/files"
 
 
 def adb(*args: str, check=True, text=True) -> str:
-    run = subprocess.run([ADB, *args], capture_output=True, text=text, timeout=180)
+    run = subprocess.run([ADB, *args], capture_output=True, text=text, timeout=180,
+                         **({"encoding": "utf-8", "errors": "replace"} if text else {}))
     if check and run.returncode:
         raise RuntimeError(f"adb {' '.join(args)}: {run.stderr.strip()[:200]}")
     return run.stdout
@@ -115,7 +116,10 @@ def prepare(args) -> None:
         sys.exit("campo do pedido não encontrado")
     adb("shell", "input", "tap", *map(str, center(field)))
     adb("shell", "input", "text", args.pedido.replace(" ", "%s"))
-    adb("shell", "input", "keyevent", "4")  # BACK fecha o teclado (ESC não fecha no React Native)
+    time.sleep(1)
+    # BACK fecha o teclado (ESC não fecha no React Native); sem teclado aberto, BACK fecharia o app (visto em 25/11).
+    if "mInputShown=true" in adb("shell", "dumpsys", "input_method", check=False):
+        adb("shell", "input", "keyevent", "4")
     time.sleep(2)
     if not tap_text(r"^Gerar apresentação$", attr="content-desc"):
         sys.exit("botão Gerar apresentação não encontrado")
@@ -127,7 +131,10 @@ def collect(args, out: Path, before: set) -> None:
     while time.time() - t0 < args.timeout_min * 60:
         time.sleep(45)
         root = dump()
-        if find(root, r"Exportar dados do teste") is not None and find(root, r"Compartilhar \.pptx") is not None:
+        # Tela de resultado do 0.7.x (edição slide a slide): o resumo "N slides · N chamadas" aparece no topo e os
+        # botões de exportar ficam abaixo dos cartões dos slides.
+        if find(root, r"^\d+ slides · \d+ chamadas") is not None or (
+                find(root, r"Exportar dados do teste") is not None and find(root, r"Compartilhar \.pptx") is not None):
             say("resultado pronto")
             break
         texts = " | ".join(n.get("text") for n in root.iter("node") if n.get("text"))[:160]
@@ -141,7 +148,8 @@ def collect(args, out: Path, before: set) -> None:
         sys.exit("tempo esgotado")
     adb("shell", "screencap", "-p", "/sdcard/resultado.png")
     adb("pull", "/sdcard/resultado.png", str(out / "tela_resultado.png"))
-    tap_text(r"Exportar dados do teste")
+    if not tap_text(r"Exportar dados do teste", scrolls=15):
+        sys.exit("botão Exportar dados do teste não encontrado")
     time.sleep(3)
     adb("shell", "input", "keyevent", "4")  # fecha a folha de compartilhamento
     after = adb("shell", "ls", FILES).split()

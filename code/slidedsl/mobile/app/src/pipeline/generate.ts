@@ -311,10 +311,15 @@ export async function writeSlide(ctx: SlideContext, plan: PlanSlide, i: number, 
   }
   // Item repetido que sobreviveu ao reparo (o 0.6B repete o mesmo texto): o compilador tira a cópia se ficarem
   // ao menos 2 itens, em vez de mostrar duas vezes a mesma frase.
-  if (accepted && diagnostics.some(d => d.code === 'P004') && (accepted.items?.length ?? 0) > 2) {
-    const keyOf = (it: {label: string; detail?: string | null}) => (it.detail || it.label).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
-    const seen = new Set<string>();
-    const items = accepted.items!.filter(it => { const k = keyOf(it); if (k.length > 15 && seen.has(k)) return false; seen.add(k); return true; });
+  // Também rótulo repetido (A023 do compilador; visto no emulador com o 0.7.5: dois itens iguais sobreviveram ao reparo).
+  if (accepted && diagnostics.some(d => d.code === 'P004' || d.code === 'A023') && (accepted.items?.length ?? 0) > 2) {
+    const norm = (t?: string | null) => (t ?? '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+    const seen = new Set<string>(), labels = new Set<string>();
+    const items = accepted.items!.filter(it => {
+      const k = norm(it.detail || it.label), l = norm(it.label);
+      if ((k.length > 15 && seen.has(k)) || (l.length > 2 && labels.has(l))) return false;
+      seen.add(k); labels.add(l); return true;
+    });
     if (items.length >= 2 && items.length < accepted.items!.length) {
       const slide = {...accepted, items};
       const built = buildAlto({...deck, slides: [...ctx.before, slide, ...ctx.after]}, facts);

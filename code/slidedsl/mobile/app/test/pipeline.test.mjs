@@ -337,3 +337,19 @@ test('título cortado no limite termina na última pausa da frase (teste no celu
   const t = 'O ciclo de água é um processo natural que transforma água em vapor e volta ao ambiente'.slice(0, 80);
   assert.equal(trimTruncated({titulo: t}, schema).titulo, 'O ciclo de água é um processo natural que transforma água em vapor');
 });
+test('rótulo repetido no slide (A023) que sobrevive ao reparo: o compilador tira a cópia', async () => {
+  class SameLabel extends Mock {
+    async complete(input) {
+      const r = await super.complete(input);
+      if (/Escreva o slide 2 /.test(input.user)) {
+        const d = JSON.parse(r.text);
+        d.itens = [item('Evaporação', 'A água passa do estado líquido para o gasoso.'), item('Condensação', 'O vapor volta ao estado líquido nas nuvens.'),
+          item('Chuva', 'Gotas caem.'), item('Chuva', 'Gotas caem.')];  // curtos e iguais: A023, não P004
+        return {...r, text: JSON.stringify(d)};
+      }
+      return r;
+    }
+  }
+  const result = await generate(base(new SameLabel()));
+  assert.deepEqual(result.deck.slides[1].items.map(i => i.label), ['Evaporação', 'Condensação', 'Chuva']);
+});
