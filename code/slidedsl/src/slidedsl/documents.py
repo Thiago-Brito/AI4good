@@ -53,6 +53,67 @@ def _pdf_text(path):
     return pages
 
 
+# --- Limpeza e estrutura de PDF: o mesmo do app (mobile/app/src/pipeline/documents.ts, cleanPdfText,
+# stripRunningHeaders, markPdfHeadings). Teste com o PDF do TCC, docs/TESTE_TCC_DOCUMENTO_LONGO.md.
+HEADING_LINE = re.compile(r"^(\d{1,2}(?:\.\d{1,2}){0,2})\.?\s+([^\W\d_][\w\s,:;()'’\-–—/]{2,80})$")
+ABSTRACT_LINE = re.compile(r"^(resumo|abstract)\b[\s.:—–-]*", re.IGNORECASE)
+REFERENCES_LINE = re.compile(r"^(refer[êe]ncias(?:\s+bibliogr[áa]ficas)?|references|bibliografia)\s*$", re.IGNORECASE)
+
+
+def clean_pdf_text(text: str) -> str:
+    """Junta palavras partidas pela hifenização e tira marcas invisíveis (U+00AD, U+FFFE, U+FFFD)."""
+    text = re.sub(r"([^\W\d_])[­￾�][ \t]*\n?[ \t]*([^\W\d_])", r"\1\2", text)
+    text = re.sub(r"[­￾�]", "", text)
+    return re.sub(r"([a-zà-ÿ])-\n[ \t]*([a-zà-ÿ])", r"\1\2", text)
+
+
+def strip_running_headers(pages: list[str]) -> list[str]:
+    """Tira linhas das bordas da página repetidas (números → #) em ≥ 30% das páginas e números de página."""
+    if len(pages) < 4:
+        return pages
+    key = lambda line: re.sub(r"\s+", " ", re.sub(r"\d+", "#", line.strip())).lower()
+
+    def edges(text):
+        lines = [l.strip() for l in text.split("\n") if l.strip()]
+        return lines[:3] + lines[-3:]
+
+    count: dict[str, int] = {}
+    for page in pages:
+        for k in {key(l) for l in edges(page)}:
+            count[k] = count.get(k, 0) + 1
+    repeated = {k for k, n in count.items() if re.search(r"[^\W\d_]", k) and len(k) <= 120 and n >= max(3, len(pages) * 0.3)}
+    out = []
+    for page in pages:
+        border = set(edges(page))
+        out.append("\n".join(l for l in page.split("\n")
+                             if not (l.strip() in border and (key(l) in repeated or re.fullmatch(r"\d{1,4}", l.strip())))))
+    return out
+
+
+def mark_pdf_headings(text: str) -> str:
+    """Seções numeradas, resumo e referências viram parágrafos de título (# ...), como no Markdown."""
+    out = []
+    for line in text.split("\n"):
+        t = line.strip()
+        abstract = ABSTRACT_LINE.match(t)
+        if REFERENCES_LINE.match(t):
+            out.append(f"\n\n# {t}\n\n")
+        elif abstract and len(t) > len(abstract.group(0)) + 20:
+            out.append(f"\n\n# {abstract.group(1).capitalize()}\n\n{t[len(abstract.group(0)):]}")
+        elif abstract and re.fullmatch(r"(resumo|abstract)[.:]?", t, re.IGNORECASE):
+            out.append(f"\n\n# {t.rstrip('.:')}\n\n")
+        elif (m := HEADING_LINE.match(t)) and len(m.group(2).split()) <= 10:
+            out.append(f"\n\n# {t}\n\n")
+        else:
+            out.append(line)
+    return "\n".join(out)
+
+
+def prepare_pdf_pages(pages: list[dict]) -> list[dict]:
+    texts = strip_running_headers([clean_pdf_text(p["text"]) for p in pages])
+    return [{**p, "text": mark_pdf_headings(t)} for p, t in zip(pages, texts)]
+
+
 def extract_pdf(path):
     import psutil
 
@@ -150,7 +211,7 @@ def add_document(name, data):
         if suffix == ".pdf":
             if not data.startswith(b"%PDF-"):
                 raise ValueError("Assinatura PDF inválida.")
-            pages = extract_pdf(path)
+            pages = prepare_pdf_pages(extract_pdf(path))
         elif suffix == ".docx":
             pages = extract_docx(path)
         else:
@@ -159,12 +220,25 @@ def add_document(name, data):
                 raise ValueError("Texto binário ou longo demais.")
             pages = [{"page": None, "text": text}]
         chunks = []
+        heading, references, top = "", False, {}
         for page in pages:
-            heading = page.get("heading", "")
+            if references:
+                break  # PDF: nada depois de "Referências" entra nos trechos
+            heading = page.get("heading", heading if suffix == ".pdf" else "")
             # Paragraphs first, then bounded pieces; no hidden content execution.
             for paragraph in re.split(r"\n\s*\n", page["text"]):
                 if re.match(r"^#{1,6}\s", paragraph):
                     heading = paragraph.lstrip("# ").splitlines()[0]
+                    if suffix == ".pdf":
+                        if REFERENCES_LINE.match(heading.strip()):
+                            references = True
+                            break
+                        # "6.4 Geração direta" fica sob "6 Resultados": a escolha dos trechos usa a seção de nível 1.
+                        number = re.match(r"(\d{1,2})(?:\.\d+)*\.?\s", heading)
+                        if number and not re.match(r"\d{1,2}\.\d", heading):
+                            top[number.group(1)] = heading
+                        heading = top.get(number.group(1), heading) if number else heading
+                        continue  # no PDF o título fica num parágrafo só dele (mark_pdf_headings)
                 for offset in range(0, len(paragraph), 900):
                     text = paragraph[offset : offset + 900].strip()
                     if text:
