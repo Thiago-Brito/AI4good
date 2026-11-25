@@ -60,3 +60,17 @@ def test_fotos_do_app_entram_no_catalogo_com_credito(tmp_path, monkeypatch):
     assert asset.startswith("assets/media/") and (tmp_path / asset).is_file()
     catalog = json.loads(next((tmp_path / "outputs/media/assets").glob("*.json")).read_text("utf-8"))
     assert catalog["author"] == "Maria Silva" and catalog["license"] == "CC BY-SA" and catalog["provider"] == "openverse"
+
+
+def test_pdf_vai_ao_app_por_pagina(tmp_path, monkeypatch):
+    """PDF no motor do celular: as páginas cruas vão ao código do app, que faz a mesma limpeza do celular."""
+    import json as _json
+    from slidedsl import documents, motor_celular
+    monkeypatch.setattr(documents, "document_root", lambda: tmp_path / "documents")
+    pages = [{"page": 1, "text": "Resumo Um texto de resumo com mais de vinte caracteres."}, {"page": 2, "text": "1 Introdução\nTexto."}]
+    monkeypatch.setattr(documents, "extract_pdf", lambda path: pages)
+    info = documents.add_document("tcc.pdf", b"%PDF-1.7 x")
+    out = motor_celular._documento_para_node(info["id"], tmp_path)
+    assert out.name == "tcc.paginas.json"
+    data = _json.loads(out.read_text("utf-8"))
+    assert data["nome"] == "tcc.pdf" and data["paginas"] == pages

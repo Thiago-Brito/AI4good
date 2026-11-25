@@ -114,8 +114,9 @@ servidor = ServidorLlama()
 
 
 def _documento_para_node(document_id: str, out_dir: Path) -> Path:
-    """Arquivo que o código do app lê (TXT/MD/DOCX). PDF vira TXT com o texto que o PC já extraiu."""
-    from .documents import document_path
+    """Arquivo que o código do app lê (TXT/MD/DOCX). PDF vai por página (.paginas.json), como o módulo Android
+    entrega, para o app aplicar a própria limpeza e escolha por seções (teste do TCC, 25/11/2026)."""
+    from .documents import document_path, extract_pdf
 
     folder = document_path(document_id)
     record = json.loads((folder / "index.json").read_text("utf-8"))
@@ -124,6 +125,11 @@ def _documento_para_node(document_id: str, out_dir: Path) -> Path:
     if original.suffix in {".txt", ".md", ".docx"}:
         destino = out_dir / f"{nome}{original.suffix}"
         destino.write_bytes(original.read_bytes())
+        return destino
+    if original.suffix == ".pdf":
+        paginas = [{"page": p["page"], "text": p["text"]} for p in extract_pdf(original)]
+        destino = out_dir / f"{nome}.paginas.json"
+        destino.write_text(json.dumps({"nome": record["name"], "paginas": paginas}, ensure_ascii=False), "utf-8")
         return destino
     partes, titulo = [], None
     for chunk in record["chunks"]:
