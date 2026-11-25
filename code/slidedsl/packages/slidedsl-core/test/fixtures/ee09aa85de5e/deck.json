@@ -1,0 +1,190 @@
+{
+  "title": "O Ciclo da Água: Como a Água Se Move e Por Que É Importante",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "A água se move em um ciclo constante",
+      "subtitle": "A água muda de estado e circula entre atmosfera, terra e oceanos.",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O ciclo da água é um processo natural contínuo que transforma a água entre líquido, sólido e gasoso. Esse movimento é essencial para o abastecimento de cidades e o equilíbrio ecológico.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "O ciclo da água tem cinco etapas principais",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Evapora",
+          "detail": "A água do solo, rios e lagos se transforma em vapor e sobe para a atmosfera."
+        },
+        {
+          "label": "Condensa",
+          "detail": "O vapor d'água se reúne e forma nuvens, passando do estado gasoso para líquido."
+        },
+        {
+          "label": "Precipita",
+          "detail": "A água cai de volta à Terra como chuva ou neve, retornando aos rios e solos."
+        },
+        {
+          "label": "Infiltra",
+          "detail": "A água penetra no solo, como processo de infiltração."
+        },
+        {
+          "label": "Transpira",
+          "detail": "As plantas liberam água do seu interior para a atmosfera, como forma de transpiração."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F2",
+        "F8",
+        "F15",
+        "F16"
+      ],
+      "notes": "Cada etapa é um processo físico claro e observável. A evaporação e transpiração são formas de água se tornarem vapor. A precipitação é o retorno da água à superfície. A infiltração é o processo de água penetrar no solo. O ciclo é contínuo e natural, sem interrupção.",
+      "line": 8,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "Água doce é rara e difícil de acessar",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Água salgada",
+          "items": [
+            {
+              "label": "97,5% é salgada, inútil para beber ou irrigar.",
+              "detail": null
+            }
+          ]
+        },
+        {
+          "name": "Água doce",
+          "items": [
+            {
+              "label": "2,5% é doce, 69% em geleiras, difícil de acessar.",
+              "detail": null
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F3",
+        "F4"
+      ],
+      "notes": "A água salgada domina o planeta, mas é inútil para consumo humano. A água doce é escassa e concentrada em geleiras, dificultando o acesso para cidades e agricultura.",
+      "line": 18,
+      "column": 3
+    },
+    {
+      "kind": "numeros",
+      "title": "A água é escassa e o ciclo se torna extremo",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [
+        {
+          "value": "97,5%",
+          "label": "A água salgada é inútil para beber ou irrigar"
+        },
+        {
+          "value": "69%",
+          "label": "69% da água doce está em geleiras, difícil de acessar"
+        },
+        {
+          "value": "2024",
+          "label": "Em 2024, o ano mais quente, houve escassez em regiões"
+        }
+      ],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F3",
+        "F4",
+        "F9"
+      ],
+      "notes": "A água doce é rara e o ciclo se torna instável com o aquecimento. Em 2024, o calor acentuou a seca. A escassez afeta o abastecimento urbano.",
+      "line": 29,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "A água circula e todos contribuem",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Plantas retomam água",
+          "detail": "As plantas liberam água por transpiração, devolvendo parte ao ambiente."
+        },
+        {
+          "label": "Animais retornam água",
+          "detail": "Os animais devolvem água por urina, fezes, respiração e transpiração."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F2",
+        "F10",
+        "F12",
+        "F13"
+      ],
+      "notes": "A circulação da água envolve todos os seres vivos. A transpiração e a excreção são processos naturais que mantêm o ciclo em movimento. Essas ações são parte integrante do equilíbrio hidrológico.",
+      "line": 37,
+      "column": 3
+    }
+  ]
+}

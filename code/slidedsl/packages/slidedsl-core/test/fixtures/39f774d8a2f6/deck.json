@@ -1,0 +1,188 @@
+{
+  "title": "O Ciclo da Água: Como a Água Circula no Planeta",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "A água se transforma e circula no planeta",
+      "subtitle": "O ciclo da água mostra como a água muda de estado e viaja pelo planeta",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O ciclo da água é um processo natural que envolve transformações entre líquido, sólido e gasoso. Ele é essencial para a vida e o equilíbrio ambiental. A água circula em um ciclo contínuo, sem perder-se do planeta.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "O ciclo da água passa por cinco etapas",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Evapora",
+          "detail": "A água do solo, rios e lagos se transforma em vapor e sobe para a atmosfera."
+        },
+        {
+          "label": "Condensa",
+          "detail": "O vapor d'água se reúne e forma nuvens, passando do estado gasoso para líquido."
+        },
+        {
+          "label": "Precipita",
+          "detail": "As nuvens liberam água como chuva ou neve, que cai de volta para a Terra."
+        },
+        {
+          "label": "Infiltra",
+          "detail": "A água penetra no solo, recarregando os lençóis freáticos e se torna fonte de água subterrânea."
+        },
+        {
+          "label": "Transpira",
+          "detail": "As plantas liberam água do solo para a atmosfera, completando o ciclo."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F2",
+        "F8",
+        "F15",
+        "F16"
+      ],
+      "notes": "Cada etapa mostra como a água se move e se transforma. A evaporação inicia o ciclo, e a transpiração é um processo natural das plantas. O ciclo é contínuo e interconectado.",
+      "line": 8,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "Água doce vs Água salgada",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Água salgada",
+          "items": [
+            {
+              "label": "97,5% é salgada e não é consumível.",
+              "detail": null
+            }
+          ]
+        },
+        {
+          "name": "Água doce",
+          "items": [
+            {
+              "label": "2,5% é doce, 69% em geleiras, difícil de acessar.",
+              "detail": null
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F3",
+        "F4"
+      ],
+      "notes": "A água salgada é abundante mas inútil para consumo. A água doce é escassa e concentrada em geleiras, dificultando o acesso para cidades e agricultura.",
+      "line": 18,
+      "column": 3
+    },
+    {
+      "kind": "numeros",
+      "title": "A água doce é muito rara no planeta",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [
+        {
+          "value": "97,5%",
+          "label": "97,5% da água existente no mundo é salgada e não é adequada ao consumo direto nem à irrigação."
+        },
+        {
+          "value": "1%",
+          "label": "1% da água doce encontra-se nos rios."
+        },
+        {
+          "value": "30%",
+          "label": "30% das águas doce são subterrâneas, armazenadas em aquíferos."
+        }
+      ],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F3",
+        "F6",
+        "F5"
+      ],
+      "notes": "A água doce é extremamente escassa: 97,5% do total é salgada. Apenas 1% está nos rios e 30% em aquíferos, mostrando a escassez e a dependência do ciclo da água para o abastecimento urbano.",
+      "line": 29,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Acompanhar o ciclo e proteger o acesso",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Monitore mudanças no ciclo",
+          "detail": "Em 2024, muitas regiões enfrentaram escassez de água devido ao calor extremo."
+        },
+        {
+          "label": "Garanta acesso equitativo",
+          "detail": "A água doce é rara e, quando disponível, é de difícil acesso, especialmente em geleiras."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F7",
+        "F9"
+      ],
+      "notes": "O ciclo da água se tornou mais errático em 2024 devido ao aumento das temperaturas. A escassez da água doce reforça a necessidade de monitoramento e proteção do acesso. Ações devem ser baseadas em dados reais e adaptadas ao contexto local.",
+      "line": 37,
+      "column": 3
+    }
+  ]
+}

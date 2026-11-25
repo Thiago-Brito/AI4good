@@ -1,0 +1,188 @@
+{
+  "title": "O Ciclo da Água: Como a Água Se Move e Por Que É Importante",
+  "theme": "claro",
+  "slides": [
+    {
+      "kind": "capa",
+      "title": "A água se move em um ciclo contínuo",
+      "subtitle": "A água muda de estado e se move constantemente na natureza, formando um ciclo natural essencial para a vida.",
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [],
+      "notes": "O ciclo da água é um processo contínuo que envolve evaporação, condensação e precipitação. A água se transforma entre estados líquido, sólido e gasoso, sem perder-se do planeta. Esse movimento garante o abastecimento de rios, solos e plantas.",
+      "line": 3,
+      "column": 3
+    },
+    {
+      "kind": "etapas",
+      "title": "Etapas do ciclo",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Evaporação",
+          "detail": "A água do solo, rios e lagos se transforma em vapor e sobe para a atmosfera."
+        },
+        {
+          "label": "Condensação",
+          "detail": "O vapor d'água se reúne e forma nuvens quando se torna líquido novamente."
+        },
+        {
+          "label": "Precipitação",
+          "detail": "A água cai de volta à Terra como chuva ou neve quando as nuvens se esgotam."
+        },
+        {
+          "label": "Infiltração",
+          "detail": "Parte da água penetra no solo, recarregando os lençóis freáticos."
+        },
+        {
+          "label": "Transpiração",
+          "detail": "As plantas liberam água do solo para a atmosfera, como uma forma natural de evaporação."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F2",
+        "F8",
+        "F15",
+        "F16"
+      ],
+      "notes": "As etapas mostram como a água se move continuamente. A evaporação inicia o ciclo, e a transpiração complementa o processo natural. A infiltração é essencial para o abastecimento de água subterrânea em áreas com pouca chuva.",
+      "line": 8,
+      "column": 3
+    },
+    {
+      "kind": "comparacao",
+      "title": "Água salgada vs Água doce",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [],
+      "values": [],
+      "sides": [
+        {
+          "name": "Água salgada",
+          "items": [
+            {
+              "label": "97,5% é salgada e não pode ser bebida nem usada em agricultura.",
+              "detail": null
+            }
+          ]
+        },
+        {
+          "name": "Água doce",
+          "items": [
+            {
+              "label": "2,5% é doce: 1% nos rios, essencial para a vida e abastecimento das cidades.",
+              "detail": null
+            }
+          ]
+        }
+      ],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F3",
+        "F4",
+        "F6"
+      ],
+      "notes": "A água doce é escassa e vital para a vida e para o abastecimento urbano. A maioria está em geleiras ou subterrânea, dificultando o acesso. Isso mostra por que o ciclo da água é essencial para a sobrevivência humana e o funcionamento das cidades.",
+      "line": 18,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Conservar água para cidades e vida",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Reduzir o consumo doméstico",
+          "detail": "Muitas regiões enfrentaram escassez de água em 2024, o ano mais quente já registrado."
+        },
+        {
+          "label": "Proteger plantas e animais",
+          "detail": "Plantas liberam água por transpiração e animais por urina, fezes, respiração e transpiração."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F7",
+        "F9",
+        "F10",
+        "F12"
+      ],
+      "notes": "O ciclo da água se tornou mais errático e extremo em 2024, com escassez em regiões quentes. A transpiração das plantas e os processos de excreção animal retornam água ao ambiente, sustentando o ciclo. Reduzir o uso e preservar a natureza são ações diretas que ajudam a garantir o abastecimento urbano e a sobrevivência da vida.",
+      "line": 29,
+      "column": 3
+    },
+    {
+      "kind": "conclusao",
+      "title": "Ciclo da água se repete continuamente",
+      "subtitle": null,
+      "author": null,
+      "text": null,
+      "caption": null,
+      "unit": null,
+      "image_file": null,
+      "image_query": null,
+      "items": [
+        {
+          "label": "Monitore o consumo de água em casa",
+          "detail": "A água é reciclada constantemente, então reduzir o uso ajuda a manter o ciclo equilibrado."
+        },
+        {
+          "label": "Aprenda sobre transpiração das plantas",
+          "detail": "As plantas contribuem para o ciclo, mostrando como a vida depende da água em movimento."
+        }
+      ],
+      "values": [],
+      "sides": [],
+      "milestones": [],
+      "bars": [],
+      "cycle": false,
+      "sources": [
+        "F1",
+        "F2",
+        "F8",
+        "F10"
+      ],
+      "notes": "O ciclo da água é contínuo e interconectado. Monitorar o uso doméstico e entender o papel das plantas ajudam a respeitar esse ciclo natural. A transpiração das plantas é parte do ciclo, mostrando que a vida e a natureza estão ligadas.",
+      "line": 36,
+      "column": 3
+    }
+  ]
+}

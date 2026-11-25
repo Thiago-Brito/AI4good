@@ -229,6 +229,47 @@
       ]
     },
     {
+      "id": "ee09aa85de5e",
+      "source": "outputs/avaliacao_cega/pc4b/agua/apresentacao.slda",
+      "status": "exported",
+      "has_ir": false,
+      "features": [
+        "kind:capa",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:etapas",
+        "kind:numeros",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "5234be7643c4",
+      "source": "outputs/avaliacao_cega/pc4b/agua_s11_invalido/apresentacao.slda",
+      "status": "exported",
+      "has_ir": false,
+      "features": [
+        "kind:capa",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:etapas",
+        "style:claro"
+      ]
+    },
+    {
+      "id": "39f774d8a2f6",
+      "source": "outputs/avaliacao_cega/pc4b/agua_s12_invalido/apresentacao.slda",
+      "status": "exported",
+      "has_ir": false,
+      "features": [
+        "kind:capa",
+        "kind:comparacao",
+        "kind:conclusao",
+        "kind:etapas",
+        "kind:numeros",
+        "style:claro"
+      ]
+    },
+    {
       "id": "ed76236ecd75",
       "source": "outputs/criar/34b8eaf24fd54474ad9b6c01776d611f/apresentacao.slda",
       "status": "exported",
@@ -377,50 +418,6 @@
         "kind:conclusao",
         "kind:numeros",
         "kind:topicos",
-        "style:claro"
-      ]
-    },
-    {
-      "id": "ec0590a7294c",
-      "source": "outputs/teste3/runs/solar_obrigatorio__gramatica__s11/deck/apresentacao.slda",
-      "status": "exported",
-      "has_ir": false,
-      "features": [
-        "kind:capa",
-        "kind:comparacao",
-        "kind:conclusao",
-        "kind:etapas",
-        "kind:numeros",
-        "kind:topicos",
-        "style:claro"
-      ]
-    },
-    {
-      "id": "ee76772dcf7c",
-      "source": "outputs/teste3/runs/solar_obrigatorio__json__s22/deck/apresentacao.slda",
-      "status": "exported",
-      "has_ir": false,
-      "features": [
-        "kind:capa",
-        "kind:comparacao",
-        "kind:conclusao",
-        "kind:etapas",
-        "kind:numeros",
-        "kind:topicos",
-        "style:claro"
-      ]
-    },
-    {
-      "id": "f551d0dbe934",
-      "source": "outputs/teste3/runs/solar_tema__direto__s11/deck/apresentacao.slda",
-      "status": "exported",
-      "has_ir": false,
-      "features": [
-        "kind:capa",
-        "kind:comparacao",
-        "kind:conclusao",
-        "kind:linha_do_tempo",
-        "kind:numeros",
         "style:claro"
       ]
     }
