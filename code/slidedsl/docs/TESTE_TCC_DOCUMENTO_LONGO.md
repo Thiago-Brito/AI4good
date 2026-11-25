@@ -35,6 +35,17 @@ Pedido: *"Apresente este TCC para a banca: o problema (…), a proposta do Slide
 | outros defeitos | 6 dos 8 slides repetem "o modelo escreve apenas a intenção" | rótulos cortados no limite ("SlideD", "aexec"), conclusão com 2 itens iguais | caractere chinês ("cada 滑"), rótulos cortados | visual do modelo padrão, só texto em tópicos |
 | tempo (PC) | 12,9 s | 35,8 s | 62 s | 18,9 s, cerca de US$ 0,01 |
 
+## Rodada 3: GPT-4.1-mini pelo SlideDSL (fluxo completo do PC)
+
+`slidedsl criar ... --provider openai --model gpt-4.1-mini --slides 8 --documento samplepaper.pdf --fontes documentos --buscador nenhum`, com o mesmo pedido.
+- **Execução:** o PDF foi lido pelo próprio PC, e o roteiro viu os 24 fatos. Foram 58 chamadas (com as correções do verificador de sustentação), 166,6 s e US$ 0,044.
+- **Resultado:** deck válido, que cobre os 5 assuntos do pedido: problema, proposta, divisão modelo/compilador, celular, resultados (10/10 e 7%, ambos corretos) e limitações. Os números vêm de fatos citados, e não houve invenção notada.
+- **Comparado ao GPT direto:** tem o mesmo conteúdo com o visual do compilador, mas custa 4 vezes mais e leva 9 vezes mais tempo, por causa das chamadas de verificação.
+- **Defeitos:**
+  - título cortado no limite ("Problema: gerar apresentações com IA depende");
+  - nos slides 3 e 5, a 2ª linha do título encosta nos cartões;
+  - itens do slide 2 repetem a mesma ideia.
+
 ## Diagnóstico
 
 1. **O roteiro do app só vê os 3 primeiros fatos.** Esta é a causa principal.
