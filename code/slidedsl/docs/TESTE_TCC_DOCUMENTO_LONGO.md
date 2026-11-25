@@ -63,3 +63,32 @@ Pedido: *"Apresente este TCC para a banca: o problema (…), a proposta do Slide
 - Com documento curto (bancada), o app chega perto do externo em validade. Com documento longo e técnico, o gargalo não é o tamanho do modelo: até o 4B falhou.
 - O gargalo é o que o pipeline deixa o modelo ver: 3 fatos no roteiro e 6 trechos. O GPT-4.1-mini, lendo o documento inteiro, cobriu os 5 assuntos do pedido com números corretos.
 - Este caso entra como limitação. As correções (itens 1–3 e 5) são candidatas a trabalho futuro ou a uma versão do app antes do congelamento, com nova bancada.
+
+## Rodada 4: depois das correções (app com os commits fab3039 e 29322bc)
+
+Correções aplicadas:
+1. O roteiro vê todos os fatos (até 32), só afirmação e valor.
+2. A gramática aceita só os caracteres que o compilador mede.
+3. Número fora dos fatos bloqueia em `numeros`/`grafico`.
+4. Texto cortado no limite perde só a palavra pela metade.
+5. Limpeza do PDF: junta a hifenização (U+FFFE), tira os cabeçalhos corridos, detecta as seções e para nas referências.
+6. Escolha dos trechos: sempre o resumo, depois espalhada pelas seções.
+
+Montagem: a mesma da rodada 2 (8 slides, pedido de banca, semente 11). O PDF entra por página (`tcc.paginas.json`, como o módulo Android entrega), via `motor_pc.mjs`.
+
+| | 0.6B LoRA | 1.7B | 4B |
+|---|---|---|---|
+| fatos usados no deck (antes → depois) | 1 → 7 | 2 → 5 | 3 → **12** |
+| slides do compilador | 0 | 0 (antes 2) | 0 |
+| cobre resultados / celular / limitações | não / não / não | não / não / não | **sim / sim / sim** |
+| caractere fora do latim | — | — | nenhum (antes "滑") |
+| tempo (PC) | 16,8 s | 27,7 s | 52,5 s |
+
+- **4B:** melhora clara.
+  - Cobre problema, método, comparação com python-pptx ("nove vezes menor", correto), 0/10 → 10/10, app Android e "avaliação pedagógica ainda não realizada".
+  - Restam detalhes inventados ("Canva ou Google Slides", "custos elevados").
+  - O valor "0/10 para 10/10" excede o limite de 14 caracteres do valor e sai "0/10 para".
+- **1.7B:** pouco melhor. Continua repetitivo, sem os resultados, e inventa métricas de desempenho.
+- **0.6B LoRA:** usa mais fatos, mas os textos perdem o sentido ("unidade de geração ou análise"). O LoRA foi treinado com documentos da Wikipédia, não com artigos técnicos.
+
+**Leitura:** as correções tiram o gargalo do pipeline. A partir delas, a qualidade passa a depender do tamanho do modelo: no celular de 4 GB, documento longo e técnico fica fora do alcance dos modelos que cabem (0.6B e 1.7B). O fluxo do PC (`documents.py`) ainda não tem a limpeza de PDF do app; isso está registrado como pendência.

@@ -6,12 +6,14 @@
 // Saída: uma linha JSON por evento no stdout ({"evento":"progresso",...}) e, em --out:
 //   deck.json (AltoDeck), fatos.json, chamadas.json, diagnosticos.json, fonte.json, apresentacao_celular.pptx
 // Uso (na cópia de build, depois de `npm test`):
-//   node bench/motor_pc.mjs --pedido "..." --slides 5 [--documento arquivo.txt|.md|.docx] --out <pasta>
+//   node bench/motor_pc.mjs --pedido "..." --slides 5 [--documento arquivo.txt|.md|.docx|.paginas.json] --out <pasta>
+//   (.paginas.json = {"nome": "x.pdf", "paginas": [{"page": 1, "text": "..."}]}: um PDF já extraído por página, como o
+//   módulo Android entrega; passa pela limpeza de PDF do app — teste do TCC, docs/TESTE_TCC_DOCUMENTO_LONGO.md)
 //     [--url http://127.0.0.1:8080] [--semente 11] [--extracao frases|json] [--slides-modo gramatica_limites|json] [--imagens]
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {generate} from '../outputs/tests/pipeline/generate.js';
-import {extractBytes} from '../outputs/tests/pipeline/documents.js';
+import {extractBytes, makeDocument} from '../outputs/tests/pipeline/documents.js';
 import {redoSlide} from '../outputs/tests/pipeline/edit.js';
 
 const arg = (name, fallback) => { const i = process.argv.indexOf(`--${name}`); return i > 0 ? process.argv[i + 1] : fallback; };
@@ -58,9 +60,16 @@ async function main() {
     const bytes = new Uint8Array(await fs.readFile(DOC)), name = path.basename(DOC);
     const ext = path.extname(name).toLowerCase();
     const mime = ext === '.docx' ? 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' : ext === '.md' ? 'text/markdown' : 'text/plain';
-    const doc = {uri: DOC, name, bytes: bytes.length, mime};
-    source = {mode: 'document', document: doc};
-    readDocument = async () => extractBytes(doc, bytes);
+    if (name.endsWith('.paginas.json')) {
+      const pages = JSON.parse(new TextDecoder().decode(bytes));
+      const doc = {uri: DOC, name: pages.nome ?? name.replace('.paginas.json', '.pdf'), bytes: bytes.length, mime: 'application/pdf'};
+      source = {mode: 'document', document: doc};
+      readDocument = async () => makeDocument(doc, pages.paginas.map(p => ({text: p.text, page: p.page})), 'PDFBox', pages.paginas.length);
+    } else {
+      const doc = {uri: DOC, name, bytes: bytes.length, mime};
+      source = {mode: 'document', document: doc};
+      readDocument = async () => extractBytes(doc, bytes);
+    }
   }
   const started = Date.now();
   const result = await generate({request: REQUEST, slides: N, model: serverModel(SEED), source, readDocument,
