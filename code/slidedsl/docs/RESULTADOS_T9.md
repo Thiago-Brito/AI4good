@@ -52,6 +52,8 @@
   - **A010, 5 casos:** 5 itens com detalhes longos, que nenhum layout comporta.
 - As correções 5b e 7 trataram esses casos: completas voltaram a 20 e slides do compilador, a 4, sem mudar o tempo (23,1 → 22,9 min).
 
+**Versão final congelada (0.7.6):** a bancada foi repetida (`outputs/teste9_v076f_*`) e deu os mesmos números do 0.7.5 em todas as métricas, com o mesmo tempo projetado. A única mudança do 0.7.6 tira cópias de itens idênticos curtos, o que é raro. Os números da tabela valem para o 0.7.6.
+
 ## Experimento descartado: pedidos mais curtos (0.7.6)
 
 Tentativa de recuperar o tempo encurtando o que vai no pedido:

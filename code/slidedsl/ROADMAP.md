@@ -510,3 +510,7 @@ continuam como etapas futuras do plano maior; o histórico desta rodada é espec
 - Teste 9 (`docs/RESULTADOS_T9.md`): bancada do app 0.7.5 contra T7/T8.
   - **Ganhos:** fatos citados por deck 2,3–2,9 → 5,3–7,7; completas 8 → 16 (0.6B) e 13 → 17 (1.7B); slides de seção quase zero; pares de slides parecidos no LoRA 12 → 6.
   - **Custo:** cerca de 10% a mais de tempo projetado no celular (LoRA 20,6 → 22,9 min).
+- **Código congelado (25/11, 05h30): tag `artigo-v1`, app 0.7.6.**
+  - Verificação: pytest 755/755, app 97/97, núcleo 44/44, editor 15 (+5 pulados), paridade PC/celular 861/861, contratos mobile em sincronia.
+  - Emulador: APK 0.7.5 gerou 5 slides com o 0.6B base (19,0 min) e com o LoRA (20,5 min).
+  - Bancada do 0.7.6 igual à do 0.7.5 (T9).
