@@ -2,13 +2,13 @@
   "expo": {
     "name": "SlideDSL",
     "slug": "slidedsl",
-    "version": "0.7.2",
+    "version": "0.7.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "android": {
       "package": "br.slidedsl.app",
-      "versionCode": 10,
+      "versionCode": 11,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/android-icon-foreground.png",
