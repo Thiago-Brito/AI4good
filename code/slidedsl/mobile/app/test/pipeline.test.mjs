@@ -20,8 +20,8 @@ const content = kind => kind === 'capa' ? {titulo: 'Planejar ajuda a equipe', su
 const fact = {afirmacao: 'A equipe confere as tarefas antes de iniciar o trabalho.', tipo: 'definicao', valor: '',
   trecho: 'A equipe confere as tarefas antes de iniciar o trabalho.', autor: '', relevancia: 'alta'};
 class Mock {
-  constructor({badFirst = [], alwaysBad = [], n = 5, extract = [fact], overrideOutline, onComplete} = {}) {
-    Object.assign(this, {badFirst, alwaysBad, n, extract, overrideOutline, onComplete}); this.inputs = []; this.counts = {};
+  constructor({badFirst = [], alwaysBad = [], longTitle = [], garbage = [], n = 5, extract = [fact], overrideOutline, onComplete} = {}) {
+    Object.assign(this, {badFirst, alwaysBad, longTitle, garbage, n, extract, overrideOutline, onComplete}); this.inputs = []; this.counts = {};
   }
   async complete(input) {
     this.inputs.push(input); this.onComplete?.(input, this);
@@ -36,9 +36,11 @@ class Mock {
     const i = Number(input.user.match(/Escreva o slide (\d+)/)[1]);
     const kind = input.user.match(/\(tipo (\w+)\)/)[1];
     this.counts[i] = (this.counts[i] ?? 0) + 1;
+    if (this.garbage.includes(i)) return {text: '{}', usage};
     const data = content(kind);
     if (input.schema.properties.fontes?.items) data.fontes = ['F1'];
     if (this.alwaysBad.includes(i) || (this.badFirst.includes(i) && this.counts[i] === 1)) data.titulo = 'x'.repeat(100);
+    if (this.longTitle.includes(i)) data.titulo = 'A equipe confere cada entrega com cuidado antes de apresentar o resultado final para toda a turma';
     return {text: JSON.stringify(data), usage};
   }
 }
@@ -76,8 +78,37 @@ test('todos os slides precisam reparar: teto de 11 chamadas, sem melhor de N', a
   assert.equal(result.max_calls, 11);
   assert.equal(result.calls.filter(c => c.repair).length, 5);
 });
-test('segundo erro do slide: sem terceira tentativa; compilador monta o slide e o deck segue', async () => {
-  const model = new Mock({alwaysBad: [2]});
+test('texto longo demais após o reparo: compilador encurta (F002) e mantém o conteúdo da IA', async () => {
+  const model = new Mock({longTitle: [2]});
+  const result = await generate(base(model));
+  assert.equal(model.counts[2], 2);
+  assert.deepEqual(result.diagnostics.filter(d => d.code === 'F001'), []);
+  assert.equal(result.diagnostics.filter(d => d.code === 'F002').length, 1);
+  const s = result.deck.slides[1];
+  assert.equal(s.title, 'A equipe confere cada entrega com cuidado antes de apresentar o resultado final');
+  assert.equal(s.items.length, 3);
+  assert.equal(result.diagnostics.filter(d => d.severity === 'ERRO').length, 0);
+});
+test('falha sem ser de tamanho, com 2 fatos planejados: tópicos montados das afirmações (não divisória vazia)', async () => {
+  const f2 = {...fact, afirmacao: 'Cada entrega recebe uma revisão antes da apresentação.', trecho: 'Cada entrega recebe uma revisão antes da apresentação.'};
+  const model = new Mock({garbage: [3], extract: [fact, f2], overrideOutline: o => o.slides.forEach(s => { if (s.fatos) s.fatos = ['F1', 'F2']; })});
+  const result = await generate({...base(model), source: {mode: 'paste', text: `${fact.trecho} ${f2.trecho}`}});
+  const s = result.deck.slides[2];
+  assert.equal(s.kind, 'topicos'); assert.deepEqual(s.sources, ['F1', 'F2']);
+  assert.deepEqual(s.items.map(it => [it.label, it.detail]), [['A equipe confere as tarefas', 'Antes de iniciar o trabalho'],
+    ['Cada entrega recebe', 'Uma revisão antes da apresentação']]);
+  assert.equal(result.diagnostics.filter(d => d.code === 'F001').length, 1);
+  assert.equal(result.diagnostics.filter(d => d.severity === 'ERRO').length, 0);
+});
+test('factItem: rótulo até 48 na palavra inteira, resto no detalhe', async () => {
+  const {factItem} = await import('../outputs/tests/pipeline/generate.js');
+  assert.deepEqual(factItem('A água evapora.'), {rotulo: 'A água evapora'});
+  const it = factItem('A evaporação ocorre nos oceanos, que cobrem cerca de 70% da superfície terrestre.');
+  assert.equal(it.rotulo, 'A evaporação ocorre nos oceanos');
+  assert.equal(it.detalhe, 'Que cobrem cerca de 70% da superfície terrestre');
+});
+test('segundo erro do slide (não é tamanho): sem terceira tentativa; compilador monta o slide e o deck segue', async () => {
+  const model = new Mock({garbage: [2]});
   const result = await generate(base(model));
   assert.equal(model.counts[2], 2);
   const fb = result.diagnostics.filter(d => d.code === 'F001');

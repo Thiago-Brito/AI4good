@@ -53,10 +53,32 @@ export function shortTitle(text: string, max: number): string {
   out = words.join(' ').replace(/[,;:]$/, '');
   return out || text.trim().slice(0, max);
 }
+/** Item de tópico a partir da afirmação de um fato: rótulo = primeira oração (até 48), detalhe = o resto (até 170). */
+export function factItem(claim: string): {rotulo: string; detalhe?: string} {
+  const text = claim.trim().replace(/\.$/, '');
+  if (text.length <= 48) return {rotulo: text};
+  const cut = text.search(/[,:;]\s|\s[—–-]\s/);
+  // Sem vírgula/travessão no lugar certo: corta perto do meio, para o detalhe levar o resto da frase.
+  const head = cut > 8 && cut <= 48 ? text.slice(0, cut) : shortTitle(text, Math.min(48, Math.max(24, Math.ceil(text.length / 2))));
+  const rest = text.slice(head.length).replace(/^[\s,:;—–-]+/, '');
+  // Sobra de 1–2 palavras ("o trabalho") não vira detalhe solto.
+  const detalhe = rest.split(/\s+/).length >= 3 ? shortTitle(rest[0].toUpperCase() + rest.slice(1), 170) : '';
+  return detalhe ? {rotulo: head, detalhe} : {rotulo: head};
+}
 /** Slide montado pelo compilador quando a IA falha após o reparo (teste no emulador, 23/11/2026:
  * a capa do Qwen3 0.6B continuou inválida e a geração inteira era abortada). Capa: título do roteiro;
  * demais tipos: divisória com a mensagem planejada. Sem nova chamada ao modelo. */
 function fallbackSlide(kind: SlideKind | 'ciclo', plan: PlanSlide, deckTitle: string, deck: AltoDeck, facts: Facts): AltoSlide | null {
+  // Com fatos planejados, tópicos montados das próprias afirmações do documento (teste no celular, 25/11/2026:
+  // a divisória só com a mensagem foi julgada de pouca utilidade). Sem fatos, ou se não couber, a divisória.
+  const planned = kind === 'capa' ? [] : (plan.fatos ?? []).filter(id => typeof facts[id]?.claim === 'string').slice(0, 4);
+  if (planned.length >= 2) {
+    const slide = jsonToSlide('topicos', {titulo: shortTitle(plan.mensagem, 60), fontes: planned,
+      itens: planned.map(id => factItem(String(facts[id].claim)))});
+    slide.notes = `Slide montado pelo compilador com os fatos ${planned.join(', ')} após falha da IA. Mensagem planejada: ${plan.mensagem}`;
+    const built = buildAlto({...deck, slides: [...deck.slides, slide]}, facts);
+    if (!built.diagnostics.some(d => d.slide === deck.slides.length + 1 && d.severity === 'ERRO')) return slide;
+  }
   const fbKind: SlideKind = kind === 'capa' ? 'capa' : 'secao';
   const source = kind === 'capa' ? deckTitle : plan.mensagem;
   for (const max of [60, 40, 28]) {
@@ -67,6 +89,19 @@ function fallbackSlide(kind: SlideKind | 'ciclo', plan: PlanSlide, deckTitle: st
     if (!own.some(d => d.severity === 'ERRO')) return slide;
   }
   return null;
+}
+/** Corta cada texto acima do maxLength do schema na última palavra inteira (sem artigo/preposição no fim). */
+export function clipToLimits(data: unknown, schema: JsonSchema): unknown {
+  if (schema.type === 'string' && typeof data === 'string') {
+    const max = schema.maxLength === undefined ? Infinity : Number(schema.maxLength);
+    return Array.from(data).length > max ? shortTitle(data, max) : data;
+  }
+  if (schema.type === 'array' && Array.isArray(data) && schema.items) return data.map(v => clipToLimits(v, schema.items as JsonSchema));
+  if (schema.type === 'object' && data && typeof data === 'object') {
+    const props = (schema.properties ?? {}) as Record<string, JsonSchema>;
+    return Object.fromEntries(Object.entries(data as Record<string, unknown>).map(([k, v]) => [k, k in props ? clipToLimits(v, props[k]) : v]));
+  }
+  return data;
 }
 export interface Outline {titulo: string; slides: PlanSlide[]}
 /** Porte de fix_outline (alto_generation.py): o primeiro slide vira capa, o último conclusão e capas no meio
@@ -114,7 +149,16 @@ export async function writeSlide(ctx: SlideContext, plan: PlanSlide, i: number, 
   const limited = slideMode === 'gramatica_limites' ? withCompilerLimits(schema) : null;
   const grammar = slideMode === 'json' ? '' : slideGrammar(kind, limited ?? schema);
   const slideBase = grammar ? `${base}\n${altoFormatHint(kind, schema)}` : base;
-  let accepted: AltoSlide | null = null, previous = '', diagnostics: Diagnostic[] = [];
+  let accepted: AltoSlide | null = null, previous = '', diagnostics: Diagnostic[] = [], lastData: unknown = null;
+  const accept = (data: unknown) => {
+    const slide = jsonToSlide(kind, data as Record<string, any>);
+    cleanVisible(slide, ids, request);  // como o PC: sem "conforme F2", caixa de frase, inicial maiúscula
+    // The cover must not invent an author, as in alto_generation.py.
+    if (kind === 'capa' && slide.author && !request.toLowerCase().includes(slide.author.toLowerCase())) slide.author = null;
+    if (!ids.length) slide.notes = `conteúdo sem fontes\n${slide.notes ?? ''}`;
+    const built = buildAlto({...deck, slides: [...ctx.before, slide, ...ctx.after]}, facts);
+    return {slide, diagnostics: built.diagnostics.filter(d => d.slide == null || d.slide === i + 1)};
+  };
   for (let attempt = 0; attempt <= 1; attempt++) {
     progress(attempt ? `Reparando slide ${i + 1}/${n}` : `Slide ${i + 1}/${n}`, i + 1);
     try {
@@ -131,13 +175,8 @@ export async function writeSlide(ctx: SlideContext, plan: PlanSlide, i: number, 
       const errors = schemaErrors(data, schema);
       if (errors.length) { accepted = null; diagnostics = errors.map(message => ({code: 'P002', severity: 'ERRO', slide: i + 1, message})); }
       else {
-        accepted = jsonToSlide(kind, data as Record<string, any>);
-        cleanVisible(accepted, ids, request);  // como o PC: sem "conforme F2", caixa de frase, inicial maiúscula
-        // The cover must not invent an author, as in alto_generation.py.
-        if (kind === 'capa' && accepted.author && !request.toLowerCase().includes(accepted.author.toLowerCase())) accepted.author = null;
-        if (!ids.length) accepted.notes = `conteúdo sem fontes\n${accepted.notes ?? ''}`;
-        const built = buildAlto({...deck, slides: [...ctx.before, accepted, ...ctx.after]}, facts);
-        diagnostics = built.diagnostics.filter(d => d.slide == null || d.slide === i + 1);
+        lastData = data;
+        ({slide: accepted, diagnostics} = accept(data));
         // Texto cortado no limite da gramática: aviso que pede reparo (não bloqueia; após o reparo, aceita).
         if (limited && ctx.repairTruncated) for (const t of truncatedPaths(data, limited)) diagnostics.push({
           code: 'A005', severity: 'AVISO', slide: i + 1, evidence: {path: t.path},
@@ -152,6 +191,17 @@ export async function writeSlide(ctx: SlideContext, plan: PlanSlide, i: number, 
     const actionable = diagnostics.filter(d => d.severity === 'ERRO' || (d.severity === 'AVISO' && d.code !== 'A009'));
     if (accepted && !actionable.length) break;
     if (attempt === 1 && (!accepted || diagnostics.some(d => d.severity === 'ERRO'))) { accepted = null; break; }
+  }
+  // Teste no celular (25/11/2026, modo JSON): slides 3 e 5 viraram divisórias vazias só por rótulos longos (A005).
+  // Se os únicos erros são de tamanho, o compilador encurta os campos na palavra inteira e fica o conteúdo da IA.
+  const errors = diagnostics.filter(d => d.severity === 'ERRO');
+  if (!accepted && lastData && errors.length && errors.every(d => d.code === 'A005')) {
+    const salvage = accept(clipToLimits(lastData, withCompilerLimits(schema)));
+    if (!salvage.diagnostics.some(d => d.severity === 'ERRO')) {
+      accepted = salvage.slide;
+      diagnostics = [...salvage.diagnostics, {code: 'F002', severity: 'AVISO', slide: i + 1,
+        message: `Slide ${i + 1}: textos longos demais encurtados pelo compilador após o reparo.`} as Diagnostic];
+    }
   }
   return {accepted, diagnostics};
 }
@@ -187,6 +237,7 @@ export async function generate(options: GenerateOptions): Promise<GenerationResu
     const ctx: SlideContext = {request, deck, facts, ids, mode, summary, slideMode, recorder, repairTruncated: options.repairTruncated ?? false,
       progress: (stage, slide) => progress(stage, slide), before: deck.slides, after: [], n, signal};
     let {accepted, diagnostics} = await writeSlide(ctx, plan, i);
+    fallbackNotes.push(...diagnostics.filter(d => d.code === 'F002'));
     if (!accepted) {
       const fb = fallbackSlide(kind, plan, deck.title, deck, facts);
       if (!fb) throw new GenerationError(`Slide ${i + 1} continua inválido após um reparo.`, diagnostics);

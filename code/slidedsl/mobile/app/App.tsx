@@ -105,11 +105,12 @@ export default function App() {
       await ensureVerified(selected, () => setProgress({stage: 'Conferindo SHA-256 do modelo (só na primeira vez)', total: slides}));
       if (abort.signal.aborted) throw Error('Operação cancelada.');
       setProgress({stage: 'Carregando modelo', total: slides});
+      const grammar = grammarSlides || !!selected.grammarOnly;  // o LoRA só conhece o modo gramática
       llm = await loadModel(modelUri(selected), gpu, n => setProgress({stage: `Carregando modelo · ${Math.round(n)}%`, total: slides}));
       const generated = await generate({request, slides, source, model: llm, signal: abort.signal,
-        slideMode: grammarSlides ? 'gramatica_limites' : 'json',
+        slideMode: grammar ? 'gramatica_limites' : 'json',
         // Bancada de 24/11 (RESULTADOS_T6.md): frases numeradas reduzem a leitura do documento em 56%.
-        extractMode: grammarSlides ? 'frases' : 'json',
+        extractMode: grammar ? 'frases' : 'json',
         readDocument: async (file, signal) => document ?? readDocument(file, signal),
         onDocument: info => {documentData = info; setDocumentInfo(info);},
         images: photos ? photoSource : undefined,
@@ -133,7 +134,7 @@ export default function App() {
       setData(testData({calls: records, device_start: snapshot, device_end: end,
         model: {...selected, quantization: 'Q4_K_M', n_ctx: 4096, gpu}, status,
         wall_ms: Date.now() - started, slides, diagnostics, error: error || undefined, source_mode: source.mode, document: documentData,
-        slide_mode: grammarSlides ? 'gramatica_limites' : 'json', extract_mode: grammarSlides ? 'frases' : 'json'}));
+        slide_mode: grammarSlides || selected.grammarOnly ? 'gramatica_limites' : 'json', extract_mode: grammarSlides || selected.grammarOnly ? 'frases' : 'json'}));
       active.current = null; setBusy(false);
       if (queuedDocument.current) {const document = queuedDocument.current; queuedDocument.current = null; acceptDocument(document);}
     }

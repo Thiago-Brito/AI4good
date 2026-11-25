@@ -6,7 +6,8 @@ $ErrorActionPreference = 'Stop'
 if ($Clean -and $SkipPrebuild) { throw 'Clean e SkipPrebuild são incompatíveis.' }
 # Só builds anteriores (Gradle/Kotlin) bloqueiam; Java de outras ferramentas (ex.: extensão Java do VS Code) não.
 $builds = Get-CimInstance Win32_Process -Filter "Name='java.exe'" -ErrorAction SilentlyContinue |
-  Where-Object { $_.CommandLine -match 'GradleDaemon|GradleWrapperMain|org\.jetbrains\.kotlin\.daemon' }
+  Where-Object { $_.CommandLine -match 'GradleDaemon|GradleWrapperMain|org\.jetbrains\.kotlin\.daemon' -and
+    $_.CommandLine -notmatch '\\\.vscode\\extensions\\' }  # daemon do Gradle da extensão Java do VS Code não é nosso
 if ($builds) {
   throw 'Há build Gradle/Kotlin ativo. Aguarde o build anterior encerrar antes de executar mobile_build.ps1.'
 }
