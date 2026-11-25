@@ -52,6 +52,19 @@
   - **A010, 5 casos:** 5 itens com detalhes longos, que nenhum layout comporta.
 - As correções 5b e 7 trataram esses casos: completas voltaram a 20 e slides do compilador, a 4, sem mudar o tempo (23,1 → 22,9 min).
 
+## Experimento descartado: pedidos mais curtos (0.7.6)
+
+Tentativa de recuperar o tempo encurtando o que vai no pedido:
+- trecho do fato: 300 → 200 caracteres;
+- itens já escritos: 320 → 200;
+- afirmações no roteiro: 220 → 160.
+
+Resultado na mesma bancada (`outputs/teste9_v076_*`):
+- **Tempo:** não caiu. LoRA 22,9 → 23,4 min, 0.6B 27,1 → 28,2, 1.7B 58,9 → 58,8.
+- **Reparos:** aumentaram (LoRA 1,17 → 1,58 por apresentação) e anularam a economia de leitura.
+- **Qualidade:** mista. No 1.7B, os pares de slides parecidos subiram de 1 para 7.
+- **Decisão:** a mudança foi desfeita, e o código segue no 0.7.5.
+
 ## Celular real (moto g(8) power lite, 0.6B LoRA, `agua.txt`, 5 slides)
 
 | versão | tempo | chamadas | reparos | observação |
