@@ -1,3 +1,5 @@
+# Encerra servidor antigo (o motor do celular do PC mantém um llama-server vivo sem --slot-save-path).
+taskkill //F //IM llama-server.exe >/dev/null 2>&1; sleep 2
 R="/c/Users/brito/OneDrive/Área de Trabalho/ia/code/slidedsl"
 # Bancada do Teste 9 (docs/RESULTADOS_T9.md): 3 modelos do celular × 24 apresentações, código do app 0.7.5.
 # Uso (Git Bash, com a cópia de build em D:/slidedsl-mobile/app compilada por npm test): bash scripts/bancada_075.sh

@@ -1,4 +1,6 @@
 # Uso: agua_rep.sh <rotulo>  — 0.6B LoRA, agua.txt, 5 slides, sementes 11 22 33
+# Encerra servidor antigo (o motor do celular do PC mantém um llama-server vivo sem --slot-save-path).
+taskkill //F //IM llama-server.exe >/dev/null 2>&1; sleep 2
 R="/c/Users/brito/OneDrive/Área de Trabalho/ia/code/slidedsl"; T="$R/outputs/repeticao_agua"; mkdir -p "$T"
 /d/android/llama/llama-server.exe -m D:/android/models/Qwen3-0.6B-SlideDSL-LoRA-Q4_K_M.gguf -ngl 99 -c 8192 -np 1 --jinja --port 8080 --cache-ram 0 --slot-save-path D:/android/llama/slots > "$T/llama.log" 2>&1 &
 srv=$!
