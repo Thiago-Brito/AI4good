@@ -1,6 +1,7 @@
-# Plano da noite (25/11/2026): testes e artigo até 12h
+# Plano da noite (25/11/2026): código e testes prontos até 12h
 
-O autor dorme. O Claude roda em loop até 12h, testando, melhorando e escrevendo.
+O autor dorme. O Claude roda em loop até 12h, testando e melhorando o código.
+**Atualização (00h40):** até 12h o autor precisa só do **código** pronto e testado; o artigo fica para depois, e não se mexe nele esta noite.
 **Regra de ouro:** nenhuma mudança pode aumentar o tempo no celular. A medida é `celular_min` da bancada; se o tempo subir mais de 5%, a mudança volta atrás.
 
 ## Estado no início (00h30)
@@ -22,25 +23,23 @@ O autor dorme. O Claude roda em loop até 12h, testando, melhorando e escrevendo
    - conferir com os casos rápidos (`agua_rep.sh`, lista de falhas).
    - Se piorar ou ficar mais lento, desfazer.
 4. **Registrar:** `docs/RESULTADOS_T9.md` (método, tabela antes/depois, leitura honesta), ROADMAP e commit/push.
-5. **Artigo** (`academy/papers/artigo-overleaf/samplepaper.tex`, commit local sem push):
-   - resultados do celular (17,8 → 20,7 min com o 0.7.x; antes 48 e 63 min);
-   - bancada T9;
-   - teste de documento longo (TCC) como limitação;
-   - números de testes e paridade atualizados;
-   - compilar com `latexmk -pdf` e conferir o PDF.
+5. **Artigo:** fica para depois. Só deixar os números prontos em `RESULTADOS_T9.md` e no `ROADMAP.md` para quando for escrever.
 
 ## Prazos
 
-- **até 06h:** bancada 0.7.5 analisada e `RESULTADOS_T9.md`; no máximo mais 1–2 correções medidas.
-- **06h–09h:** artigo atualizado e compilado.
-- **09h–10h30:** congelar.
+- **até 06h:** bancada do 0.7.5 analisada, `RESULTADOS_T9.md` escrito e 1–2 correções medidas (com bancada de novo, se mudar o pipeline).
+- **06h–09h:** mais voltas de teste e correção, se houver defeito barato. Também testes de ponta a ponta que ainda faltam:
+  - fluxo do PC com o motor do celular e a API;
+  - edição;
+  - limpeza de PDF no fluxo do PC (`documents.py`), se for simples e com paridade.
+- **09h–10h30:** congelar o código.
   - gerar o APK final e colocá-lo em `PARA_O_CELULAR`;
-  - rodar a verificação completa: pytest, núcleo, app, editor, paridade;
+  - rodar a verificação completa: pytest, núcleo, app, editor, paridade e prompts em sincronia;
   - criar a tag `artigo-v1`.
-- **10h30–12h:** revisão final do texto do artigo e um resumo para o autor (o que mudou, números, o que falta).
+- **10h30–12h:** resumo para o autor: o que mudou, os números e o que falta.
 
 ## Não fazer
 
 - Mexer na avaliação cega: o protocolo foi registrado antes das respostas, e a página fica como está.
 - Rodar dois processos pesados ao mesmo tempo (GPU, build, emulador).
-- Push no repositório do artigo, ou mudar a numeração dos testes do plano do TCC.
+- Mexer no artigo esta noite, ou mudar a numeração dos testes do plano do TCC.
