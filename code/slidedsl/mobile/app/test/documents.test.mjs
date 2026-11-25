@@ -141,3 +141,45 @@ test('documento >30 mil caracteres → deck editável de 5 slides: 6 extrações
   await fs.writeFile('outputs/evidence/document-custo.json', JSON.stringify(report, null, 2));
   await fs.writeFile('outputs/evidence/document-context.json', JSON.stringify({simulated: true, characters: doc.characters, max_input_tokens: Math.max(...model.tokens), calls: model.tokens}, null, 2));
 });
+
+// PDF do próprio TCC (teste de 25/11/2026, docs/TESTE_TCC_DOCUMENTO_LONGO.md): 10 páginas reais extraídas.
+const tccDoc = async () => {
+  const fixture = JSON.parse(await fs.readFile(new URL('./fixtures/tcc_paginas.json', import.meta.url), 'utf8'));
+  return makeDocument({name: 'tcc.pdf', bytes: 1000, mime: 'application/pdf', uri: 'file:///tcc.pdf'},
+    fixture.paginas.map(p => ({text: p.text, page: p.page})), 'PDFBox', 23);
+};
+test('PDF: junta hifenização, tira cabeçalhos corridos e para nas referências', async () => {
+  const doc = await tccDoc(), all = doc.chunks.map(c => c.text).join('\n');
+  assert.doesNotMatch(all, /[￾­]/);
+  assert.match(all, /depender de serviços pagos/);           // "depen￾der"
+  assert.doesNotMatch(all, /T\. Barbosa/);                    // "12 T. Barbosa"
+  assert.doesNotMatch(all, /apresentações editáveis \d+/);    // "SlideDSL: geração local ... 13"
+  assert.doesNotMatch(all, /arxiv\.org|doi\.org/i);           // página 23 = referências
+  assert.ok(doc.chunks.every(c => c.page < 22), 'nada depois de "Referências"');
+});
+test('PDF: seções numeradas viram seções de nível 1, com o resumo à parte', async () => {
+  const doc = await tccDoc();
+  const sections = [...new Set(doc.chunks.map(c => c.section).filter(Boolean))];
+  assert.equal(sections[0], 'Resumo');
+  assert.ok(sections.includes('1 Introdução') && sections.includes('6 Resultados') && sections.includes('8 Conclusão'), sections.join(' | '));
+  assert.ok(doc.chunks.some(c => c.heading.startsWith('6.7') && c.section === '6 Resultados'));
+  assert.ok(!sections.some(s => /Barbosa|Referências/.test(s)));
+});
+test('PDF: pedido genérico lê o resumo e espalha pelas seções; pedido de banca cobre resultados e limitações', async () => {
+  const doc = await tccDoc();
+  const generic = retrieveDocument(doc, '');
+  assert.equal(generic.length, 6);
+  assert.equal(generic[0].section, 'Resumo');
+  assert.ok(new Set(generic.map(c => c.section)).size >= 5);
+  const banca = retrieveDocument(doc, 'Apresente este TCC para a banca: o problema, a proposta do SlideDSL, a versão no celular, os principais resultados dos testes e as limitações do trabalho.');
+  const secs = banca.map(c => c.section);
+  assert.equal(secs[0], 'Resumo');
+  assert.ok(secs.includes('6 Resultados'), secs.join(' | '));
+  assert.ok(secs.includes('7 Discussão e limitações'), secs.join(' | '));
+  assert.ok(Math.max(...[...new Set(secs)].map(s => secs.filter(x => x === s).length)) <= 2);
+});
+test('TXT e MD não passam pela detecção de seções do PDF (bancadas inalteradas)', async () => {
+  const doc = makeDocument(file('agua.txt'), [{text: '1 Evaporação\n\nO sol aquece a água dos rios.\n\nReferências\n\nAutor, 2020.'}], 'UTF-8');
+  assert.ok(doc.chunks.every(c => c.section === undefined));
+  assert.match(doc.chunks.map(c => c.text).join('\n'), /Autor, 2020/);
+});

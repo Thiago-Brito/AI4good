@@ -5,7 +5,8 @@ export const MAX_EXTRACT_CALLS = 6;
 export type DocumentKind = 'txt' | 'md' | 'docx' | 'pdf';
 export interface DocumentFile {uri: string; name: string; bytes: number; mime: string}
 export interface DocumentPart {text: string; heading?: string; headingOnly?: boolean; page?: number}
-export interface DocumentChunk {id: string; passage: number; text: string; heading: string; page: number | null}
+/** `section`: seção de nível 1 detectada no PDF ("6 Resultados" para um trecho de "6.4 …"). */
+export interface DocumentChunk {id: string; passage: number; text: string; heading: string; page: number | null; section?: string}
 export interface DocumentText extends DocumentFile {kind: DocumentKind; characters: number; pages: number | null; encoding: string; chunks: DocumentChunk[]}
 export const DOCUMENT_MIMES = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain', 'text/markdown', 'text/x-markdown'];
 export function documentKind(name: string, mime = ''): DocumentKind {
@@ -117,27 +118,89 @@ export async function docxParts(bytes: Uint8Array): Promise<DocumentPart[]> {
   });
   return parts;
 }
+// --- Limpeza e estrutura de PDF (teste com o PDF do TCC, 25/11/2026; docs/TESTE_TCC_DOCUMENTO_LONGO.md) ---
+// Só para PDF: TXT/MD/DOCX seguem como antes (as bancadas usam TXT).
+const HEADING_LINE = /^(\d{1,2}(?:\.\d{1,2}){0,2})\.?\s+(\p{Lu}[\p{L}\p{M}\s,:;()'’\-–—/]{2,80})$/u;
+const ABSTRACT_LINE = /^(resumo|abstract)\b[\s.:—–-]*/i;
+const REFERENCES_LINE = /^(refer[êe]ncias(?:\s+bibliogr[áa]ficas)?|references|bibliografia)\s*$/i;
+/** Junta palavras partidas pela hifenização e tira marcas invisíveis do PDF (U+00AD, U+FFFE, U+FFFD). */
+export function cleanPdfText(text: string): string {
+  return text
+    .replace(/(\p{L})[­￾�][ \t]*\n?[ \t]*(\p{L})/gu, '$1$2')
+    .replace(/[­￾�]/g, '')
+    .replace(/(\p{Ll})-\n[ \t]*(\p{Ll})/gu, '$1$2');
+}
+/** Tira cabeçalhos/rodapés corridos: linhas das bordas da página que se repetem (números trocados por #)
+ * em ≥ 30% das páginas, e linhas que são só o número da página. Só com 4 páginas ou mais. */
+export function stripRunningHeaders(pages: string[]): string[] {
+  if (pages.length < 4) return pages;
+  const key = (line: string) => line.trim().replace(/\d+/g, '#').replace(/\s+/g, ' ').toLowerCase();
+  const edges = (text: string) => {
+    const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+    return [...lines.slice(0, 3), ...lines.slice(-3)];
+  };
+  const count = new Map<string, number>();
+  for (const page of pages) for (const k of new Set(edges(page).map(key))) count.set(k, (count.get(k) ?? 0) + 1);
+  const repeated = new Set([...count].filter(([k, n]) => /\p{L}/u.test(k) && k.length <= 120 && n >= Math.max(3, pages.length * 0.3)).map(([k]) => k));
+  return pages.map(page => {
+    const border = new Set(edges(page));
+    return page.split('\n').filter(line => {
+      const t = line.trim();
+      return !(border.has(t) && (repeated.has(key(t)) || /^\d{1,4}$/.test(t)));
+    }).join('\n');
+  });
+}
+/** Marca como título (# ...) as linhas de seção numerada, o resumo e as referências. */
+export function markPdfHeadings(text: string): string {
+  return text.split('\n').map(line => {
+    const t = line.trim();
+    if (REFERENCES_LINE.test(t)) return `# ${t}`;
+    const abstract = t.match(ABSTRACT_LINE);
+    if (abstract && t.length > abstract[0].length + 20) return `# ${abstract[1][0].toUpperCase()}${abstract[1].slice(1).toLowerCase()}\n${t.slice(abstract[0].length)}`;
+    if (abstract && /^(resumo|abstract)[.:]?$/i.test(t)) return `# ${t.replace(/[.:]$/, '')}`;
+    const m = t.match(HEADING_LINE);
+    return m && m[2].trim().split(/\s+/).length <= 10 ? `# ${t}` : line;
+  }).join('\n');
+}
 export function makeDocument(file: DocumentFile, parts: DocumentPart[], encoding: string, pages: number | null = null): DocumentText {
   const kind = validateDocument(file), chunks: DocumentChunk[] = [];
   const characters = parts.reduce((n, p) => n + p.text.length, 0);
   if (characters > MAX_DOCUMENT_CHARS) throw Error('O documento excede 200 mil caracteres extraídos.');
-  let heading = '';
+  if (kind === 'pdf') {
+    const texts = stripRunningHeaders(parts.map(p => cleanPdfText(p.text)));
+    parts = parts.map((p, k) => ({...p, text: markPdfHeadings(texts[k])}));
+  }
+  let heading = '', section = '', references = false;
+  const topLevel = new Map<string, string>();
   for (const part of parts) {
+    if (references) break;  // tudo depois de "Referências" fica fora da leitura
     if (part.heading !== undefined) heading = part.heading;
     if (part.headingOnly) continue;
     for (const paragraph of part.text.split(/\n\s*\n/)) {
+      if (references) break;
       // Markdown e títulos do Word viram metadados, nunca fatos isolados.
       let lines: string[] = [];
       const append = () => {
         const body = lines.join('\n').trim(); lines = [];
         for (let offset = 0; offset < body.length; offset += 900) {
           const text = body.slice(offset, offset + 900).trim();
-          if (text) {const passage = chunks.length + 1; chunks.push({id: `c${passage}`, passage, text, heading: heading.slice(0, 160), page: part.page ?? null});}
+          if (text) {const passage = chunks.length + 1; chunks.push({id: `c${passage}`, passage, text, heading: heading.slice(0, 160), page: part.page ?? null,
+            ...(section ? {section: section.slice(0, 160)} : {})});}
         }
       };
       for (const line of paragraph.split('\n')) {
+        if (references) break;
         const match = line.match(/^#{1,6}\s+(.+)/);
-        if (match) {append(); heading = match[1].trim();} else lines.push(line);
+        if (match) {
+          append(); heading = match[1].trim();
+          if (kind === 'pdf') {
+            if (REFERENCES_LINE.test(heading)) {references = true; break;}
+            // "6.4 Geração direta" pertence à seção "6 Resultados": as seções agrupam a escolha dos trechos.
+            const number = heading.match(/^(\d{1,2})(?:\.\d+)*\.?\s/);
+            if (number && !heading.match(/^\d{1,2}\.\d/)) topLevel.set(number[1], heading);
+            section = number ? topLevel.get(number[1]) ?? heading : heading;
+          }
+        } else lines.push(line);
       }
       append();
     }
@@ -160,12 +223,25 @@ export function genericDocumentRequest(request: string): boolean {
 }
 export function retrieveDocument(doc: DocumentText, request: string, limit = MAX_EXTRACT_CALLS): DocumentChunk[] {
   const chunks = doc.chunks;
+  // PDF com seções detectadas: o resumo entra sempre (é a síntese do autor) e a escolha se espalha pelas
+  // seções de nível 1 (introdução, método, resultados, conclusão), sem as referências (já fora dos trechos).
+  const structured = chunks.some(c => c.section);
+  const groupKey = (c: DocumentChunk) => c.section || c.heading || (c.page ? `Página ${c.page}` : 'Documento');
+  const isAbstract = (c: DocumentChunk) => /^(resumo|abstract)$/i.test(c.section ?? '');
+  const spread = <T,>(items: T[], k: number) => items.length <= k ? items : Array.from({length: k}, (_, i) => items[Math.round(i * (items.length - 1) / (k - 1 || 1))]);
   if (genericDocumentRequest(request)) {
     const sections = new Map<string, DocumentChunk[]>();
-    for (const c of chunks) {const key = c.heading || (c.page ? `Página ${c.page}` : 'Documento'); if (!sections.has(key)) sections.set(key, []); sections.get(key)!.push(c);}
-    const groups = [...sections.values()], selected: DocumentChunk[] = [];
+    for (const c of chunks) {const key = groupKey(c); if (!sections.has(key)) sections.set(key, []); sections.get(key)!.push(c);}
+    let groups = [...sections.values()];
+    const selected: DocumentChunk[] = [];
+    const abstract = structured ? groups.find(g => isAbstract(g[0])) : undefined;
+    if (abstract) {
+      // Antes do resumo só vêm título e autoria: grupos curtos ali não valem um dos 6 trechos.
+      const at = groups.indexOf(abstract);
+      groups = groups.filter((g, k) => g !== abstract && !(k < at && g.reduce((n, c) => n + c.text.length, 0) < 400));
+    }
     // Escolhe seções distribuídas até o fim; depois distribui amostras dentro delas.
-    const chosen = groups.length <= limit ? groups : Array.from({length: limit}, (_, i) => groups[Math.round(i * (groups.length - 1) / (limit - 1 || 1))]);
+    const chosen = abstract ? [abstract, ...spread(groups, limit - 1)] : spread(groups, limit);
     for (let round = 0; selected.length < Math.min(limit, chunks.length); round++) {
       let added = false;
       for (const group of chosen) {
@@ -180,11 +256,30 @@ export function retrieveDocument(doc: DocumentText, request: string, limit = MAX
   }
   const words = new Set(tokens(request)), frequency = new Map<string, number>();
   for (const c of chunks) for (const word of new Set(tokens(c.text))) frequency.set(word, (frequency.get(word) ?? 0) + 1);
-  return chunks.map(c => {
+  const scored = chunks.map(c => {
     const counts = new Map<string, number>(); for (const w of tokens(c.text)) counts.set(w, (counts.get(w) ?? 0) + 1);
-    const score = [...words].reduce((n, w) => n + Math.log(1 + chunks.length / (1 + (frequency.get(w) ?? 0))) * Math.min(3, counts.get(w) ?? 0), 0);
+    let score = [...words].reduce((n, w) => n + Math.log(1 + chunks.length / (1 + (frequency.get(w) ?? 0))) * Math.min(3, counts.get(w) ?? 0), 0);
+    if (structured) {
+      // Palavra do pedido no título da seção ("resultados", "limitações") vale mais que no meio do texto.
+      const head = new Set(tokens(`${c.section ?? ''} ${c.heading}`));
+      score += [...words].filter(w => head.has(w)).length * 4;
+      // Tabela (muitos números soltos) só entra se não houver texto corrido.
+      const parts = c.text.split(/\s+/).filter(Boolean);
+      if (parts.filter(p => /\d/.test(p)).length > parts.length * 0.3) score *= 0.3;
+    }
     return {c, score};
-  }).filter(x => x.score > 0).sort((a, b) => b.score - a.score || a.c.passage - b.c.passage).slice(0, limit).map(x => x.c);
+  }).filter(x => x.score > 0).sort((a, b) => b.score - a.score || a.c.passage - b.c.passage);
+  if (!structured) return scored.slice(0, limit).map(x => x.c);
+  // PDF com seções: resumo primeiro e no máximo 2 trechos por seção, para cobrir os assuntos do pedido.
+  const picked: DocumentChunk[] = [], perSection = new Map<string, number>();
+  const take = (c: DocumentChunk) => {picked.push(c); perSection.set(groupKey(c), (perSection.get(groupKey(c)) ?? 0) + 1);};
+  const abstract = chunks.find(isAbstract);
+  if (abstract) take(abstract);
+  for (const {c} of scored) {
+    if (picked.length >= limit) break;
+    if (!picked.includes(c) && (perSection.get(groupKey(c)) ?? 0) < 2) take(c);
+  }
+  return picked.sort((a, b) => a.passage - b.passage);
 }
 export function documentMetadata(doc: DocumentText) {
   return {name: doc.name, type: doc.kind, mime: doc.mime, bytes: doc.bytes, characters: doc.characters, pages: doc.pages, encoding: doc.encoding, chunks_total: doc.chunks.length};

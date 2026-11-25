@@ -67,8 +67,9 @@ export async function collectDocument(doc: DocumentText, request: string, record
       seen.add(key); const id = `F${Object.keys(facts).length + 1}`;
       facts[id] = {claim: item.afirmacao, quote: item.trecho, kind: item.tipo, value: item.valor ?? '', author: item.autor ?? '', relevance: item.relevancia,
         source_id: `S${chunk.passage}`, source_title: doc.name, url: `documento:${doc.name}#trecho-${chunk.passage}`};
-      let section = metadata.sections.find(s => s.title === (chunk.heading || (chunk.page ? `Página ${chunk.page}` : 'Documento')));
-      if (!section) {section = {title: chunk.heading || (chunk.page ? `Página ${chunk.page}` : 'Documento'), facts: []}; metadata.sections.push(section);}
+      const title = chunk.section || chunk.heading || (chunk.page ? `Página ${chunk.page}` : 'Documento');  // seção de nível 1 do PDF
+      let section = metadata.sections.find(s => s.title === title);
+      if (!section) {section = {title, facts: []}; metadata.sections.push(section);}
       section.facts.push(id);
     }
     metadata.facts_used = Object.keys(facts).length;
@@ -77,7 +78,7 @@ export async function collectDocument(doc: DocumentText, request: string, record
   if (!Object.keys(facts).length) throw Error('Nenhum fato com trecho literal válido no documento.');
   // A recuperação específica é ranqueada; o roteiro geral segue a ordem documental.
   const order = new Map<string, number>();
-  for (const c of doc.chunks) {const key = c.heading || (c.page ? `Página ${c.page}` : 'Documento'); if (!order.has(key)) order.set(key, c.passage);}
+  for (const c of doc.chunks) {const key = c.section || c.heading || (c.page ? `Página ${c.page}` : 'Documento'); if (!order.has(key)) order.set(key, c.passage);}
   if (genericDocumentRequest(request)) metadata.sections.sort((a, b) => (order.get(a.title) ?? 0) - (order.get(b.title) ?? 0));
   return {facts, rejected, document: metadata, source: {title: doc.name, url: `documento:${doc.name}`, text: ''},
     warning: selected.length < doc.chunks.length ? `Documento amostrado: ${selected.length} de ${doc.chunks.length} trechos; até 6 chamadas de extração.` : null};
