@@ -54,6 +54,22 @@
 
 **Versão final congelada (0.7.6):** a bancada foi repetida (`outputs/teste9_v076f_*`) e deu os mesmos números do 0.7.5 em todas as métricas, com o mesmo tempo projetado. A única mudança do 0.7.6 tira cópias de itens idênticos curtos, o que é raro. Os números da tabela valem para o 0.7.6.
 
+**Versão do artigo (0.7.7, tag `artigo-v2`, branch `congelado/artigo-v2`):** a bancada foi repetida em 25/11 à tarde (`outputs/teste9_v077_*`, `scripts/bancada_077.sh`).
+- O 0.7.7 só muda a posição do texto na capa centralizada, que a bancada não mede.
+- LoRA e 1.7B: resultado idêntico ao 0.7.6, caso a caso.
+- 0.6B: variação de casas decimais, por não determinismo da GPU (reparos 2,54 → 2,50; textos repetidos 206/517 → 207/519; vocabulário 702 → 706).
+- Testes pareados (`scripts/estatistica_teste9.py`, saída em `outputs/teste9_v077_estatistica.json`):
+
+| comparação | completas | McNemar exato | tempo médio projetado | Wilcoxon (tempo) |
+|---|---|---|---|---|
+| LoRA × 0.6B | 20 × 16 (discordantes 6 × 2) | p = 0,29 | 22,9 × 27,1 min | p = 0,001 |
+| LoRA × 1.7B | 20 × 17 (5 × 2) | p = 0,45 | 22,9 × 58,9 min | p < 0,001 |
+| 0.6B × 1.7B | 16 × 17 (4 × 5) | p = 1,0 | 27,1 × 58,9 min | p < 0,001 |
+
+- **Leitura:** no T8, o LoRA tinha vantagem significativa em apresentações completas (22 × 13 contra o 1.7B, p = 0,004). As correções do 0.7.x ajudaram mais os modelos sem ajuste, e essa diferença deixou de ser significativa.
+- O que continua significativo é o tempo: o LoRA faz o mesmo com 39% do tempo do 1.7B e 84% do tempo do 0.6B.
+- O LoRA também repete muito menos que o 0.6B: 6 × 35 pares de slides parecidos.
+
 ## Experimento descartado: pedidos mais curtos (0.7.6)
 
 Tentativa de recuperar o tempo encurtando o que vai no pedido:
