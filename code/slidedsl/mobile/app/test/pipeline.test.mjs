@@ -314,3 +314,26 @@ test('item com o mesmo texto de outro: pede reparo e, se continuar, o compilador
   assert.match(model.inputs.find(x => x.user.includes('Corrija os diagnósticos')).user, /P004/);
   assert.deepEqual(result.deck.slides[1].items.map(i => i.label), ['Evaporação', 'Condensação']);
 });
+test('número certo com citação errada: o compilador cita o fato que tem o número (não é inventado)', async () => {
+  const {citeNumberFacts, numberTokens} = await import('../outputs/tests/pipeline/generate.js');
+  assert.deepEqual([...numberTokens('87,2% dos devs; 1.300 casas; 20 mil; F5')].sort(), ['1300', '20', '20000', '87.2']);
+  const facts = {F1: {claim: 'O Git é usado por 87,2% dos desenvolvedores.', quote: '87,2% usam Git'}, F5: {claim: 'O Git é gratuito.', quote: 'gratuito'}};
+  const slide = {kind: 'numeros', title: 'Uso do Git', values: [{value: '87,2%', label: 'usam Git'}], sources: ['F5']};
+  assert.deepEqual(citeNumberFacts(slide, facts).sources, ['F5', 'F1']);
+  const invented = {...slide, values: [{value: '90%', label: 'x'}]};
+  assert.equal(citeNumberFacts(invented, facts), invented);  // número que nenhum fato tem continua inventado
+});
+test('shortenDetails: detalhes na palavra inteira e, se pedido, só os primeiros itens', async () => {
+  const {shortenDetails} = await import('../outputs/tests/pipeline/generate.js');
+  const data = {titulo: 'T', itens: Array.from({length: 5}, (_, k) => item(`Etapa ${k + 1}`, 'A água doce transforma-se em vapor com o calor do sol sobre rios, lagos e oceanos de todo o planeta'))};
+  const out = shortenDetails(data, 60, 4);
+  assert.equal(out.itens.length, 4);
+  assert.equal(out.itens[0].detalhe, 'A água doce transforma-se em vapor com o calor do sol');
+  assert.equal(data.itens.length, 5);  // não altera o original
+});
+test('título cortado no limite termina na última pausa da frase (teste no celular 0.7.4)', async () => {
+  const {trimTruncated} = await import('../outputs/tests/pipeline/generate.js');
+  const schema = {type: 'object', properties: {titulo: {type: 'string', maxLength: 80}}};
+  const t = 'O ciclo de água é um processo natural que transforma água em vapor e volta ao ambiente'.slice(0, 80);
+  assert.equal(trimTruncated({titulo: t}, schema).titulo, 'O ciclo de água é um processo natural que transforma água em vapor');
+});

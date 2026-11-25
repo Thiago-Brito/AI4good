@@ -46,6 +46,8 @@ function serverModel(seed) {
       const r = await post('/completion', {prompt, n_predict: Math.min(1400, available), temperature: 0.2, seed,
         cache_prompt: true, ...(grammar ? {grammar} : {json_schema: schema})}, signal);
       const t = r.timings ?? {};
+      // Pedido e resposta de cada chamada, para depurar por que um slide falhou (o app não guarda o texto).
+      await fs.appendFile(path.join(OUT, 'respostas.jsonl'), JSON.stringify({user: user.slice(-1500), text: r.content ?? ''}) + '\n').catch(() => {});
       return {text: r.content ?? '', usage: {input_tokens: r.tokens_evaluated ?? null, output_tokens: r.tokens_predicted ?? null,
         prefill_ms: t.prompt_ms ?? null, decode_ms: t.predicted_ms ?? null, timings: {...t}}};
     },

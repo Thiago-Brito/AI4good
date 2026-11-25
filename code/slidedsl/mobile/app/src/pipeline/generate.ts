@@ -39,7 +39,7 @@ export function jsonToSlide(kind: SlideKind | 'ciclo', data: Record<string, any>
 }
 export interface PlanSlide {tipo: SlideKind | 'ciclo'; mensagem: string; objetivo: string; fatos?: string[]}
 const TRAILING = new Set(['a', 'o', 'as', 'os', 'um', 'uma', 'de', 'do', 'da', 'dos', 'das', 'em', 'no', 'na', 'nos', 'nas',
-  'para', 'por', 'pelo', 'pela', 'com', 'sem', 'e', 'ou', 'que', 'se', 'ao', 'aos', 'à', 'às', 'é']);
+  'para', 'por', 'pelo', 'pela', 'com', 'sem', 'e', 'ou', 'que', 'se', 'ao', 'aos', 'à', 'às', 'é', 'sobre', 'entre', 'até', 'sob']);
 export function shortTitle(text: string, max: number): string {
   let out = '';
   for (const word of text.trim().split(/\s+/)) {
@@ -91,11 +91,56 @@ function fallbackSlide(kind: SlideKind | 'ciclo', plan: PlanSlide, deckTitle: st
   return null;
 }
 const NUMERIC_KINDS = new Set(['numeros', 'grafico']);
+/** Detalhes de itens, lados e marcos encurtados na palavra inteira; `maxItems` corta a lista de itens. */
+export function shortenDetails(data: unknown, max: number, maxItems?: number): unknown {
+  const d = JSON.parse(JSON.stringify(data)) as Record<string, any>;
+  const cut = (it: Record<string, any>) => { if (typeof it.detalhe === 'string' && it.detalhe.length > max) it.detalhe = shortTitle(it.detalhe, max); };
+  if (Array.isArray(d.itens)) { d.itens.forEach(cut); if (maxItems && d.itens.length > maxItems) d.itens = d.itens.slice(0, maxItems); }
+  for (const side of d.lados ?? []) (side.itens ?? []).forEach(cut);
+  (d.marcos ?? []).forEach(cut);
+  return d;
+}
+/** Mesmo critério de number_tokens (alto.py) usado pelo A007: "1.300" → 1300, "6,5" → 6.5, "20 mil" → 20 e 20000. */
+export function numberTokens(text: string | null | undefined): Set<string> {
+  const found = new Set<string>();
+  const clean = (text ?? '').replace(/\bF\d+\b/g, ' ');
+  for (const m of clean.matchAll(/\d+(?:[.,]\d+)*(\s*mil\b)?/gi)) {
+    const raw = m[0].replace(/\s*mil$/i, '');
+    let value = /^\d{1,3}([.,]\d{3})+$/.test(raw) ? raw.replace(/[.,]/g, '') : raw.replace(/,/g, '.');
+    value = value.replace(/\.$/, '');
+    if (value.includes('.')) value = value.replace(/0+$/, '').replace(/\.$/, '');
+    found.add(value);
+    if (m[1]) found.add(String(Math.round(Number(value) * 1000)));
+  }
+  return found;
+}
+/** Número certo com a citação errada (bancada 0.7.4: "87,2%" está no F1, o modelo citou F5/F6) não é número
+ * inventado: se outro fato tem o número, o compilador acrescenta esse fato às fontes antes de validar. */
+export function citeNumberFacts(slide: AltoSlide, facts: Facts): AltoSlide {
+  const values = [...(slide.values ?? []).map(v => v.value), ...(slide.bars ?? []).map(b => String(b.value))];
+  if (!values.length) return slide;
+  const tokens = new Map(Object.entries(facts).map(([id, f]) => [id, numberTokens(`${f.quote ?? ''} ${f.claim ?? ''}`)]));
+  const sources = [...(slide.sources ?? [])];
+  for (const value of values) {
+    const cited = new Set(sources.flatMap(id => [...(tokens.get(id) ?? [])]));
+    const missing = [...numberTokens(value)].filter(t => !cited.has(t));
+    if (!missing.length || sources.length >= 4) continue;
+    const hit = [...tokens].find(([id, t]) => !sources.includes(id) && missing.every(x => t.has(x)));
+    if (hit) sources.push(hit[0]);
+  }
+  return sources.length === (slide.sources ?? []).length ? slide : {...slide, sources};
+}
 /** Texto que chegou ao maxLength (a gramática fechou a string no limite): tira a palavra cortada. */
 export function trimTruncated(data: unknown, schema: JsonSchema): unknown {
   if (schema.type === 'string' && typeof data === 'string') {
     const max = schema.maxLength === undefined ? Infinity : Number(schema.maxLength);
-    return Array.from(data).length >= max && /\s/.test(data.trim()) ? shortTitle(data, max - 1) : data;
+    if (!(Array.from(data).length >= max && /\s/.test(data.trim()))) return data;
+    // Teste no celular (0.7.4): "…transforma água em vapor e volta ao" — melhor terminar na última pausa da
+    // frase (vírgula, "e", "que", "mas"…) quando ela deixa ao menos metade do texto.
+    const cut = shortTitle(data, max - 1);
+    let best = -1;
+    for (const m of cut.matchAll(/[,;:]\s|\s[—–-]\s|\s(?:e|que|mas|porque|pois|quando|onde|como|para)\s/g)) best = m.index!;
+    return best >= max / 2 ? cut.slice(0, best).replace(/[\s,;:—–-]+$/, '') : cut;
   }
   if (schema.type === 'array' && Array.isArray(data) && schema.items) return data.map(v => trimTruncated(v, schema.items as JsonSchema));
   if (schema.type === 'object' && data && typeof data === 'object') {
@@ -205,7 +250,8 @@ export async function writeSlide(ctx: SlideContext, plan: PlanSlide, i: number, 
   // depois do reparo, e o compilador monta o slide com os fatos (teste do TCC: "90%" e notas 4/4/4/5 inventados).
   const blocking = (d: Diagnostic) => d.severity === 'ERRO' || (NUMERIC_KINDS.has(kind) && d.code === 'A007');
   const accept = (data: unknown) => {
-    const slide = jsonToSlide(kind, data as Record<string, any>);
+    let slide = jsonToSlide(kind, data as Record<string, any>);
+    if (NUMERIC_KINDS.has(kind)) slide = citeNumberFacts(slide, facts);
     cleanVisible(slide, ids, request);  // como o PC: sem "conforme F2", caixa de frase, inicial maiúscula
     // The cover must not invent an author, as in alto_generation.py.
     if (kind === 'capa' && slide.author && !request.toLowerCase().includes(slide.author.toLowerCase())) slide.author = null;
@@ -278,13 +324,18 @@ export async function writeSlide(ctx: SlideContext, plan: PlanSlide, i: number, 
   }
   // Teste no celular (25/11/2026, modo JSON): slides 3 e 5 viraram divisórias vazias só por rótulos longos (A005).
   // Se os únicos erros são de tamanho, o compilador encurta os campos na palavra inteira e fica o conteúdo da IA.
+  // Bancada 0.7.4: o 0.6B escreve 5 itens com detalhes longos e nenhum layout comporta (A010). Mesmo remédio:
+  // detalhes encurtados na palavra inteira (110, depois 80) e, só se ainda não couber, os 4 primeiros itens.
   const errors = diagnostics.filter(d => d.severity === 'ERRO');
-  if (!accepted && lastData && errors.length && errors.every(d => d.code === 'A005')) {
-    const salvage = accept(clipToLimits(lastData, withCompilerLimits(schema)));
-    if (!salvage.diagnostics.some(d => d.severity === 'ERRO')) {
+  if (!accepted && lastData && errors.length && errors.every(d => d.code === 'A005' || d.code === 'A010')) {
+    const clipped = clipToLimits(lastData, withCompilerLimits(schema));
+    for (const candidate of [clipped, shortenDetails(clipped, 110), shortenDetails(clipped, 80), shortenDetails(clipped, 80, 4)]) {
+      const salvage = accept(candidate);
+      if (salvage.diagnostics.some(blocking)) continue;
       accepted = salvage.slide;
       diagnostics = [...salvage.diagnostics, {code: 'F002', severity: 'AVISO', slide: i + 1,
-        message: `Slide ${i + 1}: textos longos demais encurtados pelo compilador após o reparo.`} as Diagnostic];
+        message: `Slide ${i + 1}: textos encurtados pelo compilador após o reparo para caber no slide.`} as Diagnostic];
+      break;
     }
   }
   return {accepted, diagnostics};
