@@ -1,4 +1,4 @@
-# Plano da noite (25/11/2026): código e testes prontos até 12h
+# Plano da noite (25/11/2026): código e testes prontos até 12h — CONCLUÍDO às 05h40 (tag artigo-v1; resumo em docs/RESUMO_NOITE_25NOV.md)
 
 O autor dorme. O Claude roda em loop até 12h, testando e melhorando o código.
 **Atualização (00h40):** até 12h o autor precisa só do **código** pronto e testado; o artigo fica para depois, e não se mexe nele esta noite.
