@@ -482,3 +482,18 @@ continuam como etapas futuras do plano maior; o histórico desta rodada é espec
 - [x] Código do teste SVG do Seminário 3 congelado na tag `sem3-svg-congelado`.
 - [ ] Ciclo de 5 fases sai como lista (não cabe); avaliar composição 3+2.
 
+
+## Teste no celular e documento longo (25/11/2026)
+
+- Teste real no moto g8 power lite com o 0.6B LoRA e o `agua.txt`: levou 48 min. O interruptor "Gramática" estava desligado (modo JSON), e houve 4 reparos (18,5 min). Os slides 3 e 5 viraram divisórias vazias por A005.
+- App 0.7.2:
+  - o LoRA roda sempre no modo gramática;
+  - erro só de tamanho depois do reparo encurta o texto na palavra inteira (F002);
+  - o slide do compilador usa os fatos planejados em tópicos.
+- Teste com o PDF do próprio TCC (`docs/TESTE_TCC_DOCUMENTO_LONGO.md`): os decks são válidos, mas o conteúdo é raso ou inventado nos 3 modelos locais. O GPT-4.1-mini cobriu tudo.
+- Causa principal: o roteiro do app só vê os 3 primeiros fatos (o PC vê 32).
+- Pendentes (decisão do autor):
+  1. o roteiro do app ver todos os fatos (só as afirmações);
+  2. pular as referências e seguir as seções do documento, sempre com o resumo;
+  3. limpar a hifenização e os cabeçalhos do PDF;
+  4. corrigir a sobreposição de título e subtítulo na capa.

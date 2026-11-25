@@ -5,6 +5,8 @@ isolada do programa, com até 2 correções. O arquivo é mostrado como sai (Lib
 
 Saída: outputs/avaliacao_cega/externo/<tema>/ (prompts, respostas, programas, apresentacao.pptx, slide_NN.png).
 Uso: .venv/Scripts/python scripts/avaliacao_externo_gpt.py [--modelo gpt-4.1-mini] [--temas agua,sono,git,solar]
+Documento qualquer (teste do TCC, docs/TESTE_TCC_DOCUMENTO_LONGO.md):
+     ... --documento arquivo.txt --pedido "..." --saida outputs/teste_tcc/gpt_generico
 """
 
 from __future__ import annotations
@@ -61,16 +63,25 @@ def main(argv=None):
     ap.add_argument("--modelo", default="gpt-4.1-mini")
     ap.add_argument("--temas", default="agua,sono,git,solar")
     ap.add_argument("--slides", type=int, default=5)
+    ap.add_argument("--documento", help="arquivo de texto no lugar dos temas da bancada")
+    ap.add_argument("--pedido", default="Apresente os pontos principais do documento.")
+    ap.add_argument("--saida", help="pasta de saída com --documento")
     args = ap.parse_args(argv)
     load_local_settings()
     reqs = {r["id"]: r for r in json.loads((ROOT / "benchmark/format_requests.json").read_text("utf-8"))["requests"]}
     model = OpenAITextModel(args.modelo, output_tokens=6144)
     resumo = {}
-    for tema in args.temas.split(","):
-        folder = ROOT / "outputs/avaliacao_cega/externo" / tema
+    temas = ["documento"] if args.documento else args.temas.split(",")
+    for tema in temas:
+        if args.documento:
+            folder = Path(args.saida)
+            documento, pedido = Path(args.documento).read_text("utf-8"), args.pedido
+        else:
+            folder = ROOT / "outputs/avaliacao_cega/externo" / tema
+            documento = (ROOT / "outputs/teste4/documentos" / f"{tema}.txt").read_text("utf-8")
+            pedido = reqs[f"{tema}_detalhado"]["prompt"]
         folder.mkdir(parents=True, exist_ok=True)
-        documento = (ROOT / "outputs/teste4/documentos" / f"{tema}.txt").read_text("utf-8")
-        base = USER.format(n=args.slides, pedido=reqs[f"{tema}_detalhado"]["prompt"], documento=documento)
+        base = USER.format(n=args.slides, pedido=pedido, documento=documento)
         user, pptx, problem, t0 = base, None, "", time.time()
         for attempt in range(3):
             raw = model.generate(SYSTEM, user, temperature=0.2, seed=11 + attempt)
@@ -91,7 +102,8 @@ def main(argv=None):
         resumo[tema] = {"gerou": bool(pptx), "tentativas": attempt + 1, "slides": len(slides),
                         "falha": problem[:200], "segundos": round(time.time() - t0, 1), "ultima_chamada": usage}
         print(tema, resumo[tema], flush=True)
-    (ROOT / "outputs/avaliacao_cega/externo/resumo.json").write_text(json.dumps(resumo, ensure_ascii=False, indent=1), "utf-8")
+    dst = Path(args.saida) / "resumo.json" if args.documento else ROOT / "outputs/avaliacao_cega/externo/resumo.json"
+    dst.write_text(json.dumps(resumo, ensure_ascii=False, indent=1), "utf-8")
 
 
 if __name__ == "__main__":
