@@ -73,6 +73,17 @@ Resultado na mesma bancada (`outputs/teste9_v076_*`):
 | 0.7.2 | **17,8 min** | 12 | 0 | 3 slides repetiam evaporação/condensação |
 | 0.7.4 | 20,7 min | 13 | 1 | menos repetição; título cortado ("e volta ao"), corrigido no 0.7.5 |
 
+## Emulador (APK 0.7.5, x86_64, CPU)
+
+Rodado pela interface com `scripts/emulador_teste.py`, sem fonte. O pedido foi "Ciclo da agua para alunos do ensino fundamental", com 5 slides.
+
+| modelo | tempo | chamadas | reparos | observação |
+|---|---|---|---|---|
+| 0.6B base | 19,0 min | 9 | 3 | 2 itens iguais (A023) no slide 4, corrigido no 0.7.6 |
+| 0.6B LoRA (importado) | 20,5 min | 7 | 1 | slide 5 montado pelo compilador (A010) |
+
+Os dados estão em `outputs/teste_emulador_075_06b_base/` e `outputs/teste_emulador_075_lora/`. A tela nova de resultado e edição abriu normalmente nos dois testes.
+
 ## Leitura
 
 - **Ganho principal:** o deck usa 2 a 3 vezes mais fatos do documento.
