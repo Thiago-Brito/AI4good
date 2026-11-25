@@ -90,6 +90,33 @@ function fallbackSlide(kind: SlideKind | 'ciclo', plan: PlanSlide, deckTitle: st
   }
   return null;
 }
+const NUMERIC_KINDS = new Set(['numeros', 'grafico']);
+/** Texto que chegou ao maxLength (a gramática fechou a string no limite): tira a palavra cortada. */
+export function trimTruncated(data: unknown, schema: JsonSchema): unknown {
+  if (schema.type === 'string' && typeof data === 'string') {
+    const max = schema.maxLength === undefined ? Infinity : Number(schema.maxLength);
+    return Array.from(data).length >= max && /\s/.test(data.trim()) ? shortTitle(data, max - 1) : data;
+  }
+  if (schema.type === 'array' && Array.isArray(data) && schema.items) return data.map(v => trimTruncated(v, schema.items as JsonSchema));
+  if (schema.type === 'object' && data && typeof data === 'object') {
+    const props = (schema.properties ?? {}) as Record<string, JsonSchema>;
+    return Object.fromEntries(Object.entries(data as Record<string, unknown>).map(([k, v]) => [k, k in props ? trimTruncated(v, props[k]) : v]));
+  }
+  return data;
+}
+/** Fatos para o roteiro: TODOS (até 32, como o PC), só afirmação e valor, sem o trecho, para caber nos 4096
+ * tokens. Antes o roteiro via só os 3 primeiros; com o PDF do TCC eram 32 fatos e o deck só falava do resumo. */
+export function outlineFacts(facts: Facts, maxChars = 3600): string {
+  const lines: string[] = [];
+  let size = 0;
+  for (const [id, f] of Object.entries(facts).slice(0, 32)) {
+    const value = f.value ? ` [valor: ${String(f.value)}]` : '';
+    const line = `${id} (${String(f.kind ?? 'fato')})${value}: ${String(f.claim ?? '').slice(0, 220)}`;
+    if (size + line.length > maxChars) break;
+    lines.push(line); size += line.length + 1;
+  }
+  return lines.join('\n') || '(nenhum fato)';
+}
 /** Corta cada texto acima do maxLength do schema na última palavra inteira (sem artigo/preposição no fim). */
 export function clipToLimits(data: unknown, schema: JsonSchema): unknown {
   if (schema.type === 'string' && typeof data === 'string') {
@@ -150,6 +177,9 @@ export async function writeSlide(ctx: SlideContext, plan: PlanSlide, i: number, 
   const grammar = slideMode === 'json' ? '' : slideGrammar(kind, limited ?? schema);
   const slideBase = grammar ? `${base}\n${altoFormatHint(kind, schema)}` : base;
   let accepted: AltoSlide | null = null, previous = '', diagnostics: Diagnostic[] = [], lastData: unknown = null;
+  // Em slide de números/gráfico o número É o conteúdo: número fora dos fatos citados (A007) também bloqueia
+  // depois do reparo, e o compilador monta o slide com os fatos (teste do TCC: "90%" e notas 4/4/4/5 inventados).
+  const blocking = (d: Diagnostic) => d.severity === 'ERRO' || (NUMERIC_KINDS.has(kind) && d.code === 'A007');
   const accept = (data: unknown) => {
     const slide = jsonToSlide(kind, data as Record<string, any>);
     cleanVisible(slide, ids, request);  // como o PC: sem "conforme F2", caixa de frase, inicial maiúscula
@@ -175,8 +205,15 @@ export async function writeSlide(ctx: SlideContext, plan: PlanSlide, i: number, 
       const errors = schemaErrors(data, schema);
       if (errors.length) { accepted = null; diagnostics = errors.map(message => ({code: 'P002', severity: 'ERRO', slide: i + 1, message})); }
       else {
+        // Texto que bateu no limite da gramática termina no meio da palavra ("SlideD"): sem o reparo de
+        // texto cortado (padrão no celular), fica só até a última palavra inteira (teste do TCC, 25/11/2026).
+        if (limited && !ctx.repairTruncated) data = trimTruncated(data, limited);
         lastData = data;
         ({slide: accepted, diagnostics} = accept(data));
+        // Slide de números com valor sem número, como "geram dependên" (teste do TCC).
+        if (kind === 'numeros') (accepted?.values ?? []).forEach((v, k) => { if (!/\d/.test(v.value)) diagnostics.push({
+          code: 'P003', severity: 'ERRO', slide: i + 1, evidence: {path: `valores.${k}.valor`},
+          message: `Valor "${v.value}" sem número.`, suggestion: 'Use um número que aparece nos fatos citados.'} as Diagnostic); });
         // Texto cortado no limite da gramática: aviso que pede reparo (não bloqueia; após o reparo, aceita).
         if (limited && ctx.repairTruncated) for (const t of truncatedPaths(data, limited)) diagnostics.push({
           code: 'A005', severity: 'AVISO', slide: i + 1, evidence: {path: t.path},
@@ -190,7 +227,7 @@ export async function writeSlide(ctx: SlideContext, plan: PlanSlide, i: number, 
     }
     const actionable = diagnostics.filter(d => d.severity === 'ERRO' || (d.severity === 'AVISO' && d.code !== 'A009'));
     if (accepted && !actionable.length) break;
-    if (attempt === 1 && (!accepted || diagnostics.some(d => d.severity === 'ERRO'))) { accepted = null; break; }
+    if (attempt === 1 && (!accepted || diagnostics.some(blocking))) { accepted = null; break; }
   }
   // Teste no celular (25/11/2026, modo JSON): slides 3 e 5 viraram divisórias vazias só por rótulos longos (A005).
   // Se os únicos erros são de tamanho, o compilador encurta os campos na palavra inteira e fica o conteúdo da IA.
@@ -217,15 +254,13 @@ export async function generate(options: GenerateOptions): Promise<GenerationResu
   const source = await collectFacts(choice, request, recorder, options.fetchJson, signal, options.readDocument, progress, options.onDocument,
     options.extractMode ?? 'json');
   const facts = source.facts, ids = Object.keys(facts), mode = ids.length ? 'with_facts' : 'without_facts';
-  const factsBlock = (selected = ids) => JSON.stringify(Object.fromEntries(selected.slice(0, 3).filter(id => id in facts).map(id => [id,
-    {claim: facts[id].claim, quote: String(facts[id].quote).slice(0, 300), kind: facts[id].kind, value: facts[id].value}])));
   progress('Planejando roteiro');
   const withImages = !!options.images;
   const outlineSchema = schemaWithFacts(((withImages ? prompts.outline_schemas_imagens : prompts.outline_schemas) as Record<string, any>)[String(n)][mode], ids);
   const sections = genericDocumentRequest(request) ? source.document?.sections ?? [] : [];
   const sectionPrompt = sections.length ? `\nSeções do documento em ordem; cubra estes assuntos no roteiro, agrupando se necessário. A capa pode apresentar a primeira seção. Use os IDs correspondentes:\n${JSON.stringify(sections)}` : '';
   const raw = await recorder.json('roteiro', (withImages ? prompts.outline_system_imagens : prompts.outline_system)[mode],
-    `Pedido: ${request}\nNúmero de slides: ${n}\nFatos da pesquisa:\n${factsBlock()}${sectionPrompt}${withImages && n >= 4 ? prompts.image_outline_hint : ''}`, outlineSchema);
+    `Pedido: ${request}\nNúmero de slides: ${n}\nFatos da pesquisa:\n${outlineFacts(facts)}${sectionPrompt}${withImages && n >= 4 ? prompts.image_outline_hint : ''}`, outlineSchema);
   const outlineErrors = schemaErrors(raw, outlineSchema);
   if (outlineErrors.length) throw Error(`Roteiro inválido: ${outlineErrors.join('; ')}`);
   const outline = fixOutline(raw as Outline, withImages);

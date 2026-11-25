@@ -107,6 +107,37 @@ test('factItem: rótulo até 48 na palavra inteira, resto no detalhe', async () 
   assert.equal(it.rotulo, 'A evaporação ocorre nos oceanos');
   assert.equal(it.detalhe, 'Que cobrem cerca de 70% da superfície terrestre');
 });
+test('roteiro vê todos os fatos, não só os 3 primeiros (teste do TCC, 25/11/2026)', async () => {
+  const frases = ['A equipe confere as tarefas antes de iniciar o trabalho.', 'Cada entrega recebe uma revisão antes da apresentação.',
+    'O grupo consulta o registro quando precisa retomar uma decisão.', 'O quadro mostra as tarefas atrasadas da semana.'];
+  const extract = frases.map(t => ({...fact, afirmacao: t, trecho: t}));
+  const model = new Mock({extract});
+  const result = await generate({...base(model), source: {mode: 'paste', text: frases.join(' ')}});
+  const roteiro = model.inputs.find(x => x.schema.properties.slides).user;
+  const accepted = Object.entries(result.facts);
+  assert.ok(accepted.length >= 3, `fatos aceitos: ${accepted.length}`);  // o texto colado aceita até 3; os 32 estão no teste de outlineFacts
+  for (const [id, f] of accepted) assert.ok(roteiro.includes(`${id} (`) && roteiro.includes(f.claim), id);
+  const {outlineFacts} = await import('../outputs/tests/pipeline/generate.js');
+  const many = Object.fromEntries(Array.from({length: 40}, (_, k) => [`F${k + 1}`, {claim: `Fato número ${k + 1} do documento.`, kind: 'dado', value: String(k)}]));
+  const block = outlineFacts(many);
+  assert.match(block, /^F1 \(dado\) \[valor: 0\]: Fato número 1/);
+  assert.match(block, /F32 /); assert.doesNotMatch(block, /F33 /);  // até 32, como o PC
+  assert.ok(outlineFacts(many, 200).length <= 200);
+});
+test('texto que bateu no limite da gramática perde só a palavra cortada', async () => {
+  const {trimTruncated} = await import('../outputs/tests/pipeline/generate.js');
+  const schema = {type: 'object', properties: {t: {type: 'string', maxLength: 36}, curto: {type: 'string', maxLength: 36},
+    itens: {type: 'array', items: {type: 'object', properties: {rotulo: {type: 'string', maxLength: 20}}}}}};
+  const out = trimTruncated({t: 'Desenvolver uma versão compacta do modelo SlideDSL'.slice(0, 36), curto: 'Texto curto',
+    itens: [{rotulo: 'Integrar um compilador'.slice(0, 20)}]}, schema);
+  assert.deepEqual(out, {t: 'Desenvolver uma versão compacta', curto: 'Texto curto', itens: [{rotulo: 'Integrar um'}]});
+});
+test('gramática do slide só aceita caracteres que o compilador mede (sem CJK)', async () => {
+  const {slideGrammar} = await import('../outputs/tests/pipeline/altoText.js');
+  const g = slideGrammar('topicos', prompts.slide_schemas.topicos.with_facts);
+  const chr = g.split('\n').find(l => l.startsWith('chr ::='));
+  assert.match(chr, /\\u024F/); assert.match(chr, /\\u22FF/); assert.doesNotMatch(chr, /\[\^/);
+});
 test('segundo erro do slide (não é tamanho): sem terceira tentativa; compilador monta o slide e o deck segue', async () => {
   const model = new Mock({garbage: [2]});
   const result = await generate(base(model));

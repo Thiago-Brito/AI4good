@@ -129,7 +129,9 @@ export function slideGrammar(kind: string, schema: JsonSchema): string {
     }
   }
   rules.set('numero', '[0-9]{1,12} ("." [0-9]{1,6})?');
-  rules.set('chr', '[^"\\\\\\x00-\\x1F] | "\\\\" ["\\\\/bfnrt]');
+  // Só os caracteres que o compilador mede (MEASURABLE em text_metrics.py: latim, pontuação, setas e
+  // símbolos), sem aspas e barra invertida soltas. Teste do TCC (25/11/2026): o 4B escreveu "cada 滑".
+  rules.set('chr', '[ !#-\\[\\]-\\u024F\\u2000-\\u20BF\\u2100-\\u214F\\u2190-\\u22FF] | "\\\\" ["\\\\/bfnrt]');
   rules.set('ws', '[ \\t\\n]{0,20}');
   const root = `root ::= ws "${kind}" ws "{" ${parts.join(' ')} ws "}"`;
   return [root, ...[...rules].map(([k, v]) => `${k} ::= ${v}`)].join('\n');
