@@ -12,7 +12,7 @@ Métricas por modelo (as mesmas para o antes e o depois, calculadas por este scr
 - pares de slides parecidos: Jaccard de palavras de conteúdo ≥ 0,3 entre slides de conteúdo (sem a capa);
 - fatos citados no deck (distintos) e fatos aceitos na leitura; vocabulário visível (palavras distintas).
 
-Uso: .venv/Scripts/python scripts/analise_teste9.py
+Uso: .venv/Scripts/python scripts/analise_teste9.py [--versao v075] [--antes v074]
 """
 
 from __future__ import annotations
@@ -26,11 +26,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "outputs"
-PARES = {
-    "0.6B LoRA": ("teste8_lora", "teste9_v074_lora06"),
-    "0.6B": ("teste7_06b_dica", "teste9_v074_q06"),
-    "1.7B": ("teste6_17b_dica", "teste9_v074_q17"),
-}
+BASE = {"0.6B LoRA": ("teste8_lora", "lora06"), "0.6B": ("teste7_06b_dica", "q06"), "1.7B": ("teste6_17b_dica", "q17")}
 STOP = set("a o as os um uma de do da dos das em no na nos nas para por com sem e ou que se ao à é como mais "
            "seu sua seus suas pelo pela este esta isso".split())
 
@@ -98,13 +94,21 @@ def bancada(pasta: Path) -> dict:
     }
 
 
-def main():
+def main(argv=None):
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--versao", default="v075", help="sufixo das pastas teste9_<versao>_<modelo>")
+    ap.add_argument("--antes", help="outra versão como linha de base (ex.: v074) em vez de T7/T8")
+    args = ap.parse_args(argv)
     resultado = {}
-    for modelo, (antes, depois) in PARES.items():
-        resultado[modelo] = {"antes": bancada(OUT / antes), "depois": bancada(OUT / depois)}
-    (OUT / "teste9_resultado.json").write_text(json.dumps(resultado, ensure_ascii=False, indent=1), "utf-8")
+    for modelo, (base, nome) in BASE.items():
+        antes = f"teste9_{args.antes}_{nome}" if args.antes else base
+        resultado[modelo] = {"antes": bancada(OUT / antes), "depois": bancada(OUT / f"teste9_{args.versao}_{nome}")}
+    rotulo = args.antes or "T7/T8"
+    (OUT / f"teste9_resultado_{args.versao}_vs_{rotulo.replace('/', '')}.json").write_text(
+        json.dumps(resultado, ensure_ascii=False, indent=1), "utf-8")
     chaves = list(next(iter(resultado.values()))["antes"])
-    print("| | " + " | ".join(f"{m} antes | {m} 0.7.4" for m in resultado) + " |")
+    print("| | " + " | ".join(f"{m} {rotulo} | {m} {args.versao}" for m in resultado) + " |")
     print("|---" * (1 + 2 * len(resultado)) + "|")
     for k in chaves:
         print(f"| {k} | " + " | ".join(f"{v['antes'][k]} | {v['depois'][k]}" for v in resultado.values()) + " |")

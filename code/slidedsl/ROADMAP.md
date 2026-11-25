@@ -507,3 +507,6 @@ continuam como etapas futuras do plano maior; o histórico desta rodada é espec
   - o pedido de cada slide lista os itens já escritos;
   - item com o mesmo texto de outro pede reparo, e a cópia sai se persistir.
   - Medido no caso da água (0.6B LoRA, sementes 11/22/33, `outputs/repeticao_agua/`): pares de slides repetidos (Jaccard ≥ 0,3) foram de 5 para 1, e os fatos usados, de 5–6 para 7–8. Os erros de conteúdo do 0.6B continuam.
+- Teste 9 (`docs/RESULTADOS_T9.md`): bancada do app 0.7.5 contra T7/T8.
+  - **Ganhos:** fatos citados por deck 2,3–2,9 → 5,3–7,7; completas 8 → 16 (0.6B) e 13 → 17 (1.7B); slides de seção quase zero; pares de slides parecidos no LoRA 12 → 6.
+  - **Custo:** cerca de 10% a mais de tempo projetado no celular (LoRA 20,6 → 22,9 min).
