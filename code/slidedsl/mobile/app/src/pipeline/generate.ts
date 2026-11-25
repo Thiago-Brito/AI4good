@@ -130,6 +130,30 @@ export function clipToLimits(data: unknown, schema: JsonSchema): unknown {
   }
   return data;
 }
+/** Fatos diferentes por slide: o roteiro do modelo pequeno manda os mesmos fatos a vários slides, e eles
+ * repetem a mesma ideia (teste no celular, 25/11/2026: 3 slides sobre evaporação/condensação, 15 fatos
+ * extraídos). Mantém os fatos planejados que ainda não foram usados e completa até 2 com os não usados, na
+ * ordem do documento. A capa não recebe fatos aqui e a conclusão pode retomar (ela sintetiza). */
+export function distributeFacts(outline: Outline, ids: string[]): Outline {
+  if (!ids.length) return outline;
+  const used = new Set<string>();
+  const slides = outline.slides.map(s => ({...s, fatos: [...(s.fatos ?? [])]}));
+  for (const s of slides) {
+    if (s.tipo === 'capa' || s.tipo === 'conclusao') continue;
+    const fresh = s.fatos.filter(id => !used.has(id));
+    for (const id of ids) { if (fresh.length >= 2) break; if (!used.has(id) && !fresh.includes(id)) fresh.push(id); }
+    if (fresh.length) s.fatos = fresh;
+    s.fatos.forEach(id => used.add(id));
+  }
+  return {...outline, slides};
+}
+/** Rótulos já escritos nos outros slides, para o modelo não repetir a ideia (cabe em ~60 tokens). */
+export function writtenItems(slides: AltoSlide[], max = 320): string {
+  const labels = slides.flatMap(s => [...(s.items ?? []), ...(s.sides ?? []).flatMap(side => side.items), ...(s.milestones ?? [])].map(it => it.label));
+  let out = '';
+  for (const l of labels) { const next = out ? `${out}; ${l}` : l; if (next.length > max) break; out = next; }
+  return out;
+}
 export interface Outline {titulo: string; slides: PlanSlide[]}
 /** Porte de fix_outline (alto_generation.py): o primeiro slide vira capa, o último conclusão e capas no meio
  * viram tópicos. Na bancada de 24/11 (Qwen3 1.7B), um roteiro sem capa/conclusão abortava o deck inteiro. */
@@ -172,7 +196,7 @@ export async function writeSlide(ctx: SlideContext, plan: PlanSlide, i: number, 
     {claim: facts[id].claim, quote: String(facts[id].quote).slice(0, 300), kind: facts[id].kind, value: facts[id].value}])));
   const progress = ctx.progress;
   const schema: JsonSchema = schemaWithFacts((prompts.slide_schemas as Record<string, any>)[kind][mode], ids);
-  const base = `Pedido original: ${request}\nApresentação: ${deck.title}\nRoteiro:\n${summary}\nEscreva o slide ${i + 1} (tipo ${kind}).\nMensagem: ${plan.mensagem}\nObjetivo: ${plan.objetivo}\nRegras do tipo: ${(prompts.kind_rules as Record<string, string>)[kind]}\nFatos para este slide:\n${factsBlock(plan.fatos?.length ? plan.fatos : ids)}\nTítulos já escritos (não repetir): ${[...ctx.before, ...ctx.after].map(s => s.title).join('; ')}${extra}`;
+  const base = `Pedido original: ${request}\nApresentação: ${deck.title}\nRoteiro:\n${summary}\nEscreva o slide ${i + 1} (tipo ${kind}).\nMensagem: ${plan.mensagem}\nObjetivo: ${plan.objetivo}\nRegras do tipo: ${(prompts.kind_rules as Record<string, string>)[kind]}\nFatos para este slide:\n${factsBlock(plan.fatos?.length ? plan.fatos : ids)}\nTítulos já escritos (não repetir): ${[...ctx.before, ...ctx.after].map(s => s.title).join('; ')}${(() => { const w = writtenItems([...ctx.before, ...ctx.after]); return w ? `\nItens já escritos em outros slides (não repita estas ideias; use os fatos deste slide): ${w}` : ''; })()}${extra}`;
   const limited = slideMode === 'gramatica_limites' ? withCompilerLimits(schema) : null;
   const grammar = slideMode === 'json' ? '' : slideGrammar(kind, limited ?? schema);
   const slideBase = grammar ? `${base}\n${altoFormatHint(kind, schema)}` : base;
@@ -210,6 +234,16 @@ export async function writeSlide(ctx: SlideContext, plan: PlanSlide, i: number, 
         if (limited && !ctx.repairTruncated) data = trimTruncated(data, limited);
         lastData = data;
         ({slide: accepted, diagnostics} = accept(data));
+        // Dois itens com o mesmo texto no slide ("Precipitação — A água volta ao líquido por condensação", igual ao
+        // item Condensação; teste da água, 25/11/2026): pede o reparo. Aviso: depois do reparo, aceita.
+        const seenText = new Map<string, number>();
+        [...(accepted?.items ?? []), ...(accepted?.sides ?? []).flatMap(side => side.items)].forEach((it, k) => {
+          const key = (it.detail || it.label).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+          if (key.length > 15 && seenText.has(key)) diagnostics.push({code: 'P004', severity: 'AVISO', slide: i + 1,
+            message: `O item ${k + 1} repete o texto do item ${seenText.get(key)! + 1}.`,
+            suggestion: 'Escreva um texto próprio para cada item, com outro fato.'} as Diagnostic);
+          else seenText.set(key, k);
+        });
         // Slide de números com valor sem número, como "geram dependên" (teste do TCC).
         if (kind === 'numeros') (accepted?.values ?? []).forEach((v, k) => { if (!/\d/.test(v.value)) diagnostics.push({
           code: 'P003', severity: 'ERRO', slide: i + 1, evidence: {path: `valores.${k}.valor`},
@@ -228,6 +262,19 @@ export async function writeSlide(ctx: SlideContext, plan: PlanSlide, i: number, 
     const actionable = diagnostics.filter(d => d.severity === 'ERRO' || (d.severity === 'AVISO' && d.code !== 'A009'));
     if (accepted && !actionable.length) break;
     if (attempt === 1 && (!accepted || diagnostics.some(blocking))) { accepted = null; break; }
+  }
+  // Item repetido que sobreviveu ao reparo (o 0.6B repete o mesmo texto): o compilador tira a cópia se ficarem
+  // ao menos 2 itens, em vez de mostrar duas vezes a mesma frase.
+  if (accepted && diagnostics.some(d => d.code === 'P004') && (accepted.items?.length ?? 0) > 2) {
+    const keyOf = (it: {label: string; detail?: string | null}) => (it.detail || it.label).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+    const seen = new Set<string>();
+    const items = accepted.items!.filter(it => { const k = keyOf(it); if (k.length > 15 && seen.has(k)) return false; seen.add(k); return true; });
+    if (items.length >= 2 && items.length < accepted.items!.length) {
+      const slide = {...accepted, items};
+      const built = buildAlto({...deck, slides: [...ctx.before, slide, ...ctx.after]}, facts);
+      const own = built.diagnostics.filter(d => d.slide == null || d.slide === i + 1);
+      if (!own.some(blocking)) { accepted = slide; diagnostics = own; }
+    }
   }
   // Teste no celular (25/11/2026, modo JSON): slides 3 e 5 viraram divisórias vazias só por rótulos longos (A005).
   // Se os únicos erros são de tamanho, o compilador encurta os campos na palavra inteira e fica o conteúdo da IA.
@@ -263,7 +310,7 @@ export async function generate(options: GenerateOptions): Promise<GenerationResu
     `Pedido: ${request}\nNúmero de slides: ${n}\nFatos da pesquisa:\n${outlineFacts(facts)}${sectionPrompt}${withImages && n >= 4 ? prompts.image_outline_hint : ''}`, outlineSchema);
   const outlineErrors = schemaErrors(raw, outlineSchema);
   if (outlineErrors.length) throw Error(`Roteiro inválido: ${outlineErrors.join('; ')}`);
-  const outline = fixOutline(raw as Outline, withImages);
+  const outline = distributeFacts(fixOutline(raw as Outline, withImages), ids);
   const deck: AltoDeck = {title: outline.titulo, theme: 'claro', slides: []};
   const summary = outline.slides.map((s, i) => `${i + 1}. ${s.tipo}: ${s.mensagem}`).join('\n');
   const fallbackNotes: Diagnostic[] = [];

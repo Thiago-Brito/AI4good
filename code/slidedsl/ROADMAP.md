@@ -497,3 +497,13 @@ continuam como etapas futuras do plano maior; o histórico desta rodada é espec
   2. pular as referências e seguir as seções do documento, sempre com o resumo;
   3. limpar a hifenização e os cabeçalhos do PDF;
   4. ~~sobreposição na capa~~: falso alarme, era só a prévia do VS Code (no PowerPoint fica correto).
+- App 0.7.3: aplica as correções 1–3 dos pendentes acima e mais três (TCC refeito em `docs/TESTE_TCC_DOCUMENTO_LONGO.md`, rodada 4):
+  - a gramática aceita só os caracteres que o compilador mede;
+  - número inventado bloqueia em números/gráfico;
+  - texto cortado perde só a palavra pela metade.
+- Teste no celular com o 0.7.2 (0.6B LoRA, `agua.txt`): 17,8 min, contra 48 min antes, sem reparos. Mas 3 slides repetiam evaporação/condensação.
+- App 0.7.4, para a repetição:
+  - fatos diferentes por slide depois do roteiro (`distributeFacts`);
+  - o pedido de cada slide lista os itens já escritos;
+  - item com o mesmo texto de outro pede reparo, e a cópia sai se persistir.
+  - Medido no caso da água (0.6B LoRA, sementes 11/22/33, `outputs/repeticao_agua/`): pares de slides repetidos (Jaccard ≥ 0,3) foram de 5 para 1, e os fatos usados, de 5–6 para 7–8. Os erros de conteúdo do 0.6B continuam.

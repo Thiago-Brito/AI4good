@@ -275,3 +275,42 @@ test('título do fallback não termina em preposição ou artigo', async () => {
   assert.equal(shortTitle('A energia solar residencial é uma alternativa para a economia local', 46), 'A energia solar residencial é uma alternativa');
   assert.equal(shortTitle('Energia solar', 60), 'Energia solar');
 });
+test('fatos diferentes por slide e itens já escritos no pedido (teste da água no celular, 25/11/2026)', async () => {
+  const {distributeFacts, writtenItems} = await import('../outputs/tests/pipeline/generate.js');
+  const outline = {titulo: 'Ciclo', slides: [
+    {tipo: 'capa', mensagem: 'm', objetivo: 'o', fatos: ['F1']},
+    {tipo: 'topicos', mensagem: 'm', objetivo: 'o', fatos: ['F1', 'F2']},
+    {tipo: 'etapas', mensagem: 'm', objetivo: 'o', fatos: ['F1', 'F2']},
+    {tipo: 'comparacao', mensagem: 'm', objetivo: 'o', fatos: ['F2']},
+    {tipo: 'conclusao', mensagem: 'm', objetivo: 'o', fatos: ['F1', 'F2']}]};
+  const out = distributeFacts(outline, ['F1', 'F2', 'F3', 'F4', 'F5', 'F6']);
+  assert.deepEqual(out.slides.map(s => s.fatos), [['F1'], ['F1', 'F2'], ['F3', 'F4'], ['F5', 'F6'], ['F1', 'F2']]);
+  assert.deepEqual(outline.slides[2].fatos, ['F1', 'F2']);  // não altera o roteiro original
+  // Sem fatos novos, mantém os planejados.
+  assert.deepEqual(distributeFacts(outline, ['F1', 'F2']).slides[3].fatos, ['F2']);
+  const w = writtenItems([{items: [{label: 'Evaporação'}, {label: 'Condensação'}]}, {sides: [{name: 'x', items: [{label: 'Gelo'}]}]}]);
+  assert.equal(w, 'Evaporação; Condensação; Gelo');
+  const model = new Mock();
+  await generate(base(model));
+  const slide3 = model.inputs.find(x => /Escreva o slide 3 /.test(x.user)).user;
+  assert.match(slide3, /Itens já escritos em outros slides \(não repita estas ideias; use os fatos deste slide\): Escopo definido; Revisão frequente/);
+});
+test('item com o mesmo texto de outro: pede reparo e, se continuar, o compilador tira a cópia', async () => {
+  class Dup extends Mock {
+    async complete(input) {
+      const r = await super.complete(input);
+      if (/Escreva o slide 2 /.test(input.user)) {
+        const d = JSON.parse(r.text);
+        d.itens = [item('Evaporação', 'A água passa do estado líquido para o gasoso.'), item('Condensação', 'O vapor volta ao estado líquido nas nuvens.'),
+          item('Precipitação', 'O vapor volta ao estado líquido nas nuvens.')];
+        return {...r, text: JSON.stringify(d)};
+      }
+      return r;
+    }
+  }
+  const model = new Dup();
+  const result = await generate(base(model));
+  assert.equal(model.counts[2], 2);  // houve reparo
+  assert.match(model.inputs.find(x => x.user.includes('Corrija os diagnósticos')).user, /P004/);
+  assert.deepEqual(result.deck.slides[1].items.map(i => i.label), ['Evaporação', 'Condensação']);
+});
