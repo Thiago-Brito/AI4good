@@ -198,6 +198,45 @@ def alto_gbnf(start: str = "start", generation: bool = True) -> str:
     return gbnf
 
 
+@lru_cache
+def alto_gbnf_limitada(kind: str) -> str:
+    """GBNF de um tipo de slide com o limite de caracteres de cada campo (A005) na própria gramática.
+
+    Na gramática genérica todo texto vai até 600 caracteres, e o limite só é cobrado depois, pela
+    validação: com o Qwen3 4B local, rótulos de 49 a 78 caracteres faziam o fluxo do PC recusar o deck.
+    O app do celular já põe os limites na gramática (mobile/app/src/pipeline/altoText.ts); o Teste 5
+    mostrou que isso derruba a maior falha (A005). Limites de src/slidedsl/alto.py (TEXT_LIMITS e os
+    específicos de comparação, linha do tempo e gráfico).
+    """
+    from .alto import TEXT_LIMITS as L
+
+    detail = 80 if kind == "comparacao" else L["detail"]
+    rules = {
+        "titulo": f'ws "titulo" ws t-s{L["title"]}',
+        "subtitulo": f'ws "subtitulo" ws t-s{L["subtitle"]}',
+        "autor": f'ws "autor" ws t-s{L["author"]}',
+        "texto": f'ws "texto" ws t-s{L["text"]}',
+        "legenda": f'ws "legenda" ws t-s{L["caption"]}',
+        "unidade": f'ws "unidade" ws t-s{L["unit"]}',
+        "notas": f'ws "notas" ws t-s{min(L["notes"], 600)}',
+        "item": f'ws "item" ws t-s{L["label"]} (ws t-s{detail})?',
+        "valor": f'ws "valor" ws t-s{L["value"]} ws t-s{L["detail"]}',
+        "lado": f'ws "lado" ws t-s{L["side"]} ws "{{" item+ ws "}}"',
+        "marco": f'ws "marco" ws t-s{L["date"]} ws t-s36 (ws t-s90)?',
+        "barra": 'ws "barra" ws t-s24 ws t-numero',
+    }
+    lines, sizes = [], set()
+    for line in alto_gbnf(kind).splitlines():
+        name = line.split(" ::= ", 1)[0]
+        if name in rules:
+            line = f"{name} ::= {rules[name]}"
+            sizes |= {int(n) for n in re.findall(r"t-s(\d+)", rules[name])}
+        lines.append(line)
+    char = '[^"\\\\\\x00-\\x1F] | "\\\\" ["\\\\/bfnrt] | "\\\\u" [0-9a-fA-F]{4}'
+    lines += [f't-s{n} ::= "\\"" ( {char} ){{0,{n}}} "\\""' for n in sorted(sizes)]
+    return "\n".join(lines) + "\n"
+
+
 def low_level_gbnf() -> str:
     text = Path(__file__).with_name("grammar").joinpath("slidedsl.lark").read_text("utf-8")
     return lark_to_gbnf(text)

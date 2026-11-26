@@ -689,6 +689,64 @@ def outline_from_sections(outline: dict, sections, n_slides: int, facts: dict | 
     return {**outline, "slides": new}
 
 
+TRAILING = {"e", "de", "do", "da", "dos", "das", "o", "a", "os", "as", "em", "no", "na", "nos", "nas", "com",
+            "para", "por", "que", "um", "uma", "ao", "aos", "à", "às", "sobre", "entre", "até", "sob", "ou", "se"}
+
+
+def trim_at_limit(text: str | None, limit: int) -> str | None:
+    """Texto que a gramática cortou no limite termina na última pausa da frase, ou numa palavra inteira.
+
+    Porte de trimTruncated (mobile/app/src/pipeline/generate.ts). Só age quando o texto chegou ao limite e
+    não termina em pontuação: aí o corte foi da gramática, não do modelo.
+    """
+    if not text or len(text) < limit or text.rstrip()[-1:] in ".!?)\"”":
+        return text
+    pause = max(text.rfind(p) for p in (", ", "; ", ": ", " — ", " - "))
+    if pause >= limit // 2:
+        cut = text[:pause]
+    else:
+        cut = text[:text.rfind(" ")] if " " in text else text
+    words = cut.split()
+    while len(words) > 1 and words[-1].casefold().strip(",;:") in TRAILING:
+        words.pop()
+    return " ".join(words).rstrip(",;:— -")
+
+
+def trim_slide_limits(slide, kind: str) -> list[str]:
+    """Apara os campos que bateram no limite da gramática limitada; devolve os caminhos aparados."""
+    from .alto import TEXT_LIMITS as L
+
+    trimmed = []
+
+    def fix(obj, attr, limit, path):
+        old = getattr(obj, attr, None)
+        new = trim_at_limit(old, limit)
+        if new != old:
+            setattr(obj, attr, new)
+            trimmed.append(path)
+
+    for attr, key in (("title", "title"), ("subtitle", "subtitle"), ("author", "author"), ("text", "text"),
+                      ("caption", "caption"), ("unit", "unit")):
+        fix(slide, attr, L[key], attr)
+    detail = 80 if kind == "comparacao" else L["detail"]
+    for k, i in enumerate(slide.items):
+        fix(i, "label", L["label"], f"items.{k}.label")
+        fix(i, "detail", detail, f"items.{k}.detail")
+    for k, v in enumerate(slide.values):
+        fix(v, "label", L["detail"], f"values.{k}.label")
+    for k, side in enumerate(slide.sides):
+        fix(side, "name", L["side"], f"sides.{k}.name")
+        for j, i in enumerate(side.items):
+            fix(i, "label", L["label"], f"sides.{k}.items.{j}.label")
+            fix(i, "detail", 80, f"sides.{k}.items.{j}.detail")
+    for k, m in enumerate(slide.milestones):
+        fix(m, "label", 36, f"milestones.{k}.label")
+        fix(m, "detail", 90, f"milestones.{k}.detail")
+    for k, b in enumerate(slide.bars):
+        fix(b, "label", 24, f"bars.{k}.label")
+    return trimmed
+
+
 def ensure_section_results(outline: dict, sections, facts: dict, cap: int = 6) -> dict:
     """Cada slide que trata de uma seção do documento leva os fatos com números dessa seção.
 
@@ -1035,9 +1093,11 @@ def generate_alto(
                 else:
                     grammar = None
                     if mode == "gramatica":
-                        from .gbnf import alto_gbnf
+                        # Limites do compilador na gramática (como o app): o texto acima do limite (A005)
+                        # deixa de ser gerável; o que bate no limite é aparado na última pausa abaixo.
+                        from .gbnf import alto_gbnf_limitada
 
-                        grammar = alto_gbnf(kind)
+                        grammar = alto_gbnf_limitada(kind)
                     raw = _call(
                         model,
                         result,
@@ -1052,6 +1112,8 @@ def generate_alto(
                         seed=s_seed,
                     )
                     slide = _parse_slide_text(raw, kind, theme)
+                    if mode == "gramatica":
+                        trim_slide_limits(slide, kind)
                 clean_visible(slide, facts)  # "conforme F2" não aparece para a plateia
                 capitalize_visible(slide)
                 if slide.title:
