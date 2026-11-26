@@ -39,7 +39,7 @@ Para a geração sem documento (12 pedidos do Teste 3, semente 11, modo gramáti
 - [x] **T6. Repetir T3 com a melhor configuração** e escolher a recomendação por modelo.
 - [x] **T8. Leitura por frases numeradas no PC para modelos com gramática** (porte de `mobile/app/src/pipeline/sentences.ts`): o 4B local parafraseia o trecho e a conferência literal rejeita fatos como "O lado B teve 13 de 24". Medir com o 4B local.
 - [x] **T9. Generalização:** as mudanças da noite em outros documentos — `outputs/teste4/documentos/agua.txt` (curto, sem seções) e o PDF do artigo (longo) — com o 4B local, antes (f12b102, `D:/wt_antes`) e depois. Métricas genéricas: válido, fatos, chamadas, tempo, números do documento usados e números visíveis que não estão no documento.
-- [ ] **T10. Modelos pequenos no fluxo do PC** (1.7B e 0.6B LoRA, `--provider llamacpp`) no `diferencial_v2.md`: as correções da noite ajudam quem roda no celular, se o app as receber?
+- [x] **T10. Modelos pequenos no fluxo do PC** (1.7B e 0.6B LoRA, `--provider llamacpp`) no `diferencial_v2.md`: as correções da noite ajudam quem roda no celular, se o app as receber?
 - [ ] **T7. Resumo** em `docs/RESUMO_NOITE_26NOV.md`: o que mudou, números antes e depois, o que não funcionou, o que recomendo levar para o branch principal.
 
 ## Registro
