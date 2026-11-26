@@ -99,3 +99,25 @@ test('roteiro com 40 fatos mostra todos no mesmo espaço', () => {
   const block = outlineFacts(many);
   assert.match(block, /^F40 /m); assert.ok(block.length <= 3600);
 });
+
+test('leitura literal: o modelo só escolhe a frase; a afirmação é a frase original, sem rótulo', async () => {
+  const {factGrammar, parseFactLines, literalClaim} = await import('../outputs/tests/pipeline/sentences.js');
+  const g = factGrammar(3, 6, false);
+  assert.doesNotMatch(g, /afirmacao/);
+  assert.match(g, /corpo ::= " tipo " tipo/);
+  const s = ['Resultado: o lado A teve 1 de 24 apresentações.', 'O ajuste foi treinado com 1.876 exemplos que o modelo de 4B escreveu.'];
+  const out = parseFactLines('fato 1 tipo numero relevancia alta\nfato 2 tipo numero relevancia alta\n', s);
+  assert.deepEqual(out.map(f => f.afirmacao), ['O lado A teve 1 de 24 apresentações.', s[1]]);
+  assert.equal(out[0].trecho, s[0]); assert.equal(out[1].valor, '1.876');
+  assert.equal(literalClaim('Teste 1: garantia sobre o arquivo.'), 'Teste 1: garantia sobre o arquivo.');  // rótulo com número fica
+});
+
+test('palavra cortada perto do limite sai; palavra inteira fica', async () => {
+  const {trimTruncated, knownWords} = await import('../outputs/tests/pipeline/generate.js');
+  const schema = {type: 'string', maxLength: 48};
+  const known = knownWords(['Cada pedido roda com 2 sementes: 24 apresentações por condição.']);
+  assert.equal(trimTruncated('Cada pedido roda com 24 apresentações por condi', schema, known), 'Cada pedido roda com 24 apresentações');
+  assert.equal(trimTruncated('Cada pedido roda com 24 apresentações por cond.', schema, known), 'Cada pedido roda com 24 apresentações por cond.');
+  assert.equal(trimTruncated('Cada pedido roda com 24 apresentações condição', schema, known), 'Cada pedido roda com 24 apresentações condição');
+  assert.equal(trimTruncated('Texto curto e longe do limite', schema, known), 'Texto curto e longe do limite');
+});

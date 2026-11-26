@@ -52,3 +52,42 @@ Nenhum número fora do documento, antes ou depois.
 ## Para levar ao celular
 
 Gerar o APK a partir deste branch (`scripts/mobile_build.ps1`) e testar no aparelho com o mesmo `.md`.
+
+## Segunda rodada: leitura literal, corte perto do limite e título copiado do prompt
+
+Lendo os decks, apareceram quatro problemas no 0.6B LoRA. Três foram corrigidos:
+
+| Problema | Causa | Correção |
+|---|---|---|
+| "o modelo de 4B foi treinado com 1.876 exemplos" (é o 0.6B, com exemplos escritos pelo 4B) | o 0.6B trocou o sujeito ao **resumir** a frase na leitura | leitura literal (`extractMode` `frases`): o modelo só escolhe a frase, o tipo e a relevância; a afirmação é a frase original, sem rótulos como "Resultado:". O modo antigo continua como `frases_resumo` |
+| "24 apresentações por condi" | perto do limite de 48, a gramática fecha a string quando o próximo pedaço da palavra não cabe (47 de 48); o aparo só agia em 48 | `trimTruncated`: perto do limite, se a última palavra não existe inteira nos fatos nem no pedido, ela sai |
+| título "Regras do tipo" | o modelo copiou um rótulo do prompt do slide | título igual a um rótulo do prompt vira a mensagem planejada para o slide |
+
+Testes do app: 105/105.
+
+**O `.md` do professor.** Primeira rodada (`depois2`) → segunda rodada (`depois3`):
+
+| Modelo | Seções | Números (de 9) | Tokens de saída | Tempo das chamadas |
+|---|---|---|---|---|
+| 0.6B LoRA | 6/7 → 6/7 | 4 → **6** | 3.402 → 2.455 | 15,0 → 11,7 s |
+| 0.6B | 4/7 → 4/7 | 3 → 2 | 3.744 → 2.754 | 19,7 → 16,0 s |
+| 1.7B | 6/7 → 5/7 | 2 → 4 | 4.606 → 3.785 | 32,3 → 28,0 s |
+| 4B | 7/7 → 7/7 | 7 → **8** | 3.736 → 2.867 | 47,5 → 38,5 s |
+| 4B LoRA | 6/7 → 6/7 | 4 → 5 | 3.605 → 2.647 | 45,7 → 34,7 s |
+
+**`agua.txt`**, comparado com o código **anterior** a este branch:
+
+| Modelo | Números do documento usados | Tempo das chamadas |
+|---|---|---|
+| 0.6B LoRA | 1 → 2 | 11,7 → 8,8 s |
+| 1.7B | 0 → 2 | 20,0 → 15,8 s |
+| 4B | 2 → 3 | 32,7 → 24,8 s |
+
+A leitura caiu de cerca de 1.300 para cerca de 340 tokens de saída, porque o modelo não escreve mais a afirmação. Com isso, todos os modelos ficaram mais rápidos que **antes** deste branch, nos dois documentos. Nenhum número fora do documento.
+
+**O que continua no 0.6B LoRA** (deck `depois3`): os erros que sobraram nascem na **escrita do slide**.
+- No slide de comparação, inverteu o custo: "1.380 tokens de entrada e 1.344 de saída". O documento diz 1.380 tokens com código e 1.344 com SlideDSL.
+- Pôs "GPU RTX 3060" no slide do Teste 1.
+- Escreveu rótulos estranhos, como "Aguarde 1 de 24 apresentações".
+
+O deck do 4B não tem esses erros. Próximo passo possível: no modelo pequeno, o detalhe do item passa a ser a frase do fato citado, e o modelo escreve só o rótulo.

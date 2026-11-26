@@ -138,11 +138,27 @@ export function citeNumberFacts(slide: AltoSlide, facts: Facts): AltoSlide {
   }
   return sources.length === (slide.sources ?? []).length ? slide : {...slide, sources};
 }
+const wordKey = (w: string) => w.toLowerCase().normalize('NFKD').replace(/\p{M}/gu, '').replace(/[^\p{L}\p{N}]/gu, '');
+/** Palavras inteiras dos textos dados (fatos, pedido, roteiro), para reconhecer a palavra cortada pela gramática. */
+export function knownWords(texts: string[]): Set<string> {
+  return new Set(texts.flatMap(t => t.split(/\s+/).map(wordKey)).filter(Boolean));
+}
+/** Rótulos do prompt do slide que o modelo pequeno copia como título ("Regras do tipo", bancada de 26/11). */
+const PROMPT_LABELS = new Set(['regras do tipo', 'regras', 'mensagem', 'objetivo', 'fatos para este slide', 'pedido original',
+  'apresentacao', 'roteiro', 'titulos ja escritos', 'resposta anterior']);
 /** Texto que chegou ao maxLength (a gramática fechou a string no limite): tira a palavra cortada. */
-export function trimTruncated(data: unknown, schema: JsonSchema): unknown {
+export function trimTruncated(data: unknown, schema: JsonSchema, known?: Set<string>): unknown {
   if (schema.type === 'string' && typeof data === 'string') {
     const max = schema.maxLength === undefined ? Infinity : Number(schema.maxLength);
-    if (!(Array.from(data).length >= max && /\s/.test(data.trim()))) return data;
+    // Perto do limite, a gramática também fecha a string antes dele, quando o próximo pedaço de palavra não cabe
+    // ("…24 apresentações por condi", 47 de 48; bancada de 26/11). Se a última palavra não existe inteira nos
+    // fatos nem no pedido, ela foi cortada: sai.
+    const len = Array.from(data).length, text = data.trim();
+    if (known && len < max && len >= max - 6 && /\s/.test(text) && !/[.!?;:)"”%\d]$/.test(text)) {
+      const words = text.split(/\s+/), last = wordKey(words[words.length - 1]);
+      if (last.length >= 2 && !known.has(last)) return shortTitle(words.slice(0, -1).join(' '), max);
+    }
+    if (!(len >= max && /\s/.test(text))) return data;
     // Teste no celular (0.7.4): "…transforma água em vapor e volta ao" — melhor terminar na última pausa da
     // frase (vírgula, "e", "que", "mas"…) quando ela deixa ao menos metade do texto.
     const cut = shortTitle(data, max - 1);
@@ -150,10 +166,10 @@ export function trimTruncated(data: unknown, schema: JsonSchema): unknown {
     for (const m of cut.matchAll(/[,;:]\s|\s[—–-]\s|\s(?:e|que|mas|porque|pois|quando|onde|como|para)\s/g)) best = m.index!;
     return best >= max / 2 ? cut.slice(0, best).replace(/[\s,;:—–-]+$/, '') : cut;
   }
-  if (schema.type === 'array' && Array.isArray(data) && schema.items) return data.map(v => trimTruncated(v, schema.items as JsonSchema));
+  if (schema.type === 'array' && Array.isArray(data) && schema.items) return data.map(v => trimTruncated(v, schema.items as JsonSchema, known));
   if (schema.type === 'object' && data && typeof data === 'object') {
     const props = (schema.properties ?? {}) as Record<string, JsonSchema>;
-    return Object.fromEntries(Object.entries(data as Record<string, unknown>).map(([k, v]) => [k, k in props ? trimTruncated(v, props[k]) : v]));
+    return Object.fromEntries(Object.entries(data as Record<string, unknown>).map(([k, v]) => [k, k in props ? trimTruncated(v, props[k], known) : v]));
   }
   return data;
 }
@@ -316,6 +332,8 @@ export async function writeSlide(ctx: SlideContext, plan: PlanSlide, i: number, 
   const blocking = (d: Diagnostic) => d.severity === 'ERRO' || (NUMERIC_KINDS.has(kind) && d.code === 'A007');
   const accept = (data: unknown) => {
     let slide = jsonToSlide(kind, data as Record<string, any>);
+    if (slide.title && PROMPT_LABELS.has(slide.title.toLowerCase().normalize('NFKD').replace(/\p{M}/gu, '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim()))
+      slide.title = shortTitle(plan.mensagem, 60);
     if (ids.length) slide = citeNumberFacts(slide, facts);
     cleanVisible(slide, ids, request);  // como o PC: sem "conforme F2", caixa de frase, inicial maiúscula
     // The cover must not invent an author, as in alto_generation.py.
@@ -342,7 +360,7 @@ export async function writeSlide(ctx: SlideContext, plan: PlanSlide, i: number, 
       else {
         // Texto que bateu no limite da gramática termina no meio da palavra ("SlideD"): sem o reparo de
         // texto cortado (padrão no celular), fica só até a última palavra inteira (teste do TCC, 25/11/2026).
-        if (limited && !ctx.repairTruncated) data = trimTruncated(data, limited);
+        if (limited && !ctx.repairTruncated) data = trimTruncated(data, limited, knownWords([request, deck.title, plan.mensagem, plan.objetivo, ...Object.values(facts).flatMap(f => [String(f.claim ?? ""), String(f.quote ?? "")])]));
         lastData = data;
         ({slide: accepted, diagnostics} = accept(data));
         // Dois itens com o mesmo texto no slide ("Precipitação — A água volta ao líquido por condensação", igual ao

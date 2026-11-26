@@ -3,7 +3,7 @@ import {prompts, schemaErrors} from './contracts.js';
 import {Recorder} from './usage.js';
 import {checkCancelled} from './types.js';
 import {documentMetadata, genericDocumentRequest, readingPlan, type DocumentChunk, type DocumentFile, type DocumentText} from './documents.js';
-import {FRASES_SYSTEM, MAX_SENTENCES, factGrammar, numberedSentences, parseFactLines, splitSentences, type ExtractMode} from './sentences.js';
+import {FRASES_LITERAL_SYSTEM, FRASES_SYSTEM, MAX_SENTENCES, factGrammar, numberedSentences, parseFactLines, splitSentences, type ExtractMode} from './sentences.js';
 export type SourceChoice = {mode: 'none'} | {mode: 'paste'; text: string} |
   {mode: 'wikipedia'; title: string; language: 'pt' | 'en'} | {mode: 'document'; document: DocumentFile};
 export interface FactInput {afirmacao: string; trecho: string; valor?: string; tipo?: string; autor?: string; relevancia?: string}
@@ -27,13 +27,14 @@ export function verifyFact(item: FactInput, passage: string): string | null {
   return null;
 }
 export interface Passage {title: string; url: string; text: string}
+const frasesSystem = (mode: ExtractMode) => mode === 'frases_resumo' ? FRASES_SYSTEM : FRASES_LITERAL_SYSTEM;
 /** Uma chamada de extração. `json`: o modelo devolve fatos com o trecho copiado; `frases`: escolhe frases numeradas. */
 export async function extractFacts(recorder: Recorder, header: string, text: string, mode: ExtractMode = 'json'): Promise<FactInput[]> {
-  if (mode === 'frases') {
+  if (mode !== 'json') {
     const sentences = splitSentences(text);
     if (!sentences.length) return [];
-    const {value} = await recorder.grammar('document_extract', FRASES_SYSTEM, `${header}\nFRASES:\n${numberedSentences(sentences)}`,
-      prompts.extract_schema, factGrammar(sentences.length), out => parseFactLines(out, sentences));
+    const {value} = await recorder.grammar('document_extract', frasesSystem(mode), `${header}\nFRASES:\n${numberedSentences(sentences)}`,
+      prompts.extract_schema, factGrammar(sentences.length, 6, mode === 'frases_resumo'), out => parseFactLines(out, sentences));
     return value;
   }
   const raw = await recorder.json('document_extract', prompts.extract_system, `${header}\nTRECHO:\n${text}`, prompts.extract_schema);
@@ -47,7 +48,7 @@ export async function extractFacts(recorder: Recorder, header: string, text: str
 export async function extractBatch(recorder: Recorder, header: string, batch: DocumentChunk[], mode: ExtractMode = 'json'):
     Promise<{item: FactInput; chunk: DocumentChunk}[]> {
   const title = (c: DocumentChunk) => c.section || c.heading;
-  if (mode === 'frases') {
+  if (mode !== 'json') {
     const sentences: string[] = [], owner: DocumentChunk[] = [], lines: string[] = [];
     let last = '';
     for (const c of batch) {
@@ -58,8 +59,8 @@ export async function extractBatch(recorder: Recorder, header: string, batch: Do
       }
     }
     if (!sentences.length) return [];
-    const {value} = await recorder.grammar('document_extract', FRASES_SYSTEM, `${header}\nFRASES:\n${lines.join('\n')}`,
-      prompts.extract_schema, factGrammar(sentences.length), out => parseFactLines(out, sentences));
+    const {value} = await recorder.grammar('document_extract', frasesSystem(mode), `${header}\nFRASES:\n${lines.join('\n')}`,
+      prompts.extract_schema, factGrammar(sentences.length, 6, mode === 'frases_resumo'), out => parseFactLines(out, sentences));
     return value.map(item => ({item, chunk: owner[sentences.indexOf(item.trecho)] ?? batch[0]}));
   }
   const text = batch.map(c => `${title(c) ? `Seção: ${title(c)}\n` : ''}${c.text}`).join('\n\n');
