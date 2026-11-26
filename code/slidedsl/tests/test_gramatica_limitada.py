@@ -41,3 +41,9 @@ def test_slide_aparado_nos_campos_que_bateram_no_limite():
                          Side(name="B", items=[Item(label="Curto", detail="x" * 10)])])
     assert trim_slide_limits(s, "comparacao") == ["sides.0.items.0.label"]
     assert s.sides[0].items[0].label.split()[-1] in ("rótulo", "comprido") and len(s.sides[0].items[0].label) < 48
+
+
+def test_limite_padrao_de_chamadas_cresce_com_os_slides():
+    from slidedsl.alto_generation import default_max_calls
+    assert default_max_calls(6) == 60 and default_max_calls(4) == 60  # o padrão antigo continua para decks curtos
+    assert default_max_calls(8) == 80 and default_max_calls(30) == 200

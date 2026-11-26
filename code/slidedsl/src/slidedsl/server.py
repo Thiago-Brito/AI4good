@@ -191,7 +191,7 @@ class CriarPayload(BaseModel):
     # "celular": o mesmo pipeline do app Android (gramática com limites + frases), em modelo GGUF local.
     motor: Literal["completo", "celular"] = "completo"
     modelo_local: str | None = Field(default=None, max_length=80)
-    max_calls: int = Field(default=60, ge=1, le=200)
+    max_calls: int | None = Field(default=None, ge=1, le=200)  # None: 10 por slide, no mínimo 60
     max_output_tokens: int = Field(default=2048, ge=256, le=8192)
 
 

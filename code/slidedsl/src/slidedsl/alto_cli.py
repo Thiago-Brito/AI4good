@@ -76,7 +76,8 @@ def add_parsers(sub):
         help="Padrão: gramatica no llamacpp, json nos demais",
     )
     p.add_argument("--candidatos", type=int, default=1, help="Versões por slide (best-of-N)")
-    p.add_argument("--max-chamadas", type=int, default=60, help="Limite local de inferências")
+    p.add_argument("--max-chamadas", type=int, default=None,
+                   help="Limite local de inferências (padrão: 10 por slide, no mínimo 60)")
     p.add_argument("--reparos", type=int, default=2)
     p.add_argument(
         "--buscador",

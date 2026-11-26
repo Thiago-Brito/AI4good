@@ -1465,9 +1465,17 @@ class NoFactsError(ValueError):
     """A pesquisa terminou sem nenhuma ficha verificada."""
 
 
-def create_presentation(request, out_dir: Path, model, *, max_calls=60, on_usage=None, **options):
+def default_max_calls(n_slides: int | None) -> int:
+    """Limite padrão de chamadas: 60 servia para 6 slides; com 8, o 4B local parava no último (26/11)."""
+    return min(200, max(60, 10 * (n_slides or 6)))
+
+
+def create_presentation(request, out_dir: Path, model, *, max_calls=None, on_usage=None, **options):
     """Contabilizar também pesquisa/falhas, inclusive antes de existir roteiro."""
     from .model_usage import RecordedModel
+
+    if max_calls is None:
+        max_calls = default_max_calls(options.get("n_slides"))
 
     tracked = RecordedModel(model, out_dir, max_calls=max_calls, on_usage=on_usage)
     report = None

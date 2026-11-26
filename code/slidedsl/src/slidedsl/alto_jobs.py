@@ -81,7 +81,7 @@ def _completo(payload, out, say, usage):
         contact=payload.get("contato") or None,
         allow_without_facts=payload["permitir_sem_fatos"],
         progress=say,
-        max_calls=payload.get("max_calls", 60),
+        max_calls=payload.get("max_calls"),  # None: 10 por slide, no mínimo 60
         on_usage=usage,
     )
 
