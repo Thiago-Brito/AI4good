@@ -34,7 +34,7 @@ Para a geração sem documento (12 pedidos do Teste 3, semente 11, modo gramáti
 - [ ] **T3. Bancada de modelos com o documento** (`diferencial_v2.md`), uma execução por modelo, registrada em `docs/NOITE_26NOV.md`:
   - motor do celular no PC (`scripts/e2e_motor_celular.py --modelo ...`): `qwen3-0.6b-lora`, `qwen3-0.6b`, `qwen3-1.7b`, `qwen3-4b-instruct`, `qwen3-4b-instruct-lora`;
   - fluxo completo do PC: `--provider llamacpp` (Qwen3 4B local) e `--provider openai --model gpt-5.4-mini`.
-- [ ] **T4. Limites do compilador na gramática do PC.** O fluxo do PC com o 4B local falha por rótulo acima de 48 caracteres (A005), porque a gramática do PC não tem os limites, e a do app tem (`mobile/app/src/pipeline/altoText.ts`, `withCompilerLimits`). Portar a ideia para `src/slidedsl` (modo gramática), medir com T1 (12 pedidos) e T3 (documento).
+- [x] **T4. Limites do compilador na gramática do PC.** O fluxo do PC com o 4B local falha por rótulo acima de 48 caracteres (A005), porque a gramática do PC não tem os limites, e a do app tem (`mobile/app/src/pipeline/altoText.ts`, `withCompilerLimits`). Portar a ideia para `src/slidedsl` (modo gramática), medir com T1 (12 pedidos) e T3 (documento).
 - [ ] **T5. O que T3 mostrar** como pior defeito restante (ex.: slide de resultados sem todos os números; título que contradiz os fatos). Uma correção por volta, sempre medida antes e depois.
 - [ ] **T6. Repetir T3 com a melhor configuração** e escolher a recomendação por modelo.
 - [ ] **T7. Resumo** em `docs/RESUMO_NOITE_26NOV.md`: o que mudou, números antes e depois, o que não funcionou, o que recomendo levar para o branch principal.
