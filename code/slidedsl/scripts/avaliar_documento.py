@@ -34,6 +34,11 @@ def visible_text(deck) -> str:
             parts += [i.label or "", i.detail or ""]
         for v in getattr(s, "values", []) or []:
             parts += [v.value or "", v.label or ""]
+        for b in getattr(s, "bars", []) or []:  # gráfico: o número está no valor da barra (ex.: 63 minutos)
+            value = f"{b.value:g}".replace(".", ",")
+            parts += [b.label or "", value, f"{value} {s.unit or ''}".strip()]
+        for m in getattr(s, "milestones", []) or []:
+            parts += [m.date or "", m.label or "", m.detail or ""]
         for side in getattr(s, "sides", []) or []:
             parts.append(side.name if hasattr(side, "name") else "")
             for i in getattr(side, "items", []) or []:
