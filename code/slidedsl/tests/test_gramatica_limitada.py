@@ -19,7 +19,7 @@ def test_gramatica_limitada_poe_o_limite_de_cada_campo():
 
 def test_gramatica_limitada_aceita_o_mesmo_que_a_generica_dentro_dos_limites():
     # Mesmas regras de estrutura; só as strings mudam.
-    estrutura = lambda g: sorted(l.split(" ::= ")[0] for l in g.splitlines() if not l.startswith("t-s"))
+    estrutura = lambda g: sorted(l.split(" ::= ")[0] for l in g.splitlines() if not l.startswith(("t-s", "t-valor")))
     assert estrutura(alto_gbnf_limitada("numeros")) == estrutura(alto_gbnf("numeros"))
 
 
@@ -59,3 +59,11 @@ def test_salvamento_corta_texto_acima_do_limite_na_ultima_pausa():
     detalhe = s.sides[0].items[0].detail
     assert len(detalhe) <= 80 and detalhe == "O modelo escreve o programa de seis slides"
     assert s.sides[1].items[0].detail == "Curto."
+
+
+def test_valor_do_slide_de_numeros_comeca_por_algarismo():
+    from slidedsl.gbnf import GBNFMatcher
+    m = GBNFMatcher(alto_gbnf_limitada("numeros"))
+    assert m.accepts('numeros { titulo "Resultado" valor "13 de 24" "decks válidos" }')
+    assert m.accepts('numeros { titulo "Custo" valor "US$ 0,10" "por execução" }')
+    assert not m.accepts('numeros { titulo "Resultado" valor "texto estourou" "decks" }')  # caso real do 4B

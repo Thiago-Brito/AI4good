@@ -220,7 +220,9 @@ def alto_gbnf_limitada(kind: str) -> str:
         "unidade": f'ws "unidade" ws t-s{L["unit"]}',
         "notas": f'ws "notas" ws t-s{min(L["notes"], 600)}',
         "item": f'ws "item" ws t-s{L["label"]} (ws t-s{detail})?',
-        "valor": f'ws "valor" ws t-s{L["value"]} ws t-s{L["detail"]}',
+        # O valor do slide de números é um número: com string livre, o 4B escreveu "texto estourou" (26/11),
+        # que não cabe no cartão em fonte grande (A010).
+        "valor": f'ws "valor" ws t-valor ws t-s{L["detail"]}',
         "lado": f'ws "lado" ws t-s{L["side"]} ws "{{" item+ ws "}}"',
         "marco": f'ws "marco" ws t-s{L["date"]} ws t-s36 (ws t-s90)?',
         "barra": 'ws "barra" ws t-s24 ws t-numero',
@@ -234,6 +236,9 @@ def alto_gbnf_limitada(kind: str) -> str:
         lines.append(line)
     char = '[^"\\\\\\x00-\\x1F] | "\\\\" ["\\\\/bfnrt] | "\\\\u" [0-9a-fA-F]{4}'
     lines += [f't-s{n} ::= "\\"" ( {char} ){{0,{n}}} "\\""' for n in sorted(sizes)]
+    if any(l.startswith("valor ::=") for l in lines):
+        start = '[0-9~<>+-] | "≈" | "−" | "R$" | "US$"'
+        lines.append(f't-valor ::= "\\"" ( {start} ) ( {char} ){{0,{L["value"] - 1}}} "\\""')
     return "\n".join(lines) + "\n"
 
 
