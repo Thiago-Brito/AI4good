@@ -47,3 +47,15 @@ def test_limite_padrao_de_chamadas_cresce_com_os_slides():
     from slidedsl.alto_generation import default_max_calls
     assert default_max_calls(6) == 60 and default_max_calls(4) == 60  # o padrão antigo continua para decks curtos
     assert default_max_calls(8) == 80 and default_max_calls(30) == 200
+
+
+def test_salvamento_corta_texto_acima_do_limite_na_ultima_pausa():
+    from slidedsl.alto_generation import shorten_over_limit
+    longo = "O modelo escreve o programa de seis slides, e o arquivo sai mesmo com o texto estourando as caixas"
+    s = AltoSlide(kind="comparacao", title="Título",
+                  sides=[Side(name="A", items=[Item(label="Código", detail=longo)]),
+                         Side(name="B", items=[Item(label="SlideDSL", detail="Curto.")])])
+    shorten_over_limit(s, "comparacao")
+    detalhe = s.sides[0].items[0].detail
+    assert len(detalhe) <= 80 and detalhe == "O modelo escreve o programa de seis slides"
+    assert s.sides[1].items[0].detail == "Curto."

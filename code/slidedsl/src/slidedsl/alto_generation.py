@@ -728,6 +728,34 @@ def trim_at_limit(text: str | None, limit: int) -> str | None:
     return " ".join(words).rstrip(",;:— -")
 
 
+def shorten_over_limit(slide, kind: str) -> list[str]:
+    """Campos acima do limite são cortados no limite e aparados na última pausa (salvamento depois dos reparos)."""
+    from .alto import TEXT_LIMITS as L
+
+    def cut(obj, attr, limit):
+        value = getattr(obj, attr, None)
+        if value and len(value) > limit:
+            setattr(obj, attr, value[:limit])
+
+    for attr, key in (("title", "title"), ("subtitle", "subtitle"), ("author", "author"), ("text", "text"),
+                      ("caption", "caption"), ("unit", "unit")):
+        cut(slide, attr, L[key])
+    detail = 80 if kind == "comparacao" else L["detail"]
+    for i in slide.items:
+        cut(i, "label", L["label"]); cut(i, "detail", detail)
+    for v in slide.values:
+        cut(v, "label", L["detail"])
+    for side in slide.sides:
+        cut(side, "name", L["side"])
+        for i in side.items:
+            cut(i, "label", L["label"]); cut(i, "detail", 80)
+    for m in slide.milestones:
+        cut(m, "label", 36); cut(m, "detail", 90)
+    for b in slide.bars:
+        cut(b, "label", 24)
+    return trim_slide_limits(slide, kind)
+
+
 def trim_slide_limits(slide, kind: str) -> list[str]:
     """Apara os campos que bateram no limite da gramática limitada; devolve os caminhos aparados."""
     from .alto import TEXT_LIMITS as L
@@ -1183,6 +1211,15 @@ def generate_alto(
             # O download ocorre depois da escrita: reescrever não resolve A011.
             if images and slide is not None and slide.kind == "imagem" and slide.image_query:
                 warnings = [d for d in warnings if d.code != "A011"]
+            if errors and slide is not None and attempt >= repair_max and all(d.code == "A005" for d in errors):
+                # Depois dos reparos, sobrou só texto acima do limite: o compilador apara na última pausa da
+                # frase em vez de recusar o deck inteiro (no JSON a gramática limitada não se aplica; caso real
+                # de 26/11: dois detalhes de comparação com 85 e 86 caracteres, limite 80).
+                shorten_over_limit(slide, slide.kind)
+                ds = check_slide(slide, facts, theme, slide_topics, truncated, photo_cover=images)
+                ds.append(Diagnostic(code="F002", severity="INFORMAÇÃO",
+                                     message="Texto acima do limite encurtado pelo compilador na última pausa da frase."))
+                errors = [d for d in ds if d.severity == "ERRO"]
             if (not errors and not warnings) or attempt >= repair_max:
                 return slide, ds, attempt + 1, raw
             if not errors and slide is not None and all(d.code == "A009" for d in warnings):
