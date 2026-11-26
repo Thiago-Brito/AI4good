@@ -1,0 +1,14 @@
+{
+ "comentario": "Gabarito de avaliação automática para apresentações geradas de outputs/diferencial_professor/diferencial_v2.md (noite de 26/11). Termos procurados no texto visível, sem acento e em minúsculas.",
+ "secoes": {
+  "diferencial": ["diferencial", "intencao", "compilador"],
+  "regras comuns": ["12 pedidos", "sementes", "parea"],
+  "teste 1 garantia": ["python-pptx", "dentro das caixas"],
+  "teste 2 custo": ["custo", "tokens"],
+  "teste 3 celular": ["celular", "moto g"],
+  "teste 4 pessoas": ["colegas", "avalia"],
+  "limitacoes": ["nao esta provado", "frases erradas", "23 paginas", "4 temas"]
+ },
+ "numeros": ["1 de 24", "13 de 24", "19 de 24", "1.380", "1.344", "0,98", "63", "18 a 21", "23"],
+ "invertidas": ["custa mais caro", "nao veio de graca", "texto fora das caixas", "economiza tokens", "mais caro que"]
+}
