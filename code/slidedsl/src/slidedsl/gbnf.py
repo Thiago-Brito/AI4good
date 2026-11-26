@@ -227,12 +227,24 @@ def alto_gbnf_limitada(kind: str) -> str:
         "marco": f'ws "marco" ws t-s{L["date"]} ws t-s36 (ws t-s90)?',
         "barra": 'ws "barra" ws t-s24 ws t-numero',
     }
+    # Quantidade de itens do compilador (LIMITS em alto.py e 1–4 itens por lado): com "barra+", o 1.7B
+    # escreveu um gráfico de uma barra só, e o compilador exige de 2 a 7 (A003, 26/11).
+    from .alto import LIMITS
+
+    counts = {"topicos": ("item", *LIMITS["topicos"][1:]), "etapas": ("item", *LIMITS["etapas"][1:]),
+              "ciclo": ("item", *LIMITS["etapas"][1:]), "conclusao": ("item", *LIMITS["conclusao"][1:]),
+              "numeros": ("valor", *LIMITS["numeros"][1:]), "linha-do-tempo": ("marco", *LIMITS["linha_do_tempo"][1:]),
+              "grafico": ("barra", *LIMITS["grafico"][1:]), "imagem": ("item", *LIMITS["imagem"][1:]),
+              "lado": ("item", 1, 4)}
     lines, sizes = [], set()
     for line in alto_gbnf(kind).splitlines():
         name = line.split(" ::= ", 1)[0]
         if name in rules:
             line = f"{name} ::= {rules[name]}"
             sizes |= {int(n) for n in re.findall(r"t-s(\d+)", rules[name])}
+        if name in counts:
+            sym, low, high = counts[name]
+            line = re.sub(rf"\b{sym}[+*]", f"{sym}{{{low},{high}}}", line)
         lines.append(line)
     char = '[^"\\\\\\x00-\\x1F] | "\\\\" ["\\\\/bfnrt] | "\\\\u" [0-9a-fA-F]{4}'
     lines += [f't-s{n} ::= "\\"" ( {char} ){{0,{n}}} "\\""' for n in sorted(sizes)]

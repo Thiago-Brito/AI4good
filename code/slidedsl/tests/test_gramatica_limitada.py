@@ -67,3 +67,11 @@ def test_valor_do_slide_de_numeros_comeca_por_algarismo():
     assert m.accepts('numeros { titulo "Resultado" valor "13 de 24" "decks válidos" }')
     assert m.accepts('numeros { titulo "Custo" valor "US$ 0,10" "por execução" }')
     assert not m.accepts('numeros { titulo "Resultado" valor "texto estourou" "decks" }')  # caso real do 4B
+
+
+def test_gramatica_limitada_tem_a_quantidade_de_itens_do_compilador():
+    from slidedsl.gbnf import GBNFMatcher
+    assert "barra{2,7}" in alto_gbnf_limitada("grafico") and "item{1,4}" in alto_gbnf_limitada("comparacao")
+    m = GBNFMatcher(alto_gbnf_limitada("grafico"))
+    assert not m.accepts('grafico { titulo "T" barra "A" 1 }')  # caso real do 1.7B (A003)
+    assert m.accepts('grafico { titulo "T" barra "A" 1 barra "B" 2 }')
