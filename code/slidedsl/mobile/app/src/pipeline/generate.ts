@@ -117,7 +117,15 @@ export function numberTokens(text: string | null | undefined): Set<string> {
 /** Número certo com a citação errada (bancada 0.7.4: "87,2%" está no F1, o modelo citou F5/F6) não é número
  * inventado: se outro fato tem o número, o compilador acrescenta esse fato às fontes antes de validar. */
 export function citeNumberFacts(slide: AltoSlide, facts: Facts): AltoSlide {
-  const values = [...(slide.values ?? []).map(v => v.value), ...(slide.bars ?? []).map(b => String(b.value))];
+  // Valores e, desde 26/11, todos os textos que o A012 confere: com o documento curto lido inteiro há mais fatos com
+  // números, e a citação errada custava um reparo por slide (bancada da água: 9 chamadas de slide contra 7–8).
+  const values = [...(slide.values ?? []).map(v => v.value), ...(slide.bars ?? []).map(b => String(b.value)),
+    slide.title, slide.subtitle, slide.caption, slide.text, slide.unit, slide.author, slide.notes,
+    ...(slide.items ?? []).flatMap(it => [it.label, it.detail]),
+    ...(slide.sides ?? []).flatMap(side => [side.name, ...side.items.flatMap(it => [it.label, it.detail])]),
+    ...(slide.milestones ?? []).flatMap(m => [m.date, m.label, m.detail]),
+    ...(slide.bars ?? []).map(b => b.label), ...(slide.values ?? []).map(v => v.label)]
+    .filter((v): v is string => typeof v === 'string' && /\d/.test(v));
   if (!values.length) return slide;
   const tokens = new Map(Object.entries(facts).map(([id, f]) => [id, numberTokens(`${f.quote ?? ''} ${f.claim ?? ''}`)]));
   const sources = [...(slide.sources ?? [])];
@@ -154,9 +162,14 @@ export function trimTruncated(data: unknown, schema: JsonSchema): unknown {
 export function outlineFacts(facts: Facts, maxChars = 3600): string {
   const lines: string[] = [];
   let size = 0;
-  for (const [id, f] of Object.entries(facts).slice(0, 32)) {
+  // Documento curto lido inteiro (até 6 leituras × 6 fatos): com mais de 32 fatos, todos entram (até 80, como o
+  // PC), com a afirmação mais curta para caber no mesmo espaço; antes os fatos das últimas seções ficavam de fora.
+  const entries = Object.entries(facts), all = entries.length > 32 ? entries.slice(0, 80) : entries;
+  const perLine = all.length > 32 ? Math.floor(maxChars / all.length) - 1 : Infinity;
+  for (const [id, f] of all) {
     const value = f.value ? ` [valor: ${String(f.value)}]` : '';
-    const line = `${id} (${String(f.kind ?? 'fato')})${value}: ${String(f.claim ?? '').slice(0, 220)}`;
+    const head = `${id} (${String(f.kind ?? 'fato')})${value}: `;
+    const line = head + String(f.claim ?? '').slice(0, Math.min(220, Math.max(40, perLine - head.length)));
     if (size + line.length > maxChars) break;
     lines.push(line); size += line.length + 1;
   }
@@ -200,6 +213,58 @@ export function writtenItems(slides: AltoSlide[], max = 320): string {
   return out;
 }
 export interface Outline {titulo: string; slides: PlanSlide[]}
+export type DocumentSection = {title: string; facts: string[]};
+const RESULT_RE = /\d+\s+de\s+\d+|\bp\s*[=<]|\d\s*%|\bteve\b|\btiveram\b|superou|levou|levaram|caiu|subiu|aument|reduz|n[aã]o h[aá] diferen|sem diferen|contra \d|resultado/i;
+/** Porte de fact_weight (alto_generation.py): 2 = resultado ("1 de 24", "p = 0,98", "levou 63 minutos"); 1 = outro
+ * número; 0 = sem número. O tipo "numero" não separa método de resultado ("6 slides" e "1 de 24" vêm iguais). */
+export function factWeight(fact: Facts[string] | undefined): number {
+  if (!fact) return 0;
+  if (RESULT_RE.test(`${String(fact.claim ?? '')} ${String(fact.quote ?? '')}`)) return 2;
+  return /\d/.test(String(fact.claim ?? '')) ? 1 : 0;
+}
+/** Porte de outline_from_sections: quando o roteiro deixa uma seção do documento sem nenhum fato dela e as seções
+ * cabem (capa + uma por slide), o roteiro segue as seções; o tipo de cada slide vem do roteiro do modelo na mesma
+ * posição e a última seção vira a conclusão. Sem chamada ao modelo. */
+export function outlineFromSections(outline: Outline, sections: DocumentSection[], n: number, facts: Facts): Outline {
+  const slides = outline.slides;
+  if (!(sections.length >= 2 && sections.length === n - 1) || !slides.length) return outline;
+  const covered = new Set(slides.flatMap(s => s.fatos ?? []));
+  if (sections.every(s => s.facts.some(id => covered.has(id)))) return outline;
+  const content = slides.slice(1).filter(s => s.tipo !== 'capa' && s.tipo !== 'secao');
+  const ranked = (ids: string[]) => [...ids].sort((a, b) => factWeight(facts[b]) - factWeight(facts[a]) || ids.indexOf(a) - ids.indexOf(b));
+  const next: PlanSlide[] = [slides[0], ...sections.map((s, k) => {
+    let tipo = content[k]?.tipo ?? 'topicos';
+    if (k === sections.length - 1) tipo = 'conclusao'; else if (tipo === 'conclusao') tipo = 'topicos';
+    return {tipo, mensagem: s.title, objetivo: s.title, fatos: ranked(s.facts).slice(0, 6)};
+  })];
+  return {...outline, slides: next};
+}
+/** Porte de ensure_section_results: cada slide de uma seção leva os resultados dela (depois os outros números), no
+ * lugar dos fatos sem número, e eles vão na frente — o slide é escrito com os 3 primeiros fatos da lista. */
+export function ensureSectionResults(outline: Outline, sections: DocumentSection[], facts: Facts, cap = 6): Outline {
+  const sectionOf = new Map(sections.flatMap(s => s.facts.map(id => [id, s.title] as const)));
+  const weight = (id: string) => sectionOf.has(id) ? factWeight(facts[id]) : 0;
+  const slides = outline.slides.map((slide, k) => {
+    if (k === 0) return slide;
+    const ids = [...(slide.fatos ?? [])], counts = new Map<string, number>();
+    for (const id of ids) if (sectionOf.has(id)) counts.set(sectionOf.get(id)!, (counts.get(sectionOf.get(id)!) ?? 0) + 1);
+    if (!counts.size) return slide;
+    const heading = [...counts].reduce((a, b) => b[1] > a[1] ? b : a)[0];
+    for (const level of [2, 1]) {
+      const wanted = sections.filter(s => s.title === heading).flatMap(s => s.facts).filter(id => weight(id) === level && !ids.includes(id));
+      for (const id of wanted) {
+        if (ids.length < cap) { ids.push(id); continue; }
+        const weaker = [...ids].reverse().filter(j => weight(j) < level);
+        if (!weaker.length) break;
+        const worst = weaker.reduce((a, b) => weight(b) < weight(a) ? b : a);
+        ids[ids.indexOf(worst)] = id;
+      }
+    }
+    const order = [...ids];
+    return {...slide, fatos: order.sort((a, b) => weight(b) - weight(a) || ids.indexOf(a) - ids.indexOf(b))};
+  });
+  return {...outline, slides};
+}
 /** Porte de fix_outline (alto_generation.py): o primeiro slide vira capa, o último conclusão e capas no meio
  * viram tópicos. Na bancada de 24/11 (Qwen3 1.7B), um roteiro sem capa/conclusão abortava o deck inteiro. */
 export function fixOutline(outline: Outline, images = false): Outline {
@@ -251,7 +316,7 @@ export async function writeSlide(ctx: SlideContext, plan: PlanSlide, i: number, 
   const blocking = (d: Diagnostic) => d.severity === 'ERRO' || (NUMERIC_KINDS.has(kind) && d.code === 'A007');
   const accept = (data: unknown) => {
     let slide = jsonToSlide(kind, data as Record<string, any>);
-    if (NUMERIC_KINDS.has(kind)) slide = citeNumberFacts(slide, facts);
+    if (ids.length) slide = citeNumberFacts(slide, facts);
     cleanVisible(slide, ids, request);  // como o PC: sem "conforme F2", caixa de frase, inicial maiúscula
     // The cover must not invent an author, as in alto_generation.py.
     if (kind === 'capa' && slide.author && !request.toLowerCase().includes(slide.author.toLowerCase())) slide.author = null;
@@ -360,13 +425,20 @@ export async function generate(options: GenerateOptions): Promise<GenerationResu
   progress('Planejando roteiro');
   const withImages = !!options.images;
   const outlineSchema = schemaWithFacts(((withImages ? prompts.outline_schemas_imagens : prompts.outline_schemas) as Record<string, any>)[String(n)][mode], ids);
-  const sections = genericDocumentRequest(request) ? source.document?.sections ?? [] : [];
+  // Seções valem no pedido geral e no documento curto lido inteiro (aí o pedido específico também cobre o documento todo).
+  const sections: DocumentSection[] = genericDocumentRequest(request) || source.document?.complete ? source.document?.sections ?? [] : [];
   const sectionPrompt = sections.length ? `\nSeções do documento em ordem; cubra estes assuntos no roteiro, agrupando se necessário. A capa pode apresentar a primeira seção. Use os IDs correspondentes:\n${JSON.stringify(sections)}` : '';
   const raw = await recorder.json('roteiro', (withImages ? prompts.outline_system_imagens : prompts.outline_system)[mode],
     `Pedido: ${request}\nNúmero de slides: ${n}\nFatos da pesquisa:\n${outlineFacts(facts)}${sectionPrompt}${withImages && n >= 4 ? prompts.image_outline_hint : ''}`, outlineSchema);
   const outlineErrors = schemaErrors(raw, outlineSchema);
   if (outlineErrors.length) throw Error(`Roteiro inválido: ${outlineErrors.join('; ')}`);
-  const outline = distributeFacts(fixOutline(raw as Outline, withImages), ids);
+  const fixed = fixOutline(raw as Outline, withImages);
+  let outline = distributeFacts(fixed, ids);
+  if (sections.length >= 2) {
+    // A cobertura das seções se mede no roteiro do modelo, antes de distributeFacts completar os slides com outros fatos.
+    const bySection = outlineFromSections(fixed, sections, n, facts);
+    outline = ensureSectionResults(bySection === fixed ? outline : bySection, sections, facts);
+  }
   const deck: AltoDeck = {title: outline.titulo, theme: 'claro', slides: []};
   const summary = outline.slides.map((s, i) => `${i + 1}. ${s.tipo}: ${s.mensagem}`).join('\n');
   const fallbackNotes: Diagnostic[] = [];

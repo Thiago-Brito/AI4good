@@ -2,8 +2,8 @@ import type {Facts} from '@slidedsl/core';
 import {prompts, schemaErrors} from './contracts.js';
 import {Recorder} from './usage.js';
 import {checkCancelled} from './types.js';
-import {documentMetadata, genericDocumentRequest, retrieveDocument, type DocumentFile, type DocumentText} from './documents.js';
-import {FRASES_SYSTEM, factGrammar, numberedSentences, parseFactLines, splitSentences, type ExtractMode} from './sentences.js';
+import {documentMetadata, genericDocumentRequest, readingPlan, type DocumentChunk, type DocumentFile, type DocumentText} from './documents.js';
+import {FRASES_SYSTEM, MAX_SENTENCES, factGrammar, numberedSentences, parseFactLines, splitSentences, type ExtractMode} from './sentences.js';
 export type SourceChoice = {mode: 'none'} | {mode: 'paste'; text: string} |
   {mode: 'wikipedia'; title: string; language: 'pt' | 'en'} | {mode: 'document'; document: DocumentFile};
 export interface FactInput {afirmacao: string; trecho: string; valor?: string; tipo?: string; autor?: string; relevancia?: string}
@@ -41,26 +41,61 @@ export async function extractFacts(recorder: Recorder, header: string, text: str
   if (errors.length) throw Error(`Extração fora do formato: ${errors.join('; ')}`);
   return (raw as {fatos: FactInput[]}).fatos;
 }
+/** Uma leitura de vários trechos vizinhos (documento curto lido inteiro). Cada fato volta com o trecho de onde veio:
+ * a conferência literal e a seção continuam por trecho. Em `frases`, a numeração corre pelos trechos, com o título da
+ * seção entre eles (sem número, o modelo não pode escolhê-lo). */
+export async function extractBatch(recorder: Recorder, header: string, batch: DocumentChunk[], mode: ExtractMode = 'json'):
+    Promise<{item: FactInput; chunk: DocumentChunk}[]> {
+  const title = (c: DocumentChunk) => c.section || c.heading;
+  if (mode === 'frases') {
+    const sentences: string[] = [], owner: DocumentChunk[] = [], lines: string[] = [];
+    let last = '';
+    for (const c of batch) {
+      for (const s of splitSentences(c.text)) {
+        if (sentences.length >= MAX_SENTENCES) break;
+        if (title(c) && title(c) !== last) {lines.push(`(Seção: ${title(c)})`); last = title(c);}
+        sentences.push(s); owner.push(c); lines.push(`[${sentences.length}] ${s}`);
+      }
+    }
+    if (!sentences.length) return [];
+    const {value} = await recorder.grammar('document_extract', FRASES_SYSTEM, `${header}\nFRASES:\n${lines.join('\n')}`,
+      prompts.extract_schema, factGrammar(sentences.length), out => parseFactLines(out, sentences));
+    return value.map(item => ({item, chunk: owner[sentences.indexOf(item.trecho)] ?? batch[0]}));
+  }
+  const text = batch.map(c => `${title(c) ? `Seção: ${title(c)}\n` : ''}${c.text}`).join('\n\n');
+  const raw = await recorder.json('document_extract', prompts.extract_system, `${header}\nTRECHO:\n${text}`, prompts.extract_schema);
+  const errors = schemaErrors(raw, prompts.extract_schema);
+  if (errors.length) throw Error(`Extração fora do formato: ${errors.join('; ')}`);
+  return (raw as {fatos: FactInput[]}).fatos.map(item => {
+    const quote = normalize(item.trecho ?? '');
+    return {item, chunk: batch.find(c => quote && normalize(c.text).includes(quote)) ?? batch[0]};
+  });
+}
 export type FetchText = (url: string, signal?: AbortSignal) => Promise<unknown>;
 export type ReadDocument = (file: DocumentFile, signal?: AbortSignal) => Promise<DocumentText>;
 export interface DocumentUsage extends ReturnType<typeof documentMetadata> {
   chunks_used: number; facts_used: number; passages: number[]; max_extract_calls: number;
   sections: {title: string; facts: string[]}[];
+  /** Documento curto lido inteiro, na ordem: as seções valem para qualquer pedido, não só o pedido geral. */
+  complete?: boolean;
 }
 export interface CollectedFacts {facts: Facts; rejected: {item: FactInput; reason: string}[]; source: Passage | null; warning: string | null; document?: DocumentUsage}
 export async function collectDocument(doc: DocumentText, request: string, recorder: Recorder, signal?: AbortSignal,
   progress?: (stage: string) => void, onDocument?: (doc: DocumentUsage) => void, mode: ExtractMode = 'json'): Promise<CollectedFacts> {
-  const selected = retrieveDocument(doc, request);
+  const plan = readingPlan(doc, request), selected = plan.batches.flat();
   if (!selected.length) throw Error('Nenhum trecho relevante para o pedido. Use um pedido geral ou palavras presentes no documento.');
   const facts: Facts = {}, rejected: CollectedFacts['rejected'] = [], seen = new Set<string>();
-  const metadata: DocumentUsage = {...documentMetadata(doc), chunks_used: 0, facts_used: 0, passages: [], max_extract_calls: 6, sections: []};
+  const metadata: DocumentUsage = {...documentMetadata(doc), chunks_used: 0, facts_used: 0, passages: [], max_extract_calls: 6, sections: [], complete: plan.complete};
   onDocument?.({...metadata});
-  for (const [i, chunk] of selected.entries()) {
-    checkCancelled(signal); progress?.(`Extraindo fatos ${i + 1}/${selected.length}`);
-    const items = await extractFacts(recorder,
-      `Pedido: ${request}\nDocumento: ${doc.name}\nSeção: ${chunk.heading}\nTrecho ${chunk.passage}${chunk.page ? `, página ${chunk.page}` : ''}`, chunk.text, mode);
-    metadata.chunks_used++; metadata.passages.push(chunk.passage);
-    for (const item of items) {
+  for (const [i, batch] of plan.batches.entries()) {
+    checkCancelled(signal); progress?.(`Extraindo fatos ${i + 1}/${plan.batches.length}`);
+    // Um trecho por leitura: o mesmo prompt de antes. Vários (documento curto): os trechos vizinhos juntos.
+    const items = batch.length === 1 ? (await extractFacts(recorder,
+      `Pedido: ${request}\nDocumento: ${doc.name}\nSeção: ${batch[0].heading}\nTrecho ${batch[0].passage}${batch[0].page ? `, página ${batch[0].page}` : ''}`, batch[0].text, mode))
+      .map(item => ({item, chunk: batch[0]}))
+      : await extractBatch(recorder, `Pedido: ${request}\nDocumento: ${doc.name}\nTrechos ${batch[0].passage} a ${batch.at(-1)!.passage}`, batch, mode);
+    metadata.chunks_used += batch.length; metadata.passages.push(...batch.map(c => c.passage));
+    for (const {item, chunk} of items) {
       // Números e citação devem estar no mesmo trecho, não em outra seção do documento.
       const reason = verifyFact(item, chunk.text), key = normalize(item.afirmacao);
       if (reason || seen.has(key) || normalize(item.trecho) === normalize(chunk.heading)) {rejected.push({item, reason: reason ?? (seen.has(key) ? 'duplicada' : 'título de seção não é fato')}); continue;}
@@ -79,7 +114,7 @@ export async function collectDocument(doc: DocumentText, request: string, record
   // A recuperação específica é ranqueada; o roteiro geral segue a ordem documental.
   const order = new Map<string, number>();
   for (const c of doc.chunks) {const key = c.section || c.heading || (c.page ? `Página ${c.page}` : 'Documento'); if (!order.has(key)) order.set(key, c.passage);}
-  if (genericDocumentRequest(request)) metadata.sections.sort((a, b) => (order.get(a.title) ?? 0) - (order.get(b.title) ?? 0));
+  if (genericDocumentRequest(request) || plan.complete) metadata.sections.sort((a, b) => (order.get(a.title) ?? 0) - (order.get(b.title) ?? 0));
   return {facts, rejected, document: metadata, source: {title: doc.name, url: `documento:${doc.name}`, text: ''},
     warning: selected.length < doc.chunks.length ? `Documento amostrado: ${selected.length} de ${doc.chunks.length} trechos; até 6 chamadas de extração.` : null};
 }

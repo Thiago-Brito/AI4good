@@ -66,6 +66,20 @@ def run_pc(provider: str, slides: int, pedido: str, out: Path) -> dict:
             "custo_usd": uso.get("cost_usd")}
 
 
+def numeros_usados(pasta: Path) -> dict:
+    """Sem gabarito: números do documento que aparecem no texto visível e números visíveis fora do documento."""
+    import re
+
+    from avaliar_documento import visible_text
+    from slidedsl.alto import parse_alto
+
+    numero = re.compile(r"\d+(?:[.,]\d+)*")
+    texto = visible_text(parse_alto((pasta / "apresentacao.slda").read_text("utf-8")))
+    doc, visto = set(numero.findall(DOC.read_text("utf-8"))), set(numero.findall(texto))
+    return {"valida": (pasta / "apresentacao.pptx").exists(), "numeros_do_documento": len(visto & doc),
+            "numeros_fora_do_documento": sorted(visto - doc)}
+
+
 def main(argv=None):
     from avaliar_documento import evaluate
 
@@ -73,10 +87,15 @@ def main(argv=None):
     ap.add_argument("motores", nargs="+")
     ap.add_argument("--out", required=True)
     ap.add_argument("--slides", type=int, default=8)
+    ap.add_argument("--documento", help="outro documento (sem gabarito: mede números do documento usados)")
+    ap.add_argument("--pedido", help="pedido em texto (padrão: o pedido do .md do professor)")
     args = ap.parse_args(argv)
+    global DOC
+    if args.documento:
+        DOC = Path(args.documento).resolve()
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
-    pedido = PEDIDO.read_text("utf-8").strip()
+    pedido = args.pedido or PEDIDO.read_text("utf-8").strip()
     gabarito = json.loads((ROOT / "benchmark/documento_diferencial.json").read_text("utf-8"))
     for motor in args.motores:
         kind, name = motor.split(":", 1)
@@ -85,7 +104,7 @@ def main(argv=None):
         except Exception as exc:  # um motor que falha não para a bancada
             row = {"estado": "failed", "erro": repr(exc)[:300]}
         if row.get("pasta") and (Path(row["pasta"]) / "apresentacao.slda").exists():
-            row["avaliacao"] = evaluate(Path(row["pasta"]), gabarito)
+            row["avaliacao"] = evaluate(Path(row["pasta"]), gabarito) if not args.documento else numeros_usados(Path(row["pasta"]))
         row["motor"] = motor
         with open(out / "resultado.jsonl", "a", encoding="utf-8") as f:
             f.write(json.dumps(row, ensure_ascii=False) + "\n")

@@ -121,7 +121,8 @@ test('roteiro vê todos os fatos, não só os 3 primeiros (teste do TCC, 25/11/2
   const many = Object.fromEntries(Array.from({length: 40}, (_, k) => [`F${k + 1}`, {claim: `Fato número ${k + 1} do documento.`, kind: 'dado', value: String(k)}]));
   const block = outlineFacts(many);
   assert.match(block, /^F1 \(dado\) \[valor: 0\]: Fato número 1/);
-  assert.match(block, /F32 /); assert.doesNotMatch(block, /F33 /);  // até 32, como o PC
+  assert.match(block, /F40 \(dado\)/);  // com mais de 32, todos (até 80), com a afirmação mais curta, como o PC (26/11)
+  assert.ok(block.length <= 3600);
   assert.ok(outlineFacts(many, 200).length <= 200);
 });
 test('texto que bateu no limite da gramática perde só a palavra cortada', async () => {
@@ -322,6 +323,11 @@ test('número certo com citação errada: o compilador cita o fato que tem o nú
   assert.deepEqual(citeNumberFacts(slide, facts).sources, ['F5', 'F1']);
   const invented = {...slide, values: [{value: '90%', label: 'x'}]};
   assert.equal(citeNumberFacts(invented, facts), invented);  // número que nenhum fato tem continua inventado
+  // Também em texto de qualquer tipo de slide (A012), desde 26/11.
+  const topicos = {kind: 'topicos', title: 'Git', items: [{label: 'Uso', detail: 'Usado por 87,2% dos desenvolvedores'}], sources: ['F5']};
+  assert.deepEqual(citeNumberFacts(topicos, facts).sources, ['F5', 'F1']);
+  const semNumero = {...topicos, items: [{label: 'Uso', detail: 'Muito usado'}]};
+  assert.equal(citeNumberFacts(semNumero, facts), semNumero);
 });
 test('shortenDetails: detalhes na palavra inteira e, se pedido, só os primeiros itens', async () => {
   const {shortenDetails} = await import('../outputs/tests/pipeline/generate.js');

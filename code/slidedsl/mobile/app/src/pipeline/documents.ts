@@ -281,6 +281,26 @@ export function retrieveDocument(doc: DocumentText, request: string, limit = MAX
   }
   return picked.sort((a, b) => a.passage - b.passage);
 }
+/** Documento curto (notas, roteiro escrito pelo autor) é lido inteiro. Porte da leitura inteira do PC (26/11), sem
+ * chamadas a mais: o PC lê cada trecho numa chamada; o celular junta trechos vizinhos em até MAX_EXTRACT_CALLS
+ * leituras. Com 9 mil caracteres e 6 leituras, cada leitura fica perto de 1.500 caracteres (no máximo ~2.400 com o
+ * último trecho), dentro das 30 frases numeradas e do contexto de 4096 tokens. */
+export const SHORT_DOCUMENT_CHARS = 9_000;
+export interface ReadingPlan {batches: DocumentChunk[][]; complete: boolean}
+export function readingPlan(doc: DocumentText, request: string, limit = MAX_EXTRACT_CALLS): ReadingPlan {
+  const chunks = doc.chunks.filter(c => c.text.trim());
+  const total = chunks.reduce((n, c) => n + c.text.length, 0);
+  if (!chunks.length || total > SHORT_DOCUMENT_CHARS) return {batches: retrieveDocument(doc, request, limit).map(c => [c]), complete: false};
+  const k = Math.min(limit, chunks.length), target = total / k, batches: DocumentChunk[][] = [];
+  let before = 0;
+  for (const c of chunks) {
+    // Lote pela posição do início do trecho: lotes de trechos vizinhos, de tamanho parecido, na ordem do documento.
+    const b = Math.min(k - 1, Math.floor(before / target + 1e-9));
+    (batches[b] ??= []).push(c);
+    before += c.text.length;
+  }
+  return {batches: batches.filter(Boolean), complete: true};
+}
 export function documentMetadata(doc: DocumentText) {
   return {name: doc.name, type: doc.kind, mime: doc.mime, bytes: doc.bytes, characters: doc.characters, pages: doc.pages, encoding: doc.encoding, chunks_total: doc.chunks.length};
 }
