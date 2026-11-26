@@ -70,6 +70,12 @@ def test_documento_curto_com_muitas_secoes_e_lido_ate_o_fim(tmp_path, monkeypatc
     assert len(seen) == 20 and "teste 20" in seen[-1] and "teste 1 " in seen[0]  # todos, na ordem
     assert len(dossier.facts) == 20
 
+    # O orçamento de chamadas cresce pelas leituras além das 12 de antes (a geração não fica sem chamadas).
+    extractor = Extractor()
+    extractor.max_calls = 60
+    documents.dossier_from_documents([record["id"]], "teste", extractor)
+    assert extractor.max_calls == 60 + (20 - documents.MAX_PASSAGES)
+
 
 def test_roteiro_ve_todos_os_fatos_quando_ha_muitos():
     from slidedsl.alto_generation import facts_block

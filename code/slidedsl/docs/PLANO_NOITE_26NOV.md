@@ -31,7 +31,7 @@ Para a geração sem documento (12 pedidos do Teste 3, semente 11, modo gramáti
 
 - [x] **T1. A/B sem documento** (`scripts/regressao_pc_ab.sh`, rodando desde 26/11 ~00h; antes = commit f12b102 em `D:/wt_antes`). Comparar `outputs/regressao_pc_ab/antes` × `depois`. Se 6 fatos por slide piorar validade, reparos ou tempo (>10%), aplicar 6 só quando houver documento.
 - [x] **T2. Script de avaliação automática** `scripts/avaliar_documento.py`: lê o `.slda` de uma execução e mede os itens 1–4 acima (seções pelas palavras dos títulos, números presentes no texto visível, lista de frases suspeitas de inversão).
-- [ ] **T3. Bancada de modelos com o documento** (`diferencial_v2.md`), uma execução por modelo, registrada em `docs/NOITE_26NOV.md`:
+- [x] **T3. Bancada de modelos com o documento** (`diferencial_v2.md`), uma execução por modelo, registrada em `docs/NOITE_26NOV.md`:
   - motor do celular no PC (`scripts/e2e_motor_celular.py --modelo ...`): `qwen3-0.6b-lora`, `qwen3-0.6b`, `qwen3-1.7b`, `qwen3-4b-instruct`, `qwen3-4b-instruct-lora`;
   - fluxo completo do PC: `--provider llamacpp` (Qwen3 4B local) e `--provider openai --model gpt-5.4-mini`.
 - [x] **T4. Limites do compilador na gramática do PC.** O fluxo do PC com o 4B local falha por rótulo acima de 48 caracteres (A005), porque a gramática do PC não tem os limites, e a do app tem (`mobile/app/src/pipeline/altoText.ts`, `withCompilerLimits`). Portar a ideia para `src/slidedsl` (modo gramática), medir com T1 (12 pedidos) e T3 (documento).

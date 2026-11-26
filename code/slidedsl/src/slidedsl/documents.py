@@ -341,6 +341,11 @@ def dossier_from_documents(ids, query, model=None, *, max_chars=10800):
         selected = sorted((c for pool in pools for c in pool),
                           key=lambda c: (commands(c), ids.index(c["document_id"]),
                                          int(c.get("passage") or 0)))[:MAX_PASSAGES_SHORT]
+        # As leituras além das 12 de antes não comem o orçamento de chamadas da geração: com o 4B local,
+        # 25 leituras + roteiro + slides + reparos passavam de 60 e o deck parava no slide 7 (26/11).
+        extra = len(selected) - MAX_PASSAGES
+        if extra > 0 and model is not None and isinstance(getattr(model, "max_calls", None), int):
+            model.max_calls += extra
     for rank in range(MAX_PASSAGES if not selected else 0):
         for pool in pools:
             if rank < len(pool) and len(selected) < MAX_PASSAGES:
