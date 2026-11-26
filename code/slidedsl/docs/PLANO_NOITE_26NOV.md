@@ -37,7 +37,8 @@ Para a geração sem documento (12 pedidos do Teste 3, semente 11, modo gramáti
 - [x] **T4. Limites do compilador na gramática do PC.** O fluxo do PC com o 4B local falha por rótulo acima de 48 caracteres (A005), porque a gramática do PC não tem os limites, e a do app tem (`mobile/app/src/pipeline/altoText.ts`, `withCompilerLimits`). Portar a ideia para `src/slidedsl` (modo gramática), medir com T1 (12 pedidos) e T3 (documento).
 - [x] **T5. O que T3 mostrar** como pior defeito restante (ex.: slide de resultados sem todos os números; título que contradiz os fatos). Uma correção por volta, sempre medida antes e depois.
 - [x] **T6. Repetir T3 com a melhor configuração** e escolher a recomendação por modelo.
-- [ ] **T8. Leitura por frases numeradas no PC para modelos com gramática** (porte de `mobile/app/src/pipeline/sentences.ts`): o 4B local parafraseia o trecho e a conferência literal rejeita fatos como "O lado B teve 13 de 24". Medir com o 4B local.
+- [x] **T8. Leitura por frases numeradas no PC para modelos com gramática** (porte de `mobile/app/src/pipeline/sentences.ts`): o 4B local parafraseia o trecho e a conferência literal rejeita fatos como "O lado B teve 13 de 24". Medir com o 4B local.
+- [ ] **T9. Generalização:** as mudanças da noite em outros documentos — `outputs/teste4/documentos/agua.txt` (curto, sem seções) e o PDF do artigo (longo) — com o 4B local, antes (f12b102, `D:/wt_antes`) e depois. Métricas genéricas: válido, fatos, chamadas, tempo, números do documento usados e números visíveis que não estão no documento.
 - [ ] **T7. Resumo** em `docs/RESUMO_NOITE_26NOV.md`: o que mudou, números antes e depois, o que não funcionou, o que recomendo levar para o branch principal.
 
 ## Registro
