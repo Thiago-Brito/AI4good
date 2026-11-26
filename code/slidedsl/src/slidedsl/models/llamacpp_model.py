@@ -84,6 +84,9 @@ class LlamaCppTextModel:
             "temperature": temperature,
             "max_tokens": self.output_tokens,
             "stream": False,
+            # Qwen3 híbridos (0.6B, 1.7B) abrem com <think>; com gramática, o único caminho permitido era encerrar,
+            # e a leitura saía vazia (1 token) em todo trecho (26/11). O 4B Instruct-2507 não tem raciocínio.
+            "chat_template_kwargs": {"enable_thinking": False},
         }
         if seed is not None:
             payload["seed"] = seed
