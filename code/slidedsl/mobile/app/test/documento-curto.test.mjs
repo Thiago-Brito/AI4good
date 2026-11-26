@@ -121,3 +121,66 @@ test('palavra cortada perto do limite sai; palavra inteira fica', async () => {
   assert.equal(trimTruncated('Cada pedido roda com 24 apresentações condição', schema, known), 'Cada pedido roda com 24 apresentações condição');
   assert.equal(trimTruncated('Texto curto e longe do limite', schema, known), 'Texto curto e longe do limite');
 });
+
+test('detalhe literal: cada detalhe vira a frase do fato que combina com ele; número invertido some', async () => {
+  const {literalizeDetails} = await import('../outputs/tests/pipeline/generate.js');
+  const facts = {
+    F1: {claim: 'O modelo gerou em média 1.380 tokens escrevendo código e 1.344 escrevendo SlideDSL.', quote: 'x'},
+    F2: {claim: 'O tempo foi 19,8 s escrevendo código e 19,6 s escrevendo SlideDSL.', quote: 'y'},
+    F3: {claim: 'O pipeline completo custa cerca de 5 vezes mais, em troca de mais apresentações válidas.', quote: 'z'},
+  };
+  const slide = {kind: 'topicos', title: 'Teste 2: custo', sources: ['F1'], items: [
+    {label: 'Tokens gerados', detail: 'O modelo gerou 1.380 tokens de entrada e 1.344 de saída.'},
+    {label: 'Tempo médio', detail: 'O tempo foi de 19,6 s com código.'},
+    {label: 'Sem detalhe'}]};
+  const out = literalizeDetails(slide, 'topicos', ['F1', 'F2', 'F3'], facts);
+  assert.equal(out.items[0].detail, facts.F1.claim);
+  assert.equal(out.items[1].detail, facts.F2.claim);
+  assert.equal(out.items[2].detail, undefined);  // não acrescenta detalhe
+  assert.deepEqual(out.sources, ['F1', 'F2']);
+  assert.equal(out.items[0].label, 'Tokens gerados');  // o rótulo é do modelo
+  // Comparação: até 80 caracteres, cortado na pausa; legenda de valor só com fato que tem o número.
+  const cmp = literalizeDetails({kind: 'comparacao', title: 'x', sources: [], sides: [{name: 'Código', items: [{label: 'Tokens', detail: 'gerou 1.380 tokens'}]}]}, 'comparacao', ['F1'], facts);
+  assert.ok(cmp.sides[0].items[0].detail.length <= 80); assert.match(cmp.sides[0].items[0].detail, /1\.380 tokens/);
+  const num = literalizeDetails({kind: 'numeros', title: 'x', sources: [], values: [{value: '5 vezes', label: 'custo maior'}, {value: '42', label: 'tokens gerados'}]}, 'numeros', ['F1', 'F3'], facts);
+  assert.equal(num.values[0].label, facts.F3.claim);
+  assert.equal(num.values[1].label, 'tokens gerados');  // nenhum fato tem 42
+  // Sem fato parecido: fica como está.
+  const none = {kind: 'topicos', title: 'x', sources: [], items: [{label: 'Outra coisa', detail: 'Assunto que não aparece nos fatos.'}]};
+  assert.equal(literalizeDetails(none, 'topicos', ['F1'], facts), none);
+});
+
+test('frase cortada não termina com parêntese aberto', async () => {
+  const {closeParens} = await import('../outputs/tests/pipeline/generate.js');
+  assert.equal(closeParens('No SlideDSL, o modelo escreve só a intenção (tipo de slide, título'), 'No SlideDSL, o modelo escreve só a intenção');
+  assert.equal(closeParens('B superou A em 13 pares contra 1 (McNemar, p = 0,002)'), 'B superou A em 13 pares contra 1 (McNemar, p = 0,002)');
+});
+
+test('detalhe literal: item sem fato parecido sai quando sobram 2 itens com fato', async () => {
+  const {literalizeDetails} = await import('../outputs/tests/pipeline/generate.js');
+  const facts = {F1: {claim: 'O lado A teve 1 de 24 apresentações e o lado B teve 13 de 24.', quote: 'q'},
+    F2: {claim: 'B superou A em 13 pares contra 1, com p = 0,002.', quote: 'q'}};
+  const slide = {kind: 'topicos', title: 'x', sources: [], items: [
+    {label: 'Resultado', detail: 'O lado A teve 1 de 24 apresentações.'}, {label: 'Inventado', detail: 'A plataforma ainda não provou nada disso.'},
+    {label: 'Comparação', detail: 'B superou A em 13 pares.'}]};
+  const out = literalizeDetails(slide, 'topicos', ['F1', 'F2'], facts);
+  assert.deepEqual(out.items.map(i => i.label), ['Resultado', 'Comparação']);
+  // Só 1 item com fato: nada sai (o slide precisa de 2).
+  const one = literalizeDetails({...slide, items: slide.items.slice(0, 2)}, 'topicos', ['F1'], facts);
+  assert.equal(one.items.length, 2);
+});
+
+test('texto copiado do prompt sai do slide; título legítimo com "Regras" fica', async () => {
+  const {promptLeak, dropPromptLeaks} = await import('../outputs/tests/pipeline/generate.js');
+  assert.ok(promptLeak('Regras do tipo: 2 a 5 itens paralelos (3 é o ideal)'));
+  assert.ok(promptLeak('Fatos para este slide:'));
+  assert.ok(promptLeak('SlideDSL Alto: Microsserviços escalam só o que está sob carga'));
+  assert.ok(promptLeak('Regras do tipo'));
+  assert.ok(!promptLeak('Regras comuns a todos os testes'));
+  assert.ok(!promptLeak('Teste 1: garantia sobre o arquivo'));
+  const slide = dropPromptLeaks({kind: 'topicos', title: 'Regras do tipo: 2 a 5 itens', items: [
+    {label: 'Fatos para este slide:', detail: 'Fatos para este slide:'}, {label: 'A', detail: 'Frase um do documento.'}, {label: 'B', detail: 'Frase dois.'}]},
+    'Regras comuns a todos os testes');
+  assert.equal(slide.title, 'Regras comuns a todos os testes');
+  assert.deepEqual(slide.items.map(i => i.label), ['A', 'B']);
+});

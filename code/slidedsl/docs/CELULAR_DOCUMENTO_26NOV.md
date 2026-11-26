@@ -91,3 +91,32 @@ A leitura caiu de cerca de 1.300 para cerca de 340 tokens de saída, porque o mo
 - Escreveu rótulos estranhos, como "Aguarde 1 de 24 apresentações".
 
 O deck do 4B não tem esses erros. Próximo passo possível: no modelo pequeno, o detalhe do item passa a ser a frase do fato citado, e o modelo escreve só o rótulo.
+
+## Terceira rodada: detalhe literal nos modelos pequenos e texto copiado do prompt
+
+**Detalhe literal** (`literalDetails`). Vale só para os modelos pequenos: no app, 0.6B e 1.7B (arquivo menor que 2 GB); no PC, o campo `detalhe_literal` de `config/modelos_locais.json`, que vira `--detalhe-literal` no `motor_pc.mjs`.
+- O modelo escreve o slide como antes. Em seguida, o detalhe de cada item, lado, marco e legenda de valor é trocado pela frase do fato que mais combina com ele, por palavras e números em comum, um fato por campo.
+- Limite: o do compilador com até 3 itens (170 caracteres; 80 na comparação), 110 com mais itens e 70 no slide de imagem.
+- Frase longa termina na última pausa, sem deixar parêntese aberto.
+- Item cujo detalhe não combina com nenhum fato sai, se sobrarem 2 itens.
+
+**Texto copiado do prompt** (`promptLeak`, vale para todos os modelos). Título, subtítulo ou item igual a um rótulo do prompt, ou começando por "rótulo:" ("Regras do tipo: …", "Fatos para este slide:", "SlideDSL Alto: …"), é tratado assim: o título vira a mensagem planejada para o slide, o subtítulo sai e o item sai.
+
+Testes do app: 109/109. O `tsc` do app inteiro passa.
+
+**O `.md` do professor**, rodada anterior (`depois3`) → esta rodada (`depois7`):
+
+| Modelo | Seções | Números (de 9) | Tempo das chamadas |
+|---|---|---|---|
+| 0.6B LoRA | 6/7 → **7/7** | 6 → 5 | 11,7 → 11,2 s |
+| 0.6B | 4/7 → 4/7 | 2 → 3 | 16,0 → 16,0 s |
+| 1.7B | 5/7 → 5/7 | 4 → 5 | 28,0 → 20,3 s |
+| 4B (sem detalhe literal) | 7/7 → 7/7 | 8 → 8 | 38,5 → 37,5 s |
+| 4B LoRA (sem detalhe literal) | 6/7 → 6/7 | 5 → 5 | 34,7 → 34,4 s |
+
+No `agua.txt`: 0.6B LoRA usou 2 → 3 números do documento em 8,4 s; 1.7B, 2 → 3 em 17,5 s; 4B, 3 → 3 em 24,7 s. Nenhum número fora do documento.
+
+**Lendo os decks:**
+- **0.6B LoRA e 1.7B:** os detalhes passaram a ser frases do documento, e as inversões sumiram. Antes, o deck dizia "1.380 tokens de entrada e 1.344 de saída"; agora diz "1.380 tokens escrevendo código e 1.344 escrevendo SlideDSL".
+- **O que sobra nesses dois:** rótulos fracos e itens em seção errada (a "GPU RTX 3060" no Teste 1). Quando o slide tem só um item com fato, o outro item fica com o texto do modelo; no 1.7B, sobrou "os custos totais do modelo pequeno ainda não foram medidos", que o documento não diz.
+- **0.6B base** (sem treino): continua fraco. Repete o mesmo item, usa rótulos tirados das regras do tipo ("2 a 5 itens paralelos") e escreve "Fontes" e "Notas" como texto.

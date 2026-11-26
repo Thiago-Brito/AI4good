@@ -111,6 +111,8 @@ export default function App() {
         slideMode: grammar ? 'gramatica_limites' : 'json',
         // Bancada de 24/11 (RESULTADOS_T6.md): frases numeradas reduzem a leitura do documento em 56%.
         extractMode: grammar ? 'frases' : 'json',
+        // Modelos pequenos (0.6B, 1.7B; arquivo < 2 GB): detalhes = frases dos fatos (bancada de 26/11, docs/CELULAR_DOCUMENTO_26NOV.md).
+        literalDetails: grammar && selected.bytes < 2e9,
         readDocument: async (file, signal) => document ?? readDocument(file, signal),
         onDocument: info => {documentData = info; setDocumentInfo(info);},
         images: photos ? photoSource : undefined,

@@ -20,6 +20,8 @@ export interface GenerationResult {
   request: string; outline: Outline; slideMode: SlideMode;
   /** Fotos dos slides "imagem" (com Fotos da internet ligado): dimensões/crédito e data URIs. */
   images: DeckImages;
+  /** Detalhes literais (modelo pequeno), para refazer um slide do mesmo jeito. */
+  literalDetails?: boolean;
 }
 export class GenerationError extends Error {
   constructor(message: string, readonly diagnostics: Diagnostic[]) { super(message); }
@@ -114,6 +116,51 @@ export function numberTokens(text: string | null | undefined): Set<string> {
   }
   return found;
 }
+const contentWords = (t: string) => new Set(t.toLowerCase().normalize('NFKD').replace(/\p{M}/gu, '').match(/[a-z]{4,}/g) ?? []);
+/** Modelo pequeno: o detalhe de cada item (e de lado, marco e a legenda de valor) vira a frase do fato que mais combina
+ * com ele (palavras e números em comum), um fato por campo; o modelo fica só com o rótulo. Bancada de 26/11: o 0.6B
+ * escreveu "1.380 tokens de entrada e 1.344 de saída" quando o documento diz 1.380 com código e 1.344 com SlideDSL.
+ * Limite: o do compilador com até 3 itens (170; 80 em comparação), 110 com mais itens, 70 em imagem; frase acima dele
+ * termina na última pausa, sem parêntese aberto, e a frase que cabe inteira tem preferência. Campo sem fato parecido (menos de 2 pontos) fica como está;
+ * só troca detalhes que existem (não acrescenta texto que pode não caber no layout). */
+export function literalizeDetails(slide: AltoSlide, kind: string, candidates: string[], facts: Facts): AltoSlide {
+  const pool = [...new Set(candidates)].filter(id => typeof facts[id]?.claim === 'string');
+  if (!pool.length) return slide;
+  const out: AltoSlide = JSON.parse(JSON.stringify(slide));
+  type Slot = {text: string; limit: number; value?: string; obj?: object; set: (v: string) => void};
+  const slots: Slot[] = [];
+  for (const it of out.items ?? []) if (it.detail) slots.push({text: `${it.label} ${it.detail}`, limit: kind === 'imagem' ? 70 : kind === 'comparacao' ? 80 : (out.items?.length ?? 0) <= 3 ? 170 : 110, obj: it, set: v => { it.detail = v; }});
+  for (const side of out.sides ?? []) for (const it of side.items) if (it.detail) slots.push({text: `${side.name} ${it.label} ${it.detail}`, limit: 80, obj: it, set: v => { it.detail = v; }});
+  for (const m of out.milestones ?? []) if (m.detail) slots.push({text: `${m.date} ${m.label} ${m.detail}`, limit: 90, set: v => { m.detail = v; }});
+  for (const v of out.values ?? []) slots.push({text: `${v.value} ${v.label}`, limit: (out.values?.length ?? 0) <= 2 ? 170 : 110, value: v.value, set: x => { v.label = x; }});
+  const info = new Map(pool.map(id => { const f = `${facts[id].claim} ${facts[id].quote ?? ''}`; return [id, {nums: numberTokens(f), words: contentWords(f)}]; }));
+  const score = (s: Slot, id: string) => {
+    const {nums, words} = info.get(id)!;
+    if (s.value && [...numberTokens(s.value)].some(t => !nums.has(t))) return 0;  // legenda de valor: o fato tem de ter o número
+    let points = 0;
+    for (const w of contentWords(s.text)) if (words.has(w)) points++;
+    for (const t of numberTokens(s.text)) if (nums.has(t)) points += 3;
+    return points >= 2 && Array.from(String(facts[id].claim)).length <= s.limit ? points + 1 : points;  // a frase que cabe inteira ganha
+  };
+  const pairs = slots.flatMap((s, i) => pool.map(id => ({i, id, points: score(s, id)}))).filter(p => p.points >= 2)
+    .sort((a, b) => b.points - a.points || pool.indexOf(a.id) - pool.indexOf(b.id));
+  const usedSlots = new Set<number>(), usedFacts: string[] = [], matched = new Set<object>();
+  for (const p of pairs) {
+    if (usedSlots.has(p.i) || usedFacts.includes(p.id)) continue;
+    usedSlots.add(p.i); usedFacts.push(p.id); if (slots[p.i].obj) matched.add(slots[p.i].obj!);
+    const claim = String(facts[p.id].claim).trim(), limit = slots[p.i].limit;
+    slots[p.i].set(Array.from(claim).length <= limit ? claim : closeParens(String(trimTruncated(claim, {type: "string", maxLength: limit}))));
+  }
+  if (!usedFacts.length) return slide;
+  // Item com detalhe que não combina com nenhum fato é texto do próprio modelo pequeno, onde ficaram os erros (bancada de
+  // 26/11, 1.7B: "a plataforma ainda não provou que o modelo pequeno escreve frases erradas", sentido invertido). Sai se
+  // sobrarem ao menos 2 itens (1 por lado na comparação).
+  const keep = (it: {detail?: string | null}) => !it.detail || matched.has(it);
+  if (out.items && out.items.filter(it => it.detail && matched.has(it)).length >= 2) out.items = out.items.filter(keep);
+  for (const side of out.sides ?? []) if (side.items.some(it => it.detail && matched.has(it))) side.items = side.items.filter(keep);
+  out.sources = [...new Set([...(out.sources ?? []), ...usedFacts])];
+  return out;
+}
 /** Número certo com a citação errada (bancada 0.7.4: "87,2%" está no F1, o modelo citou F5/F6) não é número
  * inventado: se outro fato tem o número, o compilador acrescenta esse fato às fontes antes de validar. */
 export function citeNumberFacts(slide: AltoSlide, facts: Facts): AltoSlide {
@@ -145,7 +192,25 @@ export function knownWords(texts: string[]): Set<string> {
 }
 /** Rótulos do prompt do slide que o modelo pequeno copia como título ("Regras do tipo", bancada de 26/11). */
 const PROMPT_LABELS = new Set(['regras do tipo', 'regras', 'mensagem', 'objetivo', 'fatos para este slide', 'pedido original',
-  'apresentacao', 'roteiro', 'titulos ja escritos', 'resposta anterior']);
+  'apresentacao', 'roteiro', 'titulos ja escritos', 'resposta anterior', 'itens ja escritos em outros slides', 'slidedsl alto',
+  'corrija os diagnosticos mantendo o tipo']);
+/** Texto copiado do prompt: igual a um rótulo, ou começando por "rótulo:" ("Regras do tipo: 2 a 5 itens…", "Fatos para
+ * este slide:", "SlideDSL Alto: …"; 0.6B, bancada de 26/11). "Regras comuns a todos os testes" não é cópia. */
+export function promptLeak(text: string | null | undefined): boolean {
+  if (!text) return false;
+  const low = text.toLowerCase().normalize('NFKD').replace(/\p{M}/gu, '').replace(/^['"“‘\s]+/, '').trim();
+  if (PROMPT_LABELS.has(low.replace(/[^\p{L}\p{N}]+/gu, ' ').trim())) return true;
+  return [...PROMPT_LABELS].some(l => low.startsWith(`${l}:`));
+}
+/** Tira do slide o que o modelo copiou do prompt: o título vira a mensagem planejada; itens copiados saem se sobrarem 2. */
+export function dropPromptLeaks(slide: AltoSlide, message: string): AltoSlide {
+  if (promptLeak(slide.title)) slide.title = shortTitle(message, 60);
+  if (promptLeak(slide.subtitle)) slide.subtitle = null;
+  const clean = (it: {label: string; detail?: string | null}) => !promptLeak(it.label) && !promptLeak(it.detail);
+  if (slide.items && slide.items.filter(clean).length >= 2) slide.items = slide.items.filter(clean);
+  for (const side of slide.sides ?? []) if (side.items.some(clean)) side.items = side.items.filter(clean);
+  return slide;
+}
 /** Texto que chegou ao maxLength (a gramática fechou a string no limite): tira a palavra cortada. */
 export function trimTruncated(data: unknown, schema: JsonSchema, known?: Set<string>): unknown {
   if (schema.type === 'string' && typeof data === 'string') {
@@ -305,6 +370,9 @@ export interface GenerateOptions {
   extractMode?: ExtractMode;
   /** Fotos da internet: o roteiro pode usar slides "imagem" e a foto é buscada no Openverse/NASA. */
   images?: ImageSource;
+  /** Modelo pequeno (0.6B, 1.7B): o detalhe de cada item, marco e valor passa a ser a frase do fato que mais combina
+   * com ele; o modelo fica só com o rótulo. Bancada de 26/11: o 0.6B invertia números ao reescrever os detalhes. */
+  literalDetails?: boolean;
 }
 /** O que writeSlide precisa da geração em curso (ou de uma apresentação pronta, ao refazer um slide). */
 export interface SlideContext {
@@ -312,6 +380,8 @@ export interface SlideContext {
   slideMode: SlideMode; recorder: Recorder; repairTruncated: boolean; progress: (stage: string, slide?: number) => void;
   /** Slides antes e depois do slide i (na geração, `after` é vazio). */
   before: AltoSlide[]; after: AltoSlide[]; n: number; signal?: AbortSignal;
+  /** Modelo pequeno: o detalhe de cada item vem da frase do fato citado (ver literalDetails). */
+  literalDetails?: boolean;
 }
 /** Escreve o slide i (1 chamada + 1 reparo) com o prompt, a gramática e as conferências da geração.
  * `extra` vai ao fim do pedido (ex.: instrução do usuário ao refazer). Retorna null se continuar inválido. */
@@ -332,8 +402,8 @@ export async function writeSlide(ctx: SlideContext, plan: PlanSlide, i: number, 
   const blocking = (d: Diagnostic) => d.severity === 'ERRO' || (NUMERIC_KINDS.has(kind) && d.code === 'A007');
   const accept = (data: unknown) => {
     let slide = jsonToSlide(kind, data as Record<string, any>);
-    if (slide.title && PROMPT_LABELS.has(slide.title.toLowerCase().normalize('NFKD').replace(/\p{M}/gu, '').replace(/[^\p{L}\p{N}]+/gu, ' ').trim()))
-      slide.title = shortTitle(plan.mensagem, 60);
+    slide = dropPromptLeaks(slide, plan.mensagem);
+    if (ctx.literalDetails && ids.length) slide = literalizeDetails(slide, kind, [...(plan.fatos ?? []), ...(slide.sources ?? [])], facts);
     if (ids.length) slide = citeNumberFacts(slide, facts);
     cleanVisible(slide, ids, request);  // como o PC: sem "conforme F2", caixa de frase, inicial maiúscula
     // The cover must not invent an author, as in alto_generation.py.
@@ -462,7 +532,7 @@ export async function generate(options: GenerateOptions): Promise<GenerationResu
   const fallbackNotes: Diagnostic[] = [];
   for (let i = 0; i < n; i++) {
     const plan = outline.slides[i], kind = plan.tipo;
-    const ctx: SlideContext = {request, deck, facts, ids, mode, summary, slideMode, recorder, repairTruncated: options.repairTruncated ?? false,
+    const ctx: SlideContext = {request, deck, facts, ids, mode, summary, slideMode, recorder, repairTruncated: options.repairTruncated ?? false, literalDetails: options.literalDetails,
       progress: (stage, slide) => progress(stage, slide), before: deck.slides, after: [], n, signal};
     let {accepted, diagnostics} = await writeSlide(ctx, plan, i);
     fallbackNotes.push(...diagnostics.filter(d => d.code === 'F002'));
@@ -487,5 +557,10 @@ export async function generate(options: GenerateOptions): Promise<GenerationResu
   checkCancelled(signal);
   progress('Concluído');
   return {deck, ir: built.ir, pptx, calls: recorder.calls, diagnostics: [...built.diagnostics, ...fallbackNotes], source, facts,
-    wall_ms: Date.now() - start, max_calls: maxCalls, request, outline, slideMode, images};
+    wall_ms: Date.now() - start, max_calls: maxCalls, request, outline, slideMode, images, literalDetails: options.literalDetails};
+}
+/** Frase cortada não termina com parêntese aberto: "escreve só a intenção (tipo de slide, título" → "escreve só a intenção". */
+export function closeParens(text: string): string {
+  const open = text.lastIndexOf('(');
+  return open > text.lastIndexOf(')') && open > 20 ? text.slice(0, open).replace(/[\s,;:—–-]+$/, '') : text;
 }

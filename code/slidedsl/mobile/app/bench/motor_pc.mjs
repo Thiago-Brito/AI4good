@@ -9,7 +9,7 @@
 //   node bench/motor_pc.mjs --pedido "..." --slides 5 [--documento arquivo.txt|.md|.docx|.paginas.json] --out <pasta>
 //   (.paginas.json = {"nome": "x.pdf", "paginas": [{"page": 1, "text": "..."}]}: um PDF já extraído por página, como o
 //   módulo Android entrega; passa pela limpeza de PDF do app — teste do TCC, docs/TESTE_TCC_DOCUMENTO_LONGO.md)
-//     [--url http://127.0.0.1:8080] [--semente 11] [--extracao frases|json] [--slides-modo gramatica_limites|json] [--imagens]
+//     [--url http://127.0.0.1:8080] [--semente 11] [--extracao frases|json] [--slides-modo gramatica_limites|json] [--imagens] [--detalhe-literal]
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import {generate} from '../outputs/tests/pipeline/generate.js';
@@ -22,6 +22,7 @@ const OUT = arg('out'), REQUEST = arg('pedido', ''), DOC = arg('documento');
 const N = Number(arg('slides', '5')), SEED = Number(arg('semente', '11'));
 const EXTRACT = arg('extracao', 'frases'), SLIDE_MODE = arg('slides-modo', 'gramatica_limites');
 const PHOTOS = process.argv.includes('--imagens');
+const LITERAL = process.argv.includes('--detalhe-literal');
 if (!OUT) throw Error('Use --out.');
 // Refazer um slide com o código do celular (edit.ts redoSlide): --refazer <n> --estado <json> grava refeito.json.
 const REDO = Number(arg('refazer', '0')), STATE = arg('estado');
@@ -75,7 +76,7 @@ async function main() {
   }
   const started = Date.now();
   const result = await generate({request: REQUEST, slides: N, model: serverModel(SEED), source, readDocument,
-    slideMode: SLIDE_MODE, extractMode: EXTRACT,
+    slideMode: SLIDE_MODE, extractMode: EXTRACT, literalDetails: LITERAL,
     images: PHOTOS ? {
       fetchJson: async (url, signal) => { const r = await fetch(url, {signal, headers: {Accept: 'application/json', 'User-Agent': AGENT}}); if (!r.ok) throw Error(`HTTP ${r.status}`); return r.json(); },
       fetchBytes: async (url, signal) => { const r = await fetch(url, {signal, headers: {'User-Agent': AGENT}}); if (!r.ok) throw Error(`HTTP ${r.status}`); return new Uint8Array(await r.arrayBuffer()); }} : undefined,

@@ -269,6 +269,8 @@ def create_presentation_celular(request: str, out_dir: Path, *, modelo: str, n_s
         args += ["--documento", str(_documento_para_node(document_ids[0], out_dir))]
     if imagens:
         args.append("--imagens")
+    if spec.get("detalhe_literal"):  # modelos pequenos: detalhes = frases dos fatos, como no app
+        args.append("--detalhe-literal")
     _rodar_node(args, app, out_dir, say)
 
     deck = AltoDeck.model_validate(json.loads((out_dir / "deck.json").read_text("utf-8")))

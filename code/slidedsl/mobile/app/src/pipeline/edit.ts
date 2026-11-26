@@ -133,7 +133,7 @@ export async function redoSlide(result: GenerationResult, index: number, instruc
     mode: ids.length ? 'with_facts' : 'without_facts', slideMode: result.slideMode, recorder, repairTruncated: false,
     summary: result.outline.slides.map((s, i) => `${i + 1}. ${s.tipo}: ${s.mensagem}`).join('\n'),
     progress: stage => options.onProgress?.(stage), before: slides.slice(0, index), after: slides.slice(index + 1),
-    n: slides.length, signal: options.signal};
+    n: slides.length, signal: options.signal, literalDetails: result.literalDetails};
   const text = visibleText(current);
   const ask = instruction.trim()
     ? `Pedido do usuário para este slide: ${instruction.trim()}. Reescreva o slide atendendo ao pedido.`
