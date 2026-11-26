@@ -116,9 +116,17 @@ def test_slide_da_secao_leva_os_resultados_da_secao():
     outline = {"slides": [{"tipo": "capa", "fatos": []},
                           {"tipo": "topicos", "fatos": ["F1", "F2", "F3"]}, {"tipo": "conclusao", "fatos": ["F6"]}]}
     out = ensure_section_results(outline, sections, facts, cap=4)
-    # F4 entra na vaga livre; F5 toma o lugar do último fato sem número (F3).
-    assert out["slides"][1]["fatos"] == ["F1", "F2", "F5", "F4"]
+    # F4 entra na vaga livre; F5 toma o lugar do último fato sem número (F3); os resultados vão na frente.
+    assert out["slides"][1]["fatos"] == ["F5", "F4", "F1", "F2"]
     assert out["slides"][2]["fatos"] == ["F6"]
+
+
+def test_peso_do_fato_separa_resultado_de_metodo():
+    from slidedsl.alto_generation import fact_weight
+    assert fact_weight({"claim": "O programa tem 6 slides e limite de 60 segundos."}) == 1
+    assert fact_weight({"claim": "O lado A teve 1 de 24 apresentações."}) == 2
+    assert fact_weight({"claim": "Não há diferença entre os lados (p = 0,98)."}) == 2
+    assert fact_weight({"claim": "O compilador confere a forma."}) == 0
 
 
 def test_roteiro_aceita_ate_seis_fatos_por_slide():

@@ -657,6 +657,22 @@ def fix_outline(outline: dict, kinds: list[str], images=False) -> dict:
     return outline
 
 
+RESULT_RE = re.compile(
+    r"\d+\s+de\s+\d+|\bp\s*[=<]|\d\s*%|\bteve\b|\btiveram\b|superou|levou|levaram|caiu|subiu|"
+    r"aument|reduz|n[aã]o h[aá] diferen|sem diferen|contra \d|resultado", re.I)
+
+
+def fact_weight(fact: dict) -> int:
+    """2 = resultado (\"1 de 24\", \"p = 0,98\", \"levou 63 minutos\", \"não há diferença\"); 1 = outro número; 0 = sem número.
+
+    O tipo \"numero\" do fato não separa método de resultado: \"6 slides\" e \"1 de 24\" vêm iguais (26/11).
+    """
+    text = f"{fact.get('claim', '')} {fact.get('quote', '')}"
+    if RESULT_RE.search(text):
+        return 2
+    return 1 if re.search(r"\d", fact.get("claim", "")) else 0
+
+
 def outline_from_sections(outline: dict, sections, n_slides: int, facts: dict | None = None) -> dict:
     """Roteiro que segue as seções do documento, uma por slide, quando o modelo deixa seções de fora.
 
@@ -672,9 +688,9 @@ def outline_from_sections(outline: dict, sections, n_slides: int, facts: dict | 
     facts = facts or {}
 
     def ranked(ids):
-        # Os resultados (com números) costumam fechar a seção; com o teto de 6 fatos, eles vêm primeiro.
+        # Os resultados costumam fechar a seção; com o teto de 6 fatos, eles vêm primeiro.
         ids = list(ids)
-        return sorted(ids, key=lambda i: (not re.search(r"\d", facts.get(i, {}).get("claim", "")), ids.index(i)))
+        return sorted(ids, key=lambda i: (-fact_weight(facts.get(i, {})), ids.index(i)))
 
     new = [slides[0]]
     for k, (heading, ids) in enumerate(sections):
@@ -755,23 +771,25 @@ def ensure_section_results(outline: dict, sections, facts: dict, cap: int = 6) -
     tem mais fatos dele; os fatos numéricos que faltam entram no lugar dos sem número, até o teto.
     """
     section_of = {i: h for h, ids in sections for i in ids}
-    has_number = {i: bool(re.search(r"\d", facts.get(i, {}).get("claim", ""))) for i in section_of}
+    weight = {i: fact_weight(facts.get(i, {})) for i in section_of}
     for slide in outline.get("slides", [])[1:]:
         ids = list(slide.get("fatos", []))
         counts = Counter(section_of[i] for i in ids if i in section_of)
         if not counts:
             continue
         heading = counts.most_common(1)[0][0]
-        wanted = [i for h, sec in sections if h == heading for i in sec if has_number.get(i) and i not in ids]
-        for i in wanted:
-            if len(ids) < cap:
-                ids.append(i)
-                continue
-            plain = [j for j in reversed(ids) if not has_number.get(j, True)]
-            if not plain:
-                break
-            ids[ids.index(plain[0])] = i
-        slide["fatos"] = ids
+        for level in (2, 1):  # resultados primeiro, depois os outros números
+            wanted = [i for h, sec in sections if h == heading for i in sec if weight.get(i) == level and i not in ids]
+            for i in wanted:
+                if len(ids) < cap:
+                    ids.append(i)
+                    continue
+                weaker = [j for j in reversed(ids) if weight.get(j, 0) < level]
+                if not weaker:
+                    break
+                ids[ids.index(min(weaker, key=lambda j: weight.get(j, 0)))] = i
+        # O slide é escrito a partir dos primeiros fatos da lista: os resultados vão na frente.
+        slide["fatos"] = sorted(ids, key=lambda j: (-weight.get(j, 0), ids.index(j)))
     return outline
 
 
