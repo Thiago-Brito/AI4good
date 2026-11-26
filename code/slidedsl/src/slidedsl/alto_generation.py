@@ -17,6 +17,7 @@ Etapas (cada chamada do modelo é pequena, o que favorece modelos de 1–8B):
 6. Compilação: SlideDSL Alto → SlideDSL 1.1 → regras de design → PPTX editável.
 """
 
+from collections import Counter
 from dataclasses import dataclass, field
 import json
 import re
@@ -227,7 +228,7 @@ def outline_schema(
     if fact_ids:
         slide["properties"]["fatos"] = {
             "type": "array",
-            "maxItems": 4,
+            "maxItems": 6,  # 4 deixava de fora o fato que fecha a ideia (ex.: "não há diferença, p = 0,98")
             "items": {"type": "string", "enum": fact_ids},
         }
         slide["required"].append("fatos")
@@ -326,7 +327,7 @@ def slide_schema(kind: str, fact_ids: list[str]) -> dict:
         }
     if kind not in ("capa", "secao"):
         props["fontes"] = (
-            {"type": "array", "maxItems": 4, "items": {"type": "string", "enum": fact_ids}}
+            {"type": "array", "maxItems": 6, "items": {"type": "string", "enum": fact_ids}}
             if fact_ids
             else {"type": "array", "maxItems": 0}
         )
@@ -656,6 +657,66 @@ def fix_outline(outline: dict, kinds: list[str], images=False) -> dict:
     return outline
 
 
+def outline_from_sections(outline: dict, sections, n_slides: int, facts: dict | None = None) -> dict:
+    """Roteiro que segue as seções do documento, uma por slide, quando o modelo deixa seções de fora.
+
+    Só se aplica quando as seções cabem: capa + uma seção por slide (a última vira a conclusão). O tipo de
+    cada slide vem do roteiro do modelo na mesma posição, se for um tipo de conteúdo; os fatos e a mensagem
+    vêm da seção. Caso real (25/11): um .md com 7 seções para 8 slides, e o modelo gastava 2 slides em cada
+    um dos primeiros testes e não chegava às limitações.
+    """
+    slides = outline.get("slides", [])
+    if not (2 <= len(sections) == n_slides - 1) or not slides:
+        return outline
+    content = [s for s in slides[1:] if s.get("tipo") not in ("capa", "secao")]
+    facts = facts or {}
+
+    def ranked(ids):
+        # Os resultados (com números) costumam fechar a seção; com o teto de 6 fatos, eles vêm primeiro.
+        ids = list(ids)
+        return sorted(ids, key=lambda i: (not re.search(r"\d", facts.get(i, {}).get("claim", "")), ids.index(i)))
+
+    new = [slides[0]]
+    for k, (heading, ids) in enumerate(sections):
+        model_slide = content[k] if k < len(content) else {}
+        kind = model_slide.get("tipo", "topicos")
+        if k == len(sections) - 1:
+            kind = "conclusao"
+        elif kind == "conclusao":
+            kind = "topicos"
+        new.append({"tipo": kind, "mensagem": heading, "objetivo": heading, "fatos": ranked(ids)[:6],
+                    "topicos": [heading]})
+    return {**outline, "slides": new}
+
+
+def ensure_section_results(outline: dict, sections, facts: dict, cap: int = 6) -> dict:
+    """Cada slide que trata de uma seção do documento leva os fatos com números dessa seção.
+
+    O modelo tende a escolher os primeiros fatos da seção (a pergunta, o método) e deixar de fora os que
+    a fecham (os resultados), e o slide sai sem o número que dá sentido a ele. A seção do slide é a que
+    tem mais fatos dele; os fatos numéricos que faltam entram no lugar dos sem número, até o teto.
+    """
+    section_of = {i: h for h, ids in sections for i in ids}
+    has_number = {i: bool(re.search(r"\d", facts.get(i, {}).get("claim", ""))) for i in section_of}
+    for slide in outline.get("slides", [])[1:]:
+        ids = list(slide.get("fatos", []))
+        counts = Counter(section_of[i] for i in ids if i in section_of)
+        if not counts:
+            continue
+        heading = counts.most_common(1)[0][0]
+        wanted = [i for h, sec in sections if h == heading for i in sec if has_number.get(i) and i not in ids]
+        for i in wanted:
+            if len(ids) < cap:
+                ids.append(i)
+                continue
+            plain = [j for j in reversed(ids) if not has_number.get(j, True)]
+            if not plain:
+                break
+            ids[ids.index(plain[0])] = i
+        slide["fatos"] = ids
+    return outline
+
+
 def data_kind_supported(kind: str, facts: dict) -> bool:
     """Slides de dados só existem quando há fatos com o tipo de dado que eles exibem."""
     from .alto import number_tokens
@@ -716,6 +777,13 @@ def clean_visible(slide: AltoSlide, ids) -> AltoSlide:
 
 def facts_block(ids: list[str], facts: dict, all_facts: bool = False) -> str:
     chosen = list(facts) if all_facts else [i for i in ids if i in facts]
+    if all_facts and len(chosen) > 32:
+        # Muitos fatos (documento lido inteiro): todos, compactos, sem o trecho. Mostrar só os 32 primeiros com
+        # trecho fazia o roteiro nunca ver os fatos do fim do documento (resultados, limitações), como o app via
+        # antes do outlineFacts (mobile/app/src/pipeline/generate.ts).
+        return "\n".join(
+            f'{fid} ({facts[fid]["kind"]})' + (f" [valor: {facts[fid]['value']}]" if facts[fid].get("value") else "")
+            + f': {facts[fid]["claim"][:220]}' for fid in chosen[:80])
     lines = []
     for fid in chosen[:32 if all_facts else 8]:
         f = facts[fid]
@@ -928,6 +996,10 @@ def generate_alto(
             f"Faltaram os tópicos obrigatórios: {', '.join(missing)}. Refaça o roteiro "
             "cobrindo todos, juntando tópicos afins no mesmo slide se precisar."
         )
+    if missing and len(sections) >= 2:
+        outline = outline_from_sections(outline, sections, n_slides, facts)
+    if len(sections) >= 2:
+        outline = ensure_section_results(outline, sections, facts)
     result.outline = outline
     summary = "\n".join(
         f"{k + 1}. {sl['tipo']}: {sl['mensagem']} — {sl['objetivo']}"

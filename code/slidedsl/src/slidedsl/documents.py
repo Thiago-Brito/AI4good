@@ -308,6 +308,7 @@ def retrieve(ids, query, *, max_chars=6000, max_chunks=8):
 
 
 MAX_PASSAGES = 12
+MAX_PASSAGES_SHORT = 32  # documento que cabe inteiro em max_chars: todos os trechos, até este teto de chamadas
 
 
 def dossier_from_documents(ids, query, model=None, *, max_chars=10800):
@@ -323,15 +324,24 @@ def dossier_from_documents(ids, query, model=None, *, max_chars=10800):
     # Um trecho que é só o título do documento não tem fato; ocupava a vaga de uma seção.
     pools = [[c for c in pool if re.sub(r"(?m)^#+ .*$", "", c["text"]).strip()] or pool
              for pool in pools]
+    def commands(chunk):
+        return bool(re.search(r"(?:```|\\Scripts\\|--out|--provider|--repetitions|ollama pull)", chunk["text"]))
+
     for pool in pools:
         def score(chunk):
             heading = normalize(chunk.get("heading", ""))
-            text = chunk["text"]
             narrative = re.search(r"resumo|introducao|objetivo|contribu|resultado|limitac|ideia central", heading)
-            commands = bool(re.search(r"(?:```|\\Scripts\\|--out|--provider|--repetitions|ollama pull)", text))
-            return min(chunk["score"], 2) + 3 * bool(narrative) - 4 * commands
+            return min(chunk["score"], 2) + 3 * bool(narrative) - 4 * commands(chunk)
         pool.sort(key=lambda c: (-score(c), c.get("passage", 0)))
-    for rank in range(MAX_PASSAGES):
+    total = sum(len(c["text"]) for pool in pools for c in pool)
+    if total <= max_chars:
+        # Documento curto (notas, roteiro escrito pelo autor): lê tudo, na ordem do documento. O limite de
+        # 12 trechos por pontuação cortava a segunda metade de um .md dividido em muitos trechos pequenos.
+        # Trechos de comandos (blocos de terminal) vão para o fim, como na escolha por pontuação.
+        selected = sorted((c for pool in pools for c in pool),
+                          key=lambda c: (commands(c), ids.index(c["document_id"]),
+                                         int(c.get("passage") or 0)))[:MAX_PASSAGES_SHORT]
+    for rank in range(MAX_PASSAGES if not selected else 0):
         for pool in pools:
             if rank < len(pool) and len(selected) < MAX_PASSAGES:
                 chunk = pool[rank]
