@@ -25,6 +25,8 @@ const DOCS = arg('docs'), REQUESTS = arg('requests'), OUT = arg('out');
 const SEEDS = arg('seeds', '11,22').split(',').map(Number);
 const MODES = arg('modes', 'json,gramatica').split(',');
 const ONLY = arg('only', '');
+// Modelos pequenos no app novo: detalhes = frases dos fatos (App.tsx liga sozinho para arquivos < 2 GB).
+const LITERAL = process.argv.includes('--detalhe-literal');
 // Padrão: medianas medidas no celular com o 1.7B (RESULTADOS_T4.md). Outro modelo: --phone-prompt-tps / --phone-gen-tps.
 const PHONE = {prompt_tps: Number(arg('phone-prompt-tps', '3.88')), gen_tps: Number(arg('phone-gen-tps', '1.49'))};
 if (!DOCS || !REQUESTS || !OUT) throw Error('Use --docs, --requests e --out.');
@@ -107,7 +109,7 @@ async function main() {
       const [slidePart, extractPart] = mode.split('+');
       const slideMode = slidePart.startsWith('gramatica_limites') ? 'gramatica_limites' : slidePart;
       const result = await generate({request: r.prompt, slides: 5, model: serverModel(seed), slideMode,
-        repairTruncated: slidePart === 'gramatica_limites_reparo', extractMode: extractPart === 'frases' ? 'frases' : 'json',
+        repairTruncated: slidePart === 'gramatica_limites_reparo', extractMode: extractPart === 'frases' ? 'frases' : 'json', literalDetails: LITERAL,
         source: {mode: 'document', document: file}, readDocument: async () => extractBytes(file, bytes),
         onCalls: c => { calls = c; }});
       calls = result.calls;
